@@ -1,6 +1,9 @@
+#include <stdint.h>
+volatile uint8_t a_loop[] = {1, 2, 3, 4};
+
 int main (void){
-	volatile int a;
+
 	while(1) {
-		a++;
+		a_loop[0]++;
 	};
 }
