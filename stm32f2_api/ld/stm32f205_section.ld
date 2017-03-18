@@ -48,7 +48,7 @@ SECTIONS
 
 
   /* Данные в RAM, изначально 0 (заполняются нулями). */
-  .bss :
+  .bss (NOLOAD) :
   {
     . = ALIGN(4);
     __bss_start__ = .;
