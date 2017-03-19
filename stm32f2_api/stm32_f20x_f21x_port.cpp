@@ -234,7 +234,7 @@ void global_port::write_image_port_in_registrs(uint32_t number){
 answer_global_port global_port::reinit_all() {
 	answer_global_port answer = global_port_reinit_success;		// Флаг того, что во время переинициализации была обнаружен порт со включенной блокировкой (или же инициализация прошла удачно).
 	for (uint32_t loop_port; loop_port < STM32_F2_PORT_COUNT; loop_port++) {
-		if (*init_array[loop_port].look_key == 1) {
+		if (get_state_locked_key_port((port_name)loop_port) == port_locked_kay_set) {
 			answer = global_port_reinit_look;
 // В случае, если пользователь посчитал, что при обнаружении заблокированного порта не следует пытаться
 // переинициализировать незаблокированные выводы, пропускаем дальнейшую попытку переинициализации.
@@ -252,10 +252,19 @@ answer_global_port	global_port::reinit_port(port_name port){
 // переинициализировать незаблокированные выводы, проверяем наличие блокировки. И в случае, если она есть -
 // - выходим.
 #if defined(NO_REINIT_PORT_AFTER_LOOKING)
-	if (*init_array[port].look_key == 1) {
+	if (get_state_locked_key_port(port) == port_locked_kay_set) {
 		return global_port_reinit_look;
 	]:
 #endif
 	write_image_port_in_registrs((uint32_t)port);		// Записываем образ в регистры (с учётом предосторожностей переключения).
 	return global_port_reinit_success;
+}
+
+// Возвращаем состояние ключа.
+port_locked_key		global_port::get_state_locked_key_port(port_name port){
+	if (*init_array[port].look_key) {
+		return port_locked_kay_set;
+	} else {
+		return port_locked_kay_reset;
+	}
 }
