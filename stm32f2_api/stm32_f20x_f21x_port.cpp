@@ -77,7 +77,14 @@ constexpr pin::pin (pin_config *pin_cfg_array, uint32_t pin_cout):
  */
 // Режим работы.
 constexpr uint32_t global_port_registr_moder_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
-	uint32_t registr_moder = 0;
+	uint32_t registr_moder = 0;								// Начальное значение зависит от порта.
+
+	switch(port_name){
+	case port_a:	registr_moder = 0xA8000000; break;
+	case port_b:	registr_moder = 0x00000280; break;
+	default: 		registr_moder = 0; 			break;
+	};
+
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){									// Проходимся по всем структурам.
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};									// Если вывод не относится к нашему порту - выходим.
 		registr_moder &= ~(0b11 << pin_cfg_array[loop_pin].pin_name * 2);							// Сбрасываем предыдущую настройку этого вывода.
@@ -100,6 +107,9 @@ constexpr uint32_t global_port_registr_otyper_msk_init_get(pin_config *pin_cfg_a
 // Скорость.
 constexpr uint32_t global_port_registr_ospeeder_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_ospeeder = 0;
+	if (port_name == port_b){					// Для порта B свое значение.
+		registr_ospeeder = 0x000000C0;
+	};
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
 		registr_ospeeder &= ~(0b11 << pin_cfg_array[loop_pin].pin_name * 2);
@@ -111,6 +121,11 @@ constexpr uint32_t global_port_registr_ospeeder_msk_init_get(pin_config *pin_cfg
 // Подтяжка.
 constexpr uint32_t global_port_registr_pupdr_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_pupdr = 0;
+	switch(port_name){											// Начальное значение зависит от порта.
+		case port_a:	registr_pupdr = 0x64000000; break;
+		case port_b:	registr_pupdr = 0x00000100; break;
+		default: 		registr_pupdr = 0; 			break;
+	};
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
 		registr_pupdr &= ~(0b11 << pin_cfg_array[loop_pin].pin_name * 2);
