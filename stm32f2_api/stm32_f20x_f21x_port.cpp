@@ -126,6 +126,16 @@ constexpr uint32_t global_port_registr_afrh_msk_init_get(pin_config *pin_cfg_arr
 	return registr_afrh;
 }
 
+// Состояние на выводах после инициализации (для выводов, настроенных на выход).
+constexpr uint32_t global_port_registr_odr_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name){
+	uint32_t registr_odr = 0;
+	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
+		if (pin_cfg_array[loop_pin].port != port_name){continue;};
+		registr_odr &= ~(1 << pin_cfg_array[loop_pin].pin_name);
+		registr_odr |= pin_cfg_array[loop_pin].state_after_init << pin_cfg_array[loop_pin].pin_name;
+	}
+	return registr_odr;
+}
 // Позволяет получить структуру масок начальной инициализации порта из массива структур настроек выводов.
 // Пример использования: GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_a);	// Передаем массив структур pin_config, их колличество, имя порта, для которого требуется получить структуру масок настроки порта.
 #define GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port)	\
@@ -137,14 +147,15 @@ constexpr uint32_t global_port_registr_afrh_msk_init_get(pin_config *pin_cfg_arr
 		.pupdr		= global_port_registr_pupdr_msk_init_get	(pin_cfg_array, pin_count, port), \
 		.lckr 		= global_port_registr_lckr_msk_init_get		(pin_cfg_array, pin_count, port), \
 		.afrl		= global_port_registr_afrl_msk_init_get		(pin_cfg_array, pin_count, port), \
-		.afrh		= global_port_registr_afrh_msk_init_get		(pin_cfg_array, pin_count, port) \
+		.afrh		= global_port_registr_afrh_msk_init_get		(pin_cfg_array, pin_count, port), \
+		.odr		= global_port_registr_odr_msk_init_get		(pin_cfg_array, pin_count, port) \
 	}
 
 /*
  * Конструктор готовит маски для начальной инициализации выводов.
  * Колличество портов, а так же их именя задаются автоматически после выбора чипа в stm32_f20x_f21x_conf.h.
  */
-global_port::global_port(pin_config *pin_cfg_array, uint32_t pin_count):
+constexpr global_port::global_port(pin_config *pin_cfg_array, uint32_t pin_count):
 	init_array({
 #ifdef PORTA															// Если данный порт есть в чипе.
 			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_a),		// Создаем структуру масок его начальной инициализации.
