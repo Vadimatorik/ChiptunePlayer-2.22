@@ -24,13 +24,13 @@ struct port_registers_struct{
  * Заполняется внутри объекта global_port при передачи в него массива pin_config элементов.
  */
 struct port_registers_flash_copy_struct{
-	volatile uint32_t	moder;		// Регистр выбора режима работы выводов.
-	volatile uint32_t	otyper;		// Регистр выбора режима выхода (в случае, если вывод настроен как выход).
-	volatile uint32_t	ospeeder;	// Регистр выбора скорости выводов.
-	volatile uint32_t	pupdr;		// Регистр включения подтяжки выводов.
-	volatile uint32_t	lckr;		// Регистр блокировки настроек.
-	volatile uint32_t	afrl;		// Младший регистр настройки альтернативных функций выводов.
-	volatile uint32_t	afrh;		// Старший регистр настройки вльтернативных функций выводов.
+	uint32_t	moder;		// Регистр выбора режима работы выводов.
+	uint32_t	otyper;		// Регистр выбора режима выхода (в случае, если вывод настроен как выход).
+	uint32_t	ospeeder;	// Регистр выбора скорости выводов.
+	uint32_t	pupdr;		// Регистр включения подтяжки выводов.
+	uint32_t	lckr;		// Регистр блокировки настроек.
+	uint32_t	afrl;		// Младший регистр настройки альтернативных функций выводов.
+	uint32_t	afrh;		// Старший регистр настройки вльтернативных функций выводов.
 };
 
 /*
@@ -78,27 +78,24 @@ enum port_pin_name {
 /*
  * Класс описания конфигурации одного вывода.
  */
-enum pin_mode 			{pin_input_mode = 0, pin_output_mode = 1, pin_alternate_function_mode = 2, pin_analog_mode = 3};
-enum pin_output_config	{pin_output_not_use = 0, pin_output_push_pull_config = 0, pin_output_open_drain_config = 1};
-enum pin_speed			{pin_low_speed = 0, pin_medium_speed = 1, pin_fast_speed = 2, pin_high_speed = 3};
-enum pin_pull			{pin_no_pull = 0, pin_pull_up = 1, pin_pull_down = 2};
-enum pin_alternate_function {pin_af_not_use = 0,
-	pin_af0		= 0,	pin_af1		= 1,	pin_af2		= 2,	pin_af3		= 3,
+enum pin_mode 			{pin_input_mode = 0, pin_output_mode = 1, pin_alternate_function_mode = 2, pin_analog_mode = 3};	// Режим вывода: вход, выход, альтернативная функция, аналоговый режим.
+enum pin_output_config	{pin_output_not_use = 0, pin_output_push_pull_config = 0, pin_output_open_drain_config = 1};		// Режим выхода: вывод не используется как вывод, "тянуть-толкать", "открытый сток".
+enum pin_speed			{pin_low_speed = 0, pin_medium_speed = 1, pin_fast_speed = 2, pin_high_speed = 3};					// Скорость выхода: низкая, средняя, быстрая, очень быстрая.
+enum pin_pull			{pin_no_pull = 0, pin_pull_up = 1, pin_pull_down = 2};												// Выбор подтяжки: без подтяжки, подтяжка к питанию, подтяжка к земле.
+enum pin_alternate_function {pin_af_not_use = 0,											// Альтернативная функция не используется.
+	pin_af0		= 0,	pin_af1		= 1,	pin_af2		= 2,	pin_af3		= 3,			// Какая-либо альтернативная функция.
 	pin_af4		= 4,	pin_af5		= 5,	pin_af6		= 6,	pin_af7		= 7,
 	pin_af8		= 8,	pin_af9		= 9,	pin_af10	= 10,	pin_af11	= 11,
 	pin_af12	= 12,	pin_af13	= 13,	pin_af14	= 14,	pin_af15	= 15
 };
-
+// Заблокировать настройку вывода после начальной инициализации.
+// Важно! Блокировка применяется только во время начальной инициализации выводов объектом global_port, при вызове функции
+// init. Во время последующей работы заблокировать иные выводы или же отключить блокировку текущих - невозможно.
+enum pin_locked			{pin_config_not_locked = 0, pin_config_locked = 1};
 /*
- * Объекты данного класса используются как блоки конфигурации
- * объекта глобального порта.
+ * Структура настройки вывода.
  */
-class pin_config {
-public:
-	/* Конструктор просто заполняет переменные ниже */
-	constexpr pin_config(port_name port_point, port_pin_name p_name, pin_mode p_mode,
-			pin_output_config p_out_cfg, pin_speed p_speed, pin_pull p_pull, pin_alternate_function	p_af);
-
+struct pin_config{
 	port_name				port;					// Имя порта (пример: port_a).
 	port_pin_name			pin_name;				// Номер вывода (пример: port_pin_1).
 	pin_mode				mode;					// Режим вывода (пример: pin_output_mode).
@@ -106,6 +103,7 @@ public:
 	pin_speed				speed;					// Скорость вывода (пример: pin_low_speed).
 	pin_pull				pull;					// Подтяжка вывода (пример: pin_no_pull).
 	pin_alternate_function	af;						// Альтернативная функция вывода (пример: pin_af_not_use).
+	pin_locked				look;					// Заблокировать ли настройку данного вывода во время инициализации global_port объекта.
 };
 
 /*
@@ -127,7 +125,7 @@ public:
  */
 class global_port {
 public:
-	global_port	(pin_config *pin_cfg_array, uint32_t pin_count);
+				global_port	(pin_config *pin_cfg_array, uint32_t pin_count);
 	void		init		();												// Метод инициализирует в реальном времени все порты ввода-вывода контроллера,
 																			// основываясь на переданном во время формирования объекта pin_config массива.
 	void		set_pin		(pin_config &pin);								// Устанавливает "1" на выходе (для случая, когда вывод настроен как выход).
@@ -137,7 +135,7 @@ public:
 	int			read_pin	(pin_config &pin);								// Считывает состояние вывода (для случая, когда вывод настроен как вход).
 
 private:
-	port_registers_flash_copy_struct		init_array[9];					// Дубликат регистров для переинициализации всех портов контроллера.
+	port_registers_flash_copy_struct		init_array;					// Дубликат регистров для переинициализации всех портов контроллера.
 	//uint32_t								rcc_msk;
 };
 
