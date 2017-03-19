@@ -19,7 +19,7 @@ pin_config a[2] = {
 global_port g_port(a, 2);
 
 int main (void){
-	g_port.reinit_all();
+	g_port.reinit_all_ports();
 	while(1) {
 		a_loop[0]++;
 	};

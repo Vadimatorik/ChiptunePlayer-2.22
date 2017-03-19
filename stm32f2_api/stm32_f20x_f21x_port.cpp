@@ -3,7 +3,7 @@
 /*
  * Возвращает указатель на выбранный порт ввода-вывода на карте памяти в соответствии с выбранным контроллером.
  */
-constexpr port_registers_struct* point_base_port_address_get(port_name port_name){
+constexpr port_registers_struct* point_base_port_address_get(port_name port_name) {
 	switch(port_name){
 #ifdef PORTA
 	case port_a: return (port_registers_struct *)0x40020000;
@@ -37,7 +37,7 @@ constexpr port_registers_struct* point_base_port_address_get(port_name port_name
 }
 
 // Указатель на bit_banding область памяти, в которой находится бит блокировки порта.
-constexpr uint32_t* bit_banding_point_look_port_key_get (port_name port_name){
+constexpr uint32_t* bit_banding_point_look_port_key_get (port_name port_name) {
 	uint32_t port_point = (uint32_t)point_base_port_address_get(port_name);	// Получаем физический адресс порта вывода.
 	port_point += 0x1C;																	// Прибавляем смещение к IDR регистру.
 	return (uint32_t*)BIT_BAND_PER(port_point, 16);							// Получаем адрес конкретного бита регистра IDR (состояние на входе).
@@ -47,17 +47,17 @@ constexpr uint32_t* bit_banding_point_look_port_key_get (port_name port_name){
  * Методы, необходимые для констурктора класса вывода.
  */
 // Маска установки выхода в "1".
-constexpr uint32_t pin_set_msk_get (pin_config *pin_cfg_array){
+constexpr uint32_t pin_set_msk_get (pin_config *pin_cfg_array) {
 	return 1 << pin_cfg_array->pin_name;
 }
 
 // Маска установки выхода в "0".
-constexpr uint32_t pin_reset_msk_get (pin_config *pin_cfg_array){
+constexpr uint32_t pin_reset_msk_get (pin_config *pin_cfg_array) {
 	return 1 << (pin_cfg_array->pin_name + 16);
 }
 
 // Указатель на bit_banding область памяти, в которой находится бит состояния входа.
-constexpr uint32_t pin_bit_banding_point_read_pin_bit_get (pin_config *pin_cfg_array){
+constexpr uint32_t pin_bit_banding_point_read_pin_bit_get (pin_config *pin_cfg_array) {
 	uint32_t port_point = (uint32_t)point_base_port_address_get(pin_cfg_array->port);	// Получаем физический адресс порта вывода.
 	port_point += 0x10;																	// Прибавляем смещение к IDR регистру.
 	return BIT_BAND_PER(port_point, pin_cfg_array->pin_name);							// Получаем адрес конкретного бита регистра IDR (состояние на входе).
@@ -76,7 +76,7 @@ constexpr pin::pin (pin_config *pin_cfg_array, uint32_t pin_cout):
  * на основе ее конфигурации производится изменение маски регистра порта.
  */
 // Режим работы.
-constexpr uint32_t global_port_registr_moder_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name){
+constexpr uint32_t global_port_registr_moder_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_moder = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){									// Проходимся по всем структурам.
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};									// Если вывод не относится к нашему порту - выходим.
@@ -87,7 +87,7 @@ constexpr uint32_t global_port_registr_moder_msk_init_get(pin_config *pin_cfg_ar
 }
 
 // Режим выхода.
-constexpr uint32_t global_port_registr_otyper_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name){
+constexpr uint32_t global_port_registr_otyper_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_otyper = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
@@ -98,7 +98,7 @@ constexpr uint32_t global_port_registr_otyper_msk_init_get(pin_config *pin_cfg_a
 }
 
 // Скорость.
-constexpr uint32_t global_port_registr_ospeeder_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name){
+constexpr uint32_t global_port_registr_ospeeder_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_ospeeder = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
@@ -109,7 +109,7 @@ constexpr uint32_t global_port_registr_ospeeder_msk_init_get(pin_config *pin_cfg
 }
 
 // Подтяжка.
-constexpr uint32_t global_port_registr_pupdr_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name){
+constexpr uint32_t global_port_registr_pupdr_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_pupdr = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
@@ -120,7 +120,7 @@ constexpr uint32_t global_port_registr_pupdr_msk_init_get(pin_config *pin_cfg_ar
 }
 
 // Блокировка настроек.
-constexpr uint32_t global_port_registr_lckr_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name){
+constexpr uint32_t global_port_registr_lckr_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_lckr = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
@@ -131,7 +131,7 @@ constexpr uint32_t global_port_registr_lckr_msk_init_get(pin_config *pin_cfg_arr
 }
 
 // Младший регистр выбора альтернативной функции.
-constexpr uint32_t global_port_registr_afrl_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name){
+constexpr uint32_t global_port_registr_afrl_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_afrl = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
@@ -144,10 +144,10 @@ constexpr uint32_t global_port_registr_afrl_msk_init_get(pin_config *pin_cfg_arr
 }
 
 // Старший регистр выбора альтернативной функции.
-constexpr uint32_t global_port_registr_afrh_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name){
+constexpr uint32_t global_port_registr_afrh_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_afrh = 0;
-	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
-		if (pin_cfg_array[loop_pin].port != port_name){continue;};
+	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++) {
+		if (pin_cfg_array[loop_pin].port != port_name) { continue; };
 		if (pin_cfg_array[loop_pin].pin_name > port_pin_7) {
 			registr_afrh &= ~(0b1111 << (pin_cfg_array[loop_pin].pin_name - 8) * 4);
 			registr_afrh |= pin_cfg_array[loop_pin].look << (pin_cfg_array[loop_pin].pin_name - 8) * 4;
@@ -157,7 +157,7 @@ constexpr uint32_t global_port_registr_afrh_msk_init_get(pin_config *pin_cfg_arr
 }
 
 // Состояние на выводах после инициализации (для выводов, настроенных на выход).
-constexpr uint32_t global_port_registr_odr_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name){
+constexpr uint32_t global_port_registr_odr_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
 	uint32_t registr_odr = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
@@ -218,7 +218,7 @@ constexpr global_port::global_port(pin_config *pin_cfg_array, uint32_t pin_count
 #endif
 }) {};
 
-void global_port::write_image_port_in_registrs(uint32_t number){
+void global_port::write_image_port_in_registrs(uint32_t number) {
 	init_array[number].p_port->moder		= 0;	// Переключаем сначала порт на вход, чтобы ничего не натворить.
 	init_array[number].p_port->otyper		= init_array[number].otyper;
 	init_array[number].p_port->afrl			= init_array[number].afrl;
@@ -231,7 +231,7 @@ void global_port::write_image_port_in_registrs(uint32_t number){
 /*
  * Переинициализируем все порты ввода-вывода.
  */
-answer_global_port global_port::reinit_all() {
+answer_global_port global_port::reinit_all_ports() {
 	answer_global_port answer = global_port_reinit_success;		// Флаг того, что во время переинициализации была обнаружен порт со включенной блокировкой (или же инициализация прошла удачно).
 	for (uint32_t loop_port; loop_port < STM32_F2_PORT_COUNT; loop_port++) {
 		if (get_state_locked_key_port((port_name)loop_port) == port_locked_kay_set) {
@@ -247,7 +247,7 @@ answer_global_port global_port::reinit_all() {
 	return answer;
 }
 
-answer_global_port	global_port::reinit_port(port_name port){
+answer_global_port	global_port::reinit_port(port_name port) {
 // В случае, если пользователь посчитал, что при обнаружении заблокированного порта не следует пытаться
 // переинициализировать незаблокированные выводы, проверяем наличие блокировки. И в случае, если она есть -
 // - выходим.
@@ -261,10 +261,27 @@ answer_global_port	global_port::reinit_port(port_name port){
 }
 
 // Возвращаем состояние ключа.
-port_locked_key		global_port::get_state_locked_key_port(port_name port){
+port_locked_key		global_port::get_state_locked_key_port(port_name port) {
 	if (*init_array[port].look_key) {
 		return port_locked_kay_set;
 	} else {
 		return port_locked_kay_reset;
+	}
+}
+
+// Производим попытку заблокировать порт.
+answer_port_set_lock	global_port::locked_key_port_set(port_name port) {
+	if (get_state_locked_key_port(port) == port_locked_kay_set) {		// Если порт уже заблокирован.
+		return answer_port_look_already;
+	}
+	// Специальная последовательность для блокировки порта.
+	init_array[port].p_port->lckr = init_array[port].lckr | (1<<16);
+	init_array[port].p_port->lckr = init_array[port].lckr;
+	init_array[port].p_port->lckr = init_array[port].lckr | (1<<16);
+	volatile uint32_t buffer = init_array[port].p_port->lckr;			// Порт должен заблокироваться после этого действия.
+	if (get_state_locked_key_port(port) == port_locked_kay_set) {		// Проверяем.
+		return answer_port_lock_ok;
+	} else {
+		return answer_port_lock_error;
 	}
 }
