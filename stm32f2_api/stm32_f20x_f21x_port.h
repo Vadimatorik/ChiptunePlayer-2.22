@@ -155,7 +155,8 @@ public:
 																				// основываясь на переданном во время формирования объекта pin_config массива.
 	answer_global_port		reinit_port					(port_name port);		// Переинициализирует конкретный порт.
 	port_locked_key			get_state_locked_key_port	(port_name port);		// Узнаем, заблокирован порт или нет.
-	answer_port_set_lock	locked_key_port_set			(port_name port);		// Блокируем порт в соответствии с конфигурацией.
+	answer_port_set_lock	set_locked_key_port			(port_name port);		// Блокируем порт в соответствии с конфигурацией.
+	answer_port_set_lock	set_locked_keys_all_port	();						// Блокируем все порты d соответствии с конфигурацией.
 //	answer_global_port		reset_all					();						// Сбрасываем состояние всех портов на изначальное (описанное в RM).
 private:
 	port_registers_flash_copy_struct		init_array[STM32_F2_PORT_COUNT];// Дубликат регистров для переинициализации всех портов контроллера.

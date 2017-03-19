@@ -285,7 +285,7 @@ port_locked_key		global_port::get_state_locked_key_port(port_name port) {
 }
 
 // Производим попытку заблокировать порт.
-answer_port_set_lock	global_port::locked_key_port_set(port_name port) {
+answer_port_set_lock	global_port::set_locked_key_port(port_name port) {
 	if (get_state_locked_key_port(port) == port_locked_kay_set) {		// Если порт уже заблокирован.
 		return answer_port_look_already;
 	}
@@ -300,3 +300,16 @@ answer_port_set_lock	global_port::locked_key_port_set(port_name port) {
 		return answer_port_lock_error;
 	}
 }
+
+// Пытаемся заблокировать все порты.
+answer_port_set_lock	global_port::set_locked_keys_all_port() {
+	answer_port_set_lock answer = answer_port_lock_ok;			// Возвратим OK или error, если хоть в одном из портов будет ошибка.
+	for (uint32_t loop_port; loop_port < STM32_F2_PORT_COUNT; loop_port++) {
+		if (set_locked_key_port((port_name)loop_port) == answer_port_lock_error) {
+			answer == answer_port_lock_error;
+		};
+	}
+	return answer;
+}
+
+
