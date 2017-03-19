@@ -1,7 +1,7 @@
-#ifndef STM32F2_API_STM32_F20X_F21X_GPIO_H_
-#define STM32F2_API_STM32_F20X_F21X_GPIO_H_
+#ifndef STM32F2_API_STM32_F20X_F21X_PORT_H_
+#define STM32F2_API_STM32_F20X_F21X_PORT_H_
 
-#include <stdint.h>
+#include "stm32_f20x_f21x_conf.h"
 
 /*
  * Перечень регистров физического порта ввода-вывода.
@@ -24,17 +24,17 @@ struct port_registers_struct{
  * Заполняется внутри объекта global_port при передачи в него массива pin_config элементов.
  */
 struct port_registers_flash_copy_struct{
-	uint32_t	moder;		// Регистр выбора режима работы выводов.
-	uint32_t	otyper;		// Регистр выбора режима выхода (в случае, если вывод настроен как выход).
-	uint32_t	ospeeder;	// Регистр выбора скорости выводов.
-	uint32_t	pupdr;		// Регистр включения подтяжки выводов.
-	uint32_t	lckr;		// Регистр блокировки настроек.
-	uint32_t	afrl;		// Младший регистр настройки альтернативных функций выводов.
-	uint32_t	afrh;		// Старший регистр настройки вльтернативных функций выводов.
+	port_registers_struct *				p_port;				// Указатель на структуру порта port_registers_struct в области памяти переферии (базовое смещение порта в карте памяти контроллера).
+	uint32_t				moder;				// Регистр выбора режима работы выводов.
+	uint32_t				otyper;				// Регистр выбора режима выхода (в случае, если вывод настроен как выход).
+	uint32_t				ospeeder;			// Регистр выбора скорости выводов.
+	uint32_t				pupdr;				// Регистр включения подтяжки выводов.
+	uint32_t				lckr;				// Регистр блокировки настроек.
+	uint32_t				afrl;				// Младший регистр настройки альтернативных функций выводов.
+	uint32_t				afrh;				// Старший регистр настройки вльтернативных функций выводов.
 };
 
-/*
-port_a = 0x40020000,
+/*port_a = 0x40020000,
 port_b = 0x40020400,
 port_c = 0x40020800,
 port_d = 0x40020C00,
@@ -45,34 +45,23 @@ port_h = 0x40021C00,
 port_i = 0x40022000*/
 
 /*
- * Перечень имеющихся физических портов ввода-вывода контроллера.
+ * Перечень имеющихся физических портов ввода-вывода контроллера (зависит от выбранного в stm32_f20x_f21x_conf.h контроллера).
  */
+#if defined(STM32F205RB)|defined(STM32F205RC)|defined(STM32F205RE)\
+	|defined(STM32F205RF)|defined(STM32F205RG)
 enum port_name {
-	port_a = 0,	port_b = 1,	port_c = 2,	port_d = 3,
-	port_e = 4,	port_f = 5,	port_g = 6,	port_h = 7,
-	port_i = 8
+	port_a = 0,	port_b = 1,	port_c = 2,	port_d = 3, port_h = 4
 };
+#endif
 
 /*
  * Перечень выводов каждого порта.
  */
 enum port_pin_name {
-	port_pin_0	= 0,
-	port_pin_1	= 1,
-	port_pin_2	= 2,
-	port_pin_3	= 3,
-	port_pin_4	= 4,
-	port_pin_5	= 5,
-	port_pin_6	= 6,
-	port_pin_7	= 7,
-	port_pin_8	= 8,
-	port_pin_9	= 9,
-	port_pin_10	= 10,
-	port_pin_11	= 11,
-	port_pin_12	= 12,
-	port_pin_13	= 13,
-	port_pin_14	= 14,
-	port_pin_15	= 15
+	port_pin_0	= 0,	port_pin_1	= 1,	port_pin_2	= 2,	port_pin_3	= 3,
+	port_pin_4	= 4,	port_pin_5	= 5,	port_pin_6	= 6,	port_pin_7	= 7,
+	port_pin_8	= 8,	port_pin_9	= 9,	port_pin_10	= 10,	port_pin_11	= 11,
+	port_pin_12	= 12,	port_pin_13	= 13,	port_pin_14	= 14,	port_pin_15	= 15
 };
 
 /*
@@ -135,8 +124,8 @@ public:
 	int			read_pin	(pin_config &pin);								// Считывает состояние вывода (для случая, когда вывод настроен как вход).
 
 private:
-	port_registers_flash_copy_struct		init_array;					// Дубликат регистров для переинициализации всех портов контроллера.
-	//uint32_t								rcc_msk;
+	port_registers_flash_copy_struct		init_array[STM32_F2_PORT_COUNT];// Дубликат регистров для переинициализации всех портов контроллера.
+		// STM32_F2_PORT_COUNT - этот define автоматически определяется при выборе конкретного контроллера в stm32_f20x_f21x_conf.h.
 };
 
 #endif

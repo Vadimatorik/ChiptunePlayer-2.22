@@ -1,13 +1,13 @@
 #include <stdint.h>
 
-#include "stm32f2_api/stm32_f20x_f21x_gpio.h"
+#include "stm32f2_api/stm32_f20x_f21x_port.h"
 
 volatile uint8_t a_loop[] = {1, 2, 2, 2, 2, 3, 4};
 
 
 pin_config a[2] = {
 		{port_a, port_pin_0,	pin_output_mode,	pin_output_push_pull_config,	pin_low_speed,	pin_no_pull,	pin_af_not_use},
-		{port_a, port_pin_12,	pin_output_mode,	pin_output_push_pull_config,	pin_low_speed,	pin_no_pull,	pin_af_not_use}
+		{port_b, port_pin_12,	pin_output_mode,	pin_output_push_pull_config,	pin_low_speed,	pin_no_pull,	pin_af_not_use}
 };
 
 global_port g_port(a, 2);
