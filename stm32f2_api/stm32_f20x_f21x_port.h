@@ -144,6 +144,7 @@ public:
 private:
 	port_registers_flash_copy_struct		init_array[STM32_F2_PORT_COUNT];// Дубликат регистров для переинициализации всех портов контроллера.
 		// STM32_F2_PORT_COUNT - этот define автоматически определяется при выборе конкретного контроллера в stm32_f20x_f21x_conf.h.
+	void 		write_image_port_in_registrs	(uint32_t number);			// Служебный метод: записывает образ начальной инициализации в регистры порта.
 };
 
 #endif

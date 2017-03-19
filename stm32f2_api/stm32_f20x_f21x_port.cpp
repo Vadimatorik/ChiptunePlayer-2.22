@@ -218,6 +218,16 @@ constexpr global_port::global_port(pin_config *pin_cfg_array, uint32_t pin_count
 #endif
 }) {};
 
+void global_port::write_image_port_in_registrs(uint32_t number){
+	init_array[number].p_port->moder		= 0;	// Переключаем сначала порт на вход, чтобы ничего не натворить.
+	init_array[number].p_port->otyper		= init_array[number].otyper;
+	init_array[number].p_port->afrl			= init_array[number].afrl;
+	init_array[number].p_port->afrh			= init_array[number].afrh;
+	init_array[number].p_port->odr			= init_array[number].odr;
+	init_array[number].p_port->pupdr		= init_array[number].pupdr;
+	init_array[number].p_port->ospeeder		= init_array[number].ospeeder;
+	init_array[number].p_port->moder		= init_array[number].moder;
+}
 /*
  * Переинициализируем все порты ввода-вывода.
  */
@@ -232,14 +242,20 @@ answer_global_port global_port::reinit_all() {
 			continue;
 #endif
 		};
-		init_array[loop_port].p_port->moder = 0;									// Переключаем сначала порт на вход, чтобы ничего не натворить.
-		init_array[loop_port].p_port->otyper = init_array[loop_port].otyper;
-		init_array[loop_port].p_port->afrl = init_array[loop_port].afrl;
-		init_array[loop_port].p_port->afrh = init_array[loop_port].afrh;
-		init_array[loop_port].p_port->odr = init_array[loop_port].odr;
-		init_array[loop_port].p_port->pupdr = init_array[loop_port].pupdr;
-		init_array[loop_port].p_port->ospeeder = init_array[loop_port].ospeeder;
-		init_array[loop_port].p_port->moder = init_array[loop_port].moder;
+		write_image_port_in_registrs(loop_port);		// Записываем образ в регистры (с учётом предосторожностей переключения).
 	}
 	return answer;
+}
+
+answer_global_port	global_port::reinit_port(port_name port){
+// В случае, если пользователь посчитал, что при обнаружении заблокированного порта не следует пытаться
+// переинициализировать незаблокированные выводы, проверяем наличие блокировки. И в случае, если она есть -
+// - выходим.
+#if defined(NO_REINIT_PORT_AFTER_LOOKING)
+	if (*init_array[port].look_key == 1) {
+		return global_port_reinit_look;
+	]:
+#endif
+	write_image_port_in_registrs((uint32_t)port);		// Записываем образ в регистры (с учётом предосторожностей переключения).
+	return global_port_reinit_success;
 }
