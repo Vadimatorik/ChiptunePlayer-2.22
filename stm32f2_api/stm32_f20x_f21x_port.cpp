@@ -39,7 +39,7 @@ constexpr port_registers_struct* point_base_port_address_get(port_name port_name
 // Указатель на bit_banding область памяти, в которой находится бит блокировки порта.
 constexpr uint32_t* bit_banding_point_look_port_key_get (port_name port_name) {
 	uint32_t port_point = (uint32_t)point_base_port_address_get(port_name);	// Получаем физический адресс порта вывода.
-	port_point += 0x1C;																	// Прибавляем смещение к IDR регистру.
+	port_point += 0x1C;														// Прибавляем смещение к IDR регистру.
 	return (uint32_t*)BIT_BAND_PER(port_point, 16);							// Получаем адрес конкретного бита регистра IDR (состояние на входе).
 }
 
@@ -57,10 +57,22 @@ constexpr uint32_t pin_reset_msk_get (pin_config *pin_cfg_array) {
 }
 
 // Указатель на bit_banding область памяти, в которой находится бит состояния входа.
-constexpr uint32_t pin_bit_banding_point_read_pin_bit_get (pin_config *pin_cfg_array) {
+constexpr uint32_t* pin_read_banding_point_bit_get (pin_config *pin_cfg_array) {
 	uint32_t port_point = (uint32_t)point_base_port_address_get(pin_cfg_array->port);	// Получаем физический адресс порта вывода.
 	port_point += 0x10;																	// Прибавляем смещение к IDR регистру.
-	return BIT_BAND_PER(port_point, pin_cfg_array->pin_name);							// Получаем адрес конкретного бита регистра IDR (состояние на входе).
+	return (uint32_t *)BIT_BAND_PER(port_point, pin_cfg_array->pin_name);				// Получаем адрес конкретного бита регистра IDR (состояние на входе).
+}
+
+// Возвращаем указатель на регистр ODR, к которому относится вывод.
+constexpr uint32_t* pin_odr_registr_point_get(pin_config *pin_cfg_array) {
+	uint32_t point = (uint32_t)point_base_port_address_get(pin_cfg_array->port);	// Получаем указатель на порт, к которому относится бит.
+	return (uint32_t *)(point += 0x14);												// 0x14 - смещение от начала порта.
+}
+
+constexpr uint32_t* pin_odr_read_banding_point_bit_get (pin_config *pin_cfg_array) {
+	uint32_t port_point = (uint32_t)point_base_port_address_get(pin_cfg_array->port);	// Получаем физический адресс порта вывода.
+	port_point += 0x14;																	// Прибавляем смещение к ODR регистру.
+	return (uint32_t *)BIT_BAND_PER(port_point, pin_cfg_array->pin_name);				// Получаем адрес конкретного бита регистра ODR (состояние на входе).
 }
 
 /*
@@ -68,22 +80,55 @@ constexpr uint32_t pin_bit_banding_point_read_pin_bit_get (pin_config *pin_cfg_a
  */
 constexpr pin::pin (pin_config *pin_cfg_array, uint32_t pin_cout):
 	cfg(pin_cfg_array), count(pin_cout), set_msk(pin_set_msk_get(pin_cfg_array)),
-	reset_msk(pin_reset_msk_get(pin_cfg_array)), bit_banding_read(pin_bit_banding_point_read_pin_bit_get(pin_cfg_array)) {};
+	odr(pin_odr_registr_point_get(pin_cfg_array)), bit_banding_odr_read(pin_odr_read_banding_point_bit_get(pin_cfg_array)),
+	reset_msk(pin_reset_msk_get(pin_cfg_array)), bit_banding_idr_read(pin_read_banding_point_bit_get(pin_cfg_array)) {};
+
+// Устанавливаем бит.
+void pin::set() {
+	*odr = set_msk;
+}
+
+// Сбрасываем бит.
+void pin::reset() {
+	*odr = reset_msk;
+}
+
+// Инавертируем бит.
+void pin::invert() {
+	if (*bit_banding_odr_read) {			// Если был 1, то выставляем 0.
+		*odr = reset_msk;
+	} else {
+		*odr = set_msk;
+	}
+}
+
+// Считываем текущее состояние на выводе.
+int pin::read() {
+	return *bit_banding_idr_read;
+}
+
+// Переинициализируем вывод выбранной конфигурацией.
+int pin::reinit(uint32_t number_config) {
+	return 0;
+}
 
 /*
  * Необходимые для конструктора global_port constexpr функции (готовят маски из массива структур).
  * Методы проверяет все pin_config структуры и в случае, если структура относится к port_name порту,
  * на основе ее конфигурации производится изменение маски регистра порта.
  */
+
+constexpr uint32_t global_port_registr_moder_reset_msk_init_get(port_name port_name) {
+	switch(port_name){
+		case port_a:	return 0xA8000000;
+		case port_b:	return 0x00000280;
+		default: 		return 0;
+	};
+}
+
 // Режим работы.
 constexpr uint32_t global_port_registr_moder_msk_init_get(pin_config *pin_cfg_array, uint32_t pin_count, port_name port_name) {
-	uint32_t registr_moder = 0;								// Начальное значение зависит от порта.
-
-	switch(port_name){
-	case port_a:	registr_moder = 0xA8000000; break;
-	case port_b:	registr_moder = 0x00000280; break;
-	default: 		registr_moder = 0; 			break;
-	};
+	uint32_t registr_moder = global_port_registr_moder_reset_msk_init_get(port_name);	// Начальное значение зависит от порта.
 
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){									// Проходимся по всем структурам.
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};									// Если вывод не относится к нашему порту - выходим.
@@ -186,16 +231,17 @@ constexpr uint32_t global_port_registr_odr_msk_init_get(pin_config *pin_cfg_arra
 // Позволяет получить структуру масок начальной инициализации порта из массива структур настроек выводов.
 // Пример использования: GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_a);	// Передаем массив структур pin_config, их колличество, имя порта, для которого требуется получить структуру масок настроки порта.
 #define GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port) { \
-		.p_port		= point_base_port_address_get				(port), \
-		.moder		= global_port_registr_moder_msk_init_get	(pin_cfg_array, pin_count, port), \
-		.otyper		= global_port_registr_otyper_msk_init_get	(pin_cfg_array, pin_count, port), \
-		.ospeeder 	= global_port_registr_ospeeder_msk_init_get	(pin_cfg_array, pin_count, port), \
-		.pupdr		= global_port_registr_pupdr_msk_init_get	(pin_cfg_array, pin_count, port), \
-		.lckr 		= global_port_registr_lckr_msk_init_get		(pin_cfg_array, pin_count, port), \
-		.afrl		= global_port_registr_afrl_msk_init_get		(pin_cfg_array, pin_count, port), \
-		.afrh		= global_port_registr_afrh_msk_init_get		(pin_cfg_array, pin_count, port), \
-		.odr		= global_port_registr_odr_msk_init_get		(pin_cfg_array, pin_count, port), \
-		.look_key	= bit_banding_point_look_port_key_get		(port) \
+		.p_port			= point_base_port_address_get					(port), \
+		.moder			= global_port_registr_moder_msk_init_get		(pin_cfg_array, pin_count, port), \
+		.moder_reset	= global_port_registr_moder_reset_msk_init_get	(port), \
+		.otyper			= global_port_registr_otyper_msk_init_get		(pin_cfg_array, pin_count, port), \
+		.ospeeder 		= global_port_registr_ospeeder_msk_init_get		(pin_cfg_array, pin_count, port), \
+		.pupdr			= global_port_registr_pupdr_msk_init_get		(pin_cfg_array, pin_count, port), \
+		.lckr 			= global_port_registr_lckr_msk_init_get			(pin_cfg_array, pin_count, port), \
+		.afrl			= global_port_registr_afrl_msk_init_get			(pin_cfg_array, pin_count, port), \
+		.afrh			= global_port_registr_afrh_msk_init_get			(pin_cfg_array, pin_count, port), \
+		.odr			= global_port_registr_odr_msk_init_get			(pin_cfg_array, pin_count, port), \
+		.look_key		= bit_banding_point_look_port_key_get			(port) \
 	}
 
 /*
@@ -234,7 +280,8 @@ constexpr global_port::global_port(pin_config *pin_cfg_array, uint32_t pin_count
 }) {};
 
 void global_port::write_image_port_in_registrs(uint32_t number) {
-	init_array[number].p_port->moder		= 0;	// Переключаем сначала порт на вход, чтобы ничего не натворить.
+	init_array[number].p_port->moder		= init_array[number].moder_reset;	// Переключаем сначала порт на вход, чтобы ничего не натворить.
+																				// С учетом особенностей порта.
 	init_array[number].p_port->otyper		= init_array[number].otyper;
 	init_array[number].p_port->afrl			= init_array[number].afrl;
 	init_array[number].p_port->afrh			= init_array[number].afrh;
