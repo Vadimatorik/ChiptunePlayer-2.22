@@ -248,7 +248,7 @@ void global_port::write_image_port_in_registrs(uint32_t number) {
  */
 answer_global_port global_port::reinit_all_ports() {
 	answer_global_port answer = global_port_reinit_success;		// Флаг того, что во время переинициализации была обнаружен порт со включенной блокировкой (или же инициализация прошла удачно).
-	for (uint32_t loop_port; loop_port < STM32_F2_PORT_COUNT; loop_port++) {
+	for (uint32_t loop_port = 0; loop_port < STM32_F2_PORT_COUNT; loop_port++) {
 		if (get_state_locked_key_port((port_name)loop_port) == port_locked_kay_set) {
 			answer = global_port_reinit_look;
 // В случае, если пользователь посчитал, что при обнаружении заблокированного порта не следует пытаться

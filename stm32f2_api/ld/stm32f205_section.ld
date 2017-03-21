@@ -16,6 +16,7 @@ SECTIONS
   {
     . = ALIGN(4);
     *(.text)     				/* Основная программа во flash. */
+    . = ALIGN(4);
     *(.rodata)					/* Неизменяемые данные во flash. */
     . = ALIGN(4);      
   } >FLASH
