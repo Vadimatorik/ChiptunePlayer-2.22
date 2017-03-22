@@ -69,19 +69,30 @@ constexpr uint32_t* pin_odr_registr_point_get(pin_config *pin_cfg_array) {
 	return (uint32_t *)(point += 0x14);												// 0x14 - смещение от начала порта.
 }
 
-constexpr uint32_t* pin_odr_read_banding_point_bit_get (pin_config *pin_cfg_array) {
+// Получаем указатель на bit banding область памяти, с выставленным пользователем состоянием.
+constexpr uint32_t* pin_odr_read_bit_banding_point_bit_get (pin_config *pin_cfg_array) {
 	uint32_t port_point = (uint32_t)point_base_port_address_get(pin_cfg_array->port);	// Получаем физический адресс порта вывода.
 	port_point += 0x14;																	// Прибавляем смещение к ODR регистру.
 	return (uint32_t *)BIT_BAND_PER(port_point, pin_cfg_array->pin_name);				// Получаем адрес конкретного бита регистра ODR (состояние на входе).
 }
 
+// Получаем указатель на бит блокировки конфигурации конкретного вывода.
+constexpr uint32_t* pin_bit_banding_point_looking_bit_get (pin_config *pin_cfg_array) {
+	uint32_t port_point = (uint32_t)point_base_port_address_get(pin_cfg_array->port);	// Получаем физический адресс порта вывода.
+	port_point += 0x1C;																	// Прибавляем смещение к LCKR регистру.
+	return (uint32_t *)BIT_BAND_PER(port_point, pin_cfg_array->pin_name);				// Получаем адрес конкретного бита регистра LCKR.
+}
 /*
  * Конструктор готовит маски регистров для быстрой работы с выводом в режиме порта ввода-вывода.
  */
 constexpr pin::pin (pin_config *pin_cfg_array, uint32_t pin_cout):
 	cfg(pin_cfg_array), count(pin_cout), set_msk(pin_set_msk_get(pin_cfg_array)),
-	odr(pin_odr_registr_point_get(pin_cfg_array)), bit_banding_odr_read(pin_odr_read_banding_point_bit_get(pin_cfg_array)),
-	reset_msk(pin_reset_msk_get(pin_cfg_array)), bit_banding_idr_read(pin_read_banding_point_bit_get(pin_cfg_array)) {};
+	port(point_base_port_address_get(pin_cfg_array->port)),	odr(pin_odr_registr_point_get(pin_cfg_array)),
+	bit_banding_odr_read(pin_odr_read_bit_banding_point_bit_get(pin_cfg_array)),
+	reset_msk(pin_reset_msk_get(pin_cfg_array)), bit_banding_idr_read(pin_read_banding_point_bit_get(pin_cfg_array)),
+	bit_banding_key_looking(bit_banding_point_look_port_key_get(pin_cfg_array->port)),
+	bit_banding_looking_bit(pin_bit_banding_point_looking_bit_get(pin_cfg_array))
+{};
 
 // Устанавливаем бит.
 void pin::set() {
@@ -108,8 +119,30 @@ int pin::read() {
 }
 
 // Переинициализируем вывод выбранной конфигурацией.
-int pin::reinit(uint32_t number_config) {
-	return 0;
+answer_pin_reinit pin::reinit (uint32_t number_config) {
+	if (number_config >= count) return answer_pin_reinit_cfg_number_error;		// Защита от попытки инициализации вывода несуществующей конфигурацией.
+	if ((*bit_banding_key_looking)												// Если порт, к кторому относится вывод был заблокирован.
+			&& (*bit_banding_looking_bit))										// И сам вывод так же был заблокирован.
+		return answer_pin_reinit_locked;										// Выходим с ошибкой.
+
+	// Если дошли до сюда, то вывод можно переинициализировать.
+	port->moder		&= ~(0b11 << cfg[number_config].pin_name * 2);				// Переводим вывод в режим "входа" (чтобы не было неготивных последствий от переключений).
+	port->otyper	&= ~(1 << cfg[number_config].pin_name);						// Далее все как в constexpr функциях, инициализирующие маски портов.
+	port->otyper	|= cfg[number_config].output_config << cfg[number_config].pin_name;
+	port->ospeeder	&= ~(0b11 << cfg[number_config].pin_name * 2);
+	port->ospeeder	|= cfg[number_config].speed << cfg[number_config].pin_name * 2;
+	port->pupdr		&= ~(0b11 << cfg[number_config].pin_name * 2);
+	port->pupdr		|= cfg[number_config].pull << cfg[number_config].pin_name * 2;
+	if (cfg[number_config].pin_name < port_pin_8) {
+		port->afrl &= ~(0b1111 << cfg[number_config].pin_name * 4);
+		port->afrl |= cfg[number_config].locked << cfg[number_config].pin_name * 4;
+	} else {
+		port->afrh &= ~(0b1111 << (cfg[number_config].pin_name - 8) * 4);
+		port->afrh |= cfg[number_config].locked << (cfg[number_config].pin_name - 8) * 4;
+	}
+	port->moder |= cfg[number_config].mode << cfg[number_config].pin_name * 2;	// Выставляем тот режим, который указан в конфигурации.
+
+	return answer_pin_reinit_cfg_number_error;
 }
 
 /*
@@ -133,7 +166,7 @@ constexpr uint32_t global_port_registr_moder_msk_init_get(pin_config *pin_cfg_ar
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){									// Проходимся по всем структурам.
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};									// Если вывод не относится к нашему порту - выходим.
 		registr_moder &= ~(0b11 << pin_cfg_array[loop_pin].pin_name * 2);							// Сбрасываем предыдущую настройку этого вывода.
-		registr_moder |= pin_cfg_array[loop_pin].mode << pin_cfg_array[loop_pin].pin_name * 2;	// Иначе производим добавление по маске.
+		registr_moder |= pin_cfg_array[loop_pin].mode << pin_cfg_array[loop_pin].pin_name * 2;		// Иначе производим добавление по маске.
 	}
 	return registr_moder;
 }
@@ -185,7 +218,7 @@ constexpr uint32_t global_port_registr_lckr_msk_init_get(pin_config *pin_cfg_arr
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
 		registr_lckr &= ~(1 << pin_cfg_array[loop_pin].pin_name);
-		registr_lckr |= pin_cfg_array[loop_pin].look << pin_cfg_array[loop_pin].pin_name;
+		registr_lckr |= pin_cfg_array[loop_pin].locked << pin_cfg_array[loop_pin].pin_name;
 	}
 	return registr_lckr;
 }
@@ -197,7 +230,7 @@ constexpr uint32_t global_port_registr_afrl_msk_init_get(pin_config *pin_cfg_arr
 		if (pin_cfg_array[loop_pin].port != port_name){continue;};
 		if (pin_cfg_array[loop_pin].pin_name < port_pin_8) {
 			registr_afrl &= ~(0b1111 << pin_cfg_array[loop_pin].pin_name * 4);
-			registr_afrl |= pin_cfg_array[loop_pin].look << pin_cfg_array[loop_pin].pin_name * 4;
+			registr_afrl |= pin_cfg_array[loop_pin].locked << pin_cfg_array[loop_pin].pin_name * 4;
 		}
 	}
 	return registr_afrl;
@@ -210,7 +243,7 @@ constexpr uint32_t global_port_registr_afrh_msk_init_get(pin_config *pin_cfg_arr
 		if (pin_cfg_array[loop_pin].port != port_name) { continue; };
 		if (pin_cfg_array[loop_pin].pin_name > port_pin_7) {
 			registr_afrh &= ~(0b1111 << (pin_cfg_array[loop_pin].pin_name - 8) * 4);
-			registr_afrh |= pin_cfg_array[loop_pin].look << (pin_cfg_array[loop_pin].pin_name - 8) * 4;
+			registr_afrh |= pin_cfg_array[loop_pin].locked << (pin_cfg_array[loop_pin].pin_name - 8) * 4;
 		}
 	}
 	return registr_afrh;
