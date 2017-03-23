@@ -5,7 +5,7 @@
 volatile uint8_t a_loop[] = {1, 2, 2, 2, 2, 3, 4};
 
 
-pin_config a[2] = {
+const pin_config a[2] = {
 		{.port = port_a, .pin_name = port_pin_0,	.mode = pin_output_mode,
 				.output_config = pin_output_push_pull_config,	.speed = pin_low_speed,
 				.pull = pin_no_pull,	.af = pin_af_not_use,
@@ -33,3 +33,4 @@ int main (void){
 //5408	   1463	    184	   7055	   1b8f
 //5808	   1463	    204	   7475	   1d33
 //6488	   1463	    264	   8215	   2017
+//6500	   1463	    264	   8227	   2023
