@@ -1,17 +1,36 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+
+/*
+ * В данном файле находится таблица векторов-прерываний (указатель на вершину стека + массив
+ * указателей на функции), а так же функции-заглушеки (while(1){}; циклы) для неиспользуемых
+ * прерываний (на каждый вектор прерывания своя заглушка, для более удобной фиксации причины
+ * остановки программы).
+ * */
+
+/*
+ * Функция main должна быть объявлена в коде пользователя. Но если он этого не сделает,
+ * то будет использована эта функция-заглушка.
+ */
 int __attribute__((weak)) main(void) { while(1); };
 
-extern unsigned int _sidata;		// Начальный адрес содержимого .data области во flash (то, что будет скопировано в RAM).
-extern unsigned int _sdata;			// Начальный адрес .data области в RAM.
-extern unsigned int _edata;			// Конечный адрес .data области в RAM.
+/*
+ * Данные значения (указатели на области памяти контроллера) берутся из section.ld файла.
+ */
+extern unsigned int _sidata;		// Начальный адрес содержимого .data области во flash
+									// (то, что будет скопировано в RAM).
+extern unsigned int _sdata;			// Начальный адрес .data области в RAM
+									// (то, что будет скопировано с области по указателю _sidata (из flash в ram).
+extern unsigned int _edata;			// Конечный адрес .data области в RAM (проверяется операцией <, т.к. байт,
+									// адрес которого записан в эту переменную, копировать не нужно. Только то,
+									// что до него).
 
-extern unsigned int __bss_start__;	// Начальный и конечный адрес BSS области (будет заполнено 0-ми).
-extern unsigned int __bss_end__;
-
-extern unsigned int _stack;			// Вершина стека.
+extern unsigned int __bss_start__;	// Начальный и адрес BSS области
+									// (будет заполнено 0-ми. Стирать нужно уже с этого адреса).
+extern unsigned int __bss_end__;	// Конечный адрес BSS области.
+									// (По этому адресу записывать уже не нужно (проверяется по <)).
+extern unsigned int _stack;			// Вершина стека (конец RAM).
 
 // У каждого handler-а есть свое тело.
 // В случае, если пользователь не объявил его у себя в коде - используется тело-заглушка
@@ -108,8 +127,14 @@ void __attribute__((weak)) dcmi_handler(void) { while(1); };
 void __attribute__((weak)) cryp_handler(void) { while(1); };
 void __attribute__((weak)) hash_and_rng_handler(void) { while(1); };
 
+// Выполнение программы начинается с данного метода.
 void reset_handler(void);
 
+/*
+ * Вершина стека (указатель на последний байт RAM) + таблица указателей на функции-обработчики.
+ * В случае, если пользователь не использует собственные функции для какого-либо из векторов прерываний,
+ * используются заглушки по-умолчанию (описаны выше).
+ */
 __attribute__ ((section(".irq_table")))
 void (*const interrupt_vectors[])(void) =
 {
@@ -215,7 +240,7 @@ void (*const interrupt_vectors[])(void) =
 };
 
 /*
- *
+ * Функции, необходимые для начальной инициализации контроллера.
  */
 /* Заполняем 0-ми bss в RAM. */
 inline void __attribute__((always_inline))
@@ -226,7 +251,7 @@ __initialize_bss(unsigned int* section_begin, unsigned int* section_end){
 	}
 }
 
-/* Копируем область data. */
+/* Копируем область ".data" из flash в ram. */
 inline void __attribute__((always_inline))
 __initialize_data(unsigned int* from, unsigned int* section_begin, unsigned int* section_end){
 	unsigned int *p = section_begin;
@@ -235,6 +260,9 @@ __initialize_data(unsigned int* from, unsigned int* section_begin, unsigned int*
 	}
 }
 
+/*
+ * Функции, необходимые для поддержания C++.
+ */
 void __attribute__((weak))
 _exit(int code __attribute__((unused))){
 	while (1);
@@ -250,6 +278,11 @@ _getpid (int n __attribute__ ((unused))){
 	return 1;
 }
 
+/*
+ * С этого метода начинается выполнение программы.
+ * В нем производится инициализация RAM,
+ * после чего управление передается программе пользователя.
+ */
 void reset_handler(void) {
 	__initialize_bss(&__bss_start__, &__bss_end__);			// Заполняем bss область нулями.
 	__initialize_data(&_sidata, &_sdata, &_edata);			// Копируем начальные значения изменяемых данных в ram.
