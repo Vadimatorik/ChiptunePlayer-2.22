@@ -14,19 +14,19 @@ extern "C" {
 /*
  * Данные значения (указатели на области памяти контроллера) берутся из section.ld файла.
  */
-extern uint32_t *_sidata;			// Начальный адрес содержимого .data области во flash
-									// (то, что будет скопировано в RAM).
-extern uint32_t *_sdata;			// Начальный адрес .data области в RAM
-									// (то, что будет скопировано с области по указателю _sidata (из flash в ram).
-extern uint32_t *_edata;			// Конечный адрес .data области в RAM (проверяется операцией <, т.к. байт,
-									// адрес которого записан в эту переменную, копировать не нужно. Только то,
-									// что до него).
+extern uint32_t _sidata;		// Начальный адрес содержимого .data области во flash
+								// (то, что будет скопировано в RAM).
+extern uint32_t _sdata;			// Начальный адрес .data области в RAM
+								// (то, что будет скопировано с области по указателю _sidata (из flash в ram).
+extern uint32_t _edata;			// Конечный адрес .data области в RAM (проверяется операцией <, т.к. байт,
+								// адрес которого записан в эту переменную, копировать не нужно. Только то,
+								// что до него).
 
-extern uint32_t *__bss_start__;		// Начальный и адрес BSS области
-									// (будет заполнено 0-ми. Стирать нужно уже с этого адреса).
-extern uint32_t *__bss_end__;		// Конечный адрес BSS области.
-									// (По этому адресу записывать уже не нужно (проверяется по <)).
-extern uint32_t *_stack;			// Вершина стека (конец RAM).
+extern uint32_t __bss_start__;	// Начальный и адрес BSS области
+								// (будет заполнено 0-ми. Стирать нужно уже с этого адреса).
+extern uint32_t __bss_end__;	// Конечный адрес BSS области.
+								// (По этому адресу записывать уже не нужно (проверяется по <)).
+extern uint32_t _stack;			// Вершина стека (конец RAM).
 
 // У каждого handler-а есть свое тело.
 // В случае, если пользователь не объявил его у себя в коде - используется тело-заглушка
@@ -238,22 +238,23 @@ void (*const interrupt_vectors[])(void) =
 /*
  * Функции, необходимые для начальной инициализации контроллера.
  */
+
 /* Заполняем 0-ми bss в RAM. */
 inline void __attribute__((always_inline))
-__initialize_bss(uint32_t *section_begin, uint32_t *section_end){
+__initialize_data(uint32_t* from, uint32_t* section_begin, uint32_t* section_end) {
 	uint32_t *p = section_begin;
-	while (p < section_end){
-		*section_begin++ = 0;
-	}
+  while ((uint32_t)p < (uint32_t)section_end){
+    *p++ = *from++;
+  }
 }
 
 /* Копируем область ".data" из flash в ram. */
+
 inline void __attribute__((always_inline))
-__initialize_data(uint32_t *from, uint32_t *section_begin, uint32_t *section_end){
-	uint32_t *p = section_begin;
-	while (p < section_end){
-		*p++ = *from++;
-	}
+__initialize_bss(uint32_t* section_begin, uint32_t* section_end) {
+	uint32_t*p = section_begin;
+  while (p < section_end)
+    *p++ = 0;
 }
 
 /*
@@ -283,8 +284,8 @@ _getpid (int n __attribute__ ((unused))){
 extern int main();									// Функция main должна быть объявлена в коде пользователя.
 
 void reset_handler(void) {
-	__initialize_bss(__bss_start__, __bss_end__);	// Заполняем bss область нулями.
-	__initialize_data(_sidata, _sdata, _edata);		// Копируем начальные значения изменяемых данных в ram.
+	__initialize_bss(&__bss_start__, &__bss_end__);	// Заполняем bss область нулями.
+	__initialize_data(&_sidata, &_sdata, &_edata);		// Копируем начальные значения изменяемых данных в ram.
     main();
 }
 

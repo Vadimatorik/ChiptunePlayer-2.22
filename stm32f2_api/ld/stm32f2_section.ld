@@ -3,7 +3,7 @@
  * микроконтроллера.
  */
 /* Вершина стека (этот адрес будет размещен в таблице векторов прерываний). */
-_stack = ORIGIN(RAM1) + LENGTH(RAM1);
+_stack = ORIGIN(RAM1) + LENGTH(RAM1) -1;
 
 SECTIONS
 {
@@ -20,9 +20,17 @@ SECTIONS
   .text :
   {
     . = ALIGN(4);
-    *(.text)                    /* Основная программа во flash. */
+    *(.text)                    /* Основная программа во flash + что-то служебное. */
+    *(.text*)          
+    *(.glue_7)        
+    *(.glue_7t)        
+    *(.eh_frame)
+    KEEP (*(.init))
+    KEEP (*(.fini))
+
     . = ALIGN(4);
-    *(.rodata)                  /* Неизменяемые данные во flash. */
+    *(.rodata)         		/* Неизменяемые данные во flash. */
+    *(.rodata*)             
     . = ALIGN(4);      
   } >FLASH
 
@@ -46,8 +54,11 @@ SECTIONS
   .data : AT ( _sidata )        /* Секция располагается в RAM1, но продублирована во flash. */
   {
     . = ALIGN(4);               /* Обязательно выравниваем по 4-м байтам. */
-    _sdata = .;                 /* Получаем значения указателей на начало и конец области .data в RAM1. */
-    *(.data)     
+    _sdata = .;                 /* Получаем значения указателей на начало RAM1. */
+    *(.data_begin .data_begin.*)
+    *(.data .data.*)
+    *(.data_end .data_end.*)
+    *(.ramfunc*)
     . = ALIGN(4);
     _edata = .;    
   } >RAM1                       
@@ -58,7 +69,10 @@ SECTIONS
   {
     . = ALIGN(4);
     __bss_start__ = .;          /* Получаем указатели на .bss область памяти в RAM1. */
-    *(.bss)
+    *(.bss_begin .bss_begin.*)
+    *(.bss .bss.*)
+    *(.bss_end .bss_end.*)
+    *(.noinit .noinit.*) 
     . = ALIGN(4);
     __bss_end__ = .;
   } >RAM1
