@@ -134,7 +134,7 @@ void reset_handler(void);
 __attribute__ ((section(".irq_table")))
 void (*const interrupt_vectors[])(void) =
 {
-	(void (*)(void))(_stack),
+	(void (*)(void))(&_stack),
 	reset_handler,
 	nmi_handler,
 	hard_fault_handler,
@@ -243,9 +243,9 @@ void (*const interrupt_vectors[])(void) =
 inline void __attribute__((always_inline))
 __initialize_data(uint32_t* from, uint32_t* section_begin, uint32_t* section_end) {
 	uint32_t *p = section_begin;
-  while ((uint32_t)p < (uint32_t)section_end){
-    *p++ = *from++;
-  }
+	while ((uint32_t)p < (uint32_t)section_end) {
+		*p++ = *from++;
+		}
 }
 
 /* Копируем область ".data" из flash в ram. */
@@ -253,8 +253,9 @@ __initialize_data(uint32_t* from, uint32_t* section_begin, uint32_t* section_end
 inline void __attribute__((always_inline))
 __initialize_bss(uint32_t* section_begin, uint32_t* section_end) {
 	uint32_t*p = section_begin;
-  while (p < section_end)
-    *p++ = 0;
+	while (p < section_end) {
+		*p++ = 0;
+	}
 }
 
 /*
@@ -281,11 +282,11 @@ _getpid (int n __attribute__ ((unused))){
  * после чего управление передается программе пользователя.
  */
 
-extern int main();									// Функция main должна быть объявлена в коде пользователя.
+extern int main();										// Функция main должна быть объявлена в коде пользователя.
 
 void reset_handler(void) {
-	__initialize_bss(&__bss_start__, &__bss_end__);	// Заполняем bss область нулями.
 	__initialize_data(&_sidata, &_sdata, &_edata);		// Копируем начальные значения изменяемых данных в ram.
+	__initialize_bss(&__bss_start__, &__bss_end__);		// Заполняем bss область нулями.
     main();
 }
 
