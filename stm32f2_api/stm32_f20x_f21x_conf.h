@@ -45,8 +45,8 @@
 // Преобразование адреса SRAM.
 #define BIT_BAND_SRAM(reg, bit) ((BIT_BAND_SRAM_BASE + (reg - BIT_BAND_SRAM_REF)*32 + (bit * 4)))
 
-#define BIT_BAND_PER_REF   0x40000000
-#define BIT_BAND_PER_BASE  0x42000000
+#define BIT_BAND_PER_REF   (uint32_t)0x40000000
+#define BIT_BAND_PER_BASE  (uint32_t)0x42000000
 // Преобразование адреса переферии.
 #define BIT_BAND_PER(address, bit) ((BIT_BAND_PER_BASE + (address - BIT_BAND_PER_REF)*32 + (bit * 4)))
 
