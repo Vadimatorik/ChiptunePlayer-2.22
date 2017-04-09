@@ -50,11 +50,11 @@ class pin {
 public:
 	constexpr pin ( const pin_config *pin_cfg_array, const uint32_t pin_cout );
 
-	void		set			();							// Устанавливает "1" на выходе (для случая, когда вывод настроен как выход).
-	void		reset		();							// Устанавливает "0" на выходе (для случая, когда вывод настроен как выход).
-	void		invert		();							// Логическое "не" состояния на выходе вывода (для случая, когда вывод настроен как выход).
-	int			read		();							// Считывает состояние вывода (для случая, когда вывод настроен как вход).
-	answer_pin_reinit reinit (uint32_t number_config);	// Переинициализирует вывод в ходе выполнения программы в выбранную конфигурацию.
+	void		set			() const;							// Устанавливает "1" на выходе (для случая, когда вывод настроен как выход).
+	void		reset		() const;							// Устанавливает "0" на выходе (для случая, когда вывод настроен как выход).
+	void		invert		() const;							// Логическое "не" состояния на выходе вывода (для случая, когда вывод настроен как выход).
+	int			read		() const;							// Считывает состояние вывода (для случая, когда вывод настроен как вход).
+	answer_pin_reinit reinit (uint32_t number_config) const;	// Переинициализирует вывод в ходе выполнения программы в выбранную конфигурацию.
 
 private:
 	const pin_config		*cfg;						// Указатель на конфигурации, используемые выводом.
@@ -91,17 +91,17 @@ public:
 	// Это нужно на случай, когда требуется переинициализировать некоторые (1 и более) выводов
 	// не трогая другие.
 	// Данное поведение можно сменить в stm32_f20x_f21x_conf.h, NO_REINIT_PORT_AFTER_LOOKING.
-	answer_global_port		reinit_all_ports			();						// Метод инициализирует в реальном времени все порты ввода-вывода контроллера,
-																				// основываясь на переданном во время формирования объекта pin_config массива.
-	answer_global_port		reinit_port					(port_name port);		// Переинициализирует конкретный порт.
-	port_locked_key			get_state_locked_key_port	(port_name port);		// Узнаем, заблокирован порт или нет.
-	answer_port_set_lock	set_locked_key_port			(port_name port);		// Блокируем порт в соответствии с конфигурацией.
-	answer_port_set_lock	set_locked_keys_all_port	();						// Блокируем все порты в соответствии с конфигурацией.
+	answer_global_port		reinit_all_ports			() const;						// Метод инициализирует в реальном времени все порты ввода-вывода контроллера,
+																						// основываясь на переданном во время формирования объекта pin_config массива.
+	answer_global_port		reinit_port					(port_name port) const;			// Переинициализирует конкретный порт.
+	port_locked_key			get_state_locked_key_port	(port_name port) const;			// Узнаем, заблокирован порт или нет.
+	answer_port_set_lock	set_locked_key_port			(port_name port) const;			// Блокируем порт в соответствии с конфигурацией.
+	answer_port_set_lock	set_locked_keys_all_port	() const; 						// Блокируем все порты в соответствии с конфигурацией.
 
 private:
 	port_registers_flash_copy_struct					init_array[STM32_F2_PORT_COUNT];// Дубликат регистров для переинициализации всех портов контроллера.
 		// STM32_F2_PORT_COUNT - этот define автоматически определяется при выборе конкретного контроллера в stm32_f20x_f21x_conf.h.
-	void 		write_image_port_in_registrs			(uint32_t number);		// Служебный метод: записывает образ начальной инициализации в регистры порта.
+	void 		write_image_port_in_registrs			(uint32_t number) const;		// Служебный метод: записывает образ начальной инициализации в регистры порта.
 };
 
 /*
