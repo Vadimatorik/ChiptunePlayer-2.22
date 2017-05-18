@@ -3,55 +3,56 @@
 #include "stm32_f20x_f21x_conf.h"
 
 /*
- * Перечень имеющихся физических портов ввода-вывода контроллера (зависит от выбранного в stm32_f20x_f21x_conf.h контроллера).
+ * Перечень имеющихся физических портов ввода-вывода контроллера
+ * (зависит от выбранного в stm32_f20x_f21x_conf.h контроллера).
  */
 #if defined(STM32F205RB)|defined(STM32F205RC)|defined(STM32F205RE) \
 	|defined(STM32F205RF)|defined(STM32F205RG)
-enum port_name {
-	port_a = 0,	port_b = 1,	port_c = 2,	port_d = 3, port_h = 4
+enum enum_port_name {
+	PORT_A = 0,	PORT_B = 1,	PORT_C = 2,	PORT_D = 3, PORT_H = 4
 };
 #endif
 
 /*
  * Перечень выводов каждого порта.
  */
-enum port_pin_name {
-	port_pin_0	= 0,	port_pin_1	= 1,	port_pin_2	= 2,	port_pin_3	= 3,
-	port_pin_4	= 4,	port_pin_5	= 5,	port_pin_6	= 6,	port_pin_7	= 7,
-	port_pin_8	= 8,	port_pin_9	= 9,	port_pin_10	= 10,	port_pin_11	= 11,
-	port_pin_12	= 12,	port_pin_13	= 13,	port_pin_14	= 14,	port_pin_15	= 15
+enum enum_port_pin_name {
+	PORT_PIN_0	= 0,	PORT_PIN_1	= 1,	PORT_PIN_2	= 2,	PORT_PIN_3	= 3,
+	PORT_PIN_4	= 4,	PORT_PIN_5	= 5,	PORT_PIN_6	= 6,	PORT_PIN_7	= 7,
+	PORT_PIN_8	= 8,	PORT_PIN_9	= 9,	PORT_PIN_10	= 10,	PORT_PIN_11	= 11,
+	PORT_PIN_12	= 12,	PORT_PIN_13	= 13,	PORT_PIN_14	= 14,	PORT_PIN_15	= 15
 };
 
 /*
  * Предназначены для класса описания конфигурации одного вывода.
  */
-enum pin_mode 			{										// Режим вывода:
+enum enum_pin_mode 			{										// Режим вывода:
 							pin_input_mode				= 0,	// Вход.
 							pin_output_mode				= 1, 	// Выход.
 							pin_alternate_function_mode	= 2, 	// Альтернативная функция.
 							pin_analog_mode				= 3		// Аналоговый режим.
 						};
 
-enum pin_output_config	{										// Режим выхода:
+enum enum_pin_output_config	{										// Режим выхода:
 							pin_output_not_use				= 0,// Вывод не используется как вывод.
 							pin_output_push_pull_config		= 0,// "Тянуть-толкать".
 							pin_output_open_drain_config	= 1	// "Открытый сток".
 						};
 
-enum pin_speed			{										// Скорость выхода:
+enum enum_pin_speed			{										// Скорость выхода:
 							pin_low_speed		= 0,			// Низкая.
 							pin_medium_speed	= 1,			// Средняя.
 							pin_fast_speed		= 2,			// Быстрая.
 							pin_high_speed		= 3				// Очень быстрая
 						};
 
-enum pin_pull			{										// Выбор подтяжки:
+enum enum_pin_pull			{										// Выбор подтяжки:
 							pin_no_pull	= 0,					// Без подтяжки.
 							pin_pull_up = 1,					// Подтяжка к питанию.
 							pin_pull_down = 2					// Подтяжка к земле.
 						};
 
-enum pin_alternate_function {	// Выбираем альтернативную функцию, если используется.
+enum enum_pin_alternate_function {	// Выбираем альтернативную функцию, если используется.
 	pin_af_not_use = 0,																// Альтернативная функция не используется.
 	pin_af0		= 0,	pin_af1		= 1,	pin_af2		= 2,	pin_af3		= 3,	// Какая-либо альтернативная функция.
 	pin_af4		= 4,	pin_af5		= 5,	pin_af6		= 6,	pin_af7		= 7,
@@ -95,14 +96,14 @@ struct __attribute__((packed)) port_registers_struct {
 /*
  * Структура настройки вывода.
  */
-struct pin_config {
-	port_name				port;					// Имя порта (пример: port_a).
-	port_pin_name			pin_name;				// Номер вывода (пример: port_pin_1).
-	pin_mode				mode;					// Режим вывода (пример: pin_output_mode).
-	pin_output_config		output_config;			// Режим выхода (пример: pin_output_push_pull_config).
-	pin_speed				speed;					// Скорость вывода (пример: pin_low_speed).
-	pin_pull				pull;					// Подтяжка вывода (пример: pin_no_pull).
-	pin_alternate_function	af;						// Альтернативная функция вывода (пример: pin_af_not_use).
+struct pin_config_t {
+	enum_port_name				port;					// Имя порта (пример: port_a).
+	enum_port_pin_name			pin_name;				// Номер вывода (пример: port_pin_1).
+	enum_pin_mode				mode;					// Режим вывода (пример: pin_output_mode).
+	enum_pin_output_config		output_config;			// Режим выхода (пример: pin_output_push_pull_config).
+	enum_pin_speed				speed;					// Скорость вывода (пример: pin_low_speed).
+	enum_pin_pull				pull;					// Подтяжка вывода (пример: pin_no_pull).
+	enum_pin_alternate_function	af;						// Альтернативная функция вывода (пример: pin_af_not_use).
 	pin_locked				locked;					// Заблокировать ли настройку данного вывода во время инициализации global_port объекта.
 	pin_state_after_init	state_after_init;		// Состояние на выходе после инициализации (в случае, если вывод настроен как выход).
 };

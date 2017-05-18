@@ -42,13 +42,24 @@
 //******************************************************************************************************************
 #define BIT_BAND_SRAM_REF   0x20000000
 #define BIT_BAND_SRAM_BASE  0x22000000
-// Преобразование адреса SRAM.
-#define BIT_BAND_SRAM(reg, bit) ((BIT_BAND_SRAM_BASE + (reg - BIT_BAND_SRAM_REF)*32 + (bit * 4)))
+
+//Получаем адрес бита RAM в Bit Banding области.
+#define MACRO_GET_BB_P_SRAM(reg, bit) ((BIT_BAND_SRAM_BASE + (reg - BIT_BAND_SRAM_REF)*32 + (bit * 4)))
 
 #define BIT_BAND_PER_REF   (uint32_t)0x40000000
 #define BIT_BAND_PER_BASE  (uint32_t)0x42000000
-// Преобразование адреса переферии.
-#define BIT_BAND_PER(address, bit) ((BIT_BAND_PER_BASE + (address - BIT_BAND_PER_REF)*32 + (bit * 4)))
+
+// Получаем адрес бита периферии в Bit Banding области.
+#define MACRO_GET_BB_P_PER(address, bit) ((BIT_BAND_PER_BASE + (address - BIT_BAND_PER_REF)*32 + (bit * 4)))
+
+constexpr bool stop_comiling(uint32_t n) {
+	if (n == 0xFFFFFFFF) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
 
 //******************************************************************************************************************
 //											Для модуля PORT.

@@ -48,7 +48,7 @@
  */
 class pin {
 public:
-	constexpr pin ( const pin_config *pin_cfg_array, const uint32_t pin_cout );
+	constexpr pin ( const pin_config_t *pin_cfg_array, const uint32_t pin_cout );
 
 	void		set			() const;							// Устанавливает "1" на выходе (для случая, когда вывод настроен как выход).
 	void		reset		() const;							// Устанавливает "0" на выходе (для случая, когда вывод настроен как выход).
@@ -57,7 +57,7 @@ public:
 	answer_pin_reinit reinit (uint32_t number_config) const;	// Переинициализирует вывод в ходе выполнения программы в выбранную конфигурацию.
 
 private:
-	const pin_config		*cfg;						// Указатель на конфигурации, используемые выводом.
+	const pin_config_t		*cfg;						// Указатель на конфигурации, используемые выводом.
 	const uint32_t			count;						// Колличество объектов конфигурации.
 	uint32_t				p_odr;						// Указатель на ODR регистр порта, к которому относится вывод.
 	uint32_t				p_port;						// Указатель на структуру регистров порта в памяти переферии мк.
@@ -69,7 +69,7 @@ private:
 	uint32_t				p_bb_looking_bit;			// Указатель на бит блокировки конкретного вывода в порту, к которому относится вывод.
 };
 
-constexpr pin::pin ( const pin_config *pin_cfg_array, const uint32_t pin_cout ):
+constexpr pin::pin ( const pin_config_t *pin_cfg_array, const uint32_t pin_cout ):
 			cfg(pin_cfg_array), count(pin_cout),
 			p_odr(pin_p_odr(pin_cfg_array)),
 			p_port(p_base_port_address_get(pin_cfg_array->port)),
@@ -84,7 +84,7 @@ constexpr pin::pin ( const pin_config *pin_cfg_array, const uint32_t pin_cout ):
  */
 class global_port {
 public:
-	constexpr	global_port	( const pin_config *pin_cfg_array, const uint32_t pin_count );
+	constexpr	global_port	( const pin_config_t *pin_cfg_array, const uint32_t pin_count );
 
 	// Важно: в случае, если некоторые (или все) выводы порта/портов были заблокированы,
 	// попытка переинициализации все равно производится.
@@ -93,9 +93,9 @@ public:
 	// Данное поведение можно сменить в stm32_f20x_f21x_conf.h, NO_REINIT_PORT_AFTER_LOOKING.
 	answer_global_port		reinit_all_ports			() const;						// Метод инициализирует в реальном времени все порты ввода-вывода контроллера,
 																						// основываясь на переданном во время формирования объекта pin_config массива.
-	answer_global_port		reinit_port					(port_name port) const;			// Переинициализирует конкретный порт.
-	port_locked_key			get_state_locked_key_port	(port_name port) const;			// Узнаем, заблокирован порт или нет.
-	answer_port_set_lock	set_locked_key_port			(port_name port) const;			// Блокируем порт в соответствии с конфигурацией.
+	answer_global_port		reinit_port					(enum_port_name port) const;			// Переинициализирует конкретный порт.
+	port_locked_key			get_state_locked_key_port	(enum_port_name port) const;			// Узнаем, заблокирован порт или нет.
+	answer_port_set_lock	set_locked_key_port			(enum_port_name port) const;			// Блокируем порт в соответствии с конфигурацией.
 	answer_port_set_lock	set_locked_keys_all_port	() const; 						// Блокируем все порты в соответствии с конфигурацией.
 
 private:
@@ -108,19 +108,19 @@ private:
  * Конструктор готовит маски для начальной инициализации выводов.
  * Колличество портов, а так же их именя задаются автоматически после выбора чипа в stm32_f20x_f21x_conf.h.
  */
-constexpr global_port::global_port( const pin_config *pin_cfg_array, const uint32_t pin_count):
+constexpr global_port::global_port( const pin_config_t *pin_cfg_array, const uint32_t pin_count):
 	init_array({
 #ifdef PORTA															// Если данный порт есть в чипе.
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_a),		// Создаем структуру масок его начальной инициализации.
+			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_A),		// Создаем структуру масок его начальной инициализации.
 #endif
 #ifdef PORTB
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_b),
+			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_B),
 #endif
 #ifdef PORTC
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_c),
+			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_C),
 #endif
 #ifdef PORTD
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_d),
+			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_D),
 #endif
 #ifdef PORTE
 			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_e),
@@ -132,7 +132,7 @@ constexpr global_port::global_port( const pin_config *pin_cfg_array, const uint3
 			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_g),
 #endif
 #ifdef PORTH
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_h),
+			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_H),
 #endif
 #ifdef PORTI
 			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_i)

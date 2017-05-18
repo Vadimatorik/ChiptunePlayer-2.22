@@ -42,7 +42,7 @@ answer_pin_reinit pin::reinit (uint32_t number_config) const{
 	((port_registers_struct *)p_port)->ospeeder	|= cfg[number_config].speed << cfg[number_config].pin_name * 2;
 	((port_registers_struct *)p_port)->pupdr	&= ~(0b11 << cfg[number_config].pin_name * 2);
 	((port_registers_struct *)p_port)->pupdr	|= cfg[number_config].pull << cfg[number_config].pin_name * 2;
-	if (cfg[number_config].pin_name < port_pin_8) {
+	if (cfg[number_config].pin_name < PORT_PIN_8) {
 		((port_registers_struct *)p_port)->afrl &= ~(0b1111 << cfg[number_config].pin_name * 4);
 		((port_registers_struct *)p_port)->afrl |= cfg[number_config].locked << cfg[number_config].pin_name * 4;
 	} else {
@@ -74,7 +74,7 @@ void global_port::write_image_port_in_registrs(uint32_t number) const {
 answer_global_port global_port::reinit_all_ports() const {
 	answer_global_port answer = global_port_reinit_success;		// Флаг того, что во время переинициализации была обнаружен порт со включенной блокировкой (или же инициализация прошла удачно).
 	for (uint32_t loop_port = 0; loop_port < STM32_F2_PORT_COUNT; loop_port++) {
-		if (get_state_locked_key_port((port_name)loop_port) == port_locked_kay_set) {
+		if (get_state_locked_key_port((enum_port_name)loop_port) == port_locked_kay_set) {
 			answer = global_port_reinit_look;
 // В случае, если пользователь посчитал, что при обнаружении заблокированного порта не следует пытаться
 // переинициализировать незаблокированные выводы, пропускаем дальнейшую попытку переинициализации.
@@ -87,7 +87,7 @@ answer_global_port global_port::reinit_all_ports() const {
 	return answer;
 }
 
-answer_global_port	global_port::reinit_port(port_name port) const {
+answer_global_port	global_port::reinit_port(enum_port_name port) const {
 // В случае, если пользователь посчитал, что при обнаружении заблокированного порта не следует пытаться
 // переинициализировать незаблокированные выводы, проверяем наличие блокировки. И в случае, если она есть -
 // - выходим.
@@ -101,7 +101,7 @@ answer_global_port	global_port::reinit_port(port_name port) const {
 }
 
 // Возвращаем состояние ключа.
-port_locked_key global_port::get_state_locked_key_port(port_name port) const {
+port_locked_key global_port::get_state_locked_key_port(enum_port_name port) const {
 	if (*((uint32_t *)init_array[port].p_look_key)) {
 		return port_locked_kay_set;
 	} else {
@@ -110,7 +110,7 @@ port_locked_key global_port::get_state_locked_key_port(port_name port) const {
 }
 
 // Производим попытку заблокировать порт.
-answer_port_set_lock	global_port::set_locked_key_port(port_name port) const {
+answer_port_set_lock	global_port::set_locked_key_port(enum_port_name port) const {
 	if (get_state_locked_key_port(port) == port_locked_kay_set) {		// Если порт уже заблокирован.
 		return answer_port_look_already;
 	}
@@ -131,7 +131,7 @@ answer_port_set_lock	global_port::set_locked_key_port(port_name port) const {
 answer_port_set_lock	global_port::set_locked_keys_all_port() const {
 	answer_port_set_lock answer = answer_port_lock_ok;			// Возвратим OK или error, если хоть в одном из портов будет ошибка.
 	for (uint32_t loop_port; loop_port < STM32_F2_PORT_COUNT; loop_port++) {
-		if (set_locked_key_port((port_name)loop_port) == answer_port_lock_error) {
+		if (set_locked_key_port((enum_port_name)loop_port) == answer_port_lock_error) {
 			answer == answer_port_lock_error;
 		};
 	}
