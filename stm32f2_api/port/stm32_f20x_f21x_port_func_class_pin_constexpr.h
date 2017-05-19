@@ -58,8 +58,8 @@ constexpr uint32_t pin::p_odr_get( const pin_config_t *const pin_cfg_array ) {
 // Получаем указатель на bit banding область памяти, с выставленным пользователем состоянием.
 constexpr uint32_t pin::odr_bit_read_bb_p_get ( const pin_config_t *const pin_cfg_array ) {
 	uint32_t p_port	= p_base_port_address_get(pin_cfg_array->port);		// Получаем физический адресс порта вывода.
-	uint32_t p_odr	= p_port + 0x14;									// Прибавляем смещение к ODR регистру.
-	return MACRO_GET_BB_P_PER(p_odr, pin_cfg_array->pin_name);			// Получаем адрес конкретного бита регистра ODR (состояние на входе).
+	uint32_t p_reg_odr	= p_port + 0x14;								// Прибавляем смещение к ODR регистру.
+	return MACRO_GET_BB_P_PER(p_reg_odr, pin_cfg_array->pin_name);		// Получаем адрес конкретного бита регистра ODR (состояние на входе).
 }
 
 // Получаем указатель на бит блокировки конфигурации конкретного вывода.

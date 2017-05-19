@@ -52,14 +52,13 @@
 // Получаем адрес бита периферии в Bit Banding области.
 #define MACRO_GET_BB_P_PER(address, bit) ((BIT_BAND_PER_BASE + (address - BIT_BAND_PER_REF)*32 + (bit * 4)))
 
-constexpr bool stop_comiling(uint32_t n) {
-	if (n == 0xFFFFFFFF) {
-		return false;
-	} else {
-		return true;
-	}
-}
+// Преобразует число в uint32_t переменной в указатель на uint32_t (или void).
+// Причем запрещает переписывать то, что по указателю (только чтение).
+#define U32_TO_P_CONST(point)		*((const uint32_t *const)(point))
 
+// Преобразует число в uint32_t переменной в указатель на uint32_t (или void).
+// Данные по указателю можно изменять.
+#define U32_TO_P(point)		*((uint32_t *)(point))
 
 //******************************************************************************************************************
 //											Для модуля PORT.
