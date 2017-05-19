@@ -49,7 +49,7 @@
 class pin {
 public:
 	constexpr pin ( const pin_config_t *pin_cfg_array, const uint32_t pin_cout );
-
+	constexpr pin ( const pin_config_t *pin_cfg_array );
 	void		set			() const;							// Устанавливает "1" на выходе (для случая, когда вывод настроен как выход).
 	void		reset		() const;							// Устанавливает "0" на выходе (для случая, когда вывод настроен как выход).
 	void		invert		() const;							// Логическое "не" состояния на выходе вывода (для случая, когда вывод настроен как выход).
@@ -69,16 +69,31 @@ private:
 	uint32_t				p_bb_looking_bit;			// Указатель на бит блокировки конкретного вывода в порту, к которому относится вывод.
 };
 
+/*
+ * Конструктры класса pin.
+ */
+constexpr pin::pin ( const pin_config_t *pin_cfg_array ):
+	cfg(pin_cfg_array), count(1),
+	p_odr(pin_p_odr(pin_cfg_array)),
+	p_port(p_base_port_address_get(pin_cfg_array->port)),
+	p_bb_odr_read(pin_odr_bit_read_bb_p(pin_cfg_array)),
+	set_msk(pin_set_msk(pin_cfg_array)),
+	reset_msk(pin_reset_msk(pin_cfg_array)),
+	p_bb_idr_read(pin_bb_p_idr_read(pin_cfg_array)),
+	p_bb_key_looking(bb_p_port_look_key_get(pin_cfg_array->port)),
+	p_bb_looking_bit(pin_bb_p_looking_bit(pin_cfg_array)) {};
+
 constexpr pin::pin ( const pin_config_t *pin_cfg_array, const uint32_t pin_cout ):
-			cfg(pin_cfg_array), count(pin_cout),
-			p_odr(pin_p_odr(pin_cfg_array)),
-			p_port(p_base_port_address_get(pin_cfg_array->port)),
-			p_bb_odr_read(pin_odr_bit_read_bb_p(pin_cfg_array)),
-			set_msk(pin_set_msk(pin_cfg_array)),
-			reset_msk(pin_reset_msk(pin_cfg_array)),
-			p_bb_idr_read(pin_bb_p_idr_read(pin_cfg_array)),
-			p_bb_key_looking(bb_p_port_look_key_get(pin_cfg_array->port)),
-			p_bb_looking_bit(pin_bb_p_looking_bit(pin_cfg_array)) {};
+	cfg(pin_cfg_array), count(pin_cout),
+	p_odr(pin_p_odr(pin_cfg_array)),
+	p_port(p_base_port_address_get(pin_cfg_array->port)),
+	p_bb_odr_read(pin_odr_bit_read_bb_p(pin_cfg_array)),
+	set_msk(pin_set_msk(pin_cfg_array)),
+	reset_msk(pin_reset_msk(pin_cfg_array)),
+	p_bb_idr_read(pin_bb_p_idr_read(pin_cfg_array)),
+	p_bb_key_looking(bb_p_port_look_key_get(pin_cfg_array->port)),
+	p_bb_looking_bit(pin_bb_p_looking_bit(pin_cfg_array)) {};
+
 /*
  * Класс глобального порта. Через него происходит управление выводами и сменой конфигурации.
  */

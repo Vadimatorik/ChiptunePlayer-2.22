@@ -5,28 +5,28 @@ constexpr pin_config_t a[] = {
 	{
 		.port				= PORT_A,
 		.pin_name			= PORT_PIN_0,
-		.mode				= pin_output_mode,
-		.output_config		= pin_output_push_pull_config,
-		.speed				= pin_low_speed,
-		.pull				= pin_no_pull,
-		.af					= pin_af_not_use,
-		.locked				= pin_config_locked,
-		.state_after_init	= pin_state_after_init_reset
+		.mode				= PIN_OUTPUT_MODE,
+		.output_config		= PIN_OUTPUT_PUSH_PULL_CONFIG,
+		.speed				= PIN_LOW_SPEED,
+		.pull				= PIN_NO_PULL,
+		.af					= PIN_AF_NOT_USE,
+		.locked				= PIN_CONFIG_LOCKED,
+		.state_after_init	= PIN_STATE_AFTER_INIT_RESET
 	},
 	{
-		.port				= PORT_B,
+		.port				= (enum_port_name)21,
 		.pin_name			= PORT_PIN_12,
-		.mode				= pin_output_mode,
-		.output_config		= pin_output_push_pull_config,
-		.speed				= pin_low_speed,
-		.pull				= pin_no_pull,
-		.af					= pin_af_not_use,
-		.locked				= pin_config_locked,
-		.state_after_init	= pin_state_after_init_reset
+		.mode				= PIN_OUTPUT_MODE,
+		.output_config		= PIN_OUTPUT_PUSH_PULL_CONFIG,
+		.speed				= PIN_LOW_SPEED,
+		.pull				= PIN_NO_PULL,
+		.af					= PIN_AF_NOT_USE,
+		.locked				= PIN_CONFIG_LOCKED,
+		.state_after_init	= PIN_STATE_AFTER_INIT_RESET
 	}
 };
 
-const constexpr pin led(a, 1);
+const constexpr pin led(a);
 //const constexpr global_port g_port(a, 2);
 
 

@@ -2,8 +2,6 @@
 #define STM32F2_API_PORT_STM32_F20X_F21X_PORT_FUNC_H_
 #include "stm32_f20x_f21x_conf.h"
 #include "stm32_f20x_f21x_port_struct.h"
-#include <stdexcept>
-#include <iostream>									// Для вывода ошибок.
 
 /*
  * Возвращает указатель на базовый адрес выбранного порта ввода-вывода
