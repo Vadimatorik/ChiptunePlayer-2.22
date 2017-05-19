@@ -134,17 +134,17 @@ struct port_registers_flash_copy_struct {
  * для которого требуется получить структуру масок настройки порта.
  */
 #define GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port) { \
-		.p_port			= p_base_port_address_get					( port ), \
-		.moder			= global_port_registr_moder_init_msk		( pin_cfg_array, pin_count, port ), \
-		.moder_reset	= global_port_moder_registr_reset_init_msk	( port), \
-		.otyper			= global_port_registr_otyper_init_msk		( pin_cfg_array, pin_count, port ), \
-		.ospeeder 		= global_port_registr_ospeeder_init_msk		( pin_cfg_array, pin_count, port ), \
-		.pupdr			= global_port_registr_pupdr_init_msk		( pin_cfg_array, pin_count, port ), \
-		.lckr 			= global_port_registr_lckr_init_msk			( pin_cfg_array, pin_count, port ), \
-		.afrl			= global_port_registr_afrl_init_msk			( pin_cfg_array, pin_count, port ), \
-		.afrh			= global_port_registr_afrh_msk_init_get		( pin_cfg_array, pin_count, port ), \
-		.odr			= global_port_registr_odr_msk_init_get		( pin_cfg_array, pin_count, port ), \
-		.p_look_key		= bb_p_port_look_key_get					( port ) \
+		.p_port			= p_base_port_address_get			( port ), \
+		.moder			= this->reg_moder_init_msk			( pin_cfg_array, pin_count, port ), \
+		.moder_reset	= this->moder_reg_reset_init_msk	( port), \
+		.otyper			= this->reg_otyper_init_msk			( pin_cfg_array, pin_count, port ), \
+		.ospeeder 		= this->reg_ospeeder_init_msk		( pin_cfg_array, pin_count, port ), \
+		.pupdr			= this->reg_pupdr_init_msk			( pin_cfg_array, pin_count, port ), \
+		.lckr 			= this->reg_lckr_init_msk			( pin_cfg_array, pin_count, port ), \
+		.afrl			= this->reg_afrl_init_msk			( pin_cfg_array, pin_count, port ), \
+		.afrh			= this->reg_afrh_msk_init_get		( pin_cfg_array, pin_count, port ), \
+		.odr			= this->reg_odr_msk_init_get		( pin_cfg_array, pin_count, port ), \
+		.p_look_key		= bb_p_port_look_key_get			( port ) \
 	}
 
 enum answer_pin_reinit {						// Возвращаемые значения функции пере инициализации порта

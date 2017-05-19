@@ -8,16 +8,16 @@
 /*
  * В данном файле содержатся классы объектов для полноценной работы с портами ввода-вывода.
  * Краткое описание:
- * global_port	- данный объект позволяет работать со всеми имеющимеся в контроллере портами ввода-вывода.
+ * global_port	- данный объект позволяет работать со всеми имеющимися в контроллере портами ввода-вывода.
  *                В проекте должен быть один экземляр (объект) данного класса.
- *                Объект предоставляет следущие возможности:
+ *                Объект предоставляет следующие возможности:
  *                1. Переинициализации конкретных или всех портов (при условии, что те не были заблокированы).
  *                		О блокировки более подробно написано в описании global_port класса.
  *                2. Имеется возможность блокировки конкретных или всех портов.
  *                3. Получаение данных о текущем состоянии блокировки.
- * Примечание: Для инициализации объекта используюется массив структур pin_config.
+ * Примечание: Для инициализации объекта используются массив структур pin_config.
  * 1. В случае, если не была передана структура какого-либо вывода (структура, описывающая режим работы вывода),
- * то он настроен в состояние по-умолчанию (за исключением некоторых выводов, предназначенных для отладки,
+ * то он настроен в состояние по умолчанию (за исключением некоторых выводов, предназначенных для отладки,
  * это "вход без подтяжки").
  * 2. На каждый вывод порта должна быть одни структура. В случае, если на один вывод будет передано несколько
  * структур - вывод будет переинициализирован именно по последней указанной (чей индекс в массиве старше).
@@ -33,7 +33,7 @@
  * В связи с чем они пойдут в итоговый файл прошивки (что скажется на его объеме).
  * Важно понимать, что все структуры конфигурации вывода должны относится к одному физическому выводу (изменяя
  * лишь режим его работы).
- * Предполагается, что начальная инициализая всех выводов производится при инициализации всех портов объектом
+ * Предполагается, что начальная инициализация всех выводов производится при инициализации всех портов объектом
  * global_port. Что избавляет от надобности начальной инициализации выводов.
  * В случае, если в процессе работы программы будет нужно сменить режим работы вывода (при условии, что он не был
  * заблокирован объектом global_port), это можно сделать по средствам метода reinit, в который требуется передать
@@ -46,111 +46,72 @@
  * в ручном (управляется пользователем) режиме. Помимо этого разрешено использование и других конфигураций этой же
  * линии порта ввода-вывода, которые можно менять в процессе работы. Подробнее в примерах.
  */
+
 class pin {
 public:
-	constexpr pin ( const pin_config_t *pin_cfg_array, const uint32_t pin_cout );
-	constexpr pin ( const pin_config_t *pin_cfg_array );
-	void		set			() const;							// Устанавливает "1" на выходе (для случая, когда вывод настроен как выход).
-	void		reset		() const;							// Устанавливает "0" на выходе (для случая, когда вывод настроен как выход).
-	void		invert		() const;							// Логическое "не" состояния на выходе вывода (для случая, когда вывод настроен как выход).
-	int			read		() const;							// Считывает состояние вывода (для случая, когда вывод настроен как вход).
+	constexpr	pin ( const pin_config_t *pin_cfg_array, const uint32_t pin_cout );
+	constexpr	pin ( const pin_config_t *pin_cfg_array );
+	void		set				( void ) const;					// Устанавливает "1" на выходе (для случая, когда вывод настроен как выход).
+	void		reset			( void ) const;					// Устанавливает "0" на выходе (для случая, когда вывод настроен как выход).
+	void		invert			( void ) const;					// Логическое "не" состояния на выходе вывода (для случая, когда вывод настроен как выход).
+	int			read			( void ) const;					// Считывает состояние вывода (для случая, когда вывод настроен как вход).
 	answer_pin_reinit reinit (uint32_t number_config) const;	// Переинициализирует вывод в ходе выполнения программы в выбранную конфигурацию.
 
 private:
-	const pin_config_t		*cfg;						// Указатель на конфигурации, используемые выводом.
-	const uint32_t			count;						// Колличество объектов конфигурации.
-	uint32_t				p_odr;						// Указатель на ODR регистр порта, к которому относится вывод.
-	uint32_t				p_port;						// Указатель на структуру регистров порта в памяти переферии мк.
-	uint32_t				p_bb_odr_read;				// Для быстрого чтения выставленного в ODR (пользователем) состояния вывода (ножно для invert метода).
-	uint32_t				set_msk;					// По этой маске устанавливается бит в ODR.
-	uint32_t				reset_msk;					// Соответственно, сбрасывается бит в ODR.
-	uint32_t				p_bb_idr_read;				// Для быстрого чтения состояния вывода.
-	uint32_t				p_bb_key_looking;			// Указатель на ключ блокировки порта, к которому относится вывод.
-	uint32_t				p_bb_looking_bit;			// Указатель на бит блокировки конкретного вывода в порту, к которому относится вывод.
+	constexpr	uint32_t		set_msk_get				( const pin_config_t *const pin_cfg_array );
+	constexpr	uint32_t		reset_msk_get			( const pin_config_t *const pin_cfg_array );
+	constexpr	uint32_t		bb_p_idr_read_get		( const pin_config_t *const pin_cfg_array );
+	constexpr	uint32_t		p_odr_get				( const pin_config_t *const pin_cfg_array );
+	constexpr	uint32_t		odr_bit_read_bb_p_get	( const pin_config_t *const pin_cfg_array );
+	constexpr	uint32_t		bb_p_looking_bit_get	( const pin_config_t *const pin_cfg_array );
+
+	const 		pin_config_t	*cfg;						// Указатель на конфигурации, используемые выводом.
+	const 		uint32_t		count;						// Колличество объектов конфигурации.
+	const		uint32_t		p_odr;						// Указатель на ODR регистр порта, к которому относится вывод.
+	const		uint32_t		p_port;						// Указатель на структуру регистров порта в памяти периферии мк.
+	const		uint32_t		p_bb_odr_read;				// Для быстрого чтения выставленного в ODR (пользователем) состояния вывода (ножно для invert метода).
+	const		uint32_t		set_msk;					// По этой маске устанавливается бит в ODR.
+	const		uint32_t		reset_msk;					// Соответственно, сбрасывается бит в ODR.
+	const		uint32_t		p_bb_idr_read;				// Для быстрого чтения состояния вывода.
+	const		uint32_t		p_bb_key_looking;			// Указатель на ключ блокировки порта, к которому относится вывод.
+	const		uint32_t		p_bb_looking_bit;			// Указатель на бит блокировки конкретного вывода в порту, к которому относится вывод.
 };
-
-/*
- * Конструктры класса pin.
- */
-constexpr pin::pin ( const pin_config_t *pin_cfg_array ):
-	cfg(pin_cfg_array), count(1),
-	p_odr(pin_p_odr(pin_cfg_array)),
-	p_port(p_base_port_address_get(pin_cfg_array->port)),
-	p_bb_odr_read(pin_odr_bit_read_bb_p(pin_cfg_array)),
-	set_msk(pin_set_msk(pin_cfg_array)),
-	reset_msk(pin_reset_msk(pin_cfg_array)),
-	p_bb_idr_read(pin_bb_p_idr_read(pin_cfg_array)),
-	p_bb_key_looking(bb_p_port_look_key_get(pin_cfg_array->port)),
-	p_bb_looking_bit(pin_bb_p_looking_bit(pin_cfg_array)) {};
-
-constexpr pin::pin ( const pin_config_t *pin_cfg_array, const uint32_t pin_cout ):
-	cfg(pin_cfg_array), count(pin_cout),
-	p_odr(pin_p_odr(pin_cfg_array)),
-	p_port(p_base_port_address_get(pin_cfg_array->port)),
-	p_bb_odr_read(pin_odr_bit_read_bb_p(pin_cfg_array)),
-	set_msk(pin_set_msk(pin_cfg_array)),
-	reset_msk(pin_reset_msk(pin_cfg_array)),
-	p_bb_idr_read(pin_bb_p_idr_read(pin_cfg_array)),
-	p_bb_key_looking(bb_p_port_look_key_get(pin_cfg_array->port)),
-	p_bb_looking_bit(pin_bb_p_looking_bit(pin_cfg_array)) {};
+#include "stm32_f20x_f21x_port_func_class_pin_constexpr.h"
 
 /*
  * Класс глобального порта. Через него происходит управление выводами и сменой конфигурации.
  */
 class global_port {
 public:
-	constexpr	global_port	( const pin_config_t *pin_cfg_array, const uint32_t pin_count );
+	constexpr	global_port	( const pin_config_t *const pin_cfg_array, const uint32_t pin_count );
 
 	// Важно: в случае, если некоторые (или все) выводы порта/портов были заблокированы,
 	// попытка переинициализации все равно производится.
 	// Это нужно на случай, когда требуется переинициализировать некоторые (1 и более) выводов
 	// не трогая другие.
 	// Данное поведение можно сменить в stm32_f20x_f21x_conf.h, NO_REINIT_PORT_AFTER_LOOKING.
-	answer_global_port		reinit_all_ports			() const;						// Метод инициализирует в реальном времени все порты ввода-вывода контроллера,
+	answer_global_port		reinit_all_ports			( void ) const;					// Метод инициализирует в реальном времени все порты ввода-вывода контроллера,
 																						// основываясь на переданном во время формирования объекта pin_config массива.
-	answer_global_port		reinit_port					(enum_port_name port) const;			// Переинициализирует конкретный порт.
-	port_locked_key			get_state_locked_key_port	(enum_port_name port) const;			// Узнаем, заблокирован порт или нет.
-	answer_port_set_lock	set_locked_key_port			(enum_port_name port) const;			// Блокируем порт в соответствии с конфигурацией.
-	answer_port_set_lock	set_locked_keys_all_port	() const; 						// Блокируем все порты в соответствии с конфигурацией.
+	answer_global_port		reinit_port					( enum_port_name port ) const;	// Переинициализирует конкретный порт.
+	port_locked_key			get_state_locked_key_port	( enum_port_name port ) const;	// Узнаем, заблокирован порт или нет.
+	answer_port_set_lock	set_locked_key_port			( enum_port_name port ) const;	// Блокируем порт в соответствии с конфигурацией.
+	answer_port_set_lock	set_locked_keys_all_port	( void ) const; 				// Блокируем все порты в соответствии с конфигурацией.
 
 private:
-	port_registers_flash_copy_struct					init_array[STM32_F2_PORT_COUNT];// Дубликат регистров для переинициализации всех портов контроллера.
-		// STM32_F2_PORT_COUNT - этот define автоматически определяется при выборе конкретного контроллера в stm32_f20x_f21x_conf.h.
-	void 		write_image_port_in_registrs			(uint32_t number) const;		// Служебный метод: записывает образ начальной инициализации в регистры порта.
+	const		port_registers_flash_copy_struct		init_array[STM32_F2_PORT_COUNT];// Дубликат регистров для переинициализации всех портов контроллера.
+																						// STM32_F2_PORT_COUNT - этот define автоматически определяется при
+																						// выборе конкретного контроллера в stm32_f20x_f21x_conf.h.
+				void 		write_image_port_in_registrs			( uint32_t number ) const;		// Служебный метод: записывает образ начальной инициализации в регистры порта.
+	constexpr	uint32_t	moder_reg_reset_init_msk				( enum_port_name port_name );
+	constexpr	uint32_t	reg_moder_init_msk						( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t	reg_otyper_init_msk						( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t	reg_ospeeder_init_msk					( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t	reg_pupdr_init_msk						( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t	reg_lckr_init_msk						( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t	reg_afrl_init_msk						( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t	reg_afrh_msk_init_get					( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t	reg_odr_msk_init_get					( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
 };
+#include "stm32_f20x_f21x_port_func_class_global_port_constexpr.h"
 
-/*
- * Конструктор готовит маски для начальной инициализации выводов.
- * Колличество портов, а так же их именя задаются автоматически после выбора чипа в stm32_f20x_f21x_conf.h.
- */
-constexpr global_port::global_port( const pin_config_t *pin_cfg_array, const uint32_t pin_count):
-	init_array({
-#ifdef PORTA															// Если данный порт есть в чипе.
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_A),		// Создаем структуру масок его начальной инициализации.
-#endif
-#ifdef PORTB
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_B),
-#endif
-#ifdef PORTC
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_C),
-#endif
-#ifdef PORTD
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_D),
-#endif
-#ifdef PORTE
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_e),
-#endif
-#ifdef PORTF
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_f),
-#endif
-#ifdef PORTG
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_g),
-#endif
-#ifdef PORTH
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_H),
-#endif
-#ifdef PORTI
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_i)
-#endif
-}) {};
 #endif
