@@ -57,16 +57,16 @@ answer_pin_reinit pin::reinit (uint32_t number_config) const{
 
 // Служебная функция записи образа регистров порта.
 void global_port::write_image_port_in_registrs(uint32_t number) const {
-	port_registers_struct *port = (port_registers_struct *)init_array[number].p_port;
-	port->moder		= init_array[number].moder_reset;	// Переключаем сначала порт на вход, чтобы ничего не натворить.
-														// С учетом особенностей порта.
-	port->otyper	= init_array[number].otyper;
-	port->afrl		= init_array[number].afrl;
-	port->afrh		= init_array[number].afrh;
-	port->odr		= init_array[number].odr;
-	port->pupdr		= init_array[number].pupdr;
-	port->ospeeder	= init_array[number].ospeeder;
-	port->moder		= init_array[number].moder;
+	port_registers_struct *port = (port_registers_struct *)gb_msk_struct.port[number].p_port;
+	port->moder		= gb_msk_struct.port[number].moder_reset;	// Переключаем сначала порт на вход, чтобы ничего не натворить.
+																// С учетом особенностей порта.
+	port->otyper	= gb_msk_struct.port[number].otyper;
+	port->afrl		= gb_msk_struct.port[number].afrl;
+	port->afrh		= gb_msk_struct.port[number].afrh;
+	port->odr		= gb_msk_struct.port[number].odr;
+	port->pupdr		= gb_msk_struct.port[number].pupdr;
+	port->ospeeder	= gb_msk_struct.port[number].ospeeder;
+	port->moder		= gb_msk_struct.port[number].moder;
 }
 
 
@@ -104,7 +104,7 @@ answer_global_port	global_port::reinit_port(enum_port_name port) const {
 
 // Возвращаем состояние ключа.
 port_locked_key global_port::get_state_locked_key_port(enum_port_name port) const {
-	if (U32_TO_P_CONST(init_array[port].p_look_key)) {
+	if (U32_TO_P_CONST(gb_msk_struct.port[port].p_look_key)) {
 		return PORT_LOCKED_KAY_SET;
 	} else {
 		return PORT_LOCKED_KAY_RESET;
@@ -116,11 +116,11 @@ answer_port_set_lock	global_port::set_locked_key_port(enum_port_name port) const
 	if (get_state_locked_key_port(port) == PORT_LOCKED_KAY_SET) {		// Если порт уже заблокирован.
 		return ANSWER_PORT_LOCK_ALREADY;
 	}
-	port_registers_struct *p = (port_registers_struct *)init_array[(uint32_t)port].p_port;
+	port_registers_struct *p = (port_registers_struct *)gb_msk_struct.port[(uint32_t)port].p_port;
 	// Специальная последовательность для блокировки порта.
-	p->lckr = init_array[port].lckr | (1<<16);
-	p->lckr = init_array[port].lckr;
-	p->lckr = init_array[port].lckr | (1<<16);
+	p->lckr = gb_msk_struct.port[port].lckr | (1<<16);
+	p->lckr = gb_msk_struct.port[port].lckr;
+	p->lckr = gb_msk_struct.port[port].lckr | (1<<16);
 	volatile uint32_t buffer = p->lckr;			// Порт должен заблокироваться после этого действия.
 	(void)buffer;
 	if (get_state_locked_key_port(port) == PORT_LOCKED_KAY_SET) {		// Проверяем.

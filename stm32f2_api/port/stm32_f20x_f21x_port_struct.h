@@ -97,7 +97,7 @@ struct __attribute__((packed)) port_registers_struct {
 /*
  * Структура настройки вывода.
  */
-struct pin_config_t {
+struct __attribute__((packed)) pin_config_t {
 	enum_port_name				port;					// Имя порта (пример: port_a).
 	enum_port_pin_name			pin_name;				// Номер вывода (пример: port_pin_1).
 	enum_pin_mode				mode;					// Режим вывода (пример: pin_output_mode).
@@ -113,7 +113,7 @@ struct pin_config_t {
  * Структура содержит необходимые для инициализации порта данные.
  * Заполняется внутри объекта global_port при передаче в него массива pin_config элементов.
  */
-struct port_registers_flash_copy_struct {
+struct __attribute__((packed)) port_registers_flash_copy_struct {
 	uint32_t				p_port;			// Указатель на структуру порта port_registers_struct в области памяти периферии (базовое смещение порта в карте памяти контроллера).
 	uint32_t				moder;			// Данные регистра выбора режима работы выводов.
 	uint32_t				moder_reset;	// Значение регистра moder, которое имеет порт по умолчанию (для безопасного переключения).
@@ -128,24 +128,13 @@ struct port_registers_flash_copy_struct {
 };
 
 /*
- * Позволяет получить структуру масок начальной инициализации порта из массива структур настроек выводов.
- * Пример использования: GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_a);
- * Передаем массив структур pin_config, их количество, имя порта,
- * для которого требуется получить структуру масок настройки порта.
+ * Структура содержит в себе маски портов всех имеющихся регистров.
+ * STM32_F2_PORT_COUNT - этот define автоматически определяется при
+ * выборе конкретного контроллера в stm32_f20x_f21x_conf.h
  */
-#define GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port) { \
-		.p_port			= p_base_port_address_get			( port ), \
-		.moder			= this->reg_moder_init_msk			( pin_cfg_array, pin_count, port ), \
-		.moder_reset	= this->moder_reg_reset_init_msk	( port), \
-		.otyper			= this->reg_otyper_init_msk			( pin_cfg_array, pin_count, port ), \
-		.ospeeder 		= this->reg_ospeeder_init_msk		( pin_cfg_array, pin_count, port ), \
-		.pupdr			= this->reg_pupdr_init_msk			( pin_cfg_array, pin_count, port ), \
-		.lckr 			= this->reg_lckr_init_msk			( pin_cfg_array, pin_count, port ), \
-		.afrl			= this->reg_afrl_init_msk			( pin_cfg_array, pin_count, port ), \
-		.afrh			= this->reg_afrh_msk_init_get		( pin_cfg_array, pin_count, port ), \
-		.odr			= this->reg_odr_msk_init_get		( pin_cfg_array, pin_count, port ), \
-		.p_look_key		= bb_p_port_look_key_get			( port ) \
-	}
+struct __attribute__((packed)) global_port_msk_reg_struct {
+	port_registers_flash_copy_struct	port[STM32_F2_PORT_COUNT];
+};
 
 enum answer_pin_reinit {						// Возвращаемые значения функции пере инициализации порта
 	ANSWER_PIN_REINIT_OK				= 0,	// Вывод был успешно пере инициализирован.

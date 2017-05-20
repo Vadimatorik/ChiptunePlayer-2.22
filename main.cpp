@@ -27,14 +27,14 @@ constexpr pin_config_t a[] = {
 };
 
 const constexpr pin led(a);
-//const constexpr global_port g_port(a, 2);
+const constexpr global_port g_port(a, 1);
 
-
+uint32_t l;
 int main (void){
-	//g_port.reinit_all_ports();
+	g_port.reinit_all_ports();
 	led.set();
 
 	while(1) {
-		//l++;
+		l++;
 	};
 }

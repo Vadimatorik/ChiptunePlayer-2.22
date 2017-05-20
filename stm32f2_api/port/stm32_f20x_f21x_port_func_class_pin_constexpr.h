@@ -1,6 +1,7 @@
 #ifndef STM32F2_API_PORT_STM32_F20X_F21X_PORT_FUNC_CLASS_PIN_CONSTEXPR_H_
 #define STM32F2_API_PORT_STM32_F20X_F21X_PORT_FUNC_CLASS_PIN_CONSTEXPR_H_
 #include "stm32_f20x_f21x_conf.h"
+
 /****************************************************************************************************
  * Конструктры класса pin.
  ****************************************************************************************************/
@@ -68,8 +69,5 @@ constexpr uint32_t pin::bb_p_looking_bit_get ( const pin_config_t *const pin_cfg
 	uint32_t p_looking_bit = p_port + 0x1C;								// Прибавляем смещение к LCKR регистру.
 	return MACRO_GET_BB_P_PER(p_looking_bit, pin_cfg_array->pin_name);	// Получаем адрес конкретного бита регистра LCKR.
 }
-
-
-
 
 #endif

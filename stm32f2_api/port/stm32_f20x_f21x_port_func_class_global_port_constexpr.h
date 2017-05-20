@@ -6,37 +6,6 @@
  * Конструктор готовит маски для начальной инициализации выводов.
  * Количество портов, а так же их имена задаются автоматически после выбора чипа в stm32_f20x_f21x_conf.h.
  */
-constexpr global_port::global_port( const pin_config_t *const pin_cfg_array, const uint32_t pin_count ):
-	init_array({
-#ifdef PORTA															// Если данный порт есть в чипе.
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_A),		// Создаем структуру масок его начальной инициализации.
-#endif
-#ifdef PORTB
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_B),
-#endif
-#ifdef PORTC
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_C),
-#endif
-#ifdef PORTD
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_D),
-#endif
-#ifdef PORTE
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_e),
-#endif
-#ifdef PORTF
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_f),
-#endif
-#ifdef PORTG
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_g),
-#endif
-#ifdef PORTH
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, PORT_H),
-#endif
-#ifdef PORTI
-			GET_MSK_INIT_PORT(pin_cfg_array, pin_count, port_i)
-#endif
-}) {};
-
 /*****************************************************************************************************
  * Необходимые для конструктора global_port constexpr функции (готовят маски из массива структур).
  * Методы проверяет все pin_config структуры и в случае, если структура относится к port_name порту,
@@ -58,7 +27,7 @@ constexpr uint32_t global_port::reg_moder_init_msk( const pin_config_t *const pi
 		reg_moder &= ~(0b11 << pin_cfg_array[loop_pin].pin_name * 2);							// Сбрасываем предыдущую настройку этого вывода.
 		reg_moder |= pin_cfg_array[loop_pin].mode << pin_cfg_array[loop_pin].pin_name * 2;		// Иначе производим добавление по маске.
 	}
-	return reg_moder;
+	return 0;
 }
 
 // Режим выхода.
@@ -150,3 +119,65 @@ constexpr uint32_t global_port::reg_odr_msk_init_get( const pin_config_t *const 
 	return reg_odr;
 }
 #endif
+
+/*
+ * Функция заполняет структуру, необходимую для работы с одном портом.
+ */
+constexpr port_registers_flash_copy_struct global_port::fill_out_one_port_struct( enum_port_name p_name, const pin_config_t *const pin_cfg_array, const uint32_t pin_count ) {
+	port_registers_flash_copy_struct		st_port = {
+		.p_port			= p_base_port_address_get			( p_name ),
+		.moder			= this->reg_moder_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.moder_reset	= this->moder_reg_reset_init_msk	( p_name ),
+		.otyper			= this->reg_otyper_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.ospeeder		= this->reg_ospeeder_init_msk		( pin_cfg_array, pin_count, p_name ),
+		.pupdr			= this->reg_pupdr_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.lckr			= this->reg_lckr_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.afrl			= this->reg_afrl_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.afrh			= this->reg_afrh_msk_init_get		( pin_cfg_array, pin_count, p_name ),
+		.odr			= this->reg_odr_msk_init_get		( pin_cfg_array, pin_count, p_name ),
+		.p_look_key		= bb_p_port_look_key_get			( p_name )
+	};
+	return st_port;
+}
+
+/*
+ * Функция заполняет основную структуру объекта.
+ */
+constexpr global_port_msk_reg_struct global_port::fill_out_mas_struct( const pin_config_t *const pin_cfg_array, const uint32_t pin_count ) {
+	global_port_msk_reg_struct	p_st = {
+		.port = {
+#ifdef PORTA															// Если данный порт есть в чипе.
+					this->fill_out_one_port_struct( PORT_A, pin_cfg_array, pin_count ),
+#endif
+#ifdef PORTB
+					this->fill_out_one_port_struct( PORT_B, pin_cfg_array, pin_count ),
+#endif
+#ifdef PORTC
+					this->fill_out_one_port_struct( PORT_C, pin_cfg_array, pin_count ),
+#endif
+#ifdef PORTD
+					this->fill_out_one_port_struct( PORT_D, pin_cfg_array, pin_count ),
+#endif
+#ifdef PORTE
+					this->fill_out_one_port_struct( PORT_E, pin_cfg_array, pin_count ),
+#endif
+#ifdef PORTF
+					this->fill_out_one_port_struct( PORT_F, pin_cfg_array, pin_count ),
+#endif
+#ifdef PORTG
+					this->fill_out_one_port_struct( PORT_G, pin_cfg_array, pin_count ),
+#endif
+#ifdef PORTH
+					this->fill_out_one_port_struct( PORT_H, pin_cfg_array, pin_count ),
+#endif
+#ifdef PORTI
+					this->fill_out_one_port_struct( PORT_I, pin_cfg_array, pin_count )
+#endif
+		}
+	};
+	return p_st;
+}
+
+constexpr global_port::global_port( const pin_config_t *const pin_cfg_array, const uint32_t pin_count ):
+	gb_msk_struct(this->fill_out_mas_struct(pin_cfg_array, pin_count)) {};
+
