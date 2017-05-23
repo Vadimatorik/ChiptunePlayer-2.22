@@ -126,15 +126,15 @@ constexpr uint32_t global_port::reg_odr_msk_init_get( const pin_config_t *const 
 constexpr port_registers_flash_copy_struct global_port::fill_out_one_port_struct( enum_port_name p_name, const pin_config_t *const pin_cfg_array, const uint32_t pin_count ) {
 	port_registers_flash_copy_struct		st_port = {
 		.p_port			= p_base_port_address_get			( p_name ),
-		.moder			= this->reg_moder_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.moder_reset	= this->moder_reg_reset_init_msk	( p_name ),
-		.otyper			= this->reg_otyper_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.ospeeder		= this->reg_ospeeder_init_msk		( pin_cfg_array, pin_count, p_name ),
-		.pupdr			= this->reg_pupdr_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.lckr			= this->reg_lckr_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.afrl			= this->reg_afrl_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.afrh			= this->reg_afrh_msk_init_get		( pin_cfg_array, pin_count, p_name ),
-		.odr			= this->reg_odr_msk_init_get		( pin_cfg_array, pin_count, p_name ),
+		.mode			= this->reg_moder_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.mode_res		= this->moder_reg_reset_init_msk	( p_name ),
+		.otype			= this->reg_otyper_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.speed			= this->reg_ospeeder_init_msk		( pin_cfg_array, pin_count, p_name ),
+		.pupd			= this->reg_pupdr_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.lck			= this->reg_lckr_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.afl			= this->reg_afrl_init_msk			( pin_cfg_array, pin_count, p_name ),
+		.afh			= this->reg_afrh_msk_init_get		( pin_cfg_array, pin_count, p_name ),
+		.od				= this->reg_odr_msk_init_get		( pin_cfg_array, pin_count, p_name ),
 		.p_look_key		= bb_p_port_look_key_get			( p_name )
 	};
 	return st_port;
