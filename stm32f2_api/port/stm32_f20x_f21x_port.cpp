@@ -36,21 +36,21 @@ answer_pin_reinit pin::reinit (uint32_t number_config) const{
 
 	port_registers_struct *port = (port_registers_struct *)p_port;
 	// Если дошли до сюда, то вывод можно переинициализировать.
-	port->moder		&= ~(0b11 << cfg[number_config].pin_name * 2);						// Переводим вывод в режим "входа" (чтобы не было неготивных последствий от переключений).
-	port->otyper	&= ~(1 << cfg[number_config].pin_name);								// Далее все как в constexpr функциях, инициализирующие маски портов.
-	port->otyper	|= cfg[number_config].output_config << cfg[number_config].pin_name;
-	port->ospeeder	&= ~(0b11 << cfg[number_config].pin_name * 2);
-	port->ospeeder	|= cfg[number_config].speed << cfg[number_config].pin_name * 2;
-	port->pupdr		&= ~(0b11 << cfg[number_config].pin_name * 2);
-	port->pupdr		|= cfg[number_config].pull << cfg[number_config].pin_name * 2;
+	port->mode		&= ~(0b11 << cfg[number_config].pin_name * 2);						// Переводим вывод в режим "входа" (чтобы не было неготивных последствий от переключений).
+	port->otype	&= ~(1 << cfg[number_config].pin_name);								// Далее все как в constexpr функциях, инициализирующие маски портов.
+	port->otype	|= cfg[number_config].output_config << cfg[number_config].pin_name;
+	port->ospeede	&= ~(0b11 << cfg[number_config].pin_name * 2);
+	port->ospeede	|= cfg[number_config].speed << cfg[number_config].pin_name * 2;
+	port->pupd		&= ~(0b11 << cfg[number_config].pin_name * 2);
+	port->pupd		|= cfg[number_config].pull << cfg[number_config].pin_name * 2;
 	if (cfg[number_config].pin_name < PORT_PIN_8) {
-		port->afrl &= ~(0b1111 << cfg[number_config].pin_name * 4);
-		port->afrl |= cfg[number_config].locked << cfg[number_config].pin_name * 4;
+		port->afl &= ~(0b1111 << cfg[number_config].pin_name * 4);
+		port->afl |= cfg[number_config].locked << cfg[number_config].pin_name * 4;
 	} else {
-		port->afrh &= ~(0b1111 << (cfg[number_config].pin_name - 8) * 4);
-		port->afrh |= cfg[number_config].locked << (cfg[number_config].pin_name - 8) * 4;
+		port->afh &= ~(0b1111 << (cfg[number_config].pin_name - 8) * 4);
+		port->afh |= cfg[number_config].locked << (cfg[number_config].pin_name - 8) * 4;
 	}
-	port->moder |= cfg[number_config].mode << cfg[number_config].pin_name * 2;	// Выставляем тот режим, который указан в конфигурации.
+	port->mode |= cfg[number_config].mode << cfg[number_config].pin_name * 2;	// Выставляем тот режим, который указан в конфигурации.
 
 	return ANSWER_PIN_REINIT_CFG_NUMBER_ERROR;
 }
@@ -58,15 +58,15 @@ answer_pin_reinit pin::reinit (uint32_t number_config) const{
 // Служебная функция записи образа регистров порта.
 void global_port::write_image_port_in_registrs(uint32_t number) const {
 	port_registers_struct *port = (port_registers_struct *)gb_msk_struct.port[number].p_port;
-	port->moder		= gb_msk_struct.port[number].moder_reset;	// Переключаем сначала порт на вход, чтобы ничего не натворить.
+	port->mode		= gb_msk_struct.port[number].moder_reset;	// Переключаем сначала порт на вход, чтобы ничего не натворить.
 																// С учетом особенностей порта.
-	port->otyper	= gb_msk_struct.port[number].otyper;
-	port->afrl		= gb_msk_struct.port[number].afrl;
-	port->afrh		= gb_msk_struct.port[number].afrh;
-	port->odr		= gb_msk_struct.port[number].odr;
-	port->pupdr		= gb_msk_struct.port[number].pupdr;
-	port->ospeeder	= gb_msk_struct.port[number].ospeeder;
-	port->moder		= gb_msk_struct.port[number].moder;
+	port->otype	= gb_msk_struct.port[number].otyper;
+	port->afl		= gb_msk_struct.port[number].afrl;
+	port->afh		= gb_msk_struct.port[number].afrh;
+	port->od		= gb_msk_struct.port[number].odr;
+	port->pupd		= gb_msk_struct.port[number].pupdr;
+	port->ospeede	= gb_msk_struct.port[number].ospeeder;
+	port->mode		= gb_msk_struct.port[number].moder;
 }
 
 
@@ -118,10 +118,10 @@ answer_port_set_lock	global_port::set_locked_key_port(enum_port_name port) const
 	}
 	port_registers_struct *p = (port_registers_struct *)gb_msk_struct.port[(uint32_t)port].p_port;
 	// Специальная последовательность для блокировки порта.
-	p->lckr = gb_msk_struct.port[port].lckr | (1<<16);
-	p->lckr = gb_msk_struct.port[port].lckr;
-	p->lckr = gb_msk_struct.port[port].lckr | (1<<16);
-	volatile uint32_t buffer = p->lckr;			// Порт должен заблокироваться после этого действия.
+	p->lck = gb_msk_struct.port[port].lckr | (1<<16);
+	p->lck = gb_msk_struct.port[port].lckr;
+	p->lck = gb_msk_struct.port[port].lckr | (1<<16);
+	volatile uint32_t buffer = p->lck;			// Порт должен заблокироваться после этого действия.
 	(void)buffer;
 	if (get_state_locked_key_port(port) == PORT_LOCKED_KAY_SET) {		// Проверяем.
 		return ANSWER_PORT_LOCK_OK;

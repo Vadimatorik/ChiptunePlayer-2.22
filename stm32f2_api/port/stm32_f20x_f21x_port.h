@@ -1,6 +1,5 @@
 #ifndef STM32F2_API_STM32_F20X_F21X_PORT_H_
 #define STM32F2_API_STM32_F20X_F21X_PORT_H_
-
 #include "stm32_f20x_f21x_conf.h"						// Конфигурация всей библиотеки.
 #include "stm32_f20x_f21x_port_struct.h"				// Используемые структуры enum-ы.
 #include "stm32_f20x_f21x_port_func.h"					// constexpr функции.
