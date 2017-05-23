@@ -14,7 +14,7 @@ constexpr pin_config_t a[] = {
 		.state_after_init	= PIN_STATE_AFTER_INIT_RESET
 	},
 	{
-		.port				= (enum_port_name)21,
+		.port				= PORT_A,
 		.pin_name			= PORT_PIN_12,
 		.mode				= PIN_OUTPUT_MODE,
 		.output_config		= PIN_OUTPUT_PUSH_PULL_CONFIG,
@@ -29,7 +29,7 @@ constexpr pin_config_t a[] = {
 const constexpr pin led(a);
 const constexpr global_port g_port(a, 1);
 
-uint32_t l;
+uint32_t l = 0;
 int main (void){
 	g_port.reinit_all_ports();
 	led.set();

@@ -5,33 +5,33 @@
  */
 // Устанавливаем бит.
 void pin::set() const {
-	U32_TO_P(p_odr) = set_msk;
+	*U32_TO_P(p_odr) = set_msk;
 }
 
 // Сбрасываем бит.
 void pin::reset() const {
-	U32_TO_P(p_odr) = reset_msk;
+	*U32_TO_P(p_odr) = reset_msk;
 }
 
 // Инавертируем бит.
 void pin::invert() const {
-	if (U32_TO_P_CONST(p_bb_odr_read)) {			// Если был 1, то выставляем 0.
-		U32_TO_P(p_odr) = reset_msk;
+	if (*U32_TO_P_CONST(p_bb_odr_read)) {			// Если был 1, то выставляем 0.
+		*U32_TO_P(p_odr) = reset_msk;
 	} else {
-		U32_TO_P(p_odr) = set_msk;
+		*U32_TO_P(p_odr) = set_msk;
 	}
 }
 
 // Считываем текущее состояние на выводе.
 int pin::read() const {
-	return U32_TO_P_CONST(p_bb_idr_read);
+	return *U32_TO_P_CONST(p_bb_idr_read);
 }
 
 // Переинициализируем вывод выбранной конфигурацией.
 answer_pin_reinit pin::reinit (uint32_t number_config) const{
 	if (number_config >= count) return ANSWER_PIN_REINIT_CFG_NUMBER_ERROR;		// Защита от попытки инициализации вывода несуществующей конфигурацией.
-	if (U32_TO_P_CONST(p_bb_key_looking)										// Если порт, к кторому относится вывод был заблокирован.
-			&& U32_TO_P_CONST(p_bb_looking_bit))								// И сам вывод так же был заблокирован.
+	if (*U32_TO_P_CONST(p_bb_key_looking)										// Если порт, к кторому относится вывод был заблокирован.
+			&& *U32_TO_P_CONST(p_bb_looking_bit))								// И сам вывод так же был заблокирован.
 		return ANSWER_PIN_REINIT_LOCKED;										// Выходим с ошибкой.
 
 	port_registers_struct *port = (port_registers_struct *)p_port;
@@ -104,7 +104,7 @@ answer_global_port	global_port::reinit_port(enum_port_name port) const {
 
 // Возвращаем состояние ключа.
 port_locked_key global_port::get_state_locked_key_port(enum_port_name port) const {
-	if (U32_TO_P_CONST(gb_msk_struct.port[port].p_look_key)) {
+	if (*U32_TO_P_CONST(gb_msk_struct.port[port].p_look_key)) {
 		return PORT_LOCKED_KAY_SET;
 	} else {
 		return PORT_LOCKED_KAY_RESET;
