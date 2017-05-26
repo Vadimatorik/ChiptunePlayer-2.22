@@ -1,6 +1,9 @@
 #ifndef STM32F2_API_PORT_STM32_F20X_F21X_PORT_STRUCT_H_
 #define STM32F2_API_PORT_STM32_F20X_F21X_PORT_STRUCT_H_
+
 #include "stm32_f20x_f21x_conf.h"
+
+#ifdef MODULE_PORT
 
 /*
  * Перечень имеющихся физических портов ввода-вывода контроллера
@@ -49,7 +52,7 @@ enum enum_pin_speed {						// Скорость выхода:
 enum enum_pin_pull {						// Выбор подтяжки:
 	PIN_NO_PULL						= 0,	// Без подтяжки.
 	PIN_PULL_UP						= 1,	// Подтяжка к питанию.
-	pin_pull_down					= 2		// Подтяжка к земле.
+	PIN_PULL_DOWN					= 2		// Подтяжка к земле.
 };
 
 enum enum_pin_alternate_function {	// Выбираем альтернативную функцию, если используется.
@@ -169,4 +172,41 @@ enum answer_port_set_lock {
 	ANSWER_PORT_LOCK_ERROR		= 2				// После попытки заблокировать порт - порт не был заблокирован.
 };
 
+// Готовые шаблоны.
+/*
+ * Данный макрос следует использовать вместо ручного заполнения
+ * структуры конфигурации вывода (pin_config_t), когда вывод
+ * используется как вход ADC и не меняет своей функции на протяжении
+ * всего времени жизни программы.
+ *
+ * Пример использования.
+ * До:
+ * const constexpr pin_config_t ayplayer_pin_cfg = {
+		.port				= PORT_A,
+		.pin_name			= PORT_PIN_0,
+		.mode				= PIN_ANALOG_MODE,
+		.output_config		= PIN_OUTPUT_NOT_USE,
+		.speed				= PIN_LOW_SPEED,
+		.pull				= PIN_NO_PULL,
+		.af					= PIN_AF_NOT_USE,
+		.locked				= PIN_CONFIG_LOCKED,
+		.state_after_init	= PIN_STATE_NO_USE
+	};
+	После:
+	const constexpr pin_config_t ayplayer_pin_cfg = MACRO_PIN_CFG_ADC(PORT_A, PORT_PIN_0);
+ */
+
+#define MACRO_PIN_CFG_ADC(PORT,PIN)	{				\
+	.port				= PORT,						\
+	.pin_name			= PIN,						\
+	.mode				= PIN_ANALOG_MODE,			\
+	.output_config		= PIN_OUTPUT_NOT_USE,		\
+	.speed				= PIN_LOW_SPEED,			\
+	.pull				= PIN_NO_PULL,				\
+	.af					= PIN_AF_NOT_USE,			\
+	.locked				= PIN_CONFIG_LOCKED,		\
+	.state_after_init	= PIN_STATE_NO_USE			\
+}
+
+#endif
 #endif

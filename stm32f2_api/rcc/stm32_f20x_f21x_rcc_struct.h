@@ -1,6 +1,10 @@
 #ifndef STM32F2_API_RCC_STM32_F20X_F21X_RCC_STRUCT_H_
 #define STM32F2_API_RCC_STM32_F20X_F21X_RCC_STRUCT_H_
 
+#include "stm32_f20x_f21x_conf.h"
+
+#ifdef MODULE_RCC
+
 /*
  * Регистры физического модуля RCC.
  * res_x - зарезервированные области памяти rcc модуля.
@@ -34,7 +38,7 @@ struct __attribute__((packed)) rcc_registers_struct {
 	volatile uint32_t	apb_2_lp_en;
 	volatile uint32_t	res_7;
 	volatile uint32_t	res_8;
-	volatile uint32_t	bdc_;
+	volatile uint32_t	bdc;
 	volatile uint32_t	cs;
 	volatile uint32_t	res_9;
 	volatile uint32_t	res_10;
@@ -68,4 +72,18 @@ struct pll_cfg {
 									// p должен принимать значения: 2, 4, 6, 8.
 };
 
+/*
+ * Структура включает в себя все структуры, которые планируется
+ * использовать во время работы для изменения параметров RCC.
+ */
+struct rcc_cfg {
+	const pll_cfg			*const pll;			// Режимы PLL.
+	uint8_t					pll_count;			// Количество режимов.
+};
+
+/*
+ * Для работы внутренних функций.
+ */
+enum enum_rcc_cfgr_reg_pos {};
+#endif
 #endif

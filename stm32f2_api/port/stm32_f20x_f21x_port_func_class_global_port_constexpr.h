@@ -1,7 +1,12 @@
 #ifndef STM32F2_API_PORT_STM32_F20X_F21X_PORT_FUNC_CLASS_GLOBAL_PORT_CONSTEXPR_H_
 #define STM32F2_API_PORT_STM32_F20X_F21X_PORT_FUNC_CLASS_GLOBAL_PORT_CONSTEXPR_H_
+
 #include "stm32_f20x_f21x_conf.h"
+
+#ifdef MODULE_PORT
+
 #include "stm32_f20x_f21x_port_struct.h"
+
 /*
  * Конструктор готовит маски для начальной инициализации выводов.
  * Количество портов, а так же их имена задаются автоматически после выбора чипа в stm32_f20x_f21x_conf.h.
@@ -118,7 +123,6 @@ constexpr uint32_t global_port::reg_odr_msk_init_get( const pin_config_t *const 
 	}
 	return reg_odr;
 }
-#endif
 
 /*
  * Функция заполняет структуру, необходимую для работы с одном портом.
@@ -180,4 +184,7 @@ constexpr global_port_msk_reg_struct global_port::fill_out_mas_struct( const pin
 
 constexpr global_port::global_port( const pin_config_t *const pin_cfg_array, const uint32_t pin_count ):
 	gb_msk_struct(this->fill_out_mas_struct(pin_cfg_array, pin_count)) {};
+
+#endif
+#endif
 

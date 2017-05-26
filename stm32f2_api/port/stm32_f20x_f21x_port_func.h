@@ -1,6 +1,10 @@
 #ifndef STM32F2_API_PORT_STM32_F20X_F21X_PORT_FUNC_H_
 #define STM32F2_API_PORT_STM32_F20X_F21X_PORT_FUNC_H_
+
 #include "stm32_f20x_f21x_conf.h"
+
+#ifdef MODULE_PORT
+
 #include "stm32_f20x_f21x_port_struct.h"
 
 /*
@@ -52,4 +56,7 @@ constexpr uint32_t bb_p_port_look_key_get ( enum_port_name port_name ) {
 	port_point += 0x1C;											// Прибавляем смещение к IDR регистру.
 	return MACRO_GET_BB_P_PER(port_point, 16);					// Получаем адрес конкретного бита регистра IDR (состояние на входе).
 }
+
 #endif
+#endif
+

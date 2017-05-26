@@ -1,4 +1,9 @@
+#include "stm32_f20x_f21x_conf.h"
+
+#ifdef MODULE_PORT
+
 #include "stm32_f20x_f21x_port.h"
+#include "stm32_f20x_f21x_port_struct.h"
 
 /*
  * В данном файле содержатся только исполняемые в реальном времени контроллером функции.
@@ -141,4 +146,4 @@ answer_port_set_lock	global_port::set_locked_keys_all_port() const {
 	return answer;
 }
 
-
+#endif
