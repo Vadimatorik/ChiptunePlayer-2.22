@@ -16,7 +16,7 @@
  * Методы проверяет все pin_config структуры и в случае, если структура относится к port_name порту,
  * на основе ее конфигурации производится изменение маски регистра порта.
  *****************************************************************************************************/
-constexpr uint32_t global_port::moder_reg_reset_init_msk( enum_port_name port_name ) {
+constexpr uint32_t global_port::moder_reg_reset_init_msk_get( enum_port_name port_name ) {
 	switch(port_name){
 		case PORT_A:	return 0xA8000000;
 		case PORT_B:	return 0x00000280;
@@ -26,13 +26,13 @@ constexpr uint32_t global_port::moder_reg_reset_init_msk( enum_port_name port_na
 
 // Режим работы.
 constexpr uint32_t global_port::reg_moder_init_msk( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
-	uint32_t reg_moder = this->moder_reg_reset_init_msk(port_name);								// Начальное значение зависит от порта.
+	uint32_t reg_moder = this->moder_reg_reset_init_msk_get(port_name);								// Начальное значение зависит от порта.
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){								// Проходимся по всем структурам.
 		if (pin_cfg_array[loop_pin].port != port_name) { continue; };							// Если вывод не относится к нашему порту - выходим.
 		reg_moder &= ~(0b11 << pin_cfg_array[loop_pin].pin_name * 2);							// Сбрасываем предыдущую настройку этого вывода.
 		reg_moder |= pin_cfg_array[loop_pin].mode << pin_cfg_array[loop_pin].pin_name * 2;		// Иначе производим добавление по маске.
 	}
-	return 0;
+	return reg_moder;
 }
 
 // Режим выхода.
@@ -46,12 +46,17 @@ constexpr uint32_t global_port::reg_otyper_init_msk( const pin_config_t *const p
 	return reg_otyper;
 }
 
-// Скорость.
-constexpr uint32_t global_port::reg_ospeeder_init_msk( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
-	uint32_t reg_ospeeder = 0;
-	if (port_name == PORT_B){					// Для порта B свое значение.
-		reg_ospeeder = 0x000000C0;
+
+constexpr uint32_t global_port::speed_reg_reset_init_msk_get( enum_port_name port_name ) {
+	switch(port_name){
+		case PORT_B:	return 0x000000C0;
+		default: 		return 0;
 	};
+}
+
+// Скорость.
+constexpr uint32_t global_port::reg_speed_init_msk( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
+	uint32_t reg_ospeeder = this->speed_reg_reset_init_msk_get(port_name);
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){ continue; };
 		reg_ospeeder &= ~(0b11 << pin_cfg_array[loop_pin].pin_name * 2);
@@ -60,14 +65,16 @@ constexpr uint32_t global_port::reg_ospeeder_init_msk( const pin_config_t *const
 	return reg_ospeeder;
 }
 
-// Подтяжка.
-constexpr uint32_t global_port::reg_pupdr_init_msk( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
-	uint32_t reg_pupdr = 0;
-	switch(port_name){											// Начальное значение зависит от порта.
-		case PORT_A:	reg_pupdr = 0x64000000; break;
-		case PORT_B:	reg_pupdr = 0x00000100; break;
-		default: 		reg_pupdr = 0; 			break;
+constexpr uint32_t global_port::pupd_reg_reset_init_msk_get( enum_port_name port_name ) {
+	switch(port_name){
+		case PORT_A:	return 0x64000000;
+		case PORT_B:	return 0x00000100;
+		default: 		return 0;
 	};
+}
+// Подтяжка.
+constexpr uint32_t global_port::reg_pupd_init_msk( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
+	uint32_t reg_pupdr = this->pupd_reg_reset_init_msk_get(port_name);
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){ continue; };
 		reg_pupdr &= ~(0b11 << pin_cfg_array[loop_pin].pin_name * 2);
@@ -77,7 +84,7 @@ constexpr uint32_t global_port::reg_pupdr_init_msk( const pin_config_t *const pi
 }
 
 // Блокировка настроек.
-constexpr uint32_t global_port::reg_lckr_init_msk( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
+constexpr uint32_t global_port::reg_lck_init_msk( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
 	uint32_t reg_lckr = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){ continue; };
@@ -88,7 +95,7 @@ constexpr uint32_t global_port::reg_lckr_init_msk( const pin_config_t *const pin
 }
 
 // Младший регистр выбора альтернативной функции.
-constexpr uint32_t global_port::reg_afrl_init_msk( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
+constexpr uint32_t global_port::reg_afl_init_msk( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
 	uint32_t reg_afrl = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){ continue; };
@@ -101,7 +108,7 @@ constexpr uint32_t global_port::reg_afrl_init_msk( const pin_config_t *const pin
 }
 
 // Старший регистр выбора альтернативной функции.
-constexpr uint32_t global_port::reg_afrh_msk_init_get( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
+constexpr uint32_t global_port::reg_afh_msk_init_get( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
 	uint32_t reg_afrh = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++) {
 		if (pin_cfg_array[loop_pin].port != port_name) { continue; };
@@ -114,7 +121,7 @@ constexpr uint32_t global_port::reg_afrh_msk_init_get( const pin_config_t *const
 }
 
 // Состояние на выводах после инициализации (для выводов, настроенных на выход).
-constexpr uint32_t global_port::reg_odr_msk_init_get( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
+constexpr uint32_t global_port::reg_od_msk_init_get( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name ) {
 	uint32_t reg_odr = 0;
 	for (uint32_t loop_pin = 0; loop_pin < pin_count; loop_pin++){
 		if (pin_cfg_array[loop_pin].port != port_name){ continue; };
@@ -129,17 +136,17 @@ constexpr uint32_t global_port::reg_odr_msk_init_get( const pin_config_t *const 
  */
 constexpr port_registers_flash_copy_struct global_port::fill_out_one_port_struct( enum_port_name p_name, const pin_config_t *const pin_cfg_array, const uint32_t pin_count ) {
 	port_registers_flash_copy_struct		st_port = {
-		.p_port			= p_base_port_address_get			( p_name ),
-		.mode			= this->reg_moder_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.mode_res		= this->moder_reg_reset_init_msk	( p_name ),
-		.otype			= this->reg_otyper_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.speed			= this->reg_ospeeder_init_msk		( pin_cfg_array, pin_count, p_name ),
-		.pupd			= this->reg_pupdr_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.lck			= this->reg_lckr_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.afl			= this->reg_afrl_init_msk			( pin_cfg_array, pin_count, p_name ),
-		.afh			= this->reg_afrh_msk_init_get		( pin_cfg_array, pin_count, p_name ),
-		.od				= this->reg_odr_msk_init_get		( pin_cfg_array, pin_count, p_name ),
-		.p_look_key		= bb_p_port_look_key_get			( p_name )
+		.p_port			= p_base_port_address_get				( p_name ),
+		.mode			= this->reg_moder_init_msk				( pin_cfg_array, pin_count, p_name ),
+		.mode_res		= this->moder_reg_reset_init_msk_get	( p_name ),
+		.otype			= this->reg_otyper_init_msk				( pin_cfg_array, pin_count, p_name ),
+		.speed			= this->reg_speed_init_msk				( pin_cfg_array, pin_count, p_name ),
+		.pupd			= this->reg_pupd_init_msk				( pin_cfg_array, pin_count, p_name ),
+		.lck			= this->reg_lck_init_msk				( pin_cfg_array, pin_count, p_name ),
+		.afl			= this->reg_afl_init_msk				( pin_cfg_array, pin_count, p_name ),
+		.afh			= this->reg_afh_msk_init_get			( pin_cfg_array, pin_count, p_name ),
+		.od				= this->reg_od_msk_init_get				( pin_cfg_array, pin_count, p_name ),
+		.p_look_key		= bb_p_port_look_key_get				( p_name )
 	};
 	return st_port;
 }

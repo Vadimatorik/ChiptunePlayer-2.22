@@ -103,15 +103,17 @@ public:
 private:
 	const		global_port_msk_reg_struct				gb_msk_struct;						// Маски регистров всех портов.
 				void 						write_image_port_in_registrs	( uint32_t number ) const;		// Служебный метод: записывает образ начальной инициализации в регистры порта.
-	constexpr	uint32_t					moder_reg_reset_init_msk		( enum_port_name port_name );
+	constexpr	uint32_t					moder_reg_reset_init_msk_get	( enum_port_name port_name );
 	constexpr	uint32_t					reg_moder_init_msk				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
 	constexpr	uint32_t					reg_otyper_init_msk				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
-	constexpr	uint32_t					reg_ospeeder_init_msk			( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
-	constexpr	uint32_t					reg_pupdr_init_msk				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
-	constexpr	uint32_t					reg_lckr_init_msk				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
-	constexpr	uint32_t					reg_afrl_init_msk				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
-	constexpr	uint32_t					reg_afrh_msk_init_get			( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
-	constexpr	uint32_t					reg_odr_msk_init_get			( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t					speed_reg_reset_init_msk_get	( enum_port_name port_name );
+	constexpr	uint32_t					reg_speed_init_msk				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t					pupd_reg_reset_init_msk_get		( enum_port_name port_name );
+	constexpr	uint32_t					reg_pupd_init_msk				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t					reg_lck_init_msk				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t					reg_afl_init_msk				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t					reg_afh_msk_init_get			( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
+	constexpr	uint32_t					reg_od_msk_init_get			( const pin_config_t *const pin_cfg_array, const uint32_t pin_count, const enum_port_name port_name );
 	constexpr 	global_port_msk_reg_struct	fill_out_mas_struct				( const pin_config_t *const pin_cfg_array, const uint32_t pin_count );
 	constexpr	port_registers_flash_copy_struct fill_out_one_port_struct( enum_port_name p_name, const pin_config_t *const pin_cfg_array, const uint32_t pin_count );
 

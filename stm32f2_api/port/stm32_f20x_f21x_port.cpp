@@ -64,8 +64,8 @@ answer_pin_reinit pin::reinit (uint32_t number_config) const{
 void global_port::write_image_port_in_registrs(uint32_t number) const {
 	port_registers_struct *port = (port_registers_struct *)gb_msk_struct.port[number].p_port;
 	port->mode		= gb_msk_struct.port[number].mode_res;	// Переключаем сначала порт на вход, чтобы ничего не натворить.
-																// С учетом особенностей порта.
-	port->otype	= gb_msk_struct.port[number].otype;
+															// С учетом особенностей порта.
+	port->otype		= gb_msk_struct.port[number].otype;
 	port->afl		= gb_msk_struct.port[number].afl;
 	port->afh		= gb_msk_struct.port[number].afh;
 	port->od		= gb_msk_struct.port[number].od;
