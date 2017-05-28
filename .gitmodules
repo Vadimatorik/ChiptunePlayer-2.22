@@ -1,0 +1,3 @@
+[submodule "stm32f2_api"]
+	path = stm32f2_api
+	url = git@github.com:Vadimatorik/stm32f2_api.git
