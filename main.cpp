@@ -23,14 +23,36 @@ const constexpr pin_config_t ayplayer_pin_cfg11[] = {
 		.af					= PIN_AF_NOT_USE,
 		.locked				= PIN_CONFIG_LOCKED,
 		.state_after_init	= PIN_STATE_AFTER_INIT_SET
-	}
+	},
+	{
+			.port				= PORT_B,
+			.pin_name			= PORT_PIN_4,
+			.mode				= PIN_OUTPUT_MODE,
+			.output_config		= PIN_OUTPUT_PUSH_PULL_CONFIG,
+			.speed				= PIN_LOW_SPEED,
+			.pull				= PIN_NO_PULL,
+			.af					= PIN_AF_NOT_USE,
+			.locked				= PIN_CONFIG_LOCKED,
+			.state_after_init	= PIN_STATE_AFTER_INIT_SET
+		},
+		{
+				.port				= PORT_B,
+				.pin_name			= PORT_PIN_12,
+				.mode				= PIN_OUTPUT_MODE,
+				.output_config		= PIN_OUTPUT_PUSH_PULL_CONFIG,
+				.speed				= PIN_LOW_SPEED,
+				.pull				= PIN_NO_PULL,
+				.af					= PIN_AF_NOT_USE,
+				.locked				= PIN_CONFIG_LOCKED,
+				.state_after_init	= PIN_STATE_AFTER_INIT_SET
+			}
 };
 
 
 
 
 //const constexpr pin					led(a);
-const constexpr global_port				g_port(ayplayer_pin_cfg11, 4);
+const constexpr global_port				g_port(ayplayer_pin_cfg11, 6);
 //const constexpr rcc					ay_rcc(&ay_rcc_cfg);
 
 uint32_t l = 0;
