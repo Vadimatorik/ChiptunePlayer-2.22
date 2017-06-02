@@ -4,9 +4,9 @@
  * Структуры инициализации всех выводов микроконтроллера.
  */
 const constexpr pin_config_t ayplayer_pin_cfg[] = {
-	MACRO_PIN_CFG_ADC(PORT_A, PORT_PIN_0),					// ADC_BAT.
-	MACRO_PIN_CFG_ADC(PORT_A, PORT_PIN_4),					// ADC_RIGHT.
-	MACRO_PIN_CFG_ADC(PORT_B, PORT_PIN_1),					// ADC_LEFT.
+	MACRO_PIN_CFG_ADC(EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_0),					// ADC_BAT.
+	MACRO_PIN_CFG_ADC(EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4),					// ADC_RIGHT.
+	MACRO_PIN_CFG_ADC(EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1),					// ADC_LEFT.
 	/*{
 		.port				= PORT_C,
 		.pin_name			= PORT_PIN_0,

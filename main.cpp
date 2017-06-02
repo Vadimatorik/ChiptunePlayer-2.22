@@ -10,49 +10,49 @@ const constexpr rcc_cfg		ay_rcc_cfg = {
 };*/
 
 const constexpr pin_config_t ayplayer_pin_cfg11[] = {
-	MACRO_PIN_CFG_ADC(PORT_A, PORT_PIN_0),					// ADC_BAT.
-	MACRO_PIN_CFG_ADC(PORT_A, PORT_PIN_4),					// ADC_RIGHT.
-	MACRO_PIN_CFG_ADC(PORT_B, PORT_PIN_1),					// ADC_LEFT.
-	{
-		.port				= PORT_C,
-		.pin_name			= PORT_PIN_0,
-		.mode				= PIN_OUTPUT_MODE,
-		.output_config		= PIN_OUTPUT_PUSH_PULL_CONFIG,
-		.speed				= PIN_LOW_SPEED,
-		.pull				= PIN_NO_PULL,
+	MACRO_PIN_CFG_ADC(EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_0),					// ADC_BAT.
+	MACRO_PIN_CFG_ADC(EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4),					// ADC_RIGHT.
+	MACRO_PIN_CFG_ADC(EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1),					// ADC_LEFT.
+	/*{
+		.port				= ENUM_PORT_NAME::C,
+		.pin_name			= ENUM_PORT_PIN_NAME::PIN_0,
+		.mode				= ENUM_PIN_MODE::OUTPUT,
+		.output_config		= ENUM_PIN_OUTPUT_CFG::PUSH_PULL,
+		.speed				= ENUM_PIN_SPEED::LOW,
+		.pull				= ENUM_PIN_PULL::NO,
 		.af					= PIN_AF_NOT_USE,
-		.locked				= PIN_CONFIG_LOCKED,
-		.state_after_init	= PIN_STATE_AFTER_INIT_SET
+		.locked				= LOCKED,
+		.state_after_init	= SET
 	},
 	{
-			.port				= PORT_B,
-			.pin_name			= PORT_PIN_4,
-			.mode				= PIN_OUTPUT_MODE,
-			.output_config		= PIN_OUTPUT_PUSH_PULL_CONFIG,
-			.speed				= PIN_LOW_SPEED,
-			.pull				= PIN_NO_PULL,
-			.af					= PIN_AF_NOT_USE,
-			.locked				= PIN_CONFIG_LOCKED,
-			.state_after_init	= PIN_STATE_AFTER_INIT_SET
-		},
-		{
-				.port				= PORT_B,
-				.pin_name			= PORT_PIN_12,
-				.mode				= PIN_OUTPUT_MODE,
-				.output_config		= PIN_OUTPUT_PUSH_PULL_CONFIG,
-				.speed				= PIN_LOW_SPEED,
-				.pull				= PIN_NO_PULL,
-				.af					= PIN_AF_NOT_USE,
-				.locked				= PIN_CONFIG_LOCKED,
-				.state_after_init	= PIN_STATE_AFTER_INIT_SET
-			}
+		.port				= ENUM_PORT_NAME::B,
+		.pin_name			= ENUM_PORT_PIN_NAME::PIN_4,
+		.mode				= ENUM_PIN_MODE::OUTPUT,
+		.output_config		= ENUM_PIN_OUTPUT_CFG::PUSH_PULL,
+		.speed				= ENUM_PIN_SPEED::LOW,
+		.pull				= ENUM_PIN_PULL::NO,
+		.af					= PIN_AF_NOT_USE,
+		.locked				= LOCKED,
+		.state_after_init	= SET
+	},
+	{
+		.port				= ENUM_PORT_NAME::B,
+		.pin_name			= ENUM_PORT_PIN_NAME::PIN_12,
+		.mode				= ENUM_PIN_MODE::OUTPUT,
+		.output_config		= ENUM_PIN_OUTPUT_CFG::PUSH_PULL,
+		.speed				= ENUM_PIN_SPEED::LOW,
+		.pull				= ENUM_PIN_PULL::NO,
+		.af					= PIN_AF_NOT_USE,
+		.locked				= LOCKED,
+		.state_after_init	= SET
+	}*/
 };
 
 
 
 
 //const constexpr pin					led(a);
-const constexpr global_port				g_port(ayplayer_pin_cfg11, 6);
+const constexpr global_port				g_port(ayplayer_pin_cfg11, 3);
 //const constexpr rcc					ay_rcc(&ay_rcc_cfg);
 
 uint32_t l = 0;
