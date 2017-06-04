@@ -10,9 +10,9 @@ const constexpr rcc_cfg		ay_rcc_cfg = {
 };*/
 
 const constexpr pin_config_t ayplayer_pin_cfg11[] = {
-	MACRO_PIN_CFG_ADC(EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_0),					// ADC_BAT.
-	MACRO_PIN_CFG_ADC(EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4),					// ADC_RIGHT.
-	MACRO_PIN_CFG_ADC(EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1),					// ADC_LEFT.
+	M_PIN_CFG_ADC(EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_0),					// ADC_BAT.
+	M_PIN_CFG_ADC(EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4),					// ADC_RIGHT.
+	M_PIN_CFG_ADC(EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1),					// ADC_LEFT.
 	/*{
 		.port				= ENUM_PORT_NAME::C,
 		.pin_name			= ENUM_PORT_PIN_NAME::PIN_0,
