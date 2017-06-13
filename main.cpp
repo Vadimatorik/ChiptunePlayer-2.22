@@ -51,17 +51,16 @@ const constexpr pin_config_t ayplayer_pin_cfg11[] = {
 
 
 
-const constexpr pin					led(ayplayer_pin_cfg11);
-const constexpr global_port			g_port(ayplayer_pin_cfg11, 3);
+//const constexpr pin					led(a);
+const constexpr global_port				g_port(ayplayer_pin_cfg11, 3);
 //const constexpr rcc					ay_rcc(&ay_rcc_cfg);
 
 uint32_t l = 0;
 int main (void){
 	*((uint32_t*)(0x40023800 + 0x30)) |= 0xFF;
 	g_port.reinit_all_ports();
-	led.reinit(0);
-	led.reinit(1);
-	led.reinit(2);
+	//led.set();
+
 	while(1) {
 		l++;
 	};
