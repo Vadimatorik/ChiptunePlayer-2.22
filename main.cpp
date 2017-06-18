@@ -1,11 +1,10 @@
-#include <stdint.h>
-#include "ayplayer_port.h"
+#include "main.h"
 
 int main (void){
     *((uint32_t*)(0x40023800 + 0x30)) |= 0xFF;
 
     ayplayer_port_init();
 
-    while ( true ) {
-    };
+    vTaskStartScheduler();
+    while ( true ) {};
 }
