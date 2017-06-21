@@ -9,9 +9,9 @@
 /*
  * ADC.
  */
-M_OBJ_PIN_CFG_ADC(adc_bat, EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_0);                   // ADC_BAT.
-M_OBJ_PIN_CFG_ADC(adc_right, EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4);                 // ADC_RIGHT.
-M_OBJ_PIN_CFG_ADC(adc_left, EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1);                  // ADC_LEFT.
+M_OBJ_PIN_CFG_ADC(adc_bat,      EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_0);                      // ADC_BAT.
+M_OBJ_PIN_CFG_ADC(adc_right,    EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4);                      // ADC_RIGHT.
+M_OBJ_PIN_CFG_ADC(adc_left,     EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1);                      // ADC_LEFT.
 
 /*
  * EXTI кнопки.
@@ -74,8 +74,8 @@ const pin_config_check_param<EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_7,  EC_PIN_M
 /*
  * SWD.
  */
-const pin_config_check_param<EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_13, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::SYS,         EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE>        swd_io;
-const pin_config_check_param<EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_14, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::DOWN,      EC_PIN_AF::SYS,         EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE>        swd_clk;
+const pin_config_check_param<EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_13, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::SYS,         EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE>        swd_io;
+const pin_config_check_param<EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_14, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::DOWN,      EC_PIN_AF::SYS,         EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE>        swd_clk;
 
 /*
  * PWR.
