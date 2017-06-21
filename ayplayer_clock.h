@@ -1,5 +1,4 @@
-#ifndef AYPLAYER_CLOCK_H_
-#define AYPLAYER_CLOCK_H_
+#pragma once
 
 #include "stm32_f20x_f21x_rcc.h"
 
@@ -17,4 +16,3 @@ const constexpr rcc_cfg ayplayer_rcc_cfg = {
 };
 
 constexpr const rcc ayplayer_rcc( &ayplayer_rcc_cfg );
-#endif

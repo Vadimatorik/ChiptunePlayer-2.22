@@ -1,5 +1,4 @@
-#ifndef FREERTOS_CONFIG_H
-#define FREERTOS_CONFIG_H
+#pragma once
 
 #define configUSE_PREEMPTION        1
 #define configUSE_IDLE_HOOK         0                                      // Во время бездействия функция пользователя не вызывается.
@@ -48,7 +47,5 @@ NVIC value of 255. */
 /*
  * FreeRTOS забирает себе эти 2 handler-а.
  */
-#define vPortSVCHandler     SVC_Handler
-#define xPortPendSVHandler  PendSV_Handler
-
-#endif
+#define vPortSVCHandler     sv_call_handler
+#define xPortPendSVHandler  pend_sv_handler
