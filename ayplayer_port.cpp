@@ -2,7 +2,7 @@
 
 
 
-const constexpr pin_config_t ayplayer_global_port_pin_cfg_1[] = {
+const constexpr pin_config_t ayplayer_global_port_pin_cfg[] = {
     adc_bat, adc_right, adc_left,                                                                           // ADC.
     midi_uart_rx,                                                                                           // MIDI (USART2).
     lcd_clk, lcd_miso, lcd_mosi, lcd_res, lcd_dc, lcd__cs,                                                  // LCD (SPI1 + TIMx).
@@ -16,7 +16,7 @@ const constexpr pin_config_t ayplayer_global_port_pin_cfg_1[] = {
     boot_tx, boot_rx                                                                                        // BOOT-USART (USART3).
 };
 
-const constexpr global_port ayplayer_global_port( ayplayer_global_port_pin_cfg_1, M_SIZE_ARRAY(ayplayer_global_port_pin_cfg_1) );
+const constexpr global_port ayplayer_global_port( ayplayer_global_port_pin_cfg, M_SIZE_ARRAY(ayplayer_global_port_pin_cfg) );
 
 int ayplayer_port_init ( void ) {
     return ( ayplayer_global_port.reinit_all_ports() == E_ANSWER_GP::SUCCESS )?0:-1;
