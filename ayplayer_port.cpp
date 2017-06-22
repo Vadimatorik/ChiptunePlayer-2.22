@@ -1,7 +1,5 @@
 #include "ayplayer_port.h"
 
-
-
 const constexpr pin_config_t ayplayer_global_port_pin_cfg[] = {
     adc_bat, adc_right, adc_left,                                                                           // ADC.
     midi_uart_rx,                                                                                           // MIDI (USART2).
