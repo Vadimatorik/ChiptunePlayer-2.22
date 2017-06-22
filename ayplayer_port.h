@@ -3,15 +3,12 @@
 #include "stm32_f20x_f21x_port.h"
 
 /*
- * Структура инициализации всех выводов порта.
- */
-
-/*
  * ADC.
  */
-M_OBJ_PIN_CFG_ADC(adc_bat,      EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_0);                      // ADC_BAT.
-M_OBJ_PIN_CFG_ADC(adc_right,    EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4);                      // ADC_RIGHT.
-M_OBJ_PIN_CFG_ADC(adc_left,     EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1);                      // ADC_LEFT.
+
+const pin_config_adc_check_param<EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_1>      adc_bat;
+const pin_config_adc_check_param<EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4>      adc_right;
+const pin_config_adc_check_param<EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1>      adc_left;
 
 /*
  * EXTI кнопки.
