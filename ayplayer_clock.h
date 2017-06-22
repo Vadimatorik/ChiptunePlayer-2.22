@@ -9,4 +9,4 @@ const constexpr rcc_cfg ayplayer_rcc_cfg = {
     .pll_count      = 1
 };
 
-constexpr const rcc ayplayer_rcc( &ayplayer_rcc_cfg );
+int ayplayer_clock_init ( void );
