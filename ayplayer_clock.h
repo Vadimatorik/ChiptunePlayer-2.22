@@ -2,16 +2,10 @@
 
 #include "stm32_f20x_f21x_rcc.h"
 
-const constexpr pll_cfg array_pll_cfg = {
-    .s  = EC_RCC_PLL_SOURCE::HSE,
-    .m  = 16,
-    .n  = 240,
-    .p  = EC_RCC_PLL_P::DIV_2,
-    .q  = 15
-};
+const pll_cfg_check_param< EC_RCC_PLL_SOURCE::HSE, 16, 240, EC_RCC_PLL_P::DIV_2, 15 >pll_120;
 
 const constexpr rcc_cfg ayplayer_rcc_cfg = {
-    .pll            = &array_pll_cfg,
+    .pll            = &pll_120,
     .pll_count      = 1
 };
 

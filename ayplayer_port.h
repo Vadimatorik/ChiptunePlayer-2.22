@@ -6,9 +6,9 @@
  * ADC.
  */
 
-const pin_config_adc_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_1>      adc_bat;
-const pin_config_adc_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4>      adc_right;
-const pin_config_adc_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1>      adc_left;
+const pin_config_adc_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_1 >      adc_bat;
+const pin_config_adc_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4 >      adc_right;
+const pin_config_adc_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1 >      adc_left;
 
 /*
  * EXTI кнопки.
