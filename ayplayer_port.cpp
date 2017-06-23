@@ -16,6 +16,10 @@ const constexpr pin_config_t ayplayer_global_port_pin_cfg[] = {
 
 const constexpr global_port ayplayer_global_port( ayplayer_global_port_pin_cfg, M_SIZE_ARRAY(ayplayer_global_port_pin_cfg) );
 
-int ayplayer_port_init ( void ) {
-    return ( ayplayer_global_port.reinit_all_ports() == E_ANSWER_GP::SUCCESS )?0:-1;
+const constexpr pin pin_lcd_res( &lcd_res );
+
+int ayplayer_port_test ( void ) {
+    pin_lcd_res.reset();
+    pin_lcd_res.set();
+    //return ( ayplayer_global_port.reinit_all_ports() == E_ANSWER_GP::SUCCESS )?0:-1;
 }
