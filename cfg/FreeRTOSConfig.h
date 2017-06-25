@@ -3,7 +3,7 @@
 #define configUSE_PREEMPTION        1
 #define configUSE_IDLE_HOOK         0                                      // Во время бездействия функция пользователя не вызывается.
 #define configUSE_TICK_HOOK         0                                      // После каждого системного тика функция пользователя не вызывается.
-#define configCPU_CLOCK_HZ          ( ( unsigned long ) 1000000 )
+#define configCPU_CLOCK_HZ          ( ( unsigned long ) 120000000 )
 #define configTICK_RATE_HZ          ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES        ( 5 )
 #define configMINIMAL_STACK_SIZE    ( ( unsigned short ) 300 )
@@ -43,6 +43,9 @@ priority values, 0 to 15.  This must correspond to the
 configKERNEL_INTERRUPT_PRIORITY setting.  Here 15 corresponds to the lowest
 NVIC value of 255. */
 #define configLIBRARY_KERNEL_INTERRUPT_PRIORITY	15
+
+#define INCLUDE_vTaskDelayUntil        1                                        // Для работы _vTaskDelayUntil.
+
 
 /*
  * FreeRTOS забирает себе эти 2 handler-а.
