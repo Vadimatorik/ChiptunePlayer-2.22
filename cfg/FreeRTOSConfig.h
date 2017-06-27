@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define configUSE_PREEMPTION        1
 #define configUSE_IDLE_HOOK         0                                      // Во время бездействия функция пользователя не вызывается.
 #define configUSE_TICK_HOOK         0                                      // После каждого системного тика функция пользователя не вызывается.
@@ -46,10 +50,17 @@ NVIC value of 255. */
 
 #define INCLUDE_vTaskDelayUntil        1                                        // Для работы _vTaskDelayUntil.
 
+extern void xPortPendSVHandler( void ) __attribute__ (( naked ));
+extern void xPortSysTickHandler( void );
+extern void vPortSVCHandler( void ) __attribute__ (( naked ));
 
 /*
  * FreeRTOS забирает себе эти 2 handler-а.
  */
-#define vPortSVCHandler     sv_call_handler
-#define xPortPendSVHandler  pend_sv_handler
-#define xPortSysTickHandler sys_tick_handler
+#define sv_call_handler     vPortSVCHandler
+#define pend_sv_handler     xPortPendSVHandler
+#define sys_tick_handler    xPortSysTickHandler
+
+#ifdef __cplusplus
+}
+#endif
