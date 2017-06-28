@@ -2,5 +2,7 @@
 	path = stm32f2_api
 	url = git@github.com:Vadimatorik/stm32f2_api.git
 [submodule "FreeRTOS_for_stm32f2"]
+	
 	path = FreeRTOS_for_stm32f2
+
 	url = git@github.com:Vadimatorik/FreeRTOS_for_stm32f2.git
