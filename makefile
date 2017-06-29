@@ -1,11 +1,12 @@
+п»ї######################################################################
+# РџР°СЂР°РјРµС‚СЂС‹ СЃР±РѕСЂРєРё РїСЂРѕРµРєС‚Р°.
 ######################################################################
-# Параметры сборки проекта.
-######################################################################
-FREE_RTOS_OPTIMIZATION	:= -g3 -Og
+FREE_RTOS_OPTIMIZATION		:= -g3 -Os
+STM32_F2_API_OPTIMIZATION	:= -g3 -Os 
 
 MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
 
-C_FLAGS			:= $(MK_FLAGS)		
+C_FLAGS			:= $(MK_FLAGS)
 C_FLAGS			+= -fmessage-length=0 
 C_FLAGS			+= -fsigned-char 
 C_FLAGS			+= -ffunction-sections
@@ -15,8 +16,18 @@ C_FLAGS			+= -Wextra
 C_FLAGS			+= -std=gnu99 
 C_FLAGS			+= -fshort-enums
 
+CPP_FLAGS		:= $(MK_FLAGS)
+CPP_FLAGS		+= -fmessage-length=0       
+CPP_FLAGS		+= -fsigned-char
+CPP_FLAGS		+= -ffunction-sections
+CPP_FLAGS		+= -fdata-sections
+CPP_FLAGS		+= -Wall
+CPP_FLAGS		+= -Wextra
+CPP_FLAGS		+= -std=c++14
+CPP_FLAGS		+= -fshort-enums
+
 ######################################################################
-# Параметры toolchain-а.
+# РџР°СЂР°РјРµС‚СЂС‹ toolchain-Р°.
 ######################################################################
 TOOLCHAIN_PATH	= arm-none-eabi
 
@@ -32,49 +43,77 @@ GDB	= $(TOOLCHAIN_PATH)-gdb
 SIZE	= $(TOOLCHAIN_PATH)-size
 
 ######################################################################
-# Конфигурация проекта пользователя.
+# РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ РїСЂРѕРµРєС‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
 ######################################################################
-# Все файлы из папки cfg в каталоге проекта.
-USER_CFG_H_FILE		:= $(wildcard ./cfg/*.h) 
-USER_CFG_DIR		:= ./cfg
+# Р’СЃРµ С„Р°Р№Р»С‹ РёР· РїР°РїРєРё cfg РІ РєР°С‚Р°Р»РѕРіРµ РїСЂРѕРµРєС‚Р°.
+USER_CFG_H_FILE		:= $(wildcard cfg/*.h)
+USER_CFG_DIR		:= cfg
 USER_CFG_PATH		:= -I$(USER_CFG_DIR)
 
-# Данный файл служит для удобного использования FreeRTOS из 
-# CPP кода. Так что он вынесен отдельно от проекта FreeRTOS
-# и вызывается везде, где используется FreeRTOS.
-USER_CFG_H_FILE		+= ./FreeRTOS_for_stm32f2/freertos_headers.h
+
 	
 ######################################################################
-# Для сборки FreeRTOS.
+# Р”Р»СЏ СЃР±РѕСЂРєРё FreeRTOS.
 ######################################################################
-# Собираем все необходимые .h файлы FreeRTOS.
-FREE_RTOS_H_FILE	:= $(wildcard ./FreeRTOS_for_stm32f2/include/*.h)	
+# РЎРѕР±РёСЂР°РµРј РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ .h С„Р°Р№Р»С‹ FreeRTOS.
+FREE_RTOS_H_FILE	:= $(wildcard FreeRTOS_for_stm32f2/include/*.h)	
 
-# Директории, в которых лежат файлы FreeRTOS.
-FREE_RTOS_DIR		:= ./FreeRTOS_for_stm32f2
-FREE_RTOS_DIR		+= ./FreeRTOS_for_stm32f2/include
+# Р”РёСЂРµРєС‚РѕСЂРёРё, РІ РєРѕС‚РѕСЂС‹С… Р»РµР¶Р°С‚ С„Р°Р№Р»С‹ FreeRTOS.
+FREE_RTOS_DIR		:= FreeRTOS_for_stm32f2
+FREE_RTOS_DIR		+= FreeRTOS_for_stm32f2/include
 
-# Подставляем перед каждым путем директории префикс -I.
+# РџРѕРґСЃС‚Р°РІР»СЏРµРј РїРµСЂРµРґ РєР°Р¶РґС‹Рј РїСѓС‚РµРј РґРёСЂРµРєС‚РѕСЂРёРё РїСЂРµС„РёРєСЃ -I.
 FREE_RTOS_PATH		:= $(addprefix -I, $(FREE_RTOS_DIR))
 
-# Получаем список .c файлов ( путь + файл.c ).
-FREE_RTOS_C_FILE	:= $(wildcard ./FreeRTOS_for_stm32f2/*.c)
+# РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє .c С„Р°Р№Р»РѕРІ ( РїСѓС‚СЊ + С„Р°Р№Р».c ).
+FREE_RTOS_C_FILE	:= $(wildcard FreeRTOS_for_stm32f2/*.c)
 
-# Получаем список .o файлов ( путь + файл.o ).
-# Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
-# с сохранением иерархии.
-FREE_RTOS_O_FILE	:= $(addprefix ./build/o/, $(FREE_RTOS_C_FILE))
-# Затем меняем у всех .c на .o.
-FREE_RTOS_O_FILE	:= $(patsubst %.c, %.o, $(FREE_RTOS_O_FILE))   
+# РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє .o С„Р°Р№Р»РѕРІ ( РїСѓС‚СЊ + С„Р°Р№Р».o ).
+# РЎРЅР°С‡Р°Р»Р° РїСЂРёР±Р°РІР»СЏРµРј РїСЂРµС„РёРєСЃ ( С‡С‚РѕР±С‹ РІСЃРµ .o Р»РµР¶Р°Р»Рё РІ РѕС‚РґРµР»СЊРЅРѕР№ РґРёСЂРµРєС‚РѕСЂРёРё
+# СЃ СЃРѕС…СЂР°РЅРµРЅРёРµРј РёРµСЂР°СЂС…РёРё.
+FREE_RTOS_OBJ_FILE	:= $(addprefix build/obj/, $(FREE_RTOS_C_FILE))
+# Р—Р°С‚РµРј РјРµРЅСЏРµРј Сѓ РІСЃРµС… .c РЅР° .o.
+FREE_RTOS_OBJ_FILE	:= $(patsubst %.c, %.obj, $(FREE_RTOS_OBJ_FILE))
 
-all:	$(FREE_RTOS_O_FILE)	
-
-# Сборка FreeRTOS.
-# $< - текущий .c файл (зависемость).
-# $@ - текущая цель (создаваемый .o файл).
-# $(dir путь) - создает папки для того, чтобы путь файла существовал.
-$(FREE_RTOS_O_FILE):	$(FREE_RTOS_C_FILE) $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+# РЎР±РѕСЂРєР° FreeRTOS.
+# $< - С‚РµРєСѓС‰РёР№ .c С„Р°Р№Р» (Р·Р°РІРёСЃРµРјРѕСЃС‚СЊ).
+# $@ - С‚РµРєСѓС‰Р°СЏ С†РµР»СЊ (СЃРѕР·РґР°РІР°РµРјС‹Р№ .o С„Р°Р№Р»).
+# $(dir РїСѓС‚СЊ) - СЃРѕР·РґР°РµС‚ РїР°РїРєРё РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РїСѓС‚СЊ С„Р°Р№Р»Р° СЃСѓС‰РµСЃС‚РІРѕРІР°Р».
+build/obj/FreeRTOS_for_stm32f2/%.obj:	FreeRTOS_for_stm32f2/%.c $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+	@echo [CC] $<	
 	@mkdir -p $(dir $@)
-	$(CC) $(C_FLAGS) $(FREE_RTOS_PATH) $(USER_CFG_PATH) -c $< -o $@  
-	 
-	 
+	@$(CC) $(C_FLAGS) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(FREE_RTOS_OPTIMIZATION) -c $< -o $@
+
+######################################################################
+# Р”Р»СЏ СЃР±РѕСЂРєРё stm32f2_api.
+######################################################################
+# РЎРѕР±РёСЂР°РµРј РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ .h С„Р°Р№Р»С‹ Р±РёР±Р»РёРѕС‚РµРєРё.
+#STM32_F2_API_H_FILE	:= $(shell find stm32f2_api/	-maxdepth 3 -type f -name "*.h" )
+
+# РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє .cpp С„Р°Р№Р»РѕРІ ( РїСѓС‚СЊ + С„Р°Р№Р».c ).
+#STM32_F2_API_CPP_FILE	:= $(shell find stm32f2_api/	-maxdepth 3 -type f -name "*.cpp" )
+
+# Р”РёСЂРµРєС‚РѕСЂРёРё Р±РёР±Р»РёРѕС‚РµРєРё.
+#STM32_F2_API_DIR	:= $(shell find stm32f2_api/	-maxdepth 3 -type d -name "*" )
+
+# РџРѕРґСЃС‚Р°РІР»СЏРµРј РїРµСЂРµРґ РєР°Р¶РґС‹Рј РїСѓС‚РµРј РґРёСЂРµРєС‚РѕСЂРёРё РїСЂРµС„РёРєСЃ -I.
+#STM32_F2_API_PATH	:= $(addprefix -I, $(STM32_F2_API_DIR))
+
+# РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє .o С„Р°Р№Р»РѕРІ ( РїСѓС‚СЊ + С„Р°Р№Р».o ).
+# РЎРЅР°С‡Р°Р»Р° РїСЂРёР±Р°РІР»СЏРµРј РїСЂРµС„РёРєСЃ ( С‡С‚РѕР±С‹ РІСЃРµ .o Р»РµР¶Р°Р»Рё РІ РѕС‚РґРµР»СЊРЅРѕР№ РґРёСЂРµРєС‚РѕСЂРёРё
+# СЃ СЃРѕС…СЂР°РЅРµРЅРёРµРј РёРµСЂР°СЂС…РёРё.
+#STM32_F2_API_OBJ_FILE	:= $(addprefix build/obj/, $(STM32_F2_API_CPP_FILE))
+# Р—Р°С‚РµРј РјРµРЅСЏРµРј Сѓ РІСЃРµС… .c РЅР° .o.
+#STM32_F2_API_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(STM32_F2_API_OBJ_FILE))
+
+# РЎР±РѕСЂРєР° stm32f2_api.
+# $< - С‚РµРєСѓС‰РёР№ .c С„Р°Р№Р» (Р·Р°РІРёСЃРµРјРѕСЃС‚СЊ).
+# $@ - С‚РµРєСѓС‰Р°СЏ С†РµР»СЊ (СЃРѕР·РґР°РІР°РµРјС‹Р№ .o С„Р°Р№Р»).
+# $(dir РїСѓС‚СЊ) - СЃРѕР·РґР°РµС‚ РїР°РїРєРё РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РїСѓС‚СЊ С„Р°Р№Р»Р° СЃСѓС‰РµСЃС‚РІРѕРІР°Р».
+#build/obj/stm32f2_api/port/%.obj:	stm32f2_api/port/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+#	@echo [CPP] $<
+#	mkdir -p $(dir $@)
+#	$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@	 
+
+
+all:	$(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE)
