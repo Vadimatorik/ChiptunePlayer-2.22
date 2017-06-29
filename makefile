@@ -88,32 +88,32 @@ build/obj/FreeRTOS_for_stm32f2/%.obj:	FreeRTOS_for_stm32f2/%.c $(USER_CFG_H_FILE
 # Для сборки stm32f2_api.
 ######################################################################
 # Собираем все необходимые .h файлы библиотеки.
-#STM32_F2_API_H_FILE	:= $(shell find stm32f2_api/	-maxdepth 3 -type f -name "*.h" )
+STM32_F2_API_H_FILE	:= $(shell find stm32f2_api/	-maxdepth 3 -type f -name "*.h" )
 
 # Получаем список .cpp файлов ( путь + файл.c ).
-#STM32_F2_API_CPP_FILE	:= $(shell find stm32f2_api/	-maxdepth 3 -type f -name "*.cpp" )
+STM32_F2_API_CPP_FILE	:= $(shell find stm32f2_api/	-maxdepth 3 -type f -name "*.cpp" )
 
 # Директории библиотеки.
-#STM32_F2_API_DIR	:= $(shell find stm32f2_api/	-maxdepth 3 -type d -name "*" )
+STM32_F2_API_DIR	:= $(shell find stm32f2_api/	-maxdepth 3 -type d -name "*" )
 
 # Подставляем перед каждым путем директории префикс -I.
-#STM32_F2_API_PATH	:= $(addprefix -I, $(STM32_F2_API_DIR))
+STM32_F2_API_PATH	:= $(addprefix -I, $(STM32_F2_API_DIR))
 
 # Получаем список .o файлов ( путь + файл.o ).
 # Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
 # с сохранением иерархии.
-#STM32_F2_API_OBJ_FILE	:= $(addprefix build/obj/, $(STM32_F2_API_CPP_FILE))
+STM32_F2_API_OBJ_FILE	:= $(addprefix build/obj/, $(STM32_F2_API_CPP_FILE))
 # Затем меняем у всех .c на .o.
-#STM32_F2_API_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(STM32_F2_API_OBJ_FILE))
+STM32_F2_API_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(STM32_F2_API_OBJ_FILE))
 
 # Сборка stm32f2_api.
 # $< - текущий .c файл (зависемость).
 # $@ - текущая цель (создаваемый .o файл).
 # $(dir путь) - создает папки для того, чтобы путь файла существовал.
-#build/obj/stm32f2_api/port/%.obj:	stm32f2_api/port/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
-#	@echo [CPP] $<
-#	mkdir -p $(dir $@)
-#	$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@	 
+build/obj/stm32f2_api/%.obj:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+	@echo [CPP] $<
+	@mkdir -p $(dir $@)
+	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@	 
 
 
 all:	$(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE)
