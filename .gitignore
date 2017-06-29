@@ -1,6 +1,11 @@
 /Debug/
 /build/
-.cproject
-.project
+*.cproject
+*.project
+*.config
+*.creator
+*.files
+*.includes
+*.creator.user
 .settings/
 nbproject/
