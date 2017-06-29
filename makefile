@@ -3,6 +3,7 @@
 ######################################################################
 FREE_RTOS_OPTIMIZATION		:= -g3 -Os
 STM32_F2_API_OPTIMIZATION	:= -g3 -Os 
+USER_CODE_OPTIMIZATION		:= -g3 -Os 
 
 MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
 
@@ -115,5 +116,36 @@ build/obj/stm32f2_api/%.obj:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@	 
 
+######################################################################
+# Сборка кода пользователя.
+# Весь код пользователя должен быть в корневой папке.
+######################################################################
+# Собираем все необходимые .h файлы библиотеки.
+USER_H_FILE	:= $(wildcard ./*.h)	
 
-all:	$(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE)
+# Получаем список .cpp файлов ( путь + файл.cpp ).
+USER_CPP_FILE	:= $(wildcard ./*.cpp)	
+
+# Директории библиотеки.
+USER_DIR	:= ./
+
+# Подставляем перед каждым путем директории префикс -I.
+USER_PATH	:= $(addprefix -I, $(STM32_F2_API_DIR))
+
+# Получаем список .o файлов ( путь + файл.o ).
+# Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
+# с сохранением иерархии.
+USER_OBJ_FILE	:= $(addprefix build/obj/, $(USER_CPP_FILE))
+# Затем меняем у всех .c на .o.
+USER_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(USER_OBJ_FILE))
+
+# Сборка файлов пользователя.
+# $< - текущий .c файл (зависемость).
+# $@ - текущая цель (создаваемый .o файл).
+# $(dir путь) - создает папки для того, чтобы путь файла существовал.
+build/obj/%.obj:	%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+	@echo [CPP] $<
+	@mkdir -p $(dir $@)
+	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@	 
+
+all:	$(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(USER_OBJ_FILE)

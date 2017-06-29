@@ -7,7 +7,6 @@ void housekeeping_thread ( void* arg ) {
     (void) arg;
     TickType_t xLastWakeTime = xTaskGetTickCount ();
     uint8_t out = 0;
-    uint8_t in = 0;
     while (1) {
        // spi1.tx ( out );
        // spi1.rx( in );
