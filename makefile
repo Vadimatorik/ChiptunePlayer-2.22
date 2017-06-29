@@ -3,9 +3,9 @@
 ######################################################################
 PROJECT_NAME			:= ay_player
 
-FREE_RTOS_OPTIMIZATION		:= -g3 -O0
-STM32_F2_API_OPTIMIZATION	:= -g3 -O0
-USER_CODE_OPTIMIZATION		:= -g3 -O0
+FREE_RTOS_OPTIMIZATION		:= -g3 -Os
+STM32_F2_API_OPTIMIZATION	:= -g3 -Os
+USER_CODE_OPTIMIZATION		:= -g3 -Os
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
