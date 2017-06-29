@@ -1,9 +1,13 @@
 ﻿######################################################################
 # Параметры сборки проекта.
 ######################################################################
+PROJECT_NAME			:= ay_player
+
 FREE_RTOS_OPTIMIZATION		:= -g3 -Os
 STM32_F2_API_OPTIMIZATION	:= -g3 -Os 
 USER_CODE_OPTIMIZATION		:= -g3 -Os 
+
+LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
 MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
 
@@ -26,6 +30,26 @@ CPP_FLAGS		+= -Wall
 CPP_FLAGS		+= -Wextra
 CPP_FLAGS		+= -std=c++14
 CPP_FLAGS		+= -fshort-enums
+
+LDFLAGS			:= $(MK_FLAGS)
+LDFLAGS			+= $(LD_FILES)
+LDFLAGS			+= -fmessage-length=0
+LDFLAGS			+= -ffunction-sections
+LDFLAGS			+= -fdata-sections
+LDFLAGS			+= -Wall
+LDFLAGS			+= -Wextra
+LDFLAGS			+= -nostartfiles
+LDFLAGS			+= -Xlinker
+LDFLAGS			+= --gc-sections
+LDFLAGS			+= --specs=nano.specs
+LDFLAGS			+= -u _printf_float
+LDFLAGS			+= -u _scanf_float
+LDFLAGS			+= -Wl,-u,vfprintf
+LDFLAGS			+= -Wl,--start-group
+LDFLAGS			+= -Wl,--whole-archive
+LDFLAGS			+= -Wl,--no-whole-archive
+LDFLAGS			+= -Wl,--end-group
+LDFLAGS			+= -Wl,--no-wchar-size-warning
 
 ######################################################################
 # Параметры toolchain-а.
@@ -148,4 +172,19 @@ build/obj/%.obj:	%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@	 
 
-all:	$(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(USER_OBJ_FILE)
+######################################################################
+# Компановка проекта.
+######################################################################
+PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(USER_OBJ_FILE)
+build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
+	@echo 'Project Composition'
+	@$(LD) $(PROJECT_OBJ_FILE) $(LDFLAGS) -o build/$(PROJECT_NAME).elf
+	@echo 'Finished building target: $@'
+	@echo ' '
+
+$(PROJECT_NAME).siz:	build/$(PROJECT_NAME).elf
+	@echo 'Print Size'
+	@arm-none-eabi-size --format=berkeley "build/$(PROJECT_NAME).elf"
+	@echo ' '
+
+all:	$(PROJECT_NAME).siz
