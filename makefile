@@ -3,53 +3,44 @@
 ######################################################################
 PROJECT_NAME			:= ay_player
 
-FREE_RTOS_OPTIMIZATION		:= -g3 -Os
-STM32_F2_API_OPTIMIZATION	:= -g3 -Os 
-USER_CODE_OPTIMIZATION		:= -g3 -Os 
+FREE_RTOS_OPTIMIZATION		:= -g3 -O0
+STM32_F2_API_OPTIMIZATION	:= -g3 -O0
+USER_CODE_OPTIMIZATION		:= -g3 -O0
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
 MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
+# Размещает каждую функцию в отдельной секции.
+MK_FLAGS		+= -ffunction-sections
+MK_FLAGS		+= -fdata-sections
 
 C_FLAGS			:= $(MK_FLAGS)
-C_FLAGS			+= -fmessage-length=0 
-C_FLAGS			+= -fsigned-char 
-C_FLAGS			+= -ffunction-sections
-C_FLAGS			+= -fdata-sections
+# Все предупреждения == ошибки.
+C_FLAGS			+= -Werror
+# Выдавать предупреждения (ошибки) о сомнительных констукциях.
 C_FLAGS			+= -Wall
+# Выдавать предупреждение (ошибку) о любых сомнительных действиях.
 C_FLAGS			+= -Wextra 
 C_FLAGS			+= -std=gnu99 
+# Если переменная объявлена как enum, то она должна иметь возможность
+# хранить в себе всевозможные состояния этого enum-а (а не только текущее).
 C_FLAGS			+= -fshort-enums
 
-CPP_FLAGS		:= $(MK_FLAGS)
-CPP_FLAGS		+= -fmessage-length=0       
-CPP_FLAGS		+= -fsigned-char
-CPP_FLAGS		+= -ffunction-sections
-CPP_FLAGS		+= -fdata-sections
-CPP_FLAGS		+= -Wall
-CPP_FLAGS		+= -Wextra
+CPP_FLAGS		:= $(MK_FLAGS)     
+CPP_FLAGS		+= -Werror -Wall -Wextra
 CPP_FLAGS		+= -std=c++14
 CPP_FLAGS		+= -fshort-enums
 
 LDFLAGS			:= $(MK_FLAGS)
 LDFLAGS			+= $(LD_FILES)
-LDFLAGS			+= -fmessage-length=0
-LDFLAGS			+= -ffunction-sections
-LDFLAGS			+= -fdata-sections
-LDFLAGS			+= -Wall
-LDFLAGS			+= -Wextra
-LDFLAGS			+= -nostartfiles
-LDFLAGS			+= -Xlinker
-LDFLAGS			+= --gc-sections
-LDFLAGS			+= --specs=nano.specs
-LDFLAGS			+= -u _printf_float
-LDFLAGS			+= -u _scanf_float
-LDFLAGS			+= -Wl,-u,vfprintf
-LDFLAGS			+= -Wl,--start-group
-LDFLAGS			+= -Wl,--whole-archive
-LDFLAGS			+= -Wl,--no-whole-archive
-LDFLAGS			+= -Wl,--end-group
-LDFLAGS			+= -Wl,--no-wchar-size-warning
+LDFLAGS			+= -Werror -Wall -Wextra 
+# Убираем неиспользуемые функции из .elf.
+LDFLAGS			+= -Wl,--gc-sections
+LDFLAGS			+= -Ofast -funroll-loops
+# Развертывание циклов.
+LDFLAGS			+= -funroll-loops
+# Удаление из elf неиспользуемого кода.
+LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
 
 ######################################################################
 # Параметры toolchain-а.
@@ -75,13 +66,13 @@ USER_CFG_H_FILE		:= $(wildcard cfg/*.h)
 USER_CFG_DIR		:= cfg
 USER_CFG_PATH		:= -I$(USER_CFG_DIR)
 
-
-	
 ######################################################################
 # Для сборки FreeRTOS.
 ######################################################################
 # Собираем все необходимые .h файлы FreeRTOS.
-FREE_RTOS_H_FILE	:= $(wildcard FreeRTOS_for_stm32f2/include/*.h)	
+# FreeRTOS.h должен обязательно идти первым! 
+FREE_RTOS_H_FILE	:= FreeRTOS_for_stm32f2/FreeRTOS.h
+FREE_RTOS_H_FILE	+= $(wildcard FreeRTOS_for_stm32f2/include/*.h)	
 
 # Директории, в которых лежат файлы FreeRTOS.
 FREE_RTOS_DIR		:= FreeRTOS_for_stm32f2
@@ -100,14 +91,15 @@ FREE_RTOS_OBJ_FILE	:= $(addprefix build/obj/, $(FREE_RTOS_C_FILE))
 # Затем меняем у всех .c на .o.
 FREE_RTOS_OBJ_FILE	:= $(patsubst %.c, %.obj, $(FREE_RTOS_OBJ_FILE))
 
+FREE_RTOS_INCLUDE_FILE	:= -include"./FreeRTOS_for_stm32f2/include/StackMacros.h"
 # Сборка FreeRTOS.
 # $< - текущий .c файл (зависемость).
 # $@ - текущая цель (создаваемый .o файл).
 # $(dir путь) - создает папки для того, чтобы путь файла существовал.
-build/obj/FreeRTOS_for_stm32f2/%.obj:	FreeRTOS_for_stm32f2/%.c $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+build/obj/FreeRTOS_for_stm32f2/%.obj:	FreeRTOS_for_stm32f2/%.c 
 	@echo [CC] $<	
 	@mkdir -p $(dir $@)
-	@$(CC) $(C_FLAGS) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(FREE_RTOS_OPTIMIZATION) -c $< -o $@
+	@$(CC) $(C_FLAGS) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(FREE_RTOS_INCLUDE_FILE) -c $< -o $@
 
 ######################################################################
 # Для сборки stm32f2_api.
@@ -154,7 +146,7 @@ USER_CPP_FILE	:= $(wildcard ./*.cpp)
 USER_DIR	:= ./
 
 # Подставляем перед каждым путем директории префикс -I.
-USER_PATH	:= $(addprefix -I, $(STM32_F2_API_DIR))
+USER_PATH	:= $(addprefix -I, $(USER_DIR))
 
 # Получаем список .o файлов ( путь + файл.o ).
 # Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
@@ -176,15 +168,21 @@ build/obj/%.obj:	%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 # Компановка проекта.
 ######################################################################
 PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(USER_OBJ_FILE)
+
 build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
-	@echo 'Project Composition'
-	@$(LD) $(PROJECT_OBJ_FILE) $(LDFLAGS) -o build/$(PROJECT_NAME).elf
+	@echo 'Project Composition:'
+	@echo ' '
+
+#$(LD)	$(LDFLAGS) -o build/$(PROJECT_NAME).elf 2> programma.errors
+	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 $(PROJECT_NAME).siz:	build/$(PROJECT_NAME).elf
-	@echo 'Print Size'
+	@echo 'Print Size:'
 	@arm-none-eabi-size --format=berkeley "build/$(PROJECT_NAME).elf"
 	@echo ' '
 
 all:	$(PROJECT_NAME).siz
+	@$(OBJDUMP) -D build/$(PROJECT_NAME).elf > build/$(PROJECT_NAME).asm
+	@$(OBJCOPY) build/$(PROJECT_NAME).elf build/$(PROJECT_NAME).bin -O binary

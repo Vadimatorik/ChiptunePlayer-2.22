@@ -1,5 +1,4 @@
 #include "ayplayer_clock.h"
-
 constexpr const rcc ayplayer_rcc( &ayplayer_rcc_cfg );
 
 int ayplayer_clock_init ( void ) {
