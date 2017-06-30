@@ -72,7 +72,7 @@ USER_CFG_PATH		:= -I$(USER_CFG_DIR)
 # Собираем все необходимые .h файлы FreeRTOS.
 # FreeRTOS.h должен обязательно идти первым! 
 FREE_RTOS_H_FILE	:= FreeRTOS_for_stm32f2/FreeRTOS.h
-FREE_RTOS_H_FILE	+= $(wildcard FreeRTOS_for_stm32f2/include/*.h)	
+FREE_RTOS_H_FILE	+= $(wildcard FreeRTOS_for_stm32f2/include/*.h)
 
 # Директории, в которых лежат файлы FreeRTOS.
 FREE_RTOS_DIR		:= FreeRTOS_for_stm32f2
@@ -97,7 +97,7 @@ FREE_RTOS_INCLUDE_FILE	:= -include"./FreeRTOS_for_stm32f2/include/StackMacros.h"
 # $@ - текущая цель (создаваемый .o файл).
 # $(dir путь) - создает папки для того, чтобы путь файла существовал.
 build/obj/FreeRTOS_for_stm32f2/%.obj:	FreeRTOS_for_stm32f2/%.c 
-	@echo [CC] $<	
+	@echo [CC] $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(C_FLAGS) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(FREE_RTOS_INCLUDE_FILE) -c $< -o $@
 
@@ -130,7 +130,7 @@ STM32_F2_API_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(STM32_F2_API_OBJ_FILE))
 build/obj/stm32f2_api/%.obj:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@	 
+	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@
 
 ######################################################################
 # Сборка кода пользователя.
@@ -162,7 +162,7 @@ USER_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(USER_OBJ_FILE))
 build/obj/%.obj:	%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@	 
+	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
 
 ######################################################################
 # Компановка проекта.
@@ -173,7 +173,7 @@ build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
 	@echo 'Project Composition:'
 	@echo ' '
 
-#$(LD)	$(LDFLAGS) -o build/$(PROJECT_NAME).elf 2> programma.errors
+#$(LD)	$(LDFLAGS) -o build/$(PROJECT_NAME).elf
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf
 	@echo 'Finished building target: $@'
 	@echo ' '
