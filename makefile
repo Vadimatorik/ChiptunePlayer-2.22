@@ -173,7 +173,7 @@ build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
 	@echo 'Project Composition:'
 	@echo ' '
 
-#$(LD)	$(LDFLAGS) -o build/$(PROJECT_NAME).elf
+$(LD):	$(LDFLAGS) -o build/$(PROJECT_NAME).elf
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf
 	@echo 'Finished building target: $@'
 	@echo ' '
