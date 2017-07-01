@@ -170,11 +170,8 @@ build/obj/%.obj:	%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(USER_OBJ_FILE)
 
 build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
-	@echo 'Project Composition:'
-	@echo ' '
-
-$(LD):	$(LDFLAGS) -o build/$(PROJECT_NAME).elf
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf
+	@echo ' '
 	@echo 'Finished building target: $@'
 	@echo ' '
 
