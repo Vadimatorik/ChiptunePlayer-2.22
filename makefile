@@ -3,9 +3,9 @@
 #**********************************************************************
 # Параметры сборки проекта.
 #**********************************************************************
-FREE_RTOS_OPTIMIZATION		:= -g3 -Os
-STM32_F2_API_OPTIMIZATION	:= -g3 -Os
-USER_CODE_OPTIMIZATION		:= -g3 -Os
+FREE_RTOS_OPTIMIZATION		:= -g3 -Og
+STM32_F2_API_OPTIMIZATION	:= -g3 -Og
+USER_CODE_OPTIMIZATION		:= -g3 -Og
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
@@ -36,7 +36,7 @@ LDFLAGS			+= $(LD_FILES)
 LDFLAGS			+= -Werror -Wall -Wextra 
 # Убираем неиспользуемые функции из .elf.
 LDFLAGS			+= -Wl,--gc-sections
-LDFLAGS			+= -Ofast -funroll-loops
+LDFLAGS			+= -funroll-loops
 # Развертывание циклов.
 LDFLAGS			+= -funroll-loops
 # Удаление из elf неиспользуемого кода.
