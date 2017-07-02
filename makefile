@@ -183,3 +183,8 @@ $(PROJECT_NAME).siz:	build/$(PROJECT_NAME).elf
 all:	$(PROJECT_NAME).siz
 	@$(OBJDUMP) -D build/$(PROJECT_NAME).elf > build/$(PROJECT_NAME).asm
 	@$(OBJCOPY) build/$(PROJECT_NAME).elf build/$(PROJECT_NAME).bin -O binary
+	
+clean:	
+	@rm -R ./build
+	@echo 'Project cline!'
+	@echo ' '
