@@ -28,7 +28,7 @@ C_FLAGS			+= -fshort-enums
 
 CPP_FLAGS		:= $(MK_FLAGS)     
 CPP_FLAGS		+= -Werror -Wall -Wextra
-CPP_FLAGS		+= -std=c++14
+CPP_FLAGS		+= -std=c++1z
 CPP_FLAGS		+= -fshort-enums
 
 LDFLAGS			:= $(MK_FLAGS)
