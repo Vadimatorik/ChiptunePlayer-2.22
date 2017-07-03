@@ -12,7 +12,7 @@ EC_SPI_CFG_CS              :: DISABLED > spi1;
 
 extern "C" {
 void spi1_handler ( void ) {
-    //spi1.handler();
+    spi1.handler();
 }
 }
 
@@ -20,6 +20,7 @@ void spi1_handler ( void ) {
 
 int ayplayer_spi_init ( void ) {
     spi1.reinit();
-
+    ayplayer_nvic.irq_set_priority( IRQ_NAME::SPI1, IRQ_PRIO::PRIO_6 );
+    ayplayer_nvic.irq_enable( IRQ_NAME::SPI1 );
     return 0;
 }

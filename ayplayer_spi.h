@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stm32_f20x_f21x_spi.h"
+#include "ayplayer_nvic.h"
 
 extern spi_master_hardware_os< EC_SPI_NAME                :: SPI1,
 EC_SPI_CFG_CLK_POLARITY    :: IDLE_0,
