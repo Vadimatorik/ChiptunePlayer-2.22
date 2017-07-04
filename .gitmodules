@@ -6,3 +6,6 @@
 	path = FreeRTOS_for_stm32f2
 
 	url = git@github.com:Vadimatorik/FreeRTOS_for_stm32f2.git
+[submodule "mono_lcd_lib"]
+	path = mono_lcd_lib
+	url = https://github.com/Vadimatorik/mono_lcd_lib
