@@ -51,8 +51,11 @@ configKERNEL_INTERRUPT_PRIORITY setting.  Here 15 corresponds to the lowest
 NVIC value of 255. */
 #define configLIBRARY_KERNEL_INTERRUPT_PRIORITY	15
 
-#define INCLUDE_vTaskDelayUntil        1                                        // Для работы _vTaskDelayUntil.
-
+/*
+ * Разрешаем работу нужных нам функций.
+ */
+#define INCLUDE_vTaskDelayUntil         1
+#define INCLUDE_vTaskDelay              1
 extern void xPortPendSVHandler( void ) __attribute__ (( naked ));
 extern void xPortSysTickHandler( void );
 extern void vPortSVCHandler( void ) __attribute__ (( naked ));
