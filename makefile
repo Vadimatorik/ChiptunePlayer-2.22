@@ -6,6 +6,7 @@
 FREE_RTOS_OPTIMIZATION		:= -g3 -Og
 STM32_F2_API_OPTIMIZATION	:= -g3 -Og
 USER_CODE_OPTIMIZATION		:= -g3 -Og
+LCD_LIB_OPTIMIZATION		:= -g3 -Og
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
@@ -131,6 +132,37 @@ build/obj/stm32f2_api/%.obj:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@
+
+#**********************************************************************
+# Для сборки lcd.
+#**********************************************************************
+# Собираем все необходимые .h файлы библиотеки.
+LCD_LIB_H_FILE	:= $(shell find mono_lcd_lib/ -maxdepth 3 -type f -name "*.h" )
+
+# Получаем список .cpp файлов ( путь + файл.c ).
+LCD_LIB_CPP_FILE	:= $(shell find mono_lcd_lib/ -maxdepth 3 -type f -name "*.cpp" )
+
+# Директории библиотеки.
+LCD_LIB_DIR	:= $(shell find mono_lcd_lib/ -maxdepth 3 -type d -name "*" )
+
+# Подставляем перед каждым путем директории префикс -I.
+LCD_LIB_PATH	:= $(addprefix -I, $(LCD_LIB_DIR))
+
+# Получаем список .o файлов ( путь + файл.o ).
+# Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
+# с сохранением иерархии.
+LCD_LIB_OBJ_FILE	:= $(addprefix build/obj/, $(LCD_LIB_CPP_FILE))
+# Затем меняем у всех .c на .o.
+LCD_LIB_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(LCD_LIB_OBJ_FILE))
+
+# Сборка stm32f2_api.
+# $< - текущий .c файл (зависемость).
+# $@ - текущая цель (создаваемый .o файл).
+# $(dir путь) - создает папки для того, чтобы путь файла существовал.
+build/obj/mono_lcd_lib/%.obj:	mono_lcd_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+	@echo [CPP] $<
+	@mkdir -p $(dir $@)
+	@$(CPP) $(CPP_FLAGS) $(LCD_LIB_PATH) $(USER_CFG_PATH) $(LCD_LIB_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
 # Сборка кода пользователя.
