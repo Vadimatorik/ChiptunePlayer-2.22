@@ -7,7 +7,7 @@ extern "C" {
 #define configUSE_PREEMPTION        1
 #define configUSE_IDLE_HOOK         0                                      // Во время бездействия функция пользователя не вызывается.
 #define configUSE_TICK_HOOK         0                                      // После каждого системного тика функция пользователя не вызывается.
-#define configCPU_CLOCK_HZ          ( ( unsigned long ) 25000000 )
+#define configCPU_CLOCK_HZ          ( ( unsigned long ) 2000000 )
 #define configTICK_RATE_HZ          ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES        ( 5 )
 #define configMINIMAL_STACK_SIZE    ( ( unsigned short ) 300 )
