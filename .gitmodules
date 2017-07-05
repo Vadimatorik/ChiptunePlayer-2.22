@@ -9,3 +9,9 @@
 [submodule "mono_lcd_lib"]
 	path = mono_lcd_lib
 	url = https://github.com/Vadimatorik/mono_lcd_lib
+[submodule "mini_gui_by_vadimatorik"]
+	path = mini_gui_by_vadimatorik
+	url = git@github.com:Vadimatorik/mini_gui_by_vadimatorik.git
+[submodule "simple_mono_drawing_lib"]
+	path = simple_mono_drawing_lib
+	url = git@github.com:Vadimatorik/simple_mono_drawing_lib.git

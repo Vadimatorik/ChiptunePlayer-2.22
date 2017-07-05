@@ -105,101 +105,64 @@ build/obj/FreeRTOS_for_stm32f2/%.obj:	FreeRTOS_for_stm32f2/%.c
 #**********************************************************************
 # Для сборки stm32f2_api.
 #**********************************************************************
-# Собираем все необходимые .h файлы библиотеки.
 STM32_F2_API_H_FILE	:= $(shell find stm32f2_api/ -maxdepth 3 -type f -name "*.h" )
-
-# Получаем список .cpp файлов ( путь + файл.c ).
 STM32_F2_API_CPP_FILE	:= $(shell find stm32f2_api/ -maxdepth 3 -type f -name "*.cpp" )
-
-# Директории библиотеки.
 STM32_F2_API_DIR	:= $(shell find stm32f2_api/ -maxdepth 3 -type d -name "*" )
-
-# Подставляем перед каждым путем директории префикс -I.
 STM32_F2_API_PATH	:= $(addprefix -I, $(STM32_F2_API_DIR))
-
-# Получаем список .o файлов ( путь + файл.o ).
-# Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
-# с сохранением иерархии.
 STM32_F2_API_OBJ_FILE	:= $(addprefix build/obj/, $(STM32_F2_API_CPP_FILE))
-# Затем меняем у всех .c на .o.
 STM32_F2_API_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(STM32_F2_API_OBJ_FILE))
-
-# Сборка stm32f2_api.
-# $< - текущий .c файл (зависемость).
-# $@ - текущая цель (создаваемый .o файл).
-# $(dir путь) - создает папки для того, чтобы путь файла существовал.
 build/obj/stm32f2_api/%.obj:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
-# Для сборки lcd.
+# Для сборки библиотеки LCD драйверов (mono_lcd_lib).
 #**********************************************************************
-# Собираем все необходимые .h файлы библиотеки.
-LCD_LIB_H_FILE	:= $(shell find mono_lcd_lib/ -maxdepth 3 -type f -name "*.h" )
-
-# Получаем список .cpp файлов ( путь + файл.c ).
+LCD_LIB_H_FILE		:= $(shell find mono_lcd_lib/ -maxdepth 3 -type f -name "*.h" )
 LCD_LIB_CPP_FILE	:= $(shell find mono_lcd_lib/ -maxdepth 3 -type f -name "*.cpp" )
-
-# Директории библиотеки.
-LCD_LIB_DIR	:= $(shell find mono_lcd_lib/ -maxdepth 3 -type d -name "*" )
-
-# Подставляем перед каждым путем директории префикс -I.
-LCD_LIB_PATH	:= $(addprefix -I, $(LCD_LIB_DIR))
-
-# Получаем список .o файлов ( путь + файл.o ).
-# Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
-# с сохранением иерархии.
+LCD_LIB_DIR		:= $(shell find mono_lcd_lib/ -maxdepth 3 -type d -name "*" )
+LCD_LIB_PATH		:= $(addprefix -I, $(LCD_LIB_DIR))
 LCD_LIB_OBJ_FILE	:= $(addprefix build/obj/, $(LCD_LIB_CPP_FILE))
-# Затем меняем у всех .c на .o.
 LCD_LIB_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(LCD_LIB_OBJ_FILE))
-
-# Сборка stm32f2_api.
-# $< - текущий .c файл (зависемость).
-# $@ - текущая цель (создаваемый .o файл).
-# $(dir путь) - создает папки для того, чтобы путь файла существовал.
 build/obj/mono_lcd_lib/%.obj:	mono_lcd_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(LCD_LIB_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(LCD_LIB_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
+# Для сборки библиотеки рисования приметивов (simple_mono_drawing_lib).
+#**********************************************************************
+SIMPLE_MONO_DRAWING_LIB_H_FILE		:= $(shell find simple_mono_drawing_lib/ -maxdepth 3 -type f -name "*.h" )
+SIMPLE_MONO_DRAWING_LIB_CPP_FILE	:= $(shell find simple_mono_drawing_lib/ -maxdepth 3 -type f -name "*.cpp" )
+SIMPLE_MONO_DRAWING_LIB_DIR		:= $(shell find simple_mono_drawing_lib/ -maxdepth 3 -type d -name "*" )
+SIMPLE_MONO_DRAWING_LIB_PATH		:= $(addprefix -I, $(SIMPLE_MONO_DRAWING_LIB_DIR))
+SIMPLE_MONO_DRAWING_LIB_OBJ_FILE	:= $(addprefix build/obj/, $(SIMPLE_MONO_DRAWING_LIB_CPP_FILE))
+SIMPLE_MONO_DRAWING_LIB_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE))
+build/obj/simple_mono_drawing_lib/%.obj:	simple_mono_drawing_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+	@echo [CPP] $<
+	@mkdir -p $(dir $@)
+	@$(CPP) $(CPP_FLAGS) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(LCD_LIB_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(LCD_LIB_OPTIMIZATION) -c $< -o $@
+	
+#**********************************************************************
 # Сборка кода пользователя.
 # Весь код пользователя должен быть в корневой папке.
 #**********************************************************************
-# Собираем все необходимые .h файлы библиотеки.
 USER_H_FILE	:= $(wildcard ./*.h)	
-
-# Получаем список .cpp файлов ( путь + файл.cpp ).
 USER_CPP_FILE	:= $(wildcard ./*.cpp)	
-
-# Директории библиотеки.
 USER_DIR	:= ./
-
-# Подставляем перед каждым путем директории префикс -I.
 USER_PATH	:= $(addprefix -I, $(USER_DIR))
-
-# Получаем список .o файлов ( путь + файл.o ).
-# Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
-# с сохранением иерархии.
 USER_OBJ_FILE	:= $(addprefix build/obj/, $(USER_CPP_FILE))
-# Затем меняем у всех .c на .o.
 USER_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(USER_OBJ_FILE))
-
-# Сборка файлов пользователя.
-# $< - текущий .c файл (зависемость).
-# $@ - текущая цель (создаваемый .o файл).
-# $(dir путь) - создает папки для того, чтобы путь файла существовал.
 build/obj/%.obj:	%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
 # Компановка проекта.
 #**********************************************************************
-PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(LCD_LIB_OBJ_FILE) $(USER_OBJ_FILE)
+PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(LCD_LIB_OBJ_FILE) $(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE) $(USER_OBJ_FILE)
 
 build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf
