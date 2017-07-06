@@ -143,6 +143,20 @@ build/obj/simple_mono_drawing_lib/%.obj:	simple_mono_drawing_lib/%.cpp $(USER_CF
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(LCD_LIB_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(LCD_LIB_OPTIMIZATION) -c $< -o $@
+
+#**********************************************************************
+# Для сборки библиотеки GUI объектов (mini_gui_by_vadimatorik)
+#**********************************************************************
+MINI_GUI_BY_VADIMATORIK_H_FILE		:= $(shell find mini_gui_by_vadimatorik/ -maxdepth 3 -type f -name "*.h" )
+MINI_GUI_BY_VADIMATORIK_CPP_FILE	:= $(shell find mini_gui_by_vadimatorik/ -maxdepth 3 -type f -name "*.cpp" )
+MINI_GUI_BY_VADIMATORIK_DIR		:= $(shell find mini_gui_by_vadimatorik/ -maxdepth 3 -type d -name "*" )
+MINI_GUI_BY_VADIMATORIK_DIR		:= $(addprefix -I, $(MINI_GUI_BY_VADIMATORIK_DIR))
+MINI_GUI_BY_VADIMATORIK_OBJ_FILE	:= $(addprefix build/obj/, $(MINI_GUI_BY_VADIMATORIK_CPP_FILE))
+MINI_GUI_BY_VADIMATORIK_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(MINI_GUI_BY_VADIMATORIK_OBJ_FILE))
+build/obj/mini_gui_by_vadimatorik/%.obj:	mini_gui_by_vadimatorik/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+	@echo [CPP] $<
+	@mkdir -p $(dir $@)
+	@$(CPP) $(CPP_FLAGS) $(MINI_GUI_BY_VADIMATORIK_PATH) $(LCD_LIB_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(LCD_LIB_OPTIMIZATION) -c $< -o $@
 	
 #**********************************************************************
 # Сборка кода пользователя.
@@ -157,12 +171,12 @@ USER_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(USER_OBJ_FILE))
 build/obj/%.obj:	%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_DIR) $(USER_CODE_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
 # Компановка проекта.
 #**********************************************************************
-PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(LCD_LIB_OBJ_FILE) $(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE) $(USER_OBJ_FILE)
+PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(LCD_LIB_OBJ_FILE) $(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE) $(MINI_GUI_BY_VADIMATORIK_OBJ_FILE) $(USER_OBJ_FILE)
 
 build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf
