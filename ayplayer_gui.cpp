@@ -77,11 +77,11 @@ mini_gui_by_vadimatorik_status_bar_mono_cfg_t gui_main_window_status_bar_init_cf
     .fill_rect                  = virtual_layer_fill_rect,
     .draw_frame                 = virtual_layer_draw_frame,
 
-    .width_bar_pixel            = 54,
-    .height_barpixel            = 5,
+    .width_bar_pixel            = 76,
+    .height_barpixel            = 6,
     .width_line                 = 1,
-    .x_pos                      = 30,
-    .y_pos                      = 64 - 5 - 1
+    .x_pos                      = 26,
+    .y_pos                      = 64 - 6 - 2
 };
 
 mini_gui_by_vadimatorik_lcd_mono_status_bar main_status_bar( &gui_main_window_status_bar_init_cfg );
