@@ -8,4 +8,5 @@
 *.includes
 *.creator.user
 .settings/
+.o
 nbproject/

@@ -8,5 +8,6 @@
 
 #include "ayplayer_housekeeping.h"
 #include "ayplayer_lcd.h"
+#include "ayplayer_gui.h"
 
 #include <stdint.h>

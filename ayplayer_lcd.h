@@ -12,8 +12,8 @@ const mono_lcd_lib_st7565_cfg_t st7565_cfg {
 };
 
 extern uint8_t lcd_buffer[1024];
-
-const mono_lcd_lib_st7565 ayplayer_lcd( &st7565_cfg, lcd_buffer );
-const constexpr simple_drawing_lib sd_lcd( lcd_buffer );
-
-void ayplayer_lcd_init ( void );
+extern mono_lcd_lib_st7565 ayplayer_lcd;
+/*
+ * Метод инициализирует экран из ОС.
+ */
+void ayplayer_lcd_init ( uint8_t contrast );

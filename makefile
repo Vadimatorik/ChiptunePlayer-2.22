@@ -158,7 +158,7 @@ MINI_GUI_BY_VADIMATORIK_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(MINI_GUI_BY_VADIM
 build/obj/mini_gui_by_vadimatorik/%.obj:	mini_gui_by_vadimatorik/%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(MINI_GUI_BY_VADIMATORIK_PATH) $(USER_CFG_PATH) $(MINI_GUI_BY_VADIMATORIK_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(MINI_GUI_BY_VADIMATORIK_PATH) $(USER_CFG_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_OPTIMIZATION) -c $< -o $@
 	
 #**********************************************************************
 # Сборка кода пользователя.
@@ -170,7 +170,7 @@ USER_DIR	:= ./
 USER_PATH	:= $(addprefix -I, $(USER_DIR))
 USER_OBJ_FILE	:= $(addprefix build/obj/, $(USER_CPP_FILE))
 USER_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(USER_OBJ_FILE))
-build/obj/%.obj:	%.cpp 
+build/obj/%.obj:	%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@

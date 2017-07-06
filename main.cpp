@@ -6,7 +6,7 @@ int main (void){
     ayplayer_port_init();
     ayplayer_spi_init();
     ayplayer_housekeeping_init();
-
+    ayplayer_gui_init();
     vTaskStartScheduler();
     while ( true ) {};
 }
