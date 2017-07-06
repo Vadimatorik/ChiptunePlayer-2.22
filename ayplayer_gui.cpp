@@ -130,12 +130,7 @@ void ayplayer_gui_main_window_show ( void ) {
     main_play_bar.reset();
     ayplayer_lcd.clear();
     ayplayer_lcd.update();
- //   status_bar_fd = gui_status_bar_init(&gui_status_bar_init_cfg);
-   // play_bar_fd = gui_play_bar_init(&gui_play_bar_init_cfg);
-   // string_bar_fd = gui_string_box_init(&gui_string_box_init_cfg);
 }
-
-char test_w[] = "Hello World!";
 
 /*
  * Обновление экрана раз в секунду воспроизведения.
