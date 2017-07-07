@@ -9,9 +9,7 @@ int main (void){
     ayplayer_housekeeping_init();
     ayplayer_gui_init();
     ayplayer_microsd_card_init();
-
-    tim_ay_clk.reinit();
-    tim_ay_clk.on();
+    ayplayer_timers_init();
 
     vTaskStartScheduler();
     while ( true ) {};
