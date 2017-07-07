@@ -9,5 +9,6 @@
 #include "ayplayer_housekeeping.h"
 #include "ayplayer_lcd.h"
 #include "ayplayer_gui.h"
+#include "ayplayer_microsd_card.h"
 
 #include <stdint.h>

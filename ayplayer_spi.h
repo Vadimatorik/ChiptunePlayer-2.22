@@ -26,7 +26,7 @@
                                   EC_SPI_CFG_ONE_LINE_MODE   :: USE_2_LINE,     \
                                   EC_SPI_CFG_DATA_FRAME      :: FRAME_8_BIT,    \
                                   EC_SPI_CFG_FRAME_FORMAT    :: MOTOROLA,       \
-                                  EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_2,          \
+                                  EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_8,          \
                                   EC_SPI_CFG_CS              :: ENABLED
 
 
