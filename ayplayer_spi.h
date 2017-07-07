@@ -1,6 +1,6 @@
 #pragma once
 
-#include "stm32_f20x_f21x_spi.h"
+#include "stm32_f20x_f21x_include_module_lib.h"
 #include "ayplayer_nvic.h"
 
 /*

@@ -172,7 +172,7 @@ void ayplayer_gui_init ( void ) {
  *//*
 int update_string_data (main_form_cfg_t *main_form){
     // Заполняем строки.
-    for (int l_string = 0; l_string < gui_string_box_init_cfg.string_number; l_string++){
+    for ( uint32_t l_string = 0; l_string < gui_string_box_init_cfg.string_number; l_string++){
         if (l_string + main_form->point_file < main_form->psg_file_number){	// Если файлы еще не закончились (моежт быть, что строки 4, а файла 2).
             uint32_t time_sec;
             ay_psg_file_get_name(ay_file_fd, l_string + main_form->point_file, main_form->string_menu[l_string], &time_sec);
@@ -185,7 +185,6 @@ int update_string_data (main_form_cfg_t *main_form){
         }
     };
     return 0;
-}
 */
 /*
  * Прокрутить указатель на одну позицию вниз.

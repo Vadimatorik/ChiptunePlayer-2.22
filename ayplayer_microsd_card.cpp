@@ -16,10 +16,5 @@ void ayplayer_microsd_card_init (void){
 uint8_t test_buf[512];
 
 void test_microsd_driver (void) {
-    volatile FRESULT res;
-     res = sd2.read_sector(test_buf, 0);
-    (void)res;
-    while( true ) {
-
-    }
+    sd2.read_sector(test_buf, 0);
 }
