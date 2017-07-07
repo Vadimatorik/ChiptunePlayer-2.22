@@ -131,5 +131,8 @@ const constexpr pin lcd_cs_obj( &lcd_cs );
 // MICROSD 2.
 const constexpr pin sd2_cs_obj( &sd2_cs );
 
+// Защелка сдвигового регистра.
+const constexpr pin spi_audio_st_reg_obj( &spi_audio_st_reg );
+
 int ayplayer_port_init ( void );
 
