@@ -3,6 +3,7 @@
 #include "ayplayer_lcd.h"
 #include "mini_gui_by_vadimatorik_include_module.h"
 #include "freertos_headers.h"
+#include "ayplayer_microsd_card.h"
 
 /*
 // Структура главной формы.

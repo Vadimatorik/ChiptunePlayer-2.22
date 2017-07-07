@@ -128,5 +128,8 @@ const constexpr pin lcd_res_obj( &lcd_res );
 const constexpr pin lcd_dc_obj( &lcd_dc );
 const constexpr pin lcd_cs_obj( &lcd_cs );
 
+// MICROSD 2.
+const constexpr pin sd2_cs_obj( &sd2_cs );
+
 int ayplayer_port_init ( void );
 

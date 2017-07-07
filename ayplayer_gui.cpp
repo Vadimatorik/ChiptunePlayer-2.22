@@ -115,12 +115,7 @@ extern int lcd_fd;
 extern int tim_event_fd;
 extern const tFont font_gost_type_b_12_rle;			// Используем шрифт, сжатый RLE. Для экномии места.
 */
-/*
- * Структуры описания используемых на форме объектов.
- *//*
-extern gui_string_box_init_cfg_t gui_string_box_init_cfg;
-extern gui_status_bar_init_cfg_t gui_status_bar_init_cfg;
-extern gui_play_bar_init_cfg_t gui_play_bar_init_cfg;*/
+
 /*
  * Инициализируем объекты формы.
  */
@@ -137,6 +132,7 @@ void ayplayer_gui_main_window_show ( void ) {
  */
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
+    test_microsd_driver();
     ayplayer_lcd_init( 8 );
     ayplayer_gui_main_window_show();
 
