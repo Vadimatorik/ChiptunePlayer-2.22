@@ -1,6 +1,6 @@
 #include "ayplayer_timers.h"
 
-#define TIMER_AY_CLK_CFG                        TIM1_OR_TIM8::TIM1, 1000, 1000, EC_TIM_CH_TOGGLE::CH_2, EC_TIM_CH_MODE::N
+#define TIMER_AY_CLK_CFG                        TIM1_OR_TIM8::TIM1, 1, 8, EC_TIM_CH_TOGGLE::CH_2, EC_TIM_CH_MODE::N
 
 void ayplayer_timers_init ( void ) {
     const tim1_comp_one_channel_base< TIMER_AY_CLK_CFG >*tim1 = tim1_comp_one_channel_base< TIMER_AY_CLK_CFG >::instance();
