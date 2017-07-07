@@ -143,6 +143,7 @@ void ayplayer_lcd_update_task ( void* param ) {
     volatile int a = 0;
     (void)a;
     while(1){
+
 a++;
        // xSemaphoreTake( semaphore_sec_out_ay, portMAX_DELAY );
        // gui_play_bar_tim_inc_sec(play_bar_fd);

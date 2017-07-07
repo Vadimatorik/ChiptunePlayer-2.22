@@ -9,6 +9,7 @@ USER_CODE_OPTIMIZATION			:= -g3 -Og
 LCD_LIB_OPTIMIZATION			:= -g3 -Og
 SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION	:= -g3 -Og
 MINI_GUI_BY_VADIMATORIK_OPTIMIZATION	:= -g3 -Og
+MICRO_SD_DRIVER_OPTIMIZATION		:= -g3 -Og
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
@@ -161,6 +162,20 @@ build/obj/mini_gui_by_vadimatorik/%.obj:	mini_gui_by_vadimatorik/%.cpp
 	@$(CPP) $(CPP_FLAGS) $(MINI_GUI_BY_VADIMATORIK_PATH) $(USER_CFG_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_OPTIMIZATION) -c $< -o $@
 	
 #**********************************************************************
+# Драйвер SD карты (micro_sd_driver_by_vadimatorik).
+#**********************************************************************
+MICRO_SD_DRIVER_H_FILE		:= $(shell find micro_sd_driver_by_vadimatorik/ -maxdepth 3 -type f -name "*.h" )
+MICRO_SD_DRIVER_CPP_FILE	:= $(shell find micro_sd_driver_by_vadimatorik/ -maxdepth 3 -type f -name "*.cpp" )
+MICRO_SD_DRIVER_DIR		:= $(shell find micro_sd_driver_by_vadimatorik/ -maxdepth 3 -type d -name "*" )
+MICRO_SD_DRIVER_PATH		:= $(addprefix -I, $(MICRO_SD_DRIVER_DIR))
+MICRO_SD_DRIVER_OBJ_FILE	:= $(addprefix build/obj/, $(MICRO_SD_DRIVER_CPP_FILE))
+MICRO_SD_DRIVER_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(MICRO_SD_DRIVER_OBJ_FILE))
+build/obj/micro_sd_driver_by_vadimatorik/%.obj:	micro_sd_driver_by_vadimatorik/%.cpp
+	@echo [CPP] $<
+	@mkdir -p $(dir $@)
+	@$(CPP) $(CPP_FLAGS) $(MICRO_SD_DRIVER_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH)  $(MICRO_SD_DRIVER_OPTIMIZATION) -c $< -o $@
+	
+#**********************************************************************
 # Сборка кода пользователя.
 # Весь код пользователя должен быть в корневой папке.
 #**********************************************************************
@@ -178,7 +193,7 @@ build/obj/%.obj:	%.cpp
 #**********************************************************************
 # Компановка проекта.
 #**********************************************************************
-PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(LCD_LIB_OBJ_FILE) $(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE) $(MINI_GUI_BY_VADIMATORIK_OBJ_FILE) $(USER_OBJ_FILE)
+PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(LCD_LIB_OBJ_FILE) $(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE) $(MINI_GUI_BY_VADIMATORIK_OBJ_FILE) $(USER_OBJ_FILE) $(MICRO_SD_DRIVER_OBJ_FILE)
 
 build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf

@@ -15,3 +15,6 @@
 [submodule "simple_mono_drawing_lib"]
 	path = simple_mono_drawing_lib
 	url = git@github.com:Vadimatorik/simple_mono_drawing_lib.git
+[submodule "micro_sd_driver_by_vadimatorik"]
+	path = micro_sd_driver_by_vadimatorik
+	url = git@github.com:Vadimatorik/micro_sd_driver_by_vadimatorik.git
