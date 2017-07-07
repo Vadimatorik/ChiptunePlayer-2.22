@@ -10,7 +10,7 @@ LCD_LIB_OPTIMIZATION			:= -g3 -Og
 SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION	:= -g3 -Og
 MINI_GUI_BY_VADIMATORIK_OPTIMIZATION	:= -g3 -Og
 MICRO_SD_DRIVER_OPTIMIZATION		:= -g3 -Og
-SH_OPTIMIZATION				:= -g3 -0g
+SH_OPTIMIZATION				:= -g3 -Og
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
@@ -183,8 +183,8 @@ SH_H_FILE	:= $(shell find module_shift_register/ -maxdepth 3 -type f -name "*.h"
 SH_CPP_FILE	:= $(shell find module_shift_register/ -maxdepth 3 -type f -name "*.cpp" )
 SH_DIR		:= $(shell find module_shift_register/ -maxdepth 3 -type d -name "*" )
 SH_PATH		:= $(addprefix -I, $(SH_DIR))
-SH_OBJ_FILE	:= $(addprefix build/obj/, $(SH_FILE))
-SH_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(SH_FILE))
+SH_OBJ_FILE	:= $(addprefix build/obj/, $(SH_CPP_FILE))
+SH_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(SH_OBJ_FILE))
 build/obj/module_shift_register/%.obj:	module_shift_register/%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)

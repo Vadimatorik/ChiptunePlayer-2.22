@@ -9,12 +9,6 @@ microsd_spi_cfg_t microsd_card_cfg = {
 
 microsd_spi sd2(&microsd_card_cfg);
 
-void ayplayer_microsd_card_init (void){
+void ayplayer_microsd_card_init (void) {
     sd2.reinit( spi_master_hardware_os< SPI2_CFG_OBJ_PARAM >::instance() );
-}
-
-uint8_t test_buf[512];
-
-void test_microsd_driver (void) {
-    sd2.read_sector(test_buf, 0);
 }

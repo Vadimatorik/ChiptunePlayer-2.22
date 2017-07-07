@@ -10,6 +10,7 @@ int main (void){
     ayplayer_gui_init();
     ayplayer_microsd_card_init();
     ayplayer_timers_init();
+    ayplayer_shift_register();
 
     vTaskStartScheduler();
     while ( true ) {};

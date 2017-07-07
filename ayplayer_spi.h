@@ -33,8 +33,8 @@
  * Для сдвигового регистра и потенциометров.
  */
 #define SPI3_CFG_OBJ_PARAM        EC_SPI_NAME                :: SPI3,           \
-                                  EC_SPI_CFG_CLK_POLARITY    :: IDLE_1,         \
-                                  EC_SPI_CFG_CLK_PHASE       :: SECOND,         \
+                                  EC_SPI_CFG_CLK_POLARITY    :: IDLE_0,         \
+                                  EC_SPI_CFG_CLK_PHASE       :: FIRST,          \
                                   EC_SPI_CFG_NUMBER_LINE     :: LINE_2,         \
                                   EC_SPI_CFG_ONE_LINE_MODE   :: USE_2_LINE,     \
                                   EC_SPI_CFG_DATA_FRAME      :: FRAME_8_BIT,    \

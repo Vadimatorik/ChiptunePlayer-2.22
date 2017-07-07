@@ -5,4 +5,3 @@
 #include "ayplayer_spi.h"
 
 void ayplayer_microsd_card_init (void);
-void test_microsd_driver (void);
