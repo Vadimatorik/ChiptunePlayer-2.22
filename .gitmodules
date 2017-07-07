@@ -18,3 +18,6 @@
 [submodule "micro_sd_driver_by_vadimatorik"]
 	path = micro_sd_driver_by_vadimatorik
 	url = git@github.com:Vadimatorik/micro_sd_driver_by_vadimatorik.git
+[submodule "module_shift_register"]
+	path = module_shift_register
+	url = git@github.com:Vadimatorik/module_shift_register.git
