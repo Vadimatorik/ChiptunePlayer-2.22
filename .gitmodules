@@ -21,3 +21,6 @@
 [submodule "module_shift_register"]
 	path = module_shift_register
 	url = git@github.com:Vadimatorik/module_shift_register.git
+[submodule "module_chiptune"]
+	path = module_chiptune
+	url = git@github.com:Vadimatorik/module_chiptune.git

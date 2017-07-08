@@ -35,5 +35,6 @@ int ayplayer_spi_init ( void ) {
     ayplayer_nvic.irq_enable( IRQ_NAME::SPI2 );
     ayplayer_nvic.irq_set_priority( IRQ_NAME::SPI3, IRQ_PRIO::PRIO_6 );
     ayplayer_nvic.irq_enable( IRQ_NAME::SPI3 );
+
     return 0;
 }
