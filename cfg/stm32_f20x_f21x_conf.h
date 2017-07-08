@@ -183,8 +183,6 @@
     .uxDummy20      = 0                                                                                                 \
 }
 
-#define AY_PLAYER_GUI_TASK_STACK_SIZE       200
-
 /*
  * Прочее.
  */

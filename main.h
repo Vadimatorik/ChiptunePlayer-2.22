@@ -12,5 +12,6 @@
 #include "ayplayer_microsd_card.h"
 #include "ayplayer_timers.h"
 #include "ayplayer_shift_register.h"
+#include "ayplayer_ay.h"
 
 #include <stdint.h>

@@ -15,6 +15,5 @@ module_shift_register   sr( &sr_cfg_sr_cfg );
 
 void ayplayer_shift_register ( void ) {
     sr.init( spi3 );
-    sr_out_buf[1] = 0b00001111;
     sr.write();
 }

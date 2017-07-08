@@ -79,12 +79,15 @@ const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_14, EC_PIN_
 /*
  * PWR.
  */
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_0,  EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         on_5v;
+const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_0,  EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >           on_5v;
 const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_1,  EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >           power_on;
 const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_14, EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        tp_st;
 const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_15, EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        tp_ch;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_4,  EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         ay1_on;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_12, EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         ay2_on;
+
+
+// Потом исправить!!!
+const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_4,  EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >         ay1_on;
+const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_12, EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >         ay2_on;
 
 /*
  * MICRO-SD SPI2 ( SPI2 + GPIO ).
@@ -107,7 +110,7 @@ const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_11, EC_PIN_
 const constexpr pin_config_t ayplayer_global_port_pin_cfg[] = {
     adc_bat, adc_right, adc_left,                                                                           // ADC.
     midi_uart_rx,                                                                                           // MIDI (USART2).
-    lcd_clk, lcd_miso, lcd_mosi, lcd_res, lcd_dc, lcd_cs,                                                  // LCD (SPI1 + TIMx).
+    lcd_clk, lcd_miso, lcd_mosi, lcd_res, lcd_dc, lcd_cs,                                                   // LCD (SPI1 + TIMx).
     sd1_push, sd1_smd, sd1_d0, sd1_d1, sd1_d2, sd1_d3, sd1_clk,                                             // micro-sd (SDIO + GPIO).
     otg_fs_vbus, usb_dm, usb_dp,                                                                            // USB (USB_FS + GPIO).
     bdir, ay_1_res, ay_2_res, bc1, ay_clk, spi_audio_clk, spi_audio_tx, shdn, spi_audio_st_reg, cs_res,     // AY (GPIO + TIM1 + SPI3)
@@ -133,6 +136,10 @@ const constexpr pin sd2_cs_obj( &sd2_cs );
 
 // Защелка сдвигового регистра.
 const constexpr pin spi_audio_st_reg_obj( &spi_audio_st_reg );
+
+// AY_YM.
+const constexpr pin bdir_obj( &bdir );
+const constexpr pin bc1_obj( &bc1 );
 
 int ayplayer_port_init ( void );
 
