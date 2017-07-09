@@ -4,4 +4,6 @@
 #include "ayplayer_port.h"
 #include "ayplayer_spi.h"
 
+extern microsd_spi sd2;
+
 void ayplayer_microsd_card_init (void);

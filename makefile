@@ -13,7 +13,7 @@ MICRO_SD_DRIVER_OPTIMIZATION		:= -g3 -Og
 SH_OPTIMIZATION				:= -g3 -Og
 MOD_CHIP_OPTIMIZATION			:= -g3 -Og
 
-LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
+LD_FILES = -T stm32f2_api/ld/stm32f205xC_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
 MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
 # Размещает каждую функцию в отдельной секции.

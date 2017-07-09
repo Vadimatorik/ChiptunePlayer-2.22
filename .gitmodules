@@ -24,3 +24,6 @@
 [submodule "module_chiptune"]
 	path = module_chiptune
 	url = git@github.com:Vadimatorik/module_chiptune.git
+[submodule "module_digital_potentiometer"]
+	path = module_digital_potentiometer
+	url = git@github.com:Vadimatorik/module_digital_potentiometer.git

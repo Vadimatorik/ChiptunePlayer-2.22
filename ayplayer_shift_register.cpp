@@ -8,12 +8,12 @@ const module_shift_register_cfg_t sr_cfg_sr_cfg = {
     .st                     = &spi_audio_st_reg_obj,
     .number_output_byte     = 2,
     .buffer_out             = sr_out_buf,
-    .strob_active           = true
+    .strob_active           = true,
+    .p_spi                  = &p_spi3
 };
 
 module_shift_register   sr( &sr_cfg_sr_cfg );
 
 void ayplayer_shift_register ( void ) {
-    sr.init( spi3 );
-    sr.write();
+    sr.init();
 }

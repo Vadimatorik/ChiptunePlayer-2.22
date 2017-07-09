@@ -127,6 +127,11 @@ void ayplayer_gui_main_window_show ( void ) {
     ayplayer_lcd.update();
 }
 
+uint8_t test[512] = { 0 };
+
+#include "ayplayer_spi.h"
+#include "ayplayer_shift_register.h"
+#include "ayplayer_microsd_card.h"
 /*
  * Обновление экрана раз в секунду воспроизведения.
  */
@@ -134,6 +139,50 @@ void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
     ayplayer_lcd_init( 8 );
     ayplayer_gui_main_window_show();
+    shdn_obj.set();
+    //sd2.read_sector(test, 0);
+    /*
+    uint8_t high_data = 0;
+    uint8_t low_data = 255;
+    dp_cs_res_obj.reset();
+    spi3->tx(&high_data, 1, 100);
+    spi3->tx(&low_data, 1, 100);
+    dp_cs_res_obj.set();
+
+    low_data = 127;
+    dp_cs_res_obj.reset();
+    spi3->tx(&high_data, 1, 100);
+    spi3->tx(&low_data, 1, 100);
+    dp_cs_res_obj.set();
+
+    low_data = 0;
+    dp_cs_res_obj.reset();
+    spi3->tx(&high_data, 1, 100);
+    spi3->tx(&low_data, 1, 100);
+    dp_cs_res_obj.set();*/
+
+    /*
+    high_data = 1;
+    dp_cs_res_obj.reset();
+    spi3->tx(&high_data, 1, 100);
+    spi3->tx(&low_data, 1, 100);
+    dp_cs_res_obj.set();
+
+
+    high_data = 2;
+    dp_cs_res_obj.reset();
+    spi3->tx(&high_data, 1, 100);
+    spi3->tx(&low_data, 1, 100);
+    dp_cs_res_obj.set();
+
+    high_data = 3;
+    dp_cs_res_obj.reset();
+    spi3->tx(&high_data, 1, 100);
+    spi3->tx(&low_data, 1, 100);
+ */
+    while( true ) {
+        vTaskDelay(1000);
+    }
 }
 
 // 400 байт задаче.

@@ -109,7 +109,7 @@
     .xDummy3 = { { 0,nullptr, { 0,{ nullptr, nullptr } } },     \
                  { 0,nullptr, { 0,{ nullptr, nullptr } } } },   \
     .uxDummy4 = { 0, 0, 0 },                                    \
-    .ucDummy5 = { 0, 0},                                        \
+    .ucDummy5 = { 0, 0 },                                       \
     .ucDummy6 = 0                                               \
 }
 // Тип переменной-очереди.
@@ -162,7 +162,7 @@
 // Вне зависимости от успеха операции возвращается код окончания операции.
 // Параметр EXPECTATION (ожидание семафора) выставляется в системных тиках операционной системы.
 // Должно вернуть true если успех и false - есл провал.
-#define USER_OS_TAKE_BIN_SEMAPHORE(SEMAPHORE,EXPECTATION)   (bool)( xSemaphoreTake( SEMAPHORE, ( TickType_t )EXPECTATION ) )
+#define USER_OS_TAKE_BIN_SEMAPHORE(SEMAPHORE,EXPECTATION)   xSemaphoreTake( SEMAPHORE, ( TickType_t )EXPECTATION )
 
 /*
  * Созданиче задач.
