@@ -16,9 +16,6 @@ MOD_CHIP_OPTIMIZATION			:= -g3 -Og
 LD_FILES = -T stm32f2_api/ld/stm32f205xC_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
 MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
-# Размещает каждую функцию в отдельной секции.
-MK_FLAGS		+= -ffunction-sections
-MK_FLAGS		+= -fdata-sections
 
 C_FLAGS			:= $(MK_FLAGS)
 # Все предупреждения == ошибки.
@@ -31,21 +28,22 @@ C_FLAGS			+= -std=gnu99
 # Если переменная объявлена как enum, то она должна иметь возможность
 # хранить в себе всевозможные состояния этого enum-а (а не только текущее).
 C_FLAGS			+= -fshort-enums
+# Развертывание циклов.
+C_FLAGS			+= -funroll-loops
 
 CPP_FLAGS		:= $(MK_FLAGS)     
 CPP_FLAGS		+= -Werror -Wall -Wextra
 CPP_FLAGS		+= -std=c++1z
-CPP_FLAGS		+= -fshort-enums
+CPP_FLAGS		+= -funroll-loops
 
 LDFLAGS			:= $(MK_FLAGS)
 LDFLAGS			+= $(LD_FILES)
 LDFLAGS			+= -Werror -Wall -Wextra 
+# Размещает каждую функцию в отдельной секции.
+LDFLAGS			+= -ffunction-sections -fdata-sections
 # Убираем неиспользуемые функции из .elf.
 LDFLAGS			+= -Wl,--gc-sections
-LDFLAGS			+= -funroll-loops
-# Развертывание циклов.
-LDFLAGS			+= -funroll-loops
-# Удаление из elf неиспользуемого кода.
+# Формируем map файл.
 LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
 
 #**********************************************************************
