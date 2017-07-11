@@ -29,10 +29,6 @@ int ayplayer_spi_init ( void ) {
     spi2.reinit();
     spi3.reinit();
 
-    p_spi1 = &spi1;
-    p_spi2 = &spi2;
-    p_spi3 = &spi3;
-
     ayplayer_nvic.irq_set_priority( IRQ_NAME::SPI1, IRQ_PRIO::PRIO_5 );
     ayplayer_nvic.irq_enable( IRQ_NAME::SPI1 );
     ayplayer_nvic.irq_set_priority( IRQ_NAME::SPI2, IRQ_PRIO::PRIO_5 );

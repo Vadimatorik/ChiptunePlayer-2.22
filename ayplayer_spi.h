@@ -42,10 +42,9 @@
                                   EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_256,        \
                                   EC_SPI_CFG_CS              :: ENABLED
 
-
-extern spi_base*    p_spi1;
-extern spi_base*    p_spi2;
-extern spi_base*    p_spi3;
+extern spi_master_hardware_os< SPI1_CFG_OBJ_PARAM > spi1;
+extern spi_master_hardware_os< SPI2_CFG_OBJ_PARAM > spi2;
+extern spi_master_hardware_os< SPI3_CFG_OBJ_PARAM > spi3;
 
 int ayplayer_spi_init ( void );
 

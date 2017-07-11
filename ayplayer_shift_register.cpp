@@ -9,7 +9,7 @@ const module_shift_register_cfg_t sr_cfg_sr_cfg = {
     .number_output_byte     = 2,
     .buffer_out             = sr_out_buf,
     .strob_active           = true,
-    .p_spi                  = &p_spi3
+    .p_spi                  = &spi3
 };
 
 module_shift_register   sr( &sr_cfg_sr_cfg );
