@@ -5,4 +5,6 @@
 #include "ay_ym_low_lavel.h"
 #include "ayplayer_shift_register.h"
 
+extern ay_ym_low_lavel ay;
+
 void ayplayer_ay_init (void);

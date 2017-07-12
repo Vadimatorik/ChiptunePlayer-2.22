@@ -127,7 +127,7 @@ void ayplayer_gui_main_window_show ( void ) {
     ayplayer_lcd.update();
 }
 
-uint8_t test[512] = { 0 };
+//uint8_t test[512] = { 0 };
 
 #include "ayplayer_spi.h"
 #include "ayplayer_shift_register.h"
@@ -135,50 +135,51 @@ uint8_t test[512] = { 0 };
 /*
  * Обновление экрана раз в секунду воспроизведения.
  */
+void out_sh ( uint8_t res1, uint8_t value, uint8_t re2, uint8_t value2 ) {
+    uint8_t buf[4] = {0};
+    buf[0] = value2;
+    buf[1] = re2;
+    buf[1] |= value << 3;
+    buf[2] = value >> 5;
+    buf[3] = res1 << 5;
+    dp_cs_res_obj.reset();
+    spi3.tx(&buf[0], 1, 100);
+    spi3.tx(&buf[1], 1, 100);
+    spi3.tx(&buf[2], 1, 100);
+    spi3.tx(&buf[3], 1, 100);
+    dp_cs_res_obj.set();
+}
+
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
-    ayplayer_lcd_init( 8 );
-    ayplayer_gui_main_window_show();
+    //ayplayer_lcd_init( 8 );
+   // ayplayer_gui_main_window_show();
     shdn_obj.set();
-    //sd2.read_sector(test, 0);
+
     /*
-    uint8_t high_data = 0;
-    uint8_t low_data = 255;
-    dp_cs_res_obj.reset();
-    spi3->tx(&high_data, 1, 100);
-    spi3->tx(&low_data, 1, 100);
-    dp_cs_res_obj.set();
-
-    low_data = 127;
-    dp_cs_res_obj.reset();
-    spi3->tx(&high_data, 1, 100);
-    spi3->tx(&low_data, 1, 100);
-    dp_cs_res_obj.set();
-
-    low_data = 0;
-    dp_cs_res_obj.reset();
-    spi3->tx(&high_data, 1, 100);
-    spi3->tx(&low_data, 1, 100);
-    dp_cs_res_obj.set();*/
-
+    vTaskDelay(1000);
+    out_sh( 0, 0xF0, 0, 0xF0 );
+    out_sh( 1, 0x80, 1, 0x80 );
+    out_sh( 2, 0x80, 2, 0x80 );
+    out_sh( 3, 0x80, 3, 0x80 );*/
     /*
     high_data = 1;
     dp_cs_res_obj.reset();
-    spi3->tx(&high_data, 1, 100);
-    spi3->tx(&low_data, 1, 100);
+    spi3.tx(&high_data, 1, 100);
+    spi3.tx(&low_data, 1, 100);
     dp_cs_res_obj.set();
 
 
     high_data = 2;
     dp_cs_res_obj.reset();
-    spi3->tx(&high_data, 1, 100);
-    spi3->tx(&low_data, 1, 100);
+    spi3.tx(&high_data, 1, 100);
+    spi3.tx(&low_data, 1, 100);
     dp_cs_res_obj.set();
 
     high_data = 3;
     dp_cs_res_obj.reset();
-    spi3->tx(&high_data, 1, 100);
-    spi3->tx(&low_data, 1, 100);
+    spi3.tx(&high_data, 1, 100);
+    spi3.tx(&low_data, 1, 100);
  */
     while( true ) {
         vTaskDelay(1000);
