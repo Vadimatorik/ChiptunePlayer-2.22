@@ -9,16 +9,24 @@ USER_OS_STATIC_QUEUE_STRUCT  q_1_st             = USER_OS_STATIC_QUEUE_STRUCT_IN
 
 USER_OS_STATIC_QUEUE         p_queue_array[2];
 
-uint8_t r7_array[1] = { 0 };
+uint8_t r7_array[2] = { 0 };
+
+ay_ym_connection_chip_cfg_t ay_connect_cfg = { 0, 1, 2, 3, 4, 5, 6, 7 };
+ay_ym_connection_chip_cfg_t ym_connect_cfg = { 7, 6, 5, 4, 3, 2, 1, 0 };
+
+ay_ym_connection_chip_cfg_t array_connect_cfg[] = {
+    ym_connect_cfg, ay_connect_cfg
+};
 
 const ay_ym_low_lavel_cfg_t ay_low_cfg {
     .sr                 = &sr,
-    .p_sr_data          = &sr_out_buf[1],
+    .p_sr_data          = &sr_out_buf[0],
     .semaphore_sec_out  = nullptr,
     .bdir               = &bdir_obj,
     .bc1                = &bc1_obj,
     .p_queue_array      = p_queue_array,
-    .ay_number          = 1,
+    .ay_number          = 2,
+    .con_cfg            = array_connect_cfg,
     .task_prio          = 3,
     .r7_reg             = r7_array
 };
