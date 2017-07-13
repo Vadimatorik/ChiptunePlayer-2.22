@@ -16,6 +16,7 @@ ay_ym_connection_chip_cfg_t ym_connect_cfg = { 7, 6, 5, 4, 3, 2, 1, 0 };
 
 ay_ym_connection_chip_cfg_t array_connect_cfg[] = {
     ym_connect_cfg, ay_connect_cfg
+    // 0 - 40 пиновый, 1 - 28.
 };
 
 const ay_ym_low_lavel_cfg_t ay_low_cfg {

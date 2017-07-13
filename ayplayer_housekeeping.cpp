@@ -17,12 +17,15 @@ void housekeeping_thread ( void* arg ) {
     ayplayer_note_mode.write_note_to_channel( 1, 1, 50 );
     ayplayer_note_mode.write_note_to_channel( 1, 2, 60 );
 
-    ayplayer_note_mode.set_volume_channel( 1, 0, 10 );
+    ayplayer_note_mode.set_volume_channel( 1, 0, 15 );
     ayplayer_note_mode.set_volume_channel( 1, 1, 10 );
     ayplayer_note_mode.set_volume_channel( 1, 2, 10 );
 
     while( true ) {
         vTaskDelay(1000);
+
+
+
     }
 }
 

@@ -132,36 +132,47 @@ void ayplayer_gui_main_window_show ( void ) {
 #include "ayplayer_spi.h"
 #include "ayplayer_shift_register.h"
 #include "ayplayer_microsd_card.h"
-/*
- * Обновление экрана раз в секунду воспроизведения.
- */
-void out_sh ( uint8_t res1, uint8_t value, uint8_t re2, uint8_t value2 ) {
-    uint8_t buf[4] = {0};
-    buf[0] = value2;
-    buf[1] = re2;
-    buf[1] |= value << 3;
-    buf[2] = value >> 5;
-    buf[3] = res1 << 5;
+
+void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
+    uint8_t buf[3] = {0};
+    buf[0] = reg2 << 3;
+    buf[0] |= value2 >> 5;
+    buf[1] = value2 << 3;
+    buf[1] |= reg1;
+    buf[2] = value1;
     dp_cs_res_obj.reset();
     spi3.tx(&buf[0], 1, 100);
     spi3.tx(&buf[1], 1, 100);
     spi3.tx(&buf[2], 1, 100);
-    spi3.tx(&buf[3], 1, 100);
     dp_cs_res_obj.set();
 }
 
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
-    //ayplayer_lcd_init( 8 );
-   // ayplayer_gui_main_window_show();
+    ayplayer_lcd_init( 8 );
+    ayplayer_gui_main_window_show();
+    //shdn_obj.reset();
     shdn_obj.set();
+    vTaskDelay(2000);
 
-    /*
-    vTaskDelay(1000);
-    out_sh( 0, 0xF0, 0, 0xF0 );
-    out_sh( 1, 0x80, 1, 0x80 );
-    out_sh( 2, 0x80, 2, 0x80 );
-    out_sh( 3, 0x80, 3, 0x80 );*/
+    while( true ) {
+        shdn_obj.reset();
+        out_reg(0, 0, 0, 0 );
+        out_reg(1, 0, 1, 0 );
+        out_reg(2, 0, 2, 0 );
+        out_reg(3, 0, 3, 0 );
+
+        out_reg(0, 0x80, 0, 0x80 );
+        out_reg(1, 0x80, 1, 0x80 );
+        out_reg(2, 0x80, 2, 0x80 );
+        out_reg(3, 0x80, 3, 0x80 );
+
+        out_reg(0, 0xFF, 0, 0xFF );
+        out_reg(1, 0xFF, 1, 0xFF );
+        out_reg(2, 0xFF, 2, 0xFF );
+        out_reg(3, 0xFF, 3, 0xFF );
+        shdn_obj.set();       
+    }
     /*
     high_data = 1;
     dp_cs_res_obj.reset();
