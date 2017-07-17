@@ -147,31 +147,65 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
     dp_cs_res_obj.set();
 }
 
+void one_reg (  uint8_t reg1, uint8_t value1 ) {
+    dp_cs_res_obj.reset();
+    vTaskDelay(1);
+    spi3.tx( &reg1, 1, 100 );
+    spi3.tx( &value1, 1, 100 );
+    vTaskDelay(1);
+    dp_cs_res_obj.set();
+}
+
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
     ayplayer_lcd_init( 8 );
     ayplayer_gui_main_window_show();
     //shdn_obj.reset();
-    shdn_obj.set();
+            shdn_obj.reset();
     vTaskDelay(2000);
 
     while( true ) {
-        shdn_obj.reset();
-        out_reg(0, 0, 0, 0 );
-        out_reg(1, 0, 1, 0 );
-        out_reg(2, 0, 2, 0 );
-        out_reg(3, 0, 3, 0 );
 
-        out_reg(0, 0x80, 0, 0x80 );
-        out_reg(1, 0x80, 1, 0x80 );
-        out_reg(2, 0x80, 2, 0x80 );
-        out_reg(3, 0x80, 3, 0x80 );
+        /*out_reg( 0, 0, 0, 0 );
+        out_reg( 1, 0, 1, 0 );
+        out_reg( 2, 0, 2, 0 );
+        out_reg( 3, 0, 3, 0 );
 
-        out_reg(0, 0xFF, 0, 0xFF );
-        out_reg(1, 0xFF, 1, 0xFF );
-        out_reg(2, 0xFF, 2, 0xFF );
-        out_reg(3, 0xFF, 3, 0xFF );
-        shdn_obj.set();       
+        out_reg( 0, 0x80, 0, 0x80 );
+        out_reg( 1, 0x80, 1, 0x80 );
+        out_reg( 2, 0x80, 2, 0x80 );
+        out_reg( 3, 0x80, 3, 0x80 );
+
+        out_reg( 0, 0xFF, 0, 0xFF );
+        out_reg( 1, 0xFF, 1, 0xFF );
+        out_reg( 2, 0xFF, 2, 0xFF );
+        out_reg( 3, 0xFF, 3, 0xFF );*/
+        one_reg(0, 0);
+        vTaskDelay(10);
+        one_reg(1, 0);
+        vTaskDelay(10);
+        one_reg(2, 0);
+        vTaskDelay(10);
+        one_reg(3, 0);
+        vTaskDelay(10);
+
+        one_reg(0, 0x80);
+        vTaskDelay(10);
+        one_reg(1, 0x80);
+        vTaskDelay(10);
+        one_reg(2, 0x80);
+        vTaskDelay(10);
+        one_reg(3, 0x80);
+        vTaskDelay(10);
+
+        one_reg(0, 0xFF);
+        vTaskDelay(10);
+        one_reg(1, 0xFF);
+        vTaskDelay(10);
+        one_reg(2, 0xFF);
+        vTaskDelay(10);
+        one_reg(3, 0xFF);    
+        vTaskDelay(10);
     }
     /*
     high_data = 1;

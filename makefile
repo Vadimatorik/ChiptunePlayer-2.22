@@ -207,12 +207,12 @@ build/obj/module_chiptune/%.obj:	module_chiptune/%.cpp
 # Сборка кода пользователя.
 # Весь код пользователя должен быть в корневой папке.
 #**********************************************************************
-USER_H_FILE	:= $(wildcard ./*.h)	
-USER_CPP_FILE	:= $(wildcard ./*.cpp)	
-USER_DIR	:= ./
-USER_PATH	:= $(addprefix -I, $(USER_DIR))
-USER_OBJ_FILE	:= $(addprefix build/obj/, $(USER_CPP_FILE))
-USER_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(USER_OBJ_FILE))
+USER_H_FILE		:= $(shell find user_code/ -maxdepth 5 -type f -name "*.h" )
+USER_CPP_FILE		:= $(shell find user_code/ -maxdepth 5 -type f -name "*.cpp" )
+USER_DIR		:= $(shell find user_code/ -maxdepth 5 -type d -name "*" )
+USER_PATH		:= $(addprefix -I, $(USER_DIR))
+USER_OBJ_FILE		:= $(addprefix build/obj/, $(USER_CPP_FILE))
+USER_OBJ_FILE		:= $(patsubst %.cpp, %.obj, $(USER_OBJ_FILE))
 build/obj/%.obj:	%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
