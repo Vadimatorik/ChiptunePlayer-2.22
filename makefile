@@ -93,14 +93,14 @@ FREE_RTOS_C_FILE	:= $(wildcard FreeRTOS_for_stm32f2/*.c)
 # с сохранением иерархии.
 FREE_RTOS_OBJ_FILE	:= $(addprefix build/obj/, $(FREE_RTOS_C_FILE))
 # Затем меняем у всех .c на .o.
-FREE_RTOS_OBJ_FILE	:= $(patsubst %.c, %.obj, $(FREE_RTOS_OBJ_FILE))
+FREE_RTOS_OBJ_FILE	:= $(patsubst %.c, %.o, $(FREE_RTOS_OBJ_FILE))
 
 FREE_RTOS_INCLUDE_FILE	:= -include"./FreeRTOS_for_stm32f2/include/StackMacros.h"
 # Сборка FreeRTOS.
 # $< - текущий .c файл (зависемость).
 # $@ - текущая цель (создаваемый .o файл).
 # $(dir путь) - создает папки для того, чтобы путь файла существовал.
-build/obj/FreeRTOS_for_stm32f2/%.obj:	FreeRTOS_for_stm32f2/%.c 
+build/obj/FreeRTOS_for_stm32f2/%.o:	FreeRTOS_for_stm32f2/%.c 
 	@echo [CC] $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(C_FLAGS) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(FREE_RTOS_INCLUDE_FILE) -c $< -o $@
@@ -113,8 +113,8 @@ STM32_F2_API_CPP_FILE	:= $(shell find stm32f2_api/ -maxdepth 3 -type f -name "*.
 STM32_F2_API_DIR	:= $(shell find stm32f2_api/ -maxdepth 3 -type d -name "*" )
 STM32_F2_API_PATH	:= $(addprefix -I, $(STM32_F2_API_DIR))
 STM32_F2_API_OBJ_FILE	:= $(addprefix build/obj/, $(STM32_F2_API_CPP_FILE))
-STM32_F2_API_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(STM32_F2_API_OBJ_FILE))
-build/obj/stm32f2_api/%.obj:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+STM32_F2_API_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(STM32_F2_API_OBJ_FILE))
+build/obj/stm32f2_api/%.o:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@
@@ -127,8 +127,8 @@ LCD_LIB_CPP_FILE	:= $(shell find mono_lcd_lib/ -maxdepth 3 -type f -name "*.cpp"
 LCD_LIB_DIR		:= $(shell find mono_lcd_lib/ -maxdepth 3 -type d -name "*" )
 LCD_LIB_PATH		:= $(addprefix -I, $(LCD_LIB_DIR))
 LCD_LIB_OBJ_FILE	:= $(addprefix build/obj/, $(LCD_LIB_CPP_FILE))
-LCD_LIB_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(LCD_LIB_OBJ_FILE))
-build/obj/mono_lcd_lib/%.obj:	mono_lcd_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+LCD_LIB_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(LCD_LIB_OBJ_FILE))
+build/obj/mono_lcd_lib/%.o:	mono_lcd_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(LCD_LIB_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(LCD_LIB_OPTIMIZATION) -c $< -o $@
@@ -141,8 +141,8 @@ SIMPLE_MONO_DRAWING_LIB_CPP_FILE	:= $(shell find simple_mono_drawing_lib/ -maxde
 SIMPLE_MONO_DRAWING_LIB_DIR		:= $(shell find simple_mono_drawing_lib/ -maxdepth 3 -type d -name "*" )
 SIMPLE_MONO_DRAWING_LIB_PATH		:= $(addprefix -I, $(SIMPLE_MONO_DRAWING_LIB_DIR))
 SIMPLE_MONO_DRAWING_LIB_OBJ_FILE	:= $(addprefix build/obj/, $(SIMPLE_MONO_DRAWING_LIB_CPP_FILE))
-SIMPLE_MONO_DRAWING_LIB_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE))
-build/obj/simple_mono_drawing_lib/%.obj:	simple_mono_drawing_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+SIMPLE_MONO_DRAWING_LIB_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE))
+build/obj/simple_mono_drawing_lib/%.o:	simple_mono_drawing_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(LCD_LIB_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION) -c $< -o $@
@@ -155,8 +155,8 @@ MINI_GUI_BY_VADIMATORIK_CPP_FILE	:= $(shell find mini_gui_by_vadimatorik/ -maxde
 MINI_GUI_BY_VADIMATORIK_DIR		:= $(shell find mini_gui_by_vadimatorik/ -maxdepth 3 -type d -name "*" )
 MINI_GUI_BY_VADIMATORIK_PATH		:= $(addprefix -I, $(MINI_GUI_BY_VADIMATORIK_DIR))
 MINI_GUI_BY_VADIMATORIK_OBJ_FILE	:= $(addprefix build/obj/, $(MINI_GUI_BY_VADIMATORIK_CPP_FILE))
-MINI_GUI_BY_VADIMATORIK_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(MINI_GUI_BY_VADIMATORIK_OBJ_FILE))
-build/obj/mini_gui_by_vadimatorik/%.obj:	mini_gui_by_vadimatorik/%.cpp
+MINI_GUI_BY_VADIMATORIK_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(MINI_GUI_BY_VADIMATORIK_OBJ_FILE))
+build/obj/mini_gui_by_vadimatorik/%.o:	mini_gui_by_vadimatorik/%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(MINI_GUI_BY_VADIMATORIK_PATH) $(USER_CFG_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_OPTIMIZATION) -c $< -o $@
@@ -169,8 +169,8 @@ MICRO_SD_DRIVER_CPP_FILE	:= $(shell find micro_sd_driver_by_vadimatorik/ -maxdep
 MICRO_SD_DRIVER_DIR		:= $(shell find micro_sd_driver_by_vadimatorik/ -maxdepth 3 -type d -name "*" )
 MICRO_SD_DRIVER_PATH		:= $(addprefix -I, $(MICRO_SD_DRIVER_DIR))
 MICRO_SD_DRIVER_OBJ_FILE	:= $(addprefix build/obj/, $(MICRO_SD_DRIVER_CPP_FILE))
-MICRO_SD_DRIVER_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(MICRO_SD_DRIVER_OBJ_FILE))
-build/obj/micro_sd_driver_by_vadimatorik/%.obj:	micro_sd_driver_by_vadimatorik/%.cpp
+MICRO_SD_DRIVER_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(MICRO_SD_DRIVER_OBJ_FILE))
+build/obj/micro_sd_driver_by_vadimatorik/%.o:	micro_sd_driver_by_vadimatorik/%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(MICRO_SD_DRIVER_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH)  $(MICRO_SD_DRIVER_OPTIMIZATION) -c $< -o $@
@@ -183,8 +183,8 @@ SH_CPP_FILE	:= $(shell find module_shift_register/ -maxdepth 3 -type f -name "*.
 SH_DIR		:= $(shell find module_shift_register/ -maxdepth 3 -type d -name "*" )
 SH_PATH		:= $(addprefix -I, $(SH_DIR))
 SH_OBJ_FILE	:= $(addprefix build/obj/, $(SH_CPP_FILE))
-SH_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(SH_OBJ_FILE))
-build/obj/module_shift_register/%.obj:	module_shift_register/%.cpp
+SH_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(SH_OBJ_FILE))
+build/obj/module_shift_register/%.o:	module_shift_register/%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(SH_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH)  $(SH_OPTIMIZATION) -c $< -o $@
@@ -197,8 +197,8 @@ MOD_CHIP_CPP_FILE	:= $(shell find module_chiptune/ -maxdepth 3 -type f -name "*.
 MOD_CHIP_DIR		:= $(shell find module_chiptune/ -maxdepth 3 -type d -name "*" )
 MOD_CHIP_PATH		:= $(addprefix -I, $(MOD_CHIP_DIR))
 MOD_CHIP_OBJ_FILE	:= $(addprefix build/obj/, $(MOD_CHIP_CPP_FILE))
-MOD_CHIP_OBJ_FILE	:= $(patsubst %.cpp, %.obj, $(MOD_CHIP_OBJ_FILE))
-build/obj/module_chiptune/%.obj:	module_chiptune/%.cpp
+MOD_CHIP_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(MOD_CHIP_OBJ_FILE))
+build/obj/module_chiptune/%.o:	module_chiptune/%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(MOD_CHIP_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(SH_PATH) $(MOD_CHIP_OPTIMIZATION) -c $< -o $@
@@ -212,8 +212,8 @@ USER_CPP_FILE		:= $(shell find user_code/ -maxdepth 5 -type f -name "*.cpp" )
 USER_DIR		:= $(shell find user_code/ -maxdepth 5 -type d -name "*" )
 USER_PATH		:= $(addprefix -I, $(USER_DIR))
 USER_OBJ_FILE		:= $(addprefix build/obj/, $(USER_CPP_FILE))
-USER_OBJ_FILE		:= $(patsubst %.cpp, %.obj, $(USER_OBJ_FILE))
-build/obj/%.obj:	%.cpp
+USER_OBJ_FILE		:= $(patsubst %.cpp, %.o, $(USER_OBJ_FILE))
+build/obj/%.o:	%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_PATH) $(MICRO_SD_DRIVER_PATH) $(SH_PATH) $(MOD_CHIP_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
