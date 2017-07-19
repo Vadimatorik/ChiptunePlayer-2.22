@@ -1,12 +1,8 @@
 #include "ayplayer_spi.h"
 
-spi_master_hardware_os< SPI1_CFG_OBJ_PARAM > spi1;
-spi_master_hardware_os< SPI2_CFG_OBJ_PARAM > spi2;
-spi_master_hardware_os< SPI3_CFG_OBJ_PARAM > spi3;
-
-spi_base*               p_spi1 = nullptr;
-spi_base*               p_spi2 = nullptr;
-spi_base*               p_spi3 = nullptr;
+spi_master_8bit_hardware_os < SPI1_CFG_OBJ_PARAM > spi1;
+spi_master_8bit_hardware_os < SPI2_CFG_OBJ_PARAM > spi2;
+spi_master_8bit_hardware_os < SPI3_CFG_OBJ_PARAM > spi3;
 
 extern "C" {
 
