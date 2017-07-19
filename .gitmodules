@@ -30,3 +30,6 @@
 [submodule "ayplayer_board"]
 	path = ayplayer_board
 	url = git@github.com:Vadimatorik/ayplayer_board.git
+[submodule "mk_hardware_interfaces"]
+	path = mk_hardware_interfaces
+	url = git@github.com:Vadimatorik/mk_hardware_interfaces.git
