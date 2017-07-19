@@ -71,6 +71,14 @@ USER_CFG_DIR		:= cfg
 USER_CFG_PATH		:= -I$(USER_CFG_DIR)
 
 #**********************************************************************
+# Интерфейсы микроконтроллера.
+#**********************************************************************
+# Все файлы из папки cfg в каталоге проекта.
+MK_INTER_H_FILE		:= $(wildcard mk_hardware_interfaces/*.h)
+MK_INTER_DIR		:= mk_hardware_interfaces
+MK_INTER_PATH		:= -I$(MK_INTER_DIR)
+
+#**********************************************************************
 # Для сборки FreeRTOS.
 #**********************************************************************
 # Собираем все необходимые .h файлы FreeRTOS.
@@ -114,10 +122,10 @@ STM32_F2_API_DIR	:= $(shell find stm32f2_api/ -maxdepth 3 -type d -name "*" )
 STM32_F2_API_PATH	:= $(addprefix -I, $(STM32_F2_API_DIR))
 STM32_F2_API_OBJ_FILE	:= $(addprefix build/obj/, $(STM32_F2_API_CPP_FILE))
 STM32_F2_API_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(STM32_F2_API_OBJ_FILE))
-build/obj/stm32f2_api/%.o:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+build/obj/stm32f2_api/%.o:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE) $(MK_INTER_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) $(MK_INTER_PATH) -c $< -o $@
 
 #**********************************************************************
 # Для сборки библиотеки LCD драйверов (mono_lcd_lib).
@@ -128,10 +136,10 @@ LCD_LIB_DIR		:= $(shell find mono_lcd_lib/ -maxdepth 3 -type d -name "*" )
 LCD_LIB_PATH		:= $(addprefix -I, $(LCD_LIB_DIR))
 LCD_LIB_OBJ_FILE	:= $(addprefix build/obj/, $(LCD_LIB_CPP_FILE))
 LCD_LIB_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(LCD_LIB_OBJ_FILE))
-build/obj/mono_lcd_lib/%.o:	mono_lcd_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE)
+build/obj/mono_lcd_lib/%.o:	mono_lcd_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE) $(MK_INTER_H_FILE)
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(LCD_LIB_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(LCD_LIB_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(LCD_LIB_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(LCD_LIB_OPTIMIZATION) $(MK_INTER_PATH) -c $< -o $@
 
 #**********************************************************************
 # Для сборки библиотеки рисования приметивов (simple_mono_drawing_lib).
@@ -173,7 +181,7 @@ MICRO_SD_DRIVER_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(MICRO_SD_DRIVER_OBJ_FILE))
 build/obj/micro_sd_driver_by_vadimatorik/%.o:	micro_sd_driver_by_vadimatorik/%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(MICRO_SD_DRIVER_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH)  $(MICRO_SD_DRIVER_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(MICRO_SD_DRIVER_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH)  $(MICRO_SD_DRIVER_OPTIMIZATION) -c $< -o $@
 	
 #**********************************************************************
 # module_shift_register
@@ -187,7 +195,7 @@ SH_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(SH_OBJ_FILE))
 build/obj/module_shift_register/%.o:	module_shift_register/%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(SH_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH)  $(SH_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(SH_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH)  $(SH_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
 # module_chiptune
@@ -201,7 +209,7 @@ MOD_CHIP_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(MOD_CHIP_OBJ_FILE))
 build/obj/module_chiptune/%.o:	module_chiptune/%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(MOD_CHIP_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(SH_PATH) $(MOD_CHIP_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(MOD_CHIP_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(SH_PATH) $(MOD_CHIP_OPTIMIZATION) -c $< -o $@
 	
 #**********************************************************************
 # Сборка кода пользователя.
@@ -213,10 +221,10 @@ USER_DIR		:= $(shell find user_code/ -maxdepth 5 -type d -name "*" )
 USER_PATH		:= $(addprefix -I, $(USER_DIR))
 USER_OBJ_FILE		:= $(addprefix build/obj/, $(USER_CPP_FILE))
 USER_OBJ_FILE		:= $(patsubst %.cpp, %.o, $(USER_OBJ_FILE))
-build/obj/%.o:	%.cpp
+build/obj/%.o:	%.cpp	
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_PATH) $(MICRO_SD_DRIVER_PATH) $(SH_PATH) $(MOD_CHIP_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(MK_INTER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_PATH) $(MICRO_SD_DRIVER_PATH) $(SH_PATH) $(MOD_CHIP_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
 # Компановка проекта.
