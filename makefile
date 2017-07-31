@@ -12,6 +12,7 @@ MINI_GUI_BY_VADIMATORIK_OPTIMIZATION	:= -g3 -Og
 MICRO_SD_DRIVER_OPTIMIZATION		:= -g3 -Og
 SH_OPTIMIZATION				:= -g3 -Og
 MOD_CHIP_OPTIMIZATION			:= -g3 -Og
+FAT_FS_OPTIMIZATION			:= -g3 -Og
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xC_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
@@ -30,6 +31,8 @@ C_FLAGS			+= -std=gnu99
 C_FLAGS			+= -fshort-enums
 # Развертывание циклов.
 C_FLAGS			+= -funroll-loops
+
+C_FAT_FS_FLAGS		:= $(MK_FLAGS) -std=gnu89
 
 CPP_FLAGS		:= $(MK_FLAGS)     
 CPP_FLAGS		+= -Werror -Wall -Wextra
@@ -113,6 +116,21 @@ build/obj/FreeRTOS_for_stm32f2/%.o:	FreeRTOS_for_stm32f2/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(C_FLAGS) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(FREE_RTOS_INCLUDE_FILE) -c $< -o $@
 
+	
+#**********************************************************************
+# Для сборки FatFS.
+#**********************************************************************
+FAT_FS_H_FILE	:= $(shell find module_fat_fs_by_chan/ -maxdepth 3 -type f -name "*.h" )
+FAT_FS_CPP_FILE	:= $(shell find module_fat_fs_by_chan/ -maxdepth 3 -type f -name "*.c" )
+FAT_FS_DIR	:= $(shell find module_fat_fs_by_chan/ -maxdepth 3 -type d -name "*" )
+FAT_FS_PATH	:= $(addprefix -I, $(FAT_FS_DIR))
+FAT_FS_OBJ_FILE	:= $(addprefix build/obj/, $(FAT_FS_CPP_FILE))
+FAT_FS_OBJ_FILE	:= $(patsubst %.c, %.o, $(FAT_FS_OBJ_FILE))
+build/obj/module_fat_fs_by_chan/%.o:	module_fat_fs_by_chan/%.c $(USER_CFG_H_FILE)
+	@echo [CC] $<
+	@mkdir -p $(dir $@)
+	@$(CC) $(C_FAT_FS_FLAGS) $(FAT_FS_PATH) $(USER_CFG_PATH) $(FAT_FS_OPTIMIZATION) -c $< -o $@
+	
 #**********************************************************************
 # Для сборки stm32f2_api.
 #**********************************************************************
@@ -229,7 +247,15 @@ build/obj/%.o:	%.cpp
 #**********************************************************************
 # Компановка проекта.
 #**********************************************************************
-PROJECT_OBJ_FILE	:= $(FREE_RTOS_OBJ_FILE) $(STM32_F2_API_OBJ_FILE) $(LCD_LIB_OBJ_FILE) $(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE) $(MINI_GUI_BY_VADIMATORIK_OBJ_FILE) $(USER_OBJ_FILE) $(MICRO_SD_DRIVER_OBJ_FILE) $(SH_OBJ_FILE) $(MOD_CHIP_OBJ_FILE)
+PROJECT_OBJ_FILE	:= 	$(FAT_FS_OBJ_FILE) $(FREE_RTOS_OBJ_FILE) 	\
+				$(STM32_F2_API_OBJ_FILE) 			\
+				$(LCD_LIB_OBJ_FILE) 				\
+				$(SIMPLE_MONO_DRAWING_LIB_OBJ_FILE) 		\
+				$(MINI_GUI_BY_VADIMATORIK_OBJ_FILE) 		\
+				$(USER_OBJ_FILE)				\
+				$(MICRO_SD_DRIVER_OBJ_FILE) 			\
+				$(SH_OBJ_FILE) 					\
+				$(MOD_CHIP_OBJ_FILE) 
 
 build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf
