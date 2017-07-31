@@ -33,3 +33,6 @@
 [submodule "mk_hardware_interfaces"]
 	path = mk_hardware_interfaces
 	url = git@github.com:Vadimatorik/mk_hardware_interfaces.git
+[submodule "module_fat_fs_by_chan"]
+	path = module_fat_fs_by_chan
+	url = git@github.com:Vadimatorik/module_fat_fs_by_chan.git

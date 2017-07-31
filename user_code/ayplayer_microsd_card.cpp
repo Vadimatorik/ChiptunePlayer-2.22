@@ -2,8 +2,8 @@
 
 microsd_spi_cfg_t microsd_card_cfg = {
     .cs                 = &sd2_cs_obj,
-    .init_spi_baudrate  = 0,     //100000,
-    .spi_baudrate_job   = 0,     //10000000,
+    .init_spi_baudrate  = 0,            //100000
+    .spi_baudrate_job   = 0,            //10000000
     .p_spi              = &spi2
 };
 
