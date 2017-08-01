@@ -34,6 +34,8 @@
 // указатель на uint8_t байт
 // указатель на внутренную структуру самой очереди.
 #define USER_OS_STATIC_QUEUE_CREATE(QUEUE_LENGTH,ITEM_SIZE,P_BUF,P_OBJ_ST)      xQueueCreateStatic( QUEUE_LENGTH, ITEM_SIZE, P_BUF, P_OBJ_ST )
+#define USER_OS_QUEUE_RECEIVE(QUEUE,P_BUF,TIMEOUT)                              xQueueReceive(QUEUE,P_BUF,(TickType_t)TIMEOUT)
+#define USER_OS_QUEUE_SEND(QUEUE,P_BUF,TIMEOUT)                                 xQueueSend(QUEUE,P_BUF,(TickType_t)TIMEOUT)
 
 /*
  * mutex-ы.
@@ -72,6 +74,8 @@
 #define USER_OS_PRIO_TASK_WOKEN                             BaseType_t
 // Метод должен выдать семафор из прерывания.
 #define USER_OS_GIVE_BIN_SEMAPHORE_FROM_ISR(P_BUF,P_PRIO)   xSemaphoreGiveFromISR( P_BUF, P_PRIO )
+#define USER_OS_GIVE_BIN_SEMAPHORE(P_BUF)                   xSemaphoreGive( P_BUF )
+
 // Метод должен принять симафор в потоке.
 // Вне зависимости от успеха операции возвращается код окончания операции.
 // Параметр EXPECTATION (ожидание семафора) выставляется в системных тиках операционной системы.

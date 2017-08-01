@@ -242,7 +242,7 @@ USER_OBJ_FILE		:= $(patsubst %.cpp, %.o, $(USER_OBJ_FILE))
 build/obj/%.o:	%.cpp	
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(MK_INTER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_PATH) $(MICRO_SD_DRIVER_PATH) $(SH_PATH) $(MOD_CHIP_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(FAT_FS_PATH) $(MK_INTER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_PATH) $(MICRO_SD_DRIVER_PATH) $(SH_PATH) $(MOD_CHIP_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
 # Компановка проекта.

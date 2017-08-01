@@ -6,7 +6,39 @@
 #include "ayplayer_spi.h"
 #include "ayplayer_shift_register.h"
 #include "ayplayer_microsd_card.h"
+#include "ay_ym_file_mode.h"
 
+/*
+ * filemode
+ */
+
+USER_OS_STATIC_MUTEX_BUFFER microsd_mutex_buf = USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE;
+USER_OS_STATIC_MUTEX        microsd_mutex     = nullptr;
+
+uint8_t queue_ay_file_feedback_buf[ sizeof( uint8_t ) ] = { 0 };
+USER_OS_STATIC_QUEUE_STRUCT  queue_ay_file_feedback_st             = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
+USER_OS_STATIC_QUEUE         queue_ay_file_feedback;
+
+FATFS                        sd2_fat;
+uint8_t      circular_buffer[ 512*2 ];
+
+extern ay_ym_low_lavel ay;
+ay_ym_file_mode_struct_cfg_t ay_f_mode_cfg = {
+    .ay_hardware                = &ay,
+    .microsd_mutex              = &microsd_mutex,
+    .queue_feedback             = &queue_ay_file_feedback,
+    .fat                        = &sd2_fat,
+    .circular_buffer_task_prio  = 3,
+    .circular_buffer_size       = 512,
+    .p_circular_buffer          = circular_buffer
+};
+
+ay_ym_file_mode ay_file_mode(&ay_f_mode_cfg);
+
+
+/*
+ * Потенциометры
+ */
 void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
     uint8_t buf[3] = {0};
     buf[0] = reg2 << 3;
@@ -40,7 +72,8 @@ void housekeeping_thread ( void* arg ) {
     out_reg( 3, 0x80, 3, 0x80 );
     vTaskDelay(10);
 
-
+    queue_ay_file_feedback = USER_OS_STATIC_QUEUE_CREATE( 1, sizeof( uint8_t ), queue_ay_file_feedback_buf, &queue_ay_file_feedback_st );
+    microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
     while( true ) {
         vTaskDelay(1000);
 
