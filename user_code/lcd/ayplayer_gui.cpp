@@ -127,119 +127,13 @@ void ayplayer_gui_main_window_show ( void ) {
     ayplayer_lcd.update();
 }
 
-//uint8_t test[512] = { 0 };
-
-#include "ayplayer_spi.h"
-#include "ayplayer_shift_register.h"
-#include "ayplayer_microsd_card.h"
-
-void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
-    uint8_t buf[3] = {0};
-    buf[0] = reg2 << 3;
-    buf[0] |= value2 >> 5;
-    buf[1] = value2 << 3;
-    buf[1] |= reg1;
-    buf[2] = value1;
-    dp_cs_res_obj.reset();
-    spi3.tx(&buf[0], 1, 100);
-    spi3.tx(&buf[1], 1, 100);
-    spi3.tx(&buf[2], 1, 100);
-    dp_cs_res_obj.set();
-}
-
-void one_reg (  uint8_t reg1, uint8_t value1 ) {
-    dp_cs_res_obj.reset();
-    vTaskDelay(1);
-    spi3.tx( &reg1, 1, 100 );
-    spi3.tx( &value1, 1, 100 );
-    vTaskDelay(1);
-    dp_cs_res_obj.set();
-}
-
 extern const pin shdn_obj;
+
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
     ayplayer_lcd_init( 8 );
     ayplayer_gui_main_window_show();
-    //shdn_obj.reset();
-shdn_obj.set();
-    vTaskDelay(2000);
 
-    while( true ) {
-vTaskDelay(10);
-        out_reg( 0, 0, 0, 0 );
-        vTaskDelay(10);
-        out_reg( 1, 0, 1, 0 );
-        vTaskDelay(10);
-        out_reg( 2, 0, 2, 0 );
-        vTaskDelay(10);
-        out_reg( 3, 0, 3, 0 );
-        vTaskDelay(10);
-
-        out_reg( 0, 0x80, 0, 0x80 );
-        vTaskDelay(10);
-        out_reg( 1, 0x80, 1, 0x80 );
-        vTaskDelay(10);
-        out_reg( 2, 0x80, 2, 0x80 );
-        vTaskDelay(10);
-        out_reg( 3, 0x80, 3, 0x80 );
-        vTaskDelay(10);
-
-        out_reg( 0, 0xFF, 0, 0xFF );
-        vTaskDelay(10);
-        out_reg( 1, 0xFF, 1, 0xFF );
-        vTaskDelay(10);
-        out_reg( 2, 0xFF, 2, 0xFF );
-        vTaskDelay(10);
-        out_reg( 3, 0xFF, 3, 0xFF );
-
-/*
-        one_reg(0, 0);
-        vTaskDelay(10);
-        one_reg(1, 0);
-        vTaskDelay(10);
-        one_reg(2, 0);
-        vTaskDelay(10);
-        one_reg(3, 0);
-        vTaskDelay(10);
-
-        one_reg(0, 0x80);
-        vTaskDelay(10);
-        one_reg(1, 0x80);
-        vTaskDelay(10);
-        one_reg(2, 0x80);
-        vTaskDelay(10);
-        one_reg(3, 0x80);
-        vTaskDelay(10);
-
-        one_reg(0, 0xFF);
-        vTaskDelay(10);
-        one_reg(1, 0xFF);
-        vTaskDelay(10);
-        one_reg(2, 0xFF);
-        vTaskDelay(10);
-        one_reg(3, 0xFF);    
-        vTaskDelay(10);*/
-    }
-    /*
-    high_data = 1;
-    dp_cs_res_obj.reset();
-    spi3.tx(&high_data, 1, 100);
-    spi3.tx(&low_data, 1, 100);
-    dp_cs_res_obj.set();
-
-
-    high_data = 2;
-    dp_cs_res_obj.reset();
-    spi3.tx(&high_data, 1, 100);
-    spi3.tx(&low_data, 1, 100);
-    dp_cs_res_obj.set();
-
-    high_data = 3;
-    dp_cs_res_obj.reset();
-    spi3.tx(&high_data, 1, 100);
-    spi3.tx(&low_data, 1, 100);
- */
     while( true ) {
         vTaskDelay(1000);
     }
