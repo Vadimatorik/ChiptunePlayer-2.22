@@ -60,7 +60,7 @@ void housekeeping_thread ( void* arg ) {
     (void)arg;
 
     // Костыль для потенциометров. Выставляем 5 кОм на всехъ каналах.
-
+/*
     vTaskDelay(2000);
     shdn_obj.set();
     out_reg( 0, 0x80, 0, 0x80 );
@@ -70,7 +70,7 @@ void housekeeping_thread ( void* arg ) {
     out_reg( 2, 0x80, 2, 0x80 );
     vTaskDelay(10);
     out_reg( 3, 0x80, 3, 0x80 );
-    vTaskDelay(10);
+    vTaskDelay(10);*/
 
     queue_ay_file_feedback = USER_OS_STATIC_QUEUE_CREATE( 1, sizeof( uint8_t ), queue_ay_file_feedback_buf, &queue_ay_file_feedback_st );
     microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
@@ -79,12 +79,9 @@ void housekeeping_thread ( void* arg ) {
     uint32_t count = 0;
     char path_dir[255] = "/";
     ay_file_mode.file_update(path_dir, nullptr);
-    ay_file_mode.find_psg_file(count);
+
     while( true ) {
-        vTaskDelay(1000);
-
-
-
+        ay_file_mode.find_psg_file(count);
     }
 }
 
