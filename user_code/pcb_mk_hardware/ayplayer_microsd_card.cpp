@@ -8,7 +8,3 @@ microsd_spi_cfg_t microsd_card_cfg = {
 };
 
 microsd_spi sd2( &microsd_card_cfg );
-
-void ayplayer_microsd_card_init (void) {
-    sd2.reinit();
-}
