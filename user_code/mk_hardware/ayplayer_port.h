@@ -94,8 +94,8 @@ const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_12, EC_PIN_
  */
 const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_2,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::UP,        EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_rx;
 const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_3,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_tx;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_13, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2__clk;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_7,  EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         sd2_cs;
+const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_13, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_clk;
+const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_7,  EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >           sd2_cs;
 const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_9,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,    EC_PIN_PULL::UP,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_push;
 
 /*
@@ -117,7 +117,7 @@ const constexpr pin_config_t ayplayer_global_port_pin_cfg[] = {
     button_in,                                                                                              // SPI клавиатура (SPI общий AY, тут только вход).
     swd_io, swd_clk,                                                                                        // SWD.
     on_5v, power_on, tp_st, tp_ch, ay1_on, ay2_on,                                                          // PWR.
-    sd2_rx, sd2_tx, sd2__clk, sd2_cs, sd2_push,                                                             // MICRO-SD SPI2 (SPI2 + GPIO).
+    sd2_rx, sd2_tx, sd2_clk, sd2_cs, sd2_push,                                                             // MICRO-SD SPI2 (SPI2 + GPIO).
     boot_tx, boot_rx                                                                                        // BOOT-USART (USART3).
 };
 

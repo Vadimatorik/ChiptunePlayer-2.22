@@ -56,6 +56,7 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
 /*
  * Каждые 500 мс мигаем светодиодом.
  */
+extern microsd_spi sd2;
 void housekeeping_thread ( void* arg ) {
     (void)arg;
 
@@ -75,13 +76,14 @@ void housekeeping_thread ( void* arg ) {
     queue_ay_file_feedback = USER_OS_STATIC_QUEUE_CREATE( 1, sizeof( uint8_t ), queue_ay_file_feedback_buf, &queue_ay_file_feedback_st );
     microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
 
-    f_mount(&sd2_fat, "", 0);
-    uint32_t count = 0;
-    char path_dir[255] = "/";
-    ay_file_mode.file_update(path_dir, nullptr);
+    //f_mount(&sd2_fat, "", 0);
+    //uint32_t count = 0;
+    //char path_dir[255] = "/";
+    //ay_file_mode.file_update(path_dir, nullptr);
 
     while( true ) {
-        ay_file_mode.find_psg_file(count);
+        sd2.initialize();
+        //ay_file_mode.find_psg_file(count);
     }
 }
 
