@@ -78,20 +78,18 @@ void housekeeping_thread ( void* arg ) {
     queue_ay_file_feedback = USER_OS_STATIC_QUEUE_CREATE( 1, sizeof( uint8_t ), queue_ay_file_feedback_buf, &queue_ay_file_feedback_st );
     microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
 
-    //f_mount(&sd2_fat, "", 0);
-    //uint32_t count = 0;
-    //char path_dir[255] = "/";
-    //ay_file_mode.file_update(path_dir, nullptr);
+    volatile FRESULT ress;
+    ress = f_mount(&sd2_fat, "", 0);
+    ( void )ress;
+    uint32_t count = 0;
+    char path_dir[255] = "/";
+    ay_file_mode.file_update(path_dir, nullptr);
     volatile EC_MICRO_SD_TYPE type_sd = EC_MICRO_SD_TYPE::ERROR;
     ( void )type_sd;
     volatile EC_SD_RESULT res;
     ( void )res;
     while( true ) {
-        type_sd = sd2.initialize();
-        res = sd2.read_sector( 0, test_read );
-        res = sd2.write_sector( test_writre, 0 );
-        res = sd2.read_sector( 0, test_read );
-        //ay_file_mode.find_psg_file(count);
+        ay_file_mode.find_psg_file(count);
     }
 }
 
