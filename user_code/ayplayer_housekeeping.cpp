@@ -80,9 +80,10 @@ void housekeeping_thread ( void* arg ) {
     //uint32_t count = 0;
     //char path_dir[255] = "/";
     //ay_file_mode.file_update(path_dir, nullptr);
+    volatile MICRO_SD_TYPE type_sd = MICRO_SD_TYPE::ERROR; ( void )type_sd;
 
     while( true ) {
-        sd2.initialize();
+        type_sd = sd2.initialize();
         //ay_file_mode.find_psg_file(count);
     }
 }
