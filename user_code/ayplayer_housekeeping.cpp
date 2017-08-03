@@ -2,7 +2,7 @@
 #include "ayplayer_ay_note.h"               // Потом выпелить!
 
 
-
+#include "microsd_card.h"
 #include "ayplayer_spi.h"
 #include "ayplayer_shift_register.h"
 #include "ayplayer_microsd_card.h"
@@ -52,6 +52,7 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
     spi3.tx(&buf[2], 1, 100);
     dp_cs_res_obj.set();
 }
+uint8_t test_read[512] = {0};
 
 /*
  * Каждые 500 мс мигаем светодиодом.
@@ -80,10 +81,13 @@ void housekeeping_thread ( void* arg ) {
     //uint32_t count = 0;
     //char path_dir[255] = "/";
     //ay_file_mode.file_update(path_dir, nullptr);
-    volatile MICRO_SD_TYPE type_sd = MICRO_SD_TYPE::ERROR; ( void )type_sd;
-
+    volatile EC_MICRO_SD_TYPE type_sd = EC_MICRO_SD_TYPE::ERROR;
+    ( void )type_sd;
+    volatile EC_SD_RESULT res;
+    ( void )res;
     while( true ) {
         type_sd = sd2.initialize();
+        res = sd2.read_sector(test_read, 0);
         //ay_file_mode.find_psg_file(count);
     }
 }

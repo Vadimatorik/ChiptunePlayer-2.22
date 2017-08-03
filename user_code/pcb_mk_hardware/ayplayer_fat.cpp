@@ -9,27 +9,33 @@ DWORD get_fattime ( void ) {
 }
 #endif
 
-/*
- * Временный костыль.
- * При каждом чтении/записи заново переинициализируется.
- * Пока так...
- */
 DSTATUS disk_initialize ( BYTE drv ) {
-    ( void )drv;
-    return ~STA_NOINIT;
+    ( void )drv;    // Пока пользуемся одной, потом переписать на 2.
+    if ( sd2.initialize() != EC_MICRO_SD_TYPE::ERROR ) {
+        return ~STA_NOINIT;
+    } else {
+        return STA_NOINIT;
+    }
 }
 
 DSTATUS disk_status ( BYTE pdrv ) {
     ( void )pdrv;
-    return ~STA_NOINIT;
+
+    if ( sd2.get_type() == EC_MICRO_SD_TYPE::ERROR )
+        return STA_NOINIT;
+
+    if ( sd2.wake_up() == EC_SD_RESULT::OK )
+        return ~STA_NOINIT;
+
+    return STA_NOINIT;
 }
 
 DRESULT disk_read ( BYTE pdrv, BYTE* buff, DWORD sector, UINT count ) {
     ( void )pdrv;
     for (UINT i = 0; i<count; i++){										// Считываем нужное количество блоков.
-        if ( sd2.read_sector( buff, sector) != EC_FRESULT::OK ){
+      /*  if ( sd2.read_sector( buff, sector) != EC_FRESULT::OK ){
             return RES_ERROR;											// Если считать сектор не удалось.
-        }
+        }*/
         sector+=512;		// Смещаемся на ячейку (Тут учесть прикол с возможной адресацией по блокам. Сейчас побайтово).
         buff+=512;
     }
@@ -37,14 +43,14 @@ DRESULT disk_read ( BYTE pdrv, BYTE* buff, DWORD sector, UINT count ) {
 }
 
 DRESULT disk_write ( BYTE pdrv, const BYTE* buff, DWORD sector, UINT count ) {
-    ( void )pdrv;
-    BYTE* point_buf = (BYTE*)buff;
+    ( void )pdrv; ( void )buff; ( void )sector;
+    //BYTE* point_buf = (BYTE*)buff;
     for (UINT i = 0; i<count; i++){										// Считываем нужное количество блоков.
-        if ( sd2.write_sector( sector, point_buf ) != EC_FRESULT::OK ) {
+    /*    if ( sd2.write_sector( sector, point_buf ) != EC_FRESULT::OK ) {
             return RES_ERROR;											// Если считать сектор не удалось.
         }
         sector+=512;		// Смещаемся на ячейку (Тут учесть прикол с возможной адресацией по блокам. Сейчас побайтово).
-        buff+=512;
+        buff+=512;*/
     }
     return RES_OK;
 }
