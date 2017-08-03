@@ -53,6 +53,7 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
     dp_cs_res_obj.set();
 }
 uint8_t test_read[512] = {0};
+uint8_t test_writre[512] = {0, 2, 3, 4, 5};
 
 /*
  * Каждые 500 мс мигаем светодиодом.
@@ -87,7 +88,9 @@ void housekeeping_thread ( void* arg ) {
     ( void )res;
     while( true ) {
         type_sd = sd2.initialize();
-        res = sd2.read_sector(test_read, 0);
+        res = sd2.read_sector( 0, test_read );
+        res = sd2.write_sector( test_writre, 0 );
+        res = sd2.read_sector( 0, test_read );
         //ay_file_mode.find_psg_file(count);
     }
 }
