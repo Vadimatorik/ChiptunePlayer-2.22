@@ -13,7 +13,7 @@ DWORD get_fattime ( void ) {
 DSTATUS disk_initialize ( BYTE drv ) {
     ( void )drv;    // Пока пользуемся одной, потом переписать на 2.
     if ( sd2.initialize() != EC_MICRO_SD_TYPE::ERROR ) {
-        return ~STA_NOINIT;
+        return 0;
     } else {
         return STA_NOINIT;
     }
@@ -26,7 +26,7 @@ DSTATUS disk_status ( BYTE pdrv ) {
         return STA_NOINIT;
 
     if ( sd2.wake_up() == EC_SD_RESULT::OK )
-        return ~STA_NOINIT;
+        return 0;
 
     return STA_NOINIT;
 }
