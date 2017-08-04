@@ -84,6 +84,7 @@ void housekeeping_thread ( void* arg ) {
     char path[256] = "0:/";
     r = ay_file_mode.find_psg_file( path );
     r = ay_file_mode.psg_file_get_name( path, 0, name, len );
+    r = ay_file_mode.psg_file_play( path, 0 );
     while( true ) {};
 }
 

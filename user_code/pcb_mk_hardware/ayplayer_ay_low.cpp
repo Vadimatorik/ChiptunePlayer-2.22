@@ -2,8 +2,8 @@
 
 extern uint8_t sr_out_buf[2];
 
-uint8_t queue_0_buf[ sizeof( ay_low_out_data ) * 32 ] = { 0 };
-uint8_t queue_1_buf[ sizeof( ay_low_out_data ) * 32 ] = { 0 };
+uint8_t queue_0_buf[ sizeof( ay_low_out_data_struct ) * 32 ] = { 0 };
+uint8_t queue_1_buf[ sizeof( ay_low_out_data_struct ) * 32 ] = { 0 };
 USER_OS_STATIC_QUEUE_STRUCT  q_0_st             = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
 USER_OS_STATIC_QUEUE_STRUCT  q_1_st             = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
 
@@ -36,7 +36,7 @@ ay_ym_low_lavel ay( &ay_low_cfg );
 
 
 void ayplayer_ay_init (void) {
-    p_queue_array[0] = USER_OS_STATIC_QUEUE_CREATE( 32, sizeof( ay_low_out_data ), queue_0_buf, &q_0_st );
-    p_queue_array[1] = USER_OS_STATIC_QUEUE_CREATE( 32, sizeof( ay_low_out_data ), queue_1_buf, &q_1_st );
+    p_queue_array[0] = USER_OS_STATIC_QUEUE_CREATE( 32, sizeof( ay_low_out_data_struct ), queue_0_buf, &q_0_st );
+    p_queue_array[1] = USER_OS_STATIC_QUEUE_CREATE( 32, sizeof( ay_low_out_data_struct ), queue_1_buf, &q_1_st );
     ay.init();
 }
