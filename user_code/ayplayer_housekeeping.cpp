@@ -81,8 +81,12 @@ void housekeeping_thread ( void* arg ) {
     ( void )ress;
     ress = f_mount(&sd2_fat, "", 0);
 
+    char name[256];
+    uint32_t len;
+
     while( true ) {
         ay_file_mode.find_psg_file();
+        ay_file_mode.psg_file_get_name( 0, name, len );
     }
 }
 
