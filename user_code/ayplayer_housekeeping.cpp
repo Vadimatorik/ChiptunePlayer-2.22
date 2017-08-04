@@ -27,7 +27,6 @@ ay_ym_file_mode_struct_cfg_t ay_f_mode_cfg = {
     .ay_hardware                = &ay,
     .microsd_mutex              = &microsd_mutex,
     .queue_feedback             = &queue_ay_file_feedback,
-    .fat                        = &sd2_fat,
     .circular_buffer_task_prio  = 3,
     .circular_buffer_size       = 512,
     .p_circular_buffer          = circular_buffer
@@ -79,22 +78,16 @@ void housekeeping_thread ( void* arg ) {
     microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
 
     volatile FRESULT ress;
-    ress = f_mount(&sd2_fat, "", 0);
     ( void )ress;
-    uint32_t count = 0;
-    char path_dir[255] = "/";
-    ay_file_mode.file_update(path_dir, nullptr);
-    volatile EC_MICRO_SD_TYPE type_sd = EC_MICRO_SD_TYPE::ERROR;
-    ( void )type_sd;
-    volatile EC_SD_RESULT res;
-    ( void )res;
+    ress = f_mount(&sd2_fat, "", 0);
+
     while( true ) {
-        ay_file_mode.find_psg_file(count);
+        ay_file_mode.find_psg_file();
     }
 }
 
 // 400 байт задаче.
-#define AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE       200
+#define AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE       1000
 static StaticTask_t     ayplayer_housekeeping_task_buffer;
 static StackType_t      ayplayer_housekeeping_task_stack[ AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE ];
 
