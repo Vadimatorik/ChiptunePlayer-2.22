@@ -19,17 +19,13 @@ uint8_t queue_ay_file_feedback_buf[ sizeof( uint8_t ) ] = { 0 };
 USER_OS_STATIC_QUEUE_STRUCT  queue_ay_file_feedback_st             = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
 USER_OS_STATIC_QUEUE         queue_ay_file_feedback;
 
-FATFS                        sd2_fat;
-uint8_t                      circular_buffer[ 512 * 2 ];
+FATFS                        fat;
 
 extern ay_ym_low_lavel ay;
 ay_ym_file_mode_struct_cfg_t ay_f_mode_cfg = {
     .ay_hardware                = &ay,
     .microsd_mutex              = &microsd_mutex,
     .queue_feedback             = &queue_ay_file_feedback,
-    .circular_buffer_task_prio  = 3,
-    .circular_buffer_size       = 512,
-    .p_circular_buffer          = circular_buffer
 };
 
 ay_ym_file_mode ay_file_mode(&ay_f_mode_cfg);
@@ -77,7 +73,7 @@ void housekeeping_thread ( void* arg ) {
 
     volatile FRESULT ress;
     ( void )ress;
-    ress = f_mount(&sd2_fat, "", 0);
+    ress = f_mount(&fat, "", 0);
 
     char name[256];
     uint32_t len;
