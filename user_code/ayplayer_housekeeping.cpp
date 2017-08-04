@@ -20,7 +20,7 @@ USER_OS_STATIC_QUEUE_STRUCT  queue_ay_file_feedback_st             = USER_OS_STA
 USER_OS_STATIC_QUEUE         queue_ay_file_feedback;
 
 FATFS                        sd2_fat;
-uint8_t      circular_buffer[ 512*2 ];
+uint8_t                      circular_buffer[ 512 * 2 ];
 
 extern ay_ym_low_lavel ay;
 ay_ym_file_mode_struct_cfg_t ay_f_mode_cfg = {
@@ -51,8 +51,6 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
     spi3.tx(&buf[2], 1, 100);
     dp_cs_res_obj.set();
 }
-uint8_t test_read[512] = {0};
-uint8_t test_writre[512] = {0, 2, 3, 4, 5};
 
 /*
  * Каждые 500 мс мигаем светодиодом.
@@ -87,14 +85,14 @@ void housekeeping_thread ( void* arg ) {
     volatile EC_AY_FILE_MODE r;
     ( void )r;
 
-
-    r = ay_file_mode.find_psg_file();
-    r = ay_file_mode.psg_file_get_name( 0, name, len );
+    char path[256] = "0:/";
+    r = ay_file_mode.find_psg_file( path );
+    r = ay_file_mode.psg_file_get_name( path, 0, name, len );
     while( true ) {};
 }
 
 // 400 байт задаче.
-#define AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE       1000
+#define AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE       2000
 static StaticTask_t     ayplayer_housekeeping_task_buffer;
 static StackType_t      ayplayer_housekeeping_task_stack[ AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE ];
 
