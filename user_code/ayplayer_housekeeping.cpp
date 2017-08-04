@@ -84,10 +84,13 @@ void housekeeping_thread ( void* arg ) {
     char name[256];
     uint32_t len;
 
-    while( true ) {
-        ay_file_mode.find_psg_file();
-        ay_file_mode.psg_file_get_name( 0, name, len );
-    }
+    volatile EC_AY_FILE_MODE r;
+    ( void )r;
+
+
+    r = ay_file_mode.find_psg_file();
+    r = ay_file_mode.psg_file_get_name( 0, name, len );
+    while( true ) {};
 }
 
 // 400 байт задаче.

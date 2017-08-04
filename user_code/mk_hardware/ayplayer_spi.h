@@ -17,13 +17,21 @@
 /*
  * Для micro-sd
  */
-#define SPI2_CFG_OBJ_PARAM        EC_SPI_NAME                :: SPI2,           \
+#define SPI2_SLOW_CFG_OBJ_PARAM   EC_SPI_NAME                :: SPI2,           \
                                   EC_SPI_CFG_CLK_POLARITY    :: IDLE_0,         \
                                   EC_SPI_CFG_CLK_PHASE       :: FIRST,          \
                                   EC_SPI_CFG_NUMBER_LINE     :: LINE_2,         \
                                   EC_SPI_CFG_ONE_LINE_MODE   :: USE_2_LINE,     \
                                   EC_SPI_CFG_FRAME_FORMAT    :: MOTOROLA,       \
                                   EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_256
+
+#define SPI2_FAST_CFG_OBJ_PARAM   EC_SPI_NAME                :: SPI2,           \
+                                  EC_SPI_CFG_CLK_POLARITY    :: IDLE_0,         \
+                                  EC_SPI_CFG_CLK_PHASE       :: FIRST,          \
+                                  EC_SPI_CFG_NUMBER_LINE     :: LINE_2,         \
+                                  EC_SPI_CFG_ONE_LINE_MODE   :: USE_2_LINE,     \
+                                  EC_SPI_CFG_FRAME_FORMAT    :: MOTOROLA,       \
+                                  EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_2
 
 /*
  * Для сдвигового регистра и потенциометров.
@@ -37,7 +45,8 @@
                                   EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_256
 
 extern spi_master_8bit_hardware_os < SPI1_CFG_OBJ_PARAM > spi1;
-extern spi_master_8bit_hardware_os < SPI2_CFG_OBJ_PARAM > spi2;
+extern spi_master_8bit_hardware_os < SPI2_SLOW_CFG_OBJ_PARAM > spi2_slow;
+extern spi_master_8bit_hardware_os < SPI2_FAST_CFG_OBJ_PARAM > spi2_fast;
 extern spi_master_8bit_hardware_os < SPI3_CFG_OBJ_PARAM > spi3;
 
 int ayplayer_spi_init ( void );
