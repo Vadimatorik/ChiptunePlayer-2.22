@@ -30,7 +30,8 @@ const ay_ym_low_lavel_cfg_t ay_low_cfg {
     .con_cfg            = array_connect_cfg,
     .task_prio          = 3,
     .r7_reg             = r7_array,
-    .tim_frequency_ay   = &ay_player_clk_tim
+    .tim_frequency_ay   = &ay_player_clk_tim,
+    .tim_interrupt_task = &ay_player_interrupt_ay
 };
 
 ay_ym_low_lavel ay( &ay_low_cfg );
@@ -40,4 +41,10 @@ void ayplayer_ay_init (void) {
     p_queue_array[0] = USER_OS_STATIC_QUEUE_CREATE( 32, sizeof( ay_low_out_data_struct ), queue_0_buf, &q_0_st );
     p_queue_array[1] = USER_OS_STATIC_QUEUE_CREATE( 32, sizeof( ay_low_out_data_struct ), queue_1_buf, &q_1_st );
     ay.init();
+}
+
+extern "C" {
+    void tim6_and_dac_handler ( void ) {
+        ay.timer_interrupt_handler();
+    }
 }
