@@ -15,17 +15,12 @@
 USER_OS_STATIC_MUTEX_BUFFER microsd_mutex_buf = USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE;
 USER_OS_STATIC_MUTEX        microsd_mutex     = nullptr;
 
-uint8_t queue_ay_file_feedback_buf[ sizeof( uint8_t ) ] = { 0 };
-USER_OS_STATIC_QUEUE_STRUCT  queue_ay_file_feedback_st             = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
-USER_OS_STATIC_QUEUE         queue_ay_file_feedback;
-
 FATFS                        fat;
 
 extern ay_ym_low_lavel ay;
 ay_ym_file_mode_struct_cfg_t ay_f_mode_cfg = {
     .ay_hardware                = &ay,
     .microsd_mutex              = &microsd_mutex,
-    .queue_feedback             = &queue_ay_file_feedback,
 };
 
 ay_ym_file_mode ay_file_mode(&ay_f_mode_cfg);
@@ -68,7 +63,6 @@ void housekeeping_thread ( void* arg ) {
     out_reg( 3, 0x80, 3, 0x80 );
     vTaskDelay(10);*/
 
-    queue_ay_file_feedback = USER_OS_STATIC_QUEUE_CREATE( 1, sizeof( uint8_t ), queue_ay_file_feedback_buf, &queue_ay_file_feedback_st );
     microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
 
     volatile FRESULT ress;
@@ -89,7 +83,7 @@ void housekeeping_thread ( void* arg ) {
 }
 
 // 400 байт задаче.
-#define AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE       2000
+#define AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE       1500
 static StaticTask_t     ayplayer_housekeeping_task_buffer;
 static StackType_t      ayplayer_housekeeping_task_stack[ AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE ];
 
