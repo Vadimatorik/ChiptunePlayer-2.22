@@ -1,15 +1,6 @@
 #include "ayplayer_timers.h"
 
-
-const tim1_comp_one_channel_cfg_t ay_player_clk_tim_cfg = {
-    .p_tim          = TIM1_OR_TIM8::TIM1,
-    .prescaler      = 1,
-    .period_toggle  = 2,
-    .ch_toggle      = EC_TIM_CH_TOGGLE::CH_2,
-    .mode           = EC_TIM_CH_MODE::N
-};
-
-tim1_comp_one_channel ay_player_clk_tim ( &ay_player_clk_tim_cfg );
+tim1_or_8_comp_one_channel< TIM1_OR_TIM8::TIM1, 1, 2, EC_TIM_CH_TOGGLE::CH_2, EC_TIM_CH_MODE::N > ay_player_clk_tim;
 
 void ayplayer_timers_init ( void ) {
     ay_player_clk_tim.reinit();
