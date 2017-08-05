@@ -15,3 +15,15 @@
 #include "ayplayer_ay_low.h"
 
 #include <stdint.h>
+
+/*
+5.08.2017 18.42
+Print Size:
+   text	   data	    bss	    dec	    hex	filename
+ 119916	   3404	  21368	 144688	  23530	build/ay_player.elf
+
+После переписи на pin внешний.
+Print Size:
+   text	   data	    bss	    dec	    hex	filename
+ 124768	   3432	  23744	 151944	  25188	build/ay_player.elf
+*/

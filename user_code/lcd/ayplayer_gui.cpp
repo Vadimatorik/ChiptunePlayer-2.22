@@ -127,7 +127,7 @@ void ayplayer_gui_main_window_show ( void ) {
     ayplayer_lcd.update();
 }
 
-extern const pin shdn_obj;
+//extern const pin shdn_obj;
 
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;

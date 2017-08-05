@@ -112,3 +112,57 @@
 #else
 	#error Не выбран микроконтроллер. Выбирете модель микрококнтроллера. Например, STM32F205RC.
 #endif
+
+/*
+ * Перечень имеющихся физических портов ввода-вывода контроллера
+ * (зависит от выбранного в stm32_f20x_f21x_conf.h контроллера).
+ */
+#if defined(STM32F205RB)|defined(STM32F205RC)|defined(STM32F205RE) \
+    |defined(STM32F205RF)|defined(STM32F205RG)
+enum class EC_PORT_NAME {
+    A   = 0,
+    B   = 1,
+    C   = 2,
+    D   = 3,
+    H   = 4
+};
+
+/*
+ * Возвращает указатель на базовый адрес выбранного порта ввода-вывода
+ * на карте памяти в соответствии с выбранным контроллером.
+ */
+constexpr uint32_t p_base_port_address_get( EC_PORT_NAME port_name ) {
+    switch( port_name ) {
+#ifdef PORTA
+    case EC_PORT_NAME::A:   return 0x40020000;
+#endif
+#ifdef PORTB
+    case EC_PORT_NAME::B:   return 0x40020400;
+#endif
+#ifdef PORTC
+    case EC_PORT_NAME::C:   return 0x40020800;
+#endif
+#ifdef PORTD
+    case EC_PORT_NAME::D:   return 0x40020C00;
+#endif
+#ifdef PORTE
+    case EC_PORT_NAME::E:   return 0x40021000;
+#endif
+#ifdef PORTF
+    case EC_PORT_NAME::F:   return 0x40021400;
+#endif
+#ifdef PORTG
+    case EC_PORT_NAME::G:   return 0x40021800;
+#endif
+#ifdef PORTH
+    case EC_PORT_NAME::H:   return 0x40021C00;
+#endif
+#ifdef PORTI
+    case EC_PORT_NAME::I:   return 0x40022000;
+#endif
+    }
+    // Это не произойдет, т.к. ранее уже ранее была проверка,
+    // что данные верны.
+    return 0;
+}
+#endif

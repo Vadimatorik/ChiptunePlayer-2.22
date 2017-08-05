@@ -29,6 +29,8 @@ ay_ym_file_mode ay_file_mode(&ay_f_mode_cfg);
 /*
  * Потенциометры
  */
+
+/*
 void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
     uint8_t buf[3] = {0};
     buf[0] = reg2 << 3;
@@ -41,7 +43,7 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
     spi3.tx(&buf[1], 1, 100);
     spi3.tx(&buf[2], 1, 100);
     dp_cs_res_obj.set();
-}
+}*/
 
 /*
  * Каждые 500 мс мигаем светодиодом.
