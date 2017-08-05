@@ -124,27 +124,23 @@ const constexpr pin_config_t ayplayer_global_port_pin_cfg[] = {
 };
 
 const constexpr global_port ayplayer_global_port( ayplayer_global_port_pin_cfg, M_SIZE_ARRAY(ayplayer_global_port_pin_cfg) );
-//
-// Объекты pin (ручное управление выводами).
-//
-// LCD.
-const pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_4 >  lcd_res_obj;
-const pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_5 >  lcd_dc_obj;
-const pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_2 >  lcd_cs_obj;
+
+extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_4 >  lcd_res_obj;
+extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_5 >  lcd_dc_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_2 >  lcd_cs_obj;
 
 // MICROSD 2.
-const pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_7 >  sd2_cs_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_7 >  sd2_cs_obj;
 
 // Защелка сдвигового регистра.
-const pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_8 >  spi_audio_st_reg_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_8 >  spi_audio_st_reg_obj;
 
 // AY_YM.
-const pin< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_10 > bdir_obj;
-const pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_6 >  bc1_obj;
+extern pin< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_10 > bdir_obj;
+extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_6 >  bc1_obj;
 
 // Потенциометры.
-const pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_14 > dp_cs_res_obj;
-const pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_6 >  shdn_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_14 > dp_cs_res_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_6 >  shdn_obj;
 
 int ayplayer_port_init ( void );
-

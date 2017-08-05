@@ -26,4 +26,7 @@ Print Size:
 Print Size:
    text	   data	    bss	    dec	    hex	filename
  124768	   3432	  23744	 151944	  25188	build/ay_player.elf
+
+ После решения проблемы с хардом.
+ 122328	   3408	  21584	 147320	  23f78
 */
