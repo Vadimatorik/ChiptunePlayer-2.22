@@ -41,7 +41,6 @@ ay_ym_low_lavel ay( &ay_low_cfg );
 void ayplayer_ay_init (void) {
     ay_low_p_queue_array[0] = USER_OS_STATIC_QUEUE_CREATE( AY_LOW_QUEUE_BUF_SIZE, sizeof( ay_low_out_data_struct ), ay_low_queue_0_buf, &ay_low_q_0_st );
     ay_low_p_queue_array[1] = USER_OS_STATIC_QUEUE_CREATE( AY_LOW_QUEUE_BUF_SIZE, sizeof( ay_low_out_data_struct ), ay_low_queue_1_buf, &ay_low_q_1_st );
-    ay.init();
 }
 
 extern "C" {
