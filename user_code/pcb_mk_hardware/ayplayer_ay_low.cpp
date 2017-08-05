@@ -2,12 +2,13 @@
 
 extern uint8_t sr_out_buf[2];
 
-uint8_t queue_0_buf[ sizeof( ay_low_out_data_struct ) * 32 ] = { 0 };
-uint8_t queue_1_buf[ sizeof( ay_low_out_data_struct ) * 32 ] = { 0 };
-USER_OS_STATIC_QUEUE_STRUCT  q_0_st             = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
-USER_OS_STATIC_QUEUE_STRUCT  q_1_st             = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
+#define AY_LOW_QUEUE_BUF_SIZE                   128
+uint8_t ay_low_queue_0_buf[ sizeof( ay_low_out_data_struct ) * AY_LOW_QUEUE_BUF_SIZE ] = { 0 };
+uint8_t ay_low_queue_1_buf[ sizeof( ay_low_out_data_struct ) * AY_LOW_QUEUE_BUF_SIZE ] = { 0 };
+USER_OS_STATIC_QUEUE_STRUCT  ay_low_q_0_st = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
+USER_OS_STATIC_QUEUE_STRUCT  ay_low_q_1_st = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
 
-USER_OS_STATIC_QUEUE         p_queue_array[2];
+USER_OS_STATIC_QUEUE         ay_low_p_queue_array[2];
 
 uint8_t r7_array[2] = { 0 };
 
@@ -25,7 +26,7 @@ const ay_ym_low_lavel_cfg_t ay_low_cfg {
     .semaphore_sec_out  = nullptr,
     .bdir               = &bdir_obj,
     .bc1                = &bc1_obj,
-    .p_queue_array      = p_queue_array,
+    .queue_array        = ay_low_p_queue_array,
     .ay_number          = 2,
     .con_cfg            = array_connect_cfg,
     .task_prio          = 3,
@@ -38,8 +39,8 @@ ay_ym_low_lavel ay( &ay_low_cfg );
 
 
 void ayplayer_ay_init (void) {
-    p_queue_array[0] = USER_OS_STATIC_QUEUE_CREATE( 32, sizeof( ay_low_out_data_struct ), queue_0_buf, &q_0_st );
-    p_queue_array[1] = USER_OS_STATIC_QUEUE_CREATE( 32, sizeof( ay_low_out_data_struct ), queue_1_buf, &q_1_st );
+    ay_low_p_queue_array[0] = USER_OS_STATIC_QUEUE_CREATE( AY_LOW_QUEUE_BUF_SIZE, sizeof( ay_low_out_data_struct ), ay_low_queue_0_buf, &ay_low_q_0_st );
+    ay_low_p_queue_array[1] = USER_OS_STATIC_QUEUE_CREATE( AY_LOW_QUEUE_BUF_SIZE, sizeof( ay_low_out_data_struct ), ay_low_queue_1_buf, &ay_low_q_1_st );
     ay.init();
 }
 
