@@ -29,7 +29,8 @@ const ay_ym_low_lavel_cfg_t ay_low_cfg {
     .ay_number          = 2,
     .con_cfg            = array_connect_cfg,
     .task_prio          = 3,
-    .r7_reg             = r7_array
+    .r7_reg             = r7_array,
+    .tim_frequency_ay   = &ay_player_clk_tim
 };
 
 ay_ym_low_lavel ay( &ay_low_cfg );
