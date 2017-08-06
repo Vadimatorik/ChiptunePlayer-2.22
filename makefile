@@ -282,8 +282,8 @@ $(PROJECT_NAME).siz:	build/$(PROJECT_NAME).elf
 	@echo ' '
 
 all:	$(PROJECT_NAME).siz
-	#@$(OBJDUMP) -D build/$(PROJECT_NAME).elf > build/$(PROJECT_NAME).asm
-	#@$(OBJCOPY) build/$(PROJECT_NAME).elf build/$(PROJECT_NAME).bin -O binary
+#@$(OBJDUMP) -D build/$(PROJECT_NAME).elf > build/$(PROJECT_NAME).asm
+#@$(OBJCOPY) build/$(PROJECT_NAME).elf build/$(PROJECT_NAME).bin -O binary
 	
 clean:	
 	@rm -R ./build

@@ -55,19 +55,6 @@ extern microsd_spi sd2;
 void housekeeping_thread ( void* arg ) {
     (void)arg;
 
-    // Костыль для потенциометров. Выставляем 5 кОм на всехъ каналах.
-/*
-    vTaskDelay(2000);
-    shdn_obj.set();
-    out_reg( 0, 0x80, 0, 0x80 );
-    vTaskDelay(10);
-    out_reg( 1, 0x80, 1, 0x80 );
-    vTaskDelay(10);
-    out_reg( 2, 0x80, 2, 0x80 );
-    vTaskDelay(10);
-    out_reg( 3, 0x80, 3, 0x80 );
-    vTaskDelay(10);*/
-
     sound_dp.value_set( 0, 0, 0x80 );
     sound_dp.value_set( 0, 1, 0x80 );
     sound_dp.value_set( 0, 2, 0x80 );
