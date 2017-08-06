@@ -25,6 +25,7 @@ ay_ym_connection_chip_cfg_t array_connect_cfg[] = {
 
 const ay_ym_low_lavel_cfg_t ay_low_cfg {
     .sr                 = &sr,
+    .mutex              = &spi3_mutex,
     .p_sr_data          = &sr_out_buf[0],
     .semaphore_sec_out  = nullptr,
     .bdir               = &bdir_obj,
