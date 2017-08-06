@@ -47,7 +47,7 @@ LDFLAGS			+= -ffunction-sections -fdata-sections
 # Убираем неиспользуемые функции из .elf.
 LDFLAGS			+= -Wl,--gc-sections
 # Формируем map файл.
-LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
+#LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
 
 #**********************************************************************
 # Параметры toolchain-а.
@@ -282,8 +282,8 @@ $(PROJECT_NAME).siz:	build/$(PROJECT_NAME).elf
 	@echo ' '
 
 all:	$(PROJECT_NAME).siz
-	@$(OBJDUMP) -D build/$(PROJECT_NAME).elf > build/$(PROJECT_NAME).asm
-	@$(OBJCOPY) build/$(PROJECT_NAME).elf build/$(PROJECT_NAME).bin -O binary
+	#@$(OBJDUMP) -D build/$(PROJECT_NAME).elf > build/$(PROJECT_NAME).asm
+	#@$(OBJCOPY) build/$(PROJECT_NAME).elf build/$(PROJECT_NAME).bin -O binary
 	
 clean:	
 	@rm -R ./build
