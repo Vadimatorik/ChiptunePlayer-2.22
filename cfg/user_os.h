@@ -37,6 +37,12 @@
 #define USER_OS_QUEUE_RECEIVE(QUEUE,P_BUF,TIMEOUT)                              xQueueReceive(QUEUE,P_BUF,(TickType_t)TIMEOUT)
 #define USER_OS_QUEUE_SEND(QUEUE,P_BUF,TIMEOUT)                                 xQueueSend(QUEUE,P_BUF,(TickType_t)TIMEOUT)
 
+// Очистить очередь.
+#define USER_OS_QUEUE_RESET(QUEUE)                                              xQueueReset(QUEUE)
+
+// Количество элементов в очереди.
+#define USER_OS_QUEUE_CHECK_WAIT_ITEM(QUEUE)                                    uxQueueMessagesWaiting(QUEUE)
+
 /*
  * mutex-ы.
  */
