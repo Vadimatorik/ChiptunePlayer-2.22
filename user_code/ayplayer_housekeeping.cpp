@@ -49,6 +49,9 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
  * Каждые 500 мс мигаем светодиодом.
  */
 extern microsd_spi sd2;
+
+#include "ayplayer_digital_potentiometer.h"
+
 void housekeeping_thread ( void* arg ) {
     (void)arg;
 
@@ -64,6 +67,16 @@ void housekeeping_thread ( void* arg ) {
     vTaskDelay(10);
     out_reg( 3, 0x80, 3, 0x80 );
     vTaskDelay(10);*/
+
+    sound_dp.value_set( 0, 0, 0x80 );
+    sound_dp.value_set( 0, 1, 0x80 );
+    sound_dp.value_set( 0, 2, 0x80 );
+    sound_dp.value_set( 0, 3, 0x80 );
+
+    sound_dp.value_set( 0, 0, 0x80 );
+    sound_dp.value_set( 1, 1, 0x80 );
+    sound_dp.value_set( 2, 2, 0x80 );
+    sound_dp.value_set( 3, 3, 0x80 );
 
     microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
 

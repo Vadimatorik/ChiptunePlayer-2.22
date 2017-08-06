@@ -230,6 +230,13 @@ build/obj/module_chiptune/%.o:	module_chiptune/%.cpp
 	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(FAT_FS_PATH) $(MOD_CHIP_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(SH_PATH) $(MOD_CHIP_OPTIMIZATION) -c $< -o $@
 	
 #**********************************************************************
+# module_digital_potentiometer (сделано на шаблонах, все .h).
+#**********************************************************************
+DP_H_FILE	:= $(shell find module_digital_potentiometer/ -maxdepth 3 -type f -name "*.h" )
+DP_DIR		:= $(shell find module_digital_potentiometer/ -maxdepth 3 -type d -name "*" )
+DP_PATH		:= $(addprefix -I, $(DP_DIR))
+	
+#**********************************************************************
 # Сборка кода пользователя.
 # Весь код пользователя должен быть в корневой папке.
 #**********************************************************************
@@ -242,7 +249,13 @@ USER_OBJ_FILE		:= $(patsubst %.cpp, %.o, $(USER_OBJ_FILE))
 build/obj/%.o:	%.cpp	
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(USER_PATH) $(FAT_FS_PATH) $(MK_INTER_PATH) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) $(MINI_GUI_BY_VADIMATORIK_PATH) $(MICRO_SD_DRIVER_PATH) $(SH_PATH) $(MOD_CHIP_PATH) $(USER_CODE_OPTIMIZATION) -c $< -o $@
+	@$(CPP) $(CPP_FLAGS) 						\
+	$(USER_PATH) $(FAT_FS_PATH) $(MK_INTER_PATH)  			\
+	$(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) 	\
+	$(LCD_LIB_PATH) $(SIMPLE_MONO_DRAWING_LIB_PATH) 		\
+	$(MINI_GUI_BY_VADIMATORIK_PATH) $(MICRO_SD_DRIVER_PATH) 	\
+	$(SH_PATH) $(MOD_CHIP_PATH) $(DP_PATH)				\
+	 $(USER_CODE_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
 # Компановка проекта.
@@ -255,7 +268,7 @@ PROJECT_OBJ_FILE	:= 	$(FAT_FS_OBJ_FILE) $(FREE_RTOS_OBJ_FILE) 	\
 				$(USER_OBJ_FILE)				\
 				$(MICRO_SD_DRIVER_OBJ_FILE) 			\
 				$(SH_OBJ_FILE) 					\
-				$(MOD_CHIP_OBJ_FILE) 
+				$(MOD_CHIP_OBJ_FILE)					
 
 build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf

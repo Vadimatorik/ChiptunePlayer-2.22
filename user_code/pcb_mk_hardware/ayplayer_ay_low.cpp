@@ -2,6 +2,8 @@
 
 extern uint8_t sr_out_buf[2];
 
+// В этих очередях содержатся данные для каждого AY.
+// Они (данные) будут выдаваться в прерывании с заданной частотой.
 #define AY_LOW_QUEUE_BUF_SIZE                   128
 uint8_t ay_low_queue_0_buf[ sizeof( ay_low_out_data_struct ) * AY_LOW_QUEUE_BUF_SIZE ] = { 0 };
 uint8_t ay_low_queue_1_buf[ sizeof( ay_low_out_data_struct ) * AY_LOW_QUEUE_BUF_SIZE ] = { 0 };
@@ -9,6 +11,7 @@ USER_OS_STATIC_QUEUE_STRUCT  ay_low_q_0_st = USER_OS_STATIC_QUEUE_STRUCT_INIT_VA
 USER_OS_STATIC_QUEUE_STRUCT  ay_low_q_1_st = USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE;
 
 USER_OS_STATIC_QUEUE         ay_low_p_queue_array[2];
+
 
 uint8_t r7_array[2] = { 0 };
 
