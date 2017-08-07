@@ -11,4 +11,7 @@ void ayplayer_timers_init ( void ) {
     ayplayer_nvic.irq_set_priority( IRQ_NAME::TIM6, IRQ_PRIO::PRIO_5 );
     ayplayer_nvic.irq_enable( IRQ_NAME::TIM6 );
     ay_player_clk_tim.reinit();
+
+    ay_player_interrupt_ay.on();
+    ay_player_clk_tim.on();
 }
