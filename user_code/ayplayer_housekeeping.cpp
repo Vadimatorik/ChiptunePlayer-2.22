@@ -87,22 +87,6 @@ void housekeeping_thread ( void* arg ) {
     microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
 
 
-    /*
-     *
-    volatile FRESULT ress;
-    ( void )ress;
-    ress = f_mount(&fat, "", 0);
-
-    char name[256];
-    uint32_t len;
-
-    volatile EC_AY_FILE_MODE r;
-    ( void )r;
-
-    char path[256] = "0:/";
-    r = ay_file_mode.find_psg_file( path );
-    r = ay_file_mode.psg_file_get_name( path, 0, name, len );
-    r = ay_file_mode.psg_file_play( path, 0 );*/
 
     ay_queue_struct a;
     a.number_chip = 0;
@@ -115,7 +99,7 @@ void housekeeping_thread ( void* arg ) {
     a.data = 0;
     ay.queue_add_element(&a);
 
-
+/*
     ayplayer_note_mode.write_note_to_channel( 0, 0, 40 );
     ayplayer_note_mode.write_note_to_channel( 0, 1, 20 );
     ayplayer_note_mode.write_note_to_channel( 0, 2, 30 );
@@ -132,10 +116,26 @@ void housekeeping_thread ( void* arg ) {
     ayplayer_note_mode.set_volume_channel( 1, 1, 10 );
     ayplayer_note_mode.set_volume_channel( 1, 2, 10 );
 
+vTaskDelay(1000);*/
 
+    volatile FRESULT ress;
+    ( void )ress;
+    ress = f_mount(&fat, "", 0);
+
+    char name[256];
+    uint32_t len;
+
+    volatile EC_AY_FILE_MODE r;
+    ( void )r;
+
+    char path[256] = "0:/";
+    r = ay_file_mode.find_psg_file( path );
+    r = ay_file_mode.psg_file_get_name( path, 0, name, len );
+    r = ay_file_mode.psg_file_play( path, 0 );
+ r = ay_file_mode.psg_file_play( path, 0 );
     while( true ) {
 
-        vTaskDelay(1000);
+
 
     };
 }
