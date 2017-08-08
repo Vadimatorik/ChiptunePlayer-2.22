@@ -3,7 +3,6 @@
 #include "ayplayer_port.h"
 #include "ayplayer_spi.h"
 #include "mono_lcd_lib_st7565.h"
-#include "simple_mono_drawing_lib.h"
 
 extern uint8_t lcd_buffer[1024];
 
