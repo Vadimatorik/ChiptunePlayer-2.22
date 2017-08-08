@@ -13,6 +13,8 @@ MICRO_SD_DRIVER_OPTIMIZATION		:= -g3 -Og
 SH_OPTIMIZATION				:= -g3 -Og
 MOD_CHIP_OPTIMIZATION			:= -g3 -Og
 FAT_FS_OPTIMIZATION			:= -g3 -Og
+FAT_FS_OPTIMIZATION			:= -g3 -Og
+MAKISE_GUI_OPTIMIZATION			:= -g3 -Og
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
@@ -81,6 +83,20 @@ MK_INTER_H_FILE		:= $(wildcard mk_hardware_interfaces/*.h)
 MK_INTER_DIR		:= mk_hardware_interfaces
 MK_INTER_PATH		:= -I$(MK_INTER_DIR)
 
+#**********************************************************************
+# Для сборки FatFS.
+#**********************************************************************
+MAKISE_GUI_H_FILE	:= $(shell find MakiseGUI/ -maxdepth 7 -type f -name "*.h" )
+MAKISE_GUI_CPP_FILE	:= $(shell find MakiseGUI/ -maxdepth 7 -type f -name "*.c" )
+MAKISE_GUI_DIR		:= $(shell find MakiseGUI/ -maxdepth 7 -type d -name "*" )
+MAKISE_GUI_PATH		:= $(addprefix -I, $(MAKISE_GUI_DIR))
+MAKISE_GUI_OBJ_FILE	:= $(addprefix build/obj/, $(MAKISE_GUI_CPP_FILE))
+MAKISE_GUI_OBJ_FILE	:= $(patsubst %.c, %.o, $(MAKISE_GUI_OBJ_FILE))
+build/obj/MakiseGUI/%.o:	MakiseGUI/%.c $(USER_CFG_H_FILE) 
+	@echo [CC] $<
+	@mkdir -p $(dir $@)
+	@$(CC) $(USER_CFG_PATH) $(MAKISE_GUI_PATH) $(MAKISE_GUI_OPTIMIZATION) -c $< -o $@
+	
 #**********************************************************************
 # Для сборки FreeRTOS.
 #**********************************************************************
@@ -238,7 +254,9 @@ build/obj/%.o:	%.cpp
 #**********************************************************************
 # Компановка проекта.
 #**********************************************************************
-PROJECT_OBJ_FILE	:= 	$(FAT_FS_OBJ_FILE) $(FREE_RTOS_OBJ_FILE) 	\
+PROJECT_OBJ_FILE	:= 	$(MAKISE_GUI_OBJ_FILE)				\
+				$(FAT_FS_OBJ_FILE) 				\
+				$(FREE_RTOS_OBJ_FILE) 				\
 				$(STM32_F2_API_OBJ_FILE) 			\
 				$(LCD_LIB_OBJ_FILE) 				\
 				$(USER_OBJ_FILE)				\
