@@ -25,3 +25,6 @@
 [submodule "module_fat_fs_by_chan"]
 	path = module_fat_fs_by_chan
 	url = git@github.com:Vadimatorik/module_fat_fs_by_chan.git
+[submodule "mono_lcd_lib"]
+	path = mono_lcd_lib
+	url = git@github.com:Vadimatorik/mono_lcd_lib.git
