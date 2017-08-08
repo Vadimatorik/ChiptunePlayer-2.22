@@ -131,8 +131,8 @@ void ayplayer_gui_main_window_show ( void ) {
 
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
-   // ayplayer_lcd_init( 8 );
-   // ayplayer_gui_main_window_show();
+    ayplayer_lcd_init( 8 );
+    ayplayer_gui_main_window_show();
 
     while( true ) {
         vTaskDelay(1000);

@@ -88,16 +88,6 @@ void housekeeping_thread ( void* arg ) {
 
 
 
-    ay_queue_struct a;
-    a.number_chip = 0;
-    a.reg = 7;
-    a.data = 0;
-    ay.queue_add_element(&a);
-
-    a.number_chip = 1;
-    a.reg = 7;
-    a.data = 0;
-    ay.queue_add_element(&a);
 
 /*
     ayplayer_note_mode.write_note_to_channel( 0, 0, 40 );
@@ -117,7 +107,7 @@ void housekeeping_thread ( void* arg ) {
     ayplayer_note_mode.set_volume_channel( 1, 2, 10 );
 
 vTaskDelay(1000);*/
-
+/*
     volatile FRESULT ress;
     ( void )ress;
     ress = f_mount(&fat, "", 0);
@@ -129,15 +119,18 @@ vTaskDelay(1000);*/
     ( void )r;
 
     char path[256] = "0:/";
-    r = ay_file_mode.find_psg_file( path );
-    r = ay_file_mode.psg_file_get_name( path, 0, name, len );
-    r = ay_file_mode.psg_file_play( path, 0 );
- r = ay_file_mode.psg_file_play( path, 0 );
+
+
+ while( true ) {
+     if (ay_file_mode.find_psg_file( path ) != EC_AY_FILE_MODE::OK ) continue;
+   if (  ay_file_mode.psg_file_get_name( path, 0, name, len ) != EC_AY_FILE_MODE::OK ) continue;
+     if (ay_file_mode.psg_file_play( path, 0 ) != EC_AY_FILE_MODE::OK ) continue;
+
+
+    };*/
     while( true ) {
-
-
-
-    };
+        vTaskDelay(1000);
+    }
 }
 
 // 400 байт задаче.
