@@ -1,14 +1,73 @@
 #include "ayplayer_gui.h"
 
+#include "makise.h"
+#include "makise_gui.h"
+
+MHost host;
+
+
+//extern const pin shdn_obj;
+
+void makise_init ( void ) {
+    makise_gui_init( &host );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void ayplayer_gui_main_window_show ( void ) {
 
 }
 
-//extern const pin shdn_obj;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
+    makise_init();
     ayplayer_lcd_init( 8 );
     ayplayer_gui_main_window_show();
 

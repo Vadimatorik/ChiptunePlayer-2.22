@@ -25,5 +25,4 @@ enum MICRO_SD_STATUS {
 };*/
 
 void ayplayer_gui_init ( void );                // Инициализирует задчу (вызывать до ОС).
-void ayplayer_gui_main_window_show ( void );    // Отрисовываем в буфере основное окно.
 void ayplayer_lcd_update_task ( void );         // Задача разруливает перемещение по меню.

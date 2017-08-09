@@ -22,12 +22,12 @@ MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
 
 C_FLAGS			:= $(MK_FLAGS)
 # Все предупреждения == ошибки.
-C_FLAGS			+= -Werror
+#C_FLAGS			+= -Werror
 # Выдавать предупреждения (ошибки) о сомнительных констукциях.
-C_FLAGS			+= -Wall
+#C_FLAGS			+= -Wall
 # Выдавать предупреждение (ошибку) о любых сомнительных действиях.
-C_FLAGS			+= -Wextra 
-C_FLAGS			+= -std=gnu99 
+#C_FLAGS			+= -Wextra 
+C_FLAGS			+= -std=c99 
 # Если переменная объявлена как enum, то она должна иметь возможность
 # хранить в себе всевозможные состояния этого enum-а (а не только текущее).
 C_FLAGS			+= -fshort-enums
@@ -43,7 +43,6 @@ CPP_FLAGS		+= -funroll-loops
 
 LDFLAGS			:= $(MK_FLAGS)
 LDFLAGS			+= $(LD_FILES)
-LDFLAGS			+= -Werror -Wall -Wextra 
 # Размещает каждую функцию в отдельной секции.
 LDFLAGS			+= -ffunction-sections -fdata-sections
 # Убираем неиспользуемые функции из .elf.
@@ -87,15 +86,15 @@ MK_INTER_PATH		:= -I$(MK_INTER_DIR)
 # Для сборки FatFS.
 #**********************************************************************
 MAKISE_GUI_H_FILE	:= $(shell find MakiseGUI/ -maxdepth 7 -type f -name "*.h" )
-MAKISE_GUI_CPP_FILE	:= $(shell find MakiseGUI/ -maxdepth 7 -type f -name "*.c" )
+MAKISE_GUI_C_FILE	:= $(shell find MakiseGUI/ -maxdepth 7 -type f -name "*.c" )
 MAKISE_GUI_DIR		:= $(shell find MakiseGUI/ -maxdepth 7 -type d -name "*" )
 MAKISE_GUI_PATH		:= $(addprefix -I, $(MAKISE_GUI_DIR))
-MAKISE_GUI_OBJ_FILE	:= $(addprefix build/obj/, $(MAKISE_GUI_CPP_FILE))
+MAKISE_GUI_OBJ_FILE	:= $(addprefix build/obj/, $(MAKISE_GUI_C_FILE))
 MAKISE_GUI_OBJ_FILE	:= $(patsubst %.c, %.o, $(MAKISE_GUI_OBJ_FILE))
 build/obj/MakiseGUI/%.o:	MakiseGUI/%.c $(USER_CFG_H_FILE) 
 	@echo [CC] $<
 	@mkdir -p $(dir $@)
-	@$(CC) $(USER_CFG_PATH) $(MAKISE_GUI_PATH) $(MAKISE_GUI_OPTIMIZATION) -c $< -o $@
+	@$(CC) $(C_FLAGS) $(USER_CFG_PATH) $(MAKISE_GUI_PATH) $(MAKISE_GUI_OPTIMIZATION) -c $< -o $@
 	
 #**********************************************************************
 # Для сборки FreeRTOS.
@@ -239,6 +238,7 @@ build/obj/%.o:	%.cpp
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) 				\
 	$(USER_PATH) 					\
+	$(MAKISE_GUI_PATH)				\
 	$(FAT_FS_PATH) 					\
 	$(MK_INTER_PATH)  				\
 	$(STM32_F2_API_PATH) 				\
