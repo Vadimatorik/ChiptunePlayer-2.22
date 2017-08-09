@@ -6,13 +6,13 @@
 // #define MAKISE_ILI9340_USE 1
 
 
-#define MAKISEGUI_DRIVER_DEPTH 16
-#define MAKISEGUI_BUFFER_DEPTH 16
-#define MAKISEGUI_BUFFER_DEPTHMASK 0xFFFF
+#define MAKISEGUI_DRIVER_DEPTH          1
+#define MAKISEGUI_BUFFER_DEPTH          1
+#define MAKISEGUI_BUFFER_DEPTHMASK      1
 
 
-#define MAKISE_BUF_H 240
-#define MAKISE_BUF_W 320
+#define MAKISE_BUF_H 64
+#define MAKISE_BUF_W 128
 
 //Control section
 //len of buffer with input events

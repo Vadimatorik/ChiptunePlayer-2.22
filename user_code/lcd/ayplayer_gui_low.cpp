@@ -3,42 +3,52 @@
 //**********************************************************************
 // Методы-перестыки для связки драйвера экрана c MakiseGUI.
 //**********************************************************************
+extern mono_lcd_lib_st7565 ayplayer_lcd;
+
 extern "C" {
 
 uint8_t m_driver_init ( MakiseGUI* gui ) {
     ( void )gui;
+    ayplayer_lcd.reset();
     return 0;
 }
 
 uint8_t m_driver_start ( MakiseGUI* gui ) {
     ( void )gui;
+    ayplayer_lcd.update();
     return 0;
 }
 
 uint8_t m_driver_sleep ( MakiseGUI* gui ) {
     ( void )gui;
+    while( true );
     return 0;
 }
 
 uint8_t m_driver_awake ( MakiseGUI* gui ) {
     ( void )gui;
+    while( true );
     return 0;
 }
 
 uint8_t m_driver_set_backlight ( MakiseGUI* gui, uint8_t ) {
     ( void )gui;
+    while( true );
     return 0;
 }
 
 void m_gui_draw ( MakiseGUI* gui ) {
+    while( true );
     ( void )gui;
 }
 
 void m_gui_predraw ( MakiseGUI* gui ) {
+    while( true );
     ( void )gui;
 }
 
 void m_gui_update ( MakiseGUI* gui ) {
+    while( true );
     ( void )gui;
 }
 
@@ -47,16 +57,16 @@ extern MakiseGUI m_gui;
 
 extern uint8_t lcd_buffer[1024];
 
-MakiseDriver    m_driver = {
+MakiseDriver m_driver = {
     gui            : &m_gui,                       // Структура используемого GUI объекта.
-    lcd_height     : 64,                           // Реальная высота экрана.
-    lcd_width      : 128,                          // Реальная ширина экрана.
-    buffer_height  : 64,                           // Ширина/высота буфера.
-    buffer_width   : 128,
-    pixeldepth     : 1,                            // Глубина цвета 1 бит.
+    lcd_height     : 64,                 // Реальная высота экрана.
+    lcd_width      : 128,                 // Реальная ширина экрана.
+    buffer_height  : MAKISE_BUF_H,                           // Ширина/высота буфера.
+    buffer_width   : MAKISE_BUF_W,
+    pixeldepth     : MAKISEGUI_DRIVER_DEPTH,       // Глубина цвета в LCD.
     buffer         : (uint32_t*)lcd_buffer,        // Буфер на отправку в LCD.
     size           : 256,                          // Его размер.
-    posx           : 0,                            // Что это за x/y?
+    posx           : 0,                            // позиция плавающего буфера(если размера буфера на отправку должен быть меньше чем буфер гуя).
     posy           : 0,
 
     // Методы для взаимодействия с LCD.
@@ -73,11 +83,11 @@ MakiseBuffer m_buf_st = {
     gui            : &m_gui,                        // Структура используемого GUI объекта.
     height         : 64,                            // Реальная высота экрана.
     width          : 128,                           // Реальная ширина экрана.
-    pixeldepth     : 1,                             // Глубина цвета 1 бит.
-    depthmask      : 0b1,// Как правильно записать?...
+    pixeldepth     : MAKISEGUI_BUFFER_DEPTH,        // Глубина цвета в виртуальном буфере.
+    depthmask      : MAKISEGUI_BUFFER_DEPTHMASK,    // Как правильно записать?...
     buffer         : m_virtual_buf,                 // Виртуальный буфер.
     size           : 256,                           // Его размер.
-    border         : {                              // Что это?
+    border         : {                              // Границы рабочей области ГУИ
         x          : 0,
         y          : 0,
         w          : 128,
@@ -120,6 +130,7 @@ void makise_init ( void ) {
 
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
+    makise_init();
     while( true ) {
         vTaskDelay(1000);
     }
