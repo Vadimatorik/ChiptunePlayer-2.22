@@ -11,7 +11,7 @@
 /*
  * filemode
  */
-
+/*
 USER_OS_STATIC_MUTEX_BUFFER microsd_mutex_buf = USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE;
 USER_OS_STATIC_MUTEX        microsd_mutex     = nullptr;
 
@@ -24,7 +24,7 @@ ay_ym_file_mode_struct_cfg_t ay_f_mode_cfg = {
 };
 
 ay_ym_file_mode ay_file_mode(&ay_f_mode_cfg);
-
+*/
 
 /*
  * Потенциометры
@@ -48,13 +48,13 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
 /*
  * Каждые 500 мс мигаем светодиодом.
  */
-extern microsd_spi sd2;
+//extern microsd_spi sd2;
 
 #include "ayplayer_digital_potentiometer.h"
 #include "ayplayer_fat.h"
 #include "ay_ym_low_lavel.h"
 
-extern ay_ym_low_lavel ay;
+//extern ay_ym_low_lavel ay;
 void housekeeping_thread ( void* arg ) {
     (void)arg;
 
@@ -84,7 +84,7 @@ void housekeeping_thread ( void* arg ) {
         vTaskDelay(10);
 
 
-    microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
+    //microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
 
 
 

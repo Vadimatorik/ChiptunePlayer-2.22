@@ -1,4 +1,4 @@
-#include "ayplayer_fat.h"
+/*#include "ayplayer_fat.h"
 
 extern microsd_spi sd2;
 
@@ -64,7 +64,7 @@ DRESULT disk_ioctl ( BYTE pdrv, BYTE cmd, void* buff ) {
     return RES_OK;
 }
 
-}
+}*/
 
 /*
 Из примера.

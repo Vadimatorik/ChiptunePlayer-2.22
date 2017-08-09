@@ -1,5 +1,5 @@
 #include "ayplayer_ay_low.h"
-
+/*
 extern uint8_t sr_out_buf[2];
 
 // В этих очередях содержатся данные для каждого AY.
@@ -52,3 +52,4 @@ extern "C" {
         ay.timer_interrupt_handler();
     }
 }
+*/

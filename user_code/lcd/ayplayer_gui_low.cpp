@@ -120,12 +120,56 @@ MakiseGUI m_gui = {
 
 }
 
+#include "makise_e.h"
+
+MButton button; //структура, содержащая всю информацию о кнопке
+
+
+//метод будет вызыван при нажатии на кнопку
+void click(MButton *b)
+{
+    (void)b;
+   // b->text = "Clicked!"; //меняем текст кнопки
+
+}
+
+
+MakiseStyle ts_button =
+{
+    MC_White,
+    &F_Arial24,
+    0,
+    //bg       font     border   double_border
+    {MC_Black, MC_White, MC_White, 0},  //unactive
+    {MC_Black, MC_White, MC_White, 0},//normal
+    {MC_White, MC_White, MC_White, 0}, //focused
+    {MC_White, MC_White, MC_White, 0} //active
+};
+
+char string_text[] = "Click me";
+
 void makise_init ( void ) {
     host.host = &m_container;
     makise_gui_init( &host );
     ayplayer_lcd_init( 8 );
     makise_init( &m_gui, &m_driver, &m_buf_st );
     makise_start( &m_gui );
+
+    //создаём кнопку
+    m_create_button(&button, //указатель на структуру кнопки
+        host.host, //контейнер, в который будет добавлена кнопка после создания. В данном случае это контейнер MHost'a
+                    mp_rel(2, 2, //координаты элемента относительно левого верхнего угла
+                           20, 30), //ширина, высота
+        string_text,   //текст кнопки
+        //События
+        click, //Вызывается при нажатии на кнопку
+        nullptr, //Вызывается до обработки нажатия, может прервать обработку нажатия
+        nullptr, //Вызывается при действиях с фокусом кнопки
+        &ts_button //стиль кнопки
+    );
+
+     makise_g_host_call(&host, M_G_CALL_PREDRAW);
+     makise_g_host_call(&host, M_G_CALL_DRAW);
 }
 
 void ayplayer_lcd_update_task ( void* param ) {
