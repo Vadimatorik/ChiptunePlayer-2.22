@@ -1,8 +1,5 @@
 #include "ayplayer_gui_low.h"
 
-#include "makise.h"
-#include "makise_gui.h"
-
 //**********************************************************************
 // Методы-перестыки для связки драйвера экрана c MakiseGUI.
 //**********************************************************************
@@ -121,64 +118,8 @@ void makise_init ( void ) {
     makise_start( &m_gui );
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void ayplayer_gui_main_window_show ( void ) {
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
-    makise_init();
-    ayplayer_lcd_init( 8 );
-    ayplayer_gui_main_window_show();
-
     while( true ) {
         vTaskDelay(1000);
     }
@@ -186,8 +127,10 @@ void ayplayer_lcd_update_task ( void* param ) {
 
 // 400 байт задаче.
 #define AY_PLAYER_GUI_TASK_STACK_SIZE       200
+
 static StaticTask_t     ayplayer_gui_task_buffer;
 static StackType_t      ayplayer_gui_task_stack[ AY_PLAYER_GUI_TASK_STACK_SIZE ];
+
 void ayplayer_gui_init ( void ) {
     xTaskCreateStatic( ayplayer_lcd_update_task,
                        "gui",
