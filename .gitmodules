@@ -28,3 +28,6 @@
 [submodule "mono_lcd_lib"]
 	path = mono_lcd_lib
 	url = git@github.com:Vadimatorik/mono_lcd_lib.git
+[submodule "MakiseGUI"]
+	path = MakiseGUI
+	url = https://github.com/Vadimatorik/MakiseGUI
