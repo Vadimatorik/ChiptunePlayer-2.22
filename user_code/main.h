@@ -8,7 +8,7 @@
 
 #include "ayplayer_housekeeping.h"
 #include "ayplayer_lcd.h"
-#include "ayplayer_gui.h"
+#include "ayplayer_gui_low.h"
 #include "ayplayer_microsd_card.h"
 #include "ayplayer_timers.h"
 #include "ayplayer_shift_register.h"

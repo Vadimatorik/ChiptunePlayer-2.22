@@ -1,17 +1,125 @@
-#include "ayplayer_gui.h"
+#include "ayplayer_gui_low.h"
 
 #include "makise.h"
 #include "makise_gui.h"
 
-MHost host;
+//**********************************************************************
+// Методы-перестыки для связки драйвера экрана c MakiseGUI.
+//**********************************************************************
+extern "C" {
 
-
-//extern const pin shdn_obj;
-
-void makise_init ( void ) {
-    makise_gui_init( &host );
+uint8_t m_driver_init ( MakiseGUI* gui ) {
+    ( void )gui;
+    return 0;
 }
 
+uint8_t m_driver_start ( MakiseGUI* gui ) {
+    ( void )gui;
+    return 0;
+}
+
+uint8_t m_driver_sleep ( MakiseGUI* gui ) {
+    ( void )gui;
+    return 0;
+}
+
+uint8_t m_driver_awake ( MakiseGUI* gui ) {
+    ( void )gui;
+    return 0;
+}
+
+uint8_t m_driver_set_backlight ( MakiseGUI* gui, uint8_t ) {
+    ( void )gui;
+    return 0;
+}
+
+void m_gui_draw ( MakiseGUI* gui ) {
+    ( void )gui;
+}
+
+void m_gui_predraw ( MakiseGUI* gui ) {
+    ( void )gui;
+}
+
+void m_gui_update ( MakiseGUI* gui ) {
+    ( void )gui;
+}
+
+//extern uint8_t lcd_buffer;
+extern MakiseGUI m_gui;
+
+extern uint8_t lcd_buffer[1024];
+
+MakiseDriver    m_driver = {
+    gui            : &m_gui,                       // Структура используемого GUI объекта.
+    lcd_height     : 64,                           // Реальная высота экрана.
+    lcd_width      : 128,                          // Реальная ширина экрана.
+    buffer_height  : 64,                           // Ширина/высота буфера.
+    buffer_width   : 128,
+    pixeldepth     : 1,                            // Глубина цвета 1 бит.
+    buffer         : (uint32_t*)lcd_buffer,        // Буфер на отправку в LCD.
+    size           : 256,                          // Его размер.
+    posx           : 0,                            // Что это за x/y?
+    posy           : 0,
+
+    // Методы для взаимодействия с LCD.
+    init           : m_driver_init,                // Первичная инициализация экрана.
+    start          : m_driver_start,               // Старт работы экрана.
+    sleep          : m_driver_sleep,               // Переход экрана в спящий режим.
+    awake          : m_driver_awake,               // Выход экрана из спящего режима.
+    set_backlight  : m_driver_set_backlight        // Управление подсветкой.
+};
+
+uint32_t    m_virtual_buf[ 1024 / 4 ];
+
+MakiseBuffer m_buf_st = {
+    gui            : &m_gui,                        // Структура используемого GUI объекта.
+    height         : 64,                            // Реальная высота экрана.
+    width          : 128,                           // Реальная ширина экрана.
+    pixeldepth     : 1,                             // Глубина цвета 1 бит.
+    depthmask      : 0b1,// Как правильно записать?...
+    buffer         : m_virtual_buf,                 // Виртуальный буфер.
+    size           : 256,                           // Его размер.
+    border         : {                              // Что это?
+        x          : 0,
+        y          : 0,
+        w          : 128,
+        h          : 64,
+        ex         : 0,
+        ey         : 0
+    }
+};
+
+MPosition m_pos;
+
+MContainer m_container = {
+    gui           : &m_gui,
+    el            : nullptr,
+    position      : &m_pos,
+    first         : nullptr,
+    last          : nullptr,
+    focused       : nullptr
+};
+
+MHost host;
+
+MakiseGUI m_gui = {
+    .buffer         = &m_buf_st,
+    .driver         = &m_driver,
+    .draw           = &m_gui_draw,
+    .predraw        = m_gui_predraw,
+    .update         = m_gui_update
+};
+
+}
+
+void makise_init ( void ) {
+    host.host = &m_container;
+    makise_gui_init( &host );
+    ayplayer_lcd_init( 8 );
+    makise_init( &m_gui, &m_driver, &m_buf_st );
+    makise_start( &m_gui );
+}
 
 
 
