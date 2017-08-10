@@ -15,6 +15,7 @@ MOD_CHIP_OPTIMIZATION			:= -g3 -Og
 FAT_FS_OPTIMIZATION			:= -g3 -Og
 FAT_FS_OPTIMIZATION			:= -g3 -Og
 MAKISE_GUI_OPTIMIZATION			:= -g3 -Og
+BUT_OPTIMIZATION			:= -g3 -Og
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
@@ -217,6 +218,20 @@ build/obj/module_chiptune/%.o:	module_chiptune/%.cpp
 	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(FAT_FS_PATH) $(MOD_CHIP_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(SH_PATH) $(MOD_CHIP_OPTIMIZATION) -c $< -o $@
 	
 #**********************************************************************
+# module_button_api
+#**********************************************************************
+BUT_H_FILE		:= $(shell find module_button_api/ -maxdepth 3 -type f -name "*.h" )
+BUT_CPP_FILE		:= $(shell find module_button_api/ -maxdepth 3 -type f -name "*.cpp" )
+BUT_DIR			:= $(shell find module_button_api/ -maxdepth 3 -type d -name "*" )
+BUT_PATH		:= $(addprefix -I, $(BUT_DIR))
+BUT_OBJ_FILE		:= $(addprefix build/obj/, $(BUT_CPP_FILE))
+BUT_OBJ_FILE		:= $(patsubst %.cpp, %.o, $(BUT_OBJ_FILE))
+build/obj/module_button_api/%.o:	module_button_api/%.cpp
+	@echo [CPP] $<
+	@mkdir -p $(dir $@)
+	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(BUT_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(SH_PATH) $(BUT_OPTIMIZATION) -c $< -o $@
+	
+#**********************************************************************
 # module_digital_potentiometer (сделано на шаблонах, все .h).
 #**********************************************************************
 DP_H_FILE	:= $(shell find module_digital_potentiometer/ -maxdepth 3 -type f -name "*.h" )
@@ -249,7 +264,9 @@ build/obj/%.o:	%.cpp
 	$(SH_PATH) 					\
 	$(MOD_CHIP_PATH) 				\
 	$(DP_PATH)					\
-	$(USER_CODE_OPTIMIZATION) -c $< -o $@
+	$(BUT_PATH)					\
+	$(USER_CODE_OPTIMIZATION)			\
+	-c $< -o $@
 
 #**********************************************************************
 # Компановка проекта.
@@ -262,7 +279,8 @@ PROJECT_OBJ_FILE	:= 	$(MAKISE_GUI_OBJ_FILE)				\
 				$(USER_OBJ_FILE)				\
 				$(MICRO_SD_DRIVER_OBJ_FILE) 			\
 				$(SH_OBJ_FILE) 					\
-				$(MOD_CHIP_OBJ_FILE)					
+				$(MOD_CHIP_OBJ_FILE)				\
+				$(BUT_OBJ_FILE)
 
 build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf

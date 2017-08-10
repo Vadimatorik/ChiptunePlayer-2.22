@@ -31,3 +31,6 @@
 [submodule "MakiseGUI"]
 	path = MakiseGUI
 	url = https://github.com/Vadimatorik/MakiseGUI
+[submodule "module_button_api"]
+	path = module_button_api
+	url = https://github.com/Vadimatorik/module_button_api
