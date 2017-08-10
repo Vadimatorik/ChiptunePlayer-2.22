@@ -12,7 +12,7 @@
                                   EC_SPI_CFG_NUMBER_LINE     :: LINE_2,         \
                                   EC_SPI_CFG_ONE_LINE_MODE   :: USE_2_LINE,     \
                                   EC_SPI_CFG_FRAME_FORMAT    :: MOTOROLA,       \
-                                  EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_256
+                                  EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_2
 
 /*
  * Для micro-sd

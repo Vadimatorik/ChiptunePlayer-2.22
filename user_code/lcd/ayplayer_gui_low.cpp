@@ -172,8 +172,9 @@ void makise_init ( void ) {
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
     makise_init();
+    m_gui.draw( &m_gui );
     while( true ) {
-        m_gui.draw( &m_gui );
+
         vTaskDelay(1000);
     }
 }
