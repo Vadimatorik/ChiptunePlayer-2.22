@@ -139,7 +139,7 @@ MakiseStyle ts_button =
     0,
     //bg       font     border   double_border
     {MC_White, MC_White, MC_White, 0},  //unactive
-    {MC_White, MC_White, MC_White, 0},//normal
+    {MC_White, MC_Black, MC_Black, 0},//normal
     {MC_White, MC_White, MC_White, 0}, //focused
     {MC_White, MC_White, MC_White, 0} //active
 };
@@ -156,7 +156,7 @@ void makise_init ( void ) {
     m_create_button(&button, //указатель на структуру кнопки
         host.host, //контейнер, в который будет добавлена кнопка после создания. В данном случае это контейнер MHost'a
                     mp_rel(0, 0, //координаты элемента относительно левого верхнего угла
-                           10, 7), //ширина, высота
+                           100, 40), //ширина, высота
         string_text,   //текст кнопки
         //События
         click, //Вызывается при нажатии на кнопку
