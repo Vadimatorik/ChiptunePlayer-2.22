@@ -37,8 +37,8 @@ uint8_t m_driver_set_backlight ( MakiseGUI* gui, uint8_t ) {
     return 0;
 }
 
-void m_gui_draw ( MakiseGUI* gui ) {
-    while( true );
+ void m_gui_draw ( MakiseGUI* gui ) {
+    ayplayer_lcd.update();
     ( void )gui;
 }
 
@@ -48,7 +48,7 @@ void m_gui_predraw ( MakiseGUI* gui ) {
 }
 
 void m_gui_update ( MakiseGUI* gui ) {
-    while( true );
+    ayplayer_lcd.update();
     ( void )gui;
 }
 
@@ -59,9 +59,9 @@ extern uint8_t lcd_buffer[1024];
 
 MakiseDriver m_driver = {
     gui            : &m_gui,                       // Структура используемого GUI объекта.
-    lcd_height     : 64,                 // Реальная высота экрана.
-    lcd_width      : 128,                 // Реальная ширина экрана.
-    buffer_height  : MAKISE_BUF_H,                           // Ширина/высота буфера.
+    lcd_height     : 64,                           // Реальная высота экрана.
+    lcd_width      : 128,                          // Реальная ширина экрана.
+    buffer_height  : MAKISE_BUF_H,                 // Ширина/высота буфера.
     buffer_width   : MAKISE_BUF_W,
     pixeldepth     : MAKISEGUI_DRIVER_DEPTH,       // Глубина цвета в LCD.
     buffer         : (uint32_t*)lcd_buffer,        // Буфер на отправку в LCD.
@@ -77,23 +77,21 @@ MakiseDriver m_driver = {
     set_backlight  : m_driver_set_backlight        // Управление подсветкой.
 };
 
-uint32_t    m_virtual_buf[ 1024 / 4 ];
-
 MakiseBuffer m_buf_st = {
     gui            : &m_gui,                        // Структура используемого GUI объекта.
     height         : 64,                            // Реальная высота экрана.
     width          : 128,                           // Реальная ширина экрана.
     pixeldepth     : MAKISEGUI_BUFFER_DEPTH,        // Глубина цвета в виртуальном буфере.
     depthmask      : MAKISEGUI_BUFFER_DEPTHMASK,    // Как правильно записать?...
-    buffer         : m_virtual_buf,                 // Виртуальный буфер.
+    buffer         : (uint32_t*)lcd_buffer,         // Виртуальный буфер ( совпадает с драйвером ).
     size           : 256,                           // Его размер.
     border         : {                              // Границы рабочей области ГУИ
         x          : 0,
         y          : 0,
         w          : 128,
         h          : 64,
-        ex         : 0,
-        ey         : 0
+        ex         : 128,
+        ey         : 64
     }
 };
 
@@ -113,7 +111,7 @@ MHost host;
 MakiseGUI m_gui = {
     .buffer         = &m_buf_st,
     .driver         = &m_driver,
-    .draw           = &m_gui_draw,
+    .draw           = m_gui_draw,
     .predraw        = m_gui_predraw,
     .update         = m_gui_update
 };
@@ -140,8 +138,8 @@ MakiseStyle ts_button =
     &F_Arial24,
     0,
     //bg       font     border   double_border
-    {MC_Black, MC_White, MC_White, 0},  //unactive
-    {MC_Black, MC_White, MC_White, 0},//normal
+    {MC_White, MC_White, MC_White, 0},  //unactive
+    {MC_White, MC_White, MC_White, 0},//normal
     {MC_White, MC_White, MC_White, 0}, //focused
     {MC_White, MC_White, MC_White, 0} //active
 };
@@ -152,14 +150,13 @@ void makise_init ( void ) {
     host.host = &m_container;
     makise_gui_init( &host );
     ayplayer_lcd_init( 8 );
-    makise_init( &m_gui, &m_driver, &m_buf_st );
     makise_start( &m_gui );
 
     //создаём кнопку
     m_create_button(&button, //указатель на структуру кнопки
         host.host, //контейнер, в который будет добавлена кнопка после создания. В данном случае это контейнер MHost'a
-                    mp_rel(2, 2, //координаты элемента относительно левого верхнего угла
-                           20, 30), //ширина, высота
+                    mp_rel(0, 0, //координаты элемента относительно левого верхнего угла
+                           10, 7), //ширина, высота
         string_text,   //текст кнопки
         //События
         click, //Вызывается при нажатии на кнопку
@@ -168,14 +165,15 @@ void makise_init ( void ) {
         &ts_button //стиль кнопки
     );
 
-     makise_g_host_call(&host, M_G_CALL_PREDRAW);
-     makise_g_host_call(&host, M_G_CALL_DRAW);
+     makise_g_host_call( &host, M_G_CALL_PREDRAW );
+     makise_g_host_call( &host, M_G_CALL_DRAW );
 }
 
 void ayplayer_lcd_update_task ( void* param ) {
     (void)param;
     makise_init();
     while( true ) {
+        m_gui.draw( &m_gui );
         vTaskDelay(1000);
     }
 }
