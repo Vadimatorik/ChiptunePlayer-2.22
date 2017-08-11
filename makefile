@@ -86,9 +86,9 @@ MK_INTER_PATH		:= -I$(MK_INTER_DIR)
 #**********************************************************************
 # Для сборки FatFS.
 #**********************************************************************
-MAKISE_GUI_H_FILE	:= $(shell find MakiseGUI/ -maxdepth 7 -type f -name "*.h" )
-MAKISE_GUI_C_FILE	:= $(shell find MakiseGUI/ -maxdepth 7 -type f -name "*.c" )
-MAKISE_GUI_DIR		:= $(shell find MakiseGUI/ -maxdepth 7 -type d -name "*" )
+MAKISE_GUI_H_FILE	:= $(shell find MakiseGUI/ -maxdepth 10 -type f -name "*.h" )
+MAKISE_GUI_C_FILE	:= $(shell find MakiseGUI/ -maxdepth 10 -type f -name "*.c" )
+MAKISE_GUI_DIR		:= $(shell find MakiseGUI/ -maxdepth 10 -type d -name "*" )
 MAKISE_GUI_PATH		:= $(addprefix -I, $(MAKISE_GUI_DIR))
 MAKISE_GUI_OBJ_FILE	:= $(addprefix build/obj/, $(MAKISE_GUI_C_FILE))
 MAKISE_GUI_OBJ_FILE	:= $(patsubst %.c, %.o, $(MAKISE_GUI_OBJ_FILE))

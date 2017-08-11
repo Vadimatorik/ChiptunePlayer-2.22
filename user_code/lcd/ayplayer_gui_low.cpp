@@ -135,7 +135,7 @@ void click(MButton *b)
 MakiseStyle ts_button =
 {
     MC_White,
-    &F_Arial24,
+    &F_Arial12,
     0,
     //bg       font     border   double_border
     {MC_White, MC_White, MC_White, 0},  //unactive

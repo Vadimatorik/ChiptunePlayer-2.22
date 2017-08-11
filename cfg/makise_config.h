@@ -1,5 +1,9 @@
 #ifndef MAKISE_CONFIG_H
-#define  MAKISE_CONFIG_H 1
+#define MAKISE_CONFIG_H     1
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // comment unused displays
 // #define MAKISE_SDL2_USE 1
@@ -20,10 +24,18 @@
 //use x-y pointing control devices. like mouse or touchscreen
 #define MAKISE_GUI_INPUT_POINTER_ENABLE 1
 
+// Enable element support.
+#define MAKISE_E_BUTTONS            1
+#define MAKISE_E_CANVAS             1
+#define MAKISE_E_LABLE              1
+#define MAKISE_E_SLIDER             1
+#define MAKISE_E_SLIST              1
+#define MAKISE_E_TABS               1
+#define MAKISE_E_TEXT_FIELD         1
+#define MAKISE_E_TOGGLE             1
 
-
-#ifdef MAKISE_ILI9340_USE
-#include "ili9340.h"
+#ifdef __cplusplus
+}
 #endif
 
 #endif
