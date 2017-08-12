@@ -15,6 +15,9 @@ void ayplayer_gui_core_init ( void ) {
 
 MHost host;
 
+extern MProgressBar pb;
+uint8_t pb_duty = 0;
+
 void ayplayer_gui_core_task ( void* param ) {
     (void)param;
     ayplayer_gui_low_init();
@@ -23,12 +26,17 @@ void ayplayer_gui_core_task ( void* param ) {
 
     ayplayer_gui_window_sd_card_analysis_creature( c );
 
-    makise_g_host_call( &host, M_G_CALL_PREDRAW );
-    makise_g_host_call( &host, M_G_CALL_DRAW );
 
-    m_gui_update( &m_gui );
+
     while( true ) {
-        vTaskDelay(1000);
+        m_progress_bar_set_duty( &pb, pb_duty );
+        pb_duty++;
+
+        makise_g_host_call( &host, M_G_CALL_PREDRAW );
+        makise_g_host_call( &host, M_G_CALL_DRAW );
+        m_gui_update( &m_gui );
+
+        vTaskDelay(800);
     }
 }
 

@@ -28,6 +28,7 @@ extern "C" {
 #define MAKISE_E_BUTTONS            1
 #define MAKISE_E_CANVAS             1
 #define MAKISE_E_LABLE              1
+#define MAKISE_E_PROGRESS_BAR       1
 #define MAKISE_E_SLIDER             1
 #define MAKISE_E_SLIST              1
 #define MAKISE_E_TABS               1
