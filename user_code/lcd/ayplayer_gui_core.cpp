@@ -18,7 +18,7 @@ MHost host;
 void ayplayer_gui_core_task ( void* param ) {
     (void)param;
     ayplayer_gui_low_init();
-    MContainer      c;
+    MContainer      c = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
     host.host       = &c;
 
     ayplayer_gui_window_sd_card_analysis_creature( c );
@@ -26,6 +26,7 @@ void ayplayer_gui_core_task ( void* param ) {
     makise_g_host_call( &host, M_G_CALL_PREDRAW );
     makise_g_host_call( &host, M_G_CALL_DRAW );
 
+    m_gui_update( &m_gui );
     while( true ) {
         vTaskDelay(1000);
     }

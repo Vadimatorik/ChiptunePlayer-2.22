@@ -32,17 +32,6 @@ char string_text[] = "Click me";
 
 MPosition m_pos;
 
-MContainer m_container = {
-    gui           : &m_gui,
-    el            : nullptr,
-    position      : &m_pos,
-    first         : nullptr,
-    last          : nullptr,
-    focused       : nullptr
-};
-
-
-
 // Заполняем контейнер окна.
 void ayplayer_gui_window_sd_card_analysis_creature ( MContainer& c ) {
     makise_g_cont_clear( &c );                                          // Чистим контейнер.

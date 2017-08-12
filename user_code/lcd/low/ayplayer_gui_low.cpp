@@ -11,7 +11,6 @@ uint8_t             contrast_lcd = 8;                                   // Дл�
 
 uint8_t m_driver_init ( MakiseGUI* gui ) {
     ( void )gui;
-    ayplayer_lcd.reset();
     return M_OK;
 }
 
