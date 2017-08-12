@@ -28,20 +28,39 @@ MakiseStyle ts_button = {
     {MC_White, MC_White, MC_White, 0} //active
 };
 
-
-MProgressBar pb;
-MakiseProgressBarStyleTheme makise_progress_bar_style_theme = {
+MakiseProgressBarStyle makise_progress_bar_style = {
     bg_color           : MC_White,
     border_color       : MC_Black,
     duty_color         : MC_Black
 };
 
+MakiseStyle l_style = {
+    MC_White,
+    &F_Arial12,
+    0,
+    //bg       font     border   double_border
+    {MC_White, MC_White, MC_White, 0},  //unactive
+    {MC_White, MC_Black, MC_Black, 0},  //normal
+    {MC_White, MC_White, MC_White, 0}, //focused
+    {MC_White, MC_White, MC_White, 0} //active
+};
+
+MakiseLableStyle makise_lable_style = {
+    font                : &F_Arial12,
+    font_col            : MC_Black,
+    bg_color            : MC_White,
+    border_c            : MC_Black,
+    double_border       : 0
+};
+
 char string_text[] = "Click me";
+char string_scanning_dir[] = "The directory is scanned:"; //"Производится сканирование директории:";
 
 MPosition m_pos;
 
 // Заполняем контейнер окна.
-void ayplayer_gui_window_sd_card_analysis_creature ( MContainer& c ) {
+void ayplayer_gui_window_sd_card_analysis_creature ( MContainer& c, MProgressBar& pb, MLable& lb ) {
+    (void)lb;
     makise_g_cont_clear( &c );                                          // Чистим контейнер.
     /*m_create_button( &button,                                           // указатель на структуру кнопки
                      &c,                                                // контейнер, в который будет добавлена кнопка после создания. В данном случае это контейнер MHost'a
@@ -55,12 +74,18 @@ void ayplayer_gui_window_sd_card_analysis_creature ( MContainer& c ) {
                      &ts_button );                                      // стиль кнопки
 */
 
+    m_create_lable( &lb, &c,
+                    mp_rel( 0,     0,
+                            128,   14 ),
+                    string_scanning_dir,
+                    &makise_lable_style );
+
     m_create_progress_bar( &pb, &c,
-                           mp_rel( 2,  2,
-                                   124, 10 ),
+                           mp_rel( 0,   54,
+                                   128, 10 ),
                            0,
                            1,
-                           &makise_progress_bar_style_theme );
+                           &makise_progress_bar_style );
 }
 
 

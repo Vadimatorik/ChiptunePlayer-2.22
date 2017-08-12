@@ -13,9 +13,12 @@ void ayplayer_gui_core_init ( void ) {
                        &ayplayer_gui_task_buffer );
 }
 
-MHost host;
 
-extern MProgressBar pb;
+
+MHost           host;
+MProgressBar    pb;
+MLable          l_0;
+
 uint8_t pb_duty = 0;
 
 void ayplayer_gui_core_task ( void* param ) {
@@ -24,7 +27,7 @@ void ayplayer_gui_core_task ( void* param ) {
     MContainer      c = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
     host.host       = &c;
 
-    ayplayer_gui_window_sd_card_analysis_creature( c );
+    ayplayer_gui_window_sd_card_analysis_creature( c, pb, l_0 );
 
 
 
