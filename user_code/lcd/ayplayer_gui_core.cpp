@@ -1,192 +1,10 @@
-#include "ayplayer_gui_low.h"
-
-//**********************************************************************
-// Методы-перестыки для связки драйвера экрана c MakiseGUI.
-//**********************************************************************
-extern mono_lcd_lib_st7565 ayplayer_lcd;
-
-extern "C" {
-
-uint8_t m_driver_init ( MakiseGUI* gui ) {
-    ( void )gui;
-    ayplayer_lcd.reset();
-    return 0;
-}
-
-uint8_t m_driver_start ( MakiseGUI* gui ) {
-    ( void )gui;
-    ayplayer_lcd.update();
-    return 0;
-}
-
-uint8_t m_driver_sleep ( MakiseGUI* gui ) {
-    ( void )gui;
-    while( true );
-    return 0;
-}
-
-uint8_t m_driver_awake ( MakiseGUI* gui ) {
-    ( void )gui;
-    while( true );
-    return 0;
-}
-
-uint8_t m_driver_set_backlight ( MakiseGUI* gui, uint8_t ) {
-    ( void )gui;
-    while( true );
-    return 0;
-}
-
- void m_gui_draw ( MakiseGUI* gui ) {
-    ayplayer_lcd.update();
-    ( void )gui;
-}
-
-void m_gui_predraw ( MakiseGUI* gui ) {
-    while( true );
-    ( void )gui;
-}
-
-void m_gui_update ( MakiseGUI* gui ) {
-    ayplayer_lcd.update();
-    ( void )gui;
-}
-
-//extern uint8_t lcd_buffer;
-extern MakiseGUI m_gui;
-
-extern uint8_t lcd_buffer[1024];
-
-MakiseDriver m_driver = {
-    gui            : &m_gui,                       // Структура используемого GUI объекта.
-    lcd_height     : 64,                           // Реальная высота экрана.
-    lcd_width      : 128,                          // Реальная ширина экрана.
-    buffer_height  : MAKISE_BUF_H,                 // Ширина/высота буфера.
-    buffer_width   : MAKISE_BUF_W,
-    pixeldepth     : MAKISEGUI_DRIVER_DEPTH,       // Глубина цвета в LCD.
-    buffer         : (uint32_t*)lcd_buffer,        // Буфер на отправку в LCD.
-    size           : 256,                          // Его размер.
-    posx           : 0,                            // позиция плавающего буфера(если размера буфера на отправку должен быть меньше чем буфер гуя).
-    posy           : 0,
-
-    // Методы для взаимодействия с LCD.
-    init           : m_driver_init,                // Первичная инициализация экрана.
-    start          : m_driver_start,               // Старт работы экрана.
-    sleep          : m_driver_sleep,               // Переход экрана в спящий режим.
-    awake          : m_driver_awake,               // Выход экрана из спящего режима.
-    set_backlight  : m_driver_set_backlight        // Управление подсветкой.
-};
-
-MakiseBuffer m_buf_st = {
-    gui            : &m_gui,                        // Структура используемого GUI объекта.
-    height         : 64,                            // Реальная высота экрана.
-    width          : 128,                           // Реальная ширина экрана.
-    pixeldepth     : MAKISEGUI_BUFFER_DEPTH,        // Глубина цвета в виртуальном буфере.
-    depthmask      : MAKISEGUI_BUFFER_DEPTHMASK,    // Как правильно записать?...
-    buffer         : (uint32_t*)lcd_buffer,         // Виртуальный буфер ( совпадает с драйвером ).
-    size           : 256,                           // Его размер.
-    border         : {                              // Границы рабочей области ГУИ
-        x          : 0,
-        y          : 0,
-        w          : 128,
-        h          : 64,
-        ex         : 128,
-        ey         : 64
-    }
-};
-
-MPosition m_pos;
-
-MContainer m_container = {
-    gui           : &m_gui,
-    el            : nullptr,
-    position      : &m_pos,
-    first         : nullptr,
-    last          : nullptr,
-    focused       : nullptr
-};
-
-MHost host;
-
-MakiseGUI m_gui = {
-    .buffer         = &m_buf_st,
-    .driver         = &m_driver,
-    .draw           = m_gui_draw,
-    .predraw        = m_gui_predraw,
-    .update         = m_gui_update
-};
-
-}
-
-#include "makise_e.h"
-
-MButton button; //структура, содержащая всю информацию о кнопке
-
-
-//метод будет вызыван при нажатии на кнопку
-void click(MButton *b)
-{
-    (void)b;
-   // b->text = "Clicked!"; //меняем текст кнопки
-
-}
-
-
-MakiseStyle ts_button =
-{
-    MC_White,
-    &F_Arial12,
-    0,
-    //bg       font     border   double_border
-    {MC_White, MC_White, MC_White, 0},  //unactive
-    {MC_White, MC_Black, MC_Black, 0},//normal
-    {MC_White, MC_White, MC_White, 0}, //focused
-    {MC_White, MC_White, MC_White, 0} //active
-};
-
-char string_text[] = "Click me";
-
-void makise_init ( void ) {
-    host.host = &m_container;
-    makise_gui_init( &host );
-    ayplayer_lcd_init( 8 );
-    makise_start( &m_gui );
-
-    //создаём кнопку
-    m_create_button(&button, //указатель на структуру кнопки
-        host.host, //контейнер, в который будет добавлена кнопка после создания. В данном случае это контейнер MHost'a
-                    mp_rel(0, 0, //координаты элемента относительно левого верхнего угла
-                           100, 40), //ширина, высота
-        string_text,   //текст кнопки
-        //События
-        click, //Вызывается при нажатии на кнопку
-        nullptr, //Вызывается до обработки нажатия, может прервать обработку нажатия
-        nullptr, //Вызывается при действиях с фокусом кнопки
-        &ts_button //стиль кнопки
-    );
-
-     makise_g_host_call( &host, M_G_CALL_PREDRAW );
-     makise_g_host_call( &host, M_G_CALL_DRAW );
-}
-
-void ayplayer_lcd_update_task ( void* param ) {
-    (void)param;
-    makise_init();
-    m_gui.draw( &m_gui );
-    while( true ) {
-
-        vTaskDelay(1000);
-    }
-}
-
-// 400 байт задаче.
-#define AY_PLAYER_GUI_TASK_STACK_SIZE       200
+#include "ayplayer_gui_core.h"
 
 static StaticTask_t     ayplayer_gui_task_buffer;
 static StackType_t      ayplayer_gui_task_stack[ AY_PLAYER_GUI_TASK_STACK_SIZE ];
 
-void ayplayer_gui_init ( void ) {
-    xTaskCreateStatic( ayplayer_lcd_update_task,
+void ayplayer_gui_core_init ( void ) {
+    xTaskCreateStatic( ayplayer_gui_core_task,
                        "gui",
                        AY_PLAYER_GUI_TASK_STACK_SIZE,
                        NULL,
@@ -194,6 +12,25 @@ void ayplayer_gui_init ( void ) {
                        ayplayer_gui_task_stack,
                        &ayplayer_gui_task_buffer );
 }
+
+MHost host;
+
+void ayplayer_gui_core_task ( void* param ) {
+    (void)param;
+    ayplayer_gui_low_init();
+    MContainer      c;
+    host.host       = &c;
+
+    ayplayer_gui_window_sd_card_analysis_creature( c );
+
+    makise_g_host_call( &host, M_G_CALL_PREDRAW );
+    makise_g_host_call( &host, M_G_CALL_DRAW );
+
+    while( true ) {
+        vTaskDelay(1000);
+    }
+}
+
 
 /*
  * Заполняем строки данными с microsd.
