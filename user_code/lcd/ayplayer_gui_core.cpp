@@ -18,8 +18,11 @@ void ayplayer_gui_core_init ( void ) {
 MHost           host;
 MProgressBar    pb;
 MLable          l_0;
-
+MSList          sl;
 uint8_t pb_duty = 0;
+
+char test_string_0[] = "String 0";
+char test_string_1[] = "String 1";
 
 void ayplayer_gui_core_task ( void* param ) {
     (void)param;
@@ -27,8 +30,18 @@ void ayplayer_gui_core_task ( void* param ) {
     MContainer      c = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
     host.host       = &c;
 
-    ayplayer_gui_window_sd_card_analysis_creature( c, pb, l_0 );
+    ayplayer_gui_window_sd_card_analysis_creature( c, pb, l_0, sl );
 
+    MSList_Item ms = {
+        .text       = test_string_0,
+        .value      = 0,
+        .prev       = 0,
+        .next       = 0,
+        .id         = 0
+    };
+
+
+    m_slist_add( &sl, &ms );
 
 
     while( true ) {

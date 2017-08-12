@@ -53,13 +53,25 @@ MakiseLableStyle makise_lable_style = {
     double_border       : 0
 };
 
+
+MakiseSListStyle sl_style = {
+    &F_Arial12,
+    0,
+    //bg       font     border   double_border
+    {MC_White, MC_Black, MC_Black, 0},  //unactive
+    {MC_White, MC_Black, MC_Black, 0},  //normal
+    {MC_White, MC_Black, MC_Black, 0}, //focused
+};
+
+
 char string_text[] = "Click me";
 char string_scanning_dir[] = "The directory is scanned:"; //"Производится сканирование директории:";
+char string_slist[] = "Check file";
 
 MPosition m_pos;
 
 // Заполняем контейнер окна.
-void ayplayer_gui_window_sd_card_analysis_creature ( MContainer& c, MProgressBar& pb, MLable& lb ) {
+void ayplayer_gui_window_sd_card_analysis_creature ( MContainer& c, MProgressBar& pb, MLable& lb, MSList& sl ) {
     (void)lb;
     makise_g_cont_clear( &c );                                          // Чистим контейнер.
     /*m_create_button( &button,                                           // указатель на структуру кнопки
@@ -86,6 +98,16 @@ void ayplayer_gui_window_sd_card_analysis_creature ( MContainer& c, MProgressBar
                            0,
                            1,
                            &makise_progress_bar_style );
+
+    m_create_slist( &sl, &c,
+                    mp_rel( 0,   20,
+                            128, 30 ),
+                    string_slist,
+                    nullptr,
+                    nullptr,
+                    MSList_List,
+                    &sl_style,
+                    &sl_style );
 }
 
 
