@@ -17,5 +17,6 @@ sr_one_in_button_item_cfg ayplayer_button_cfg[1] = {
         .v_start_long_press     = nullptr,
     }
 };
+
+buttons_through_shift_register_one_in ayplayer_button();
 */
-//buttons_through_shift_register_one_in ayplayer_button();

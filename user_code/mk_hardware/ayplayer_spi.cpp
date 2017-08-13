@@ -34,7 +34,6 @@ spi_master_8bit_hardware_os < SPI3_CFG_OBJ_PARAM > spi3( &spi1_cfg );
 USER_OS_STATIC_MUTEX_BUFFER spi3_mutex_buf = USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE;
 USER_OS_STATIC_MUTEX        spi3_mutex     = nullptr;
 
-
 int ayplayer_spi_init ( void ) {
     mutex_spi[0] = USER_OS_STATIC_MUTEX_CREATE( &mutex_spi_buf[0] );
     mutex_spi[1] = USER_OS_STATIC_MUTEX_CREATE( &mutex_spi_buf[1] );

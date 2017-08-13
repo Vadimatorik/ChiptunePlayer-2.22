@@ -16,3 +16,5 @@ extern MakiseGUI m_gui;
 void m_gui_update ( MakiseGUI* gui );
 
 }
+
+void gui_update ( void );

@@ -15,42 +15,34 @@ void ayplayer_gui_core_init ( void ) {
 }
 
 // Внутренние объекты (общие для всех окон).
-MHost           host;
-MProgressBar    pb;
-MLable          l_0;
-MSList          sl;
-MSList_Item     sl_item_array[6];
 
-uint8_t         pb_duty = 0;
+extern MHost           host;
+MContainer             c;
+char                   path_dir[512] = "./";
+FATFS                  fat;
 
-char test_string_0[] = "String 0";
-char test_string_1[] = "String 1";
-
+//**********************************************************************
+// Через данную задачу будут происходить все монипуляции с GUI.
+//**********************************************************************
 void ayplayer_gui_core_task ( void* param ) {
-    (void)param;
+    ( void )param;
+    // Готовим низкий уровень GUI и все необходимые структуры.
     ayplayer_gui_low_init();
-    MContainer      c = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
     host.host       = &c;
+    c = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
 
-    ayplayer_gui_window_sd_card_analysis_creature( c, pb, l_0, sl );
+    // Инициализация FAT объекта (общий на обе карты).
+    FRESULT fr = f_mount( &fat, "", 0 );
+    if ( fr != FR_OK ) while( true );
 
-    MSList_Item ms = {
-        .text       = test_string_0,
-        .value      = 0,
-        .prev       = 0,
-        .next       = 0,
-        .id         = 0
-    };
-
-    m_slist_add( &sl, &ms );
+    // Пытаемся просканировать карту.
+    ayplayer_sd_card_scan( path_dir, &c );
 
     while( true ) {
-        m_progress_bar_set_duty( &pb, pb_duty );
-        pb_duty++;
+     //   m_progress_bar_set_duty( &pb, pb_duty );
+    //    pb_duty++;
+        //gui_update();
 
-        makise_g_host_call( &host, M_G_CALL_PREDRAW );
-        makise_g_host_call( &host, M_G_CALL_DRAW );
-        m_gui_update( &m_gui );
 
         vTaskDelay(800);
     }

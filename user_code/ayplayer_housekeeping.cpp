@@ -1,29 +1,10 @@
 #include "ayplayer_housekeeping.h"
-#include "ayplayer_ay_note.h"               // Потом выпелить!
-
-
-#include "microsd_card.h"
-#include "ayplayer_spi.h"
-#include "ayplayer_shift_register.h"
-#include "ayplayer_microsd_card.h"
-#include "ay_ym_file_mode.h"
 
 /*
  * filemode
  */
 /*
-USER_OS_STATIC_MUTEX_BUFFER microsd_mutex_buf = USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE;
-USER_OS_STATIC_MUTEX        microsd_mutex     = nullptr;
 
-FATFS                        fat;
-
-extern ay_ym_low_lavel ay;
-ay_ym_file_mode_struct_cfg_t ay_f_mode_cfg = {
-    .ay_hardware                = &ay,
-    .microsd_mutex              = &microsd_mutex,
-};
-
-ay_ym_file_mode ay_file_mode(&ay_f_mode_cfg);
 */
 
 /*
@@ -31,6 +12,7 @@ ay_ym_file_mode ay_file_mode(&ay_f_mode_cfg);
  */
 
 
+/*
 void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
     uint8_t buf[3] = {0};
     buf[0] = reg2 << 3;
@@ -44,15 +26,15 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
     spi3.tx(&buf[2], 1, 100);
     dp_cs_res_obj.set();
 }
-
+*/
 /*
  * Каждые 500 мс мигаем светодиодом.
  */
 //extern microsd_spi sd2;
 
 #include "ayplayer_digital_potentiometer.h"
-#include "ayplayer_fat.h"
-#include "ay_ym_low_lavel.h"
+
+
 
 //extern ay_ym_low_lavel ay;
 void housekeeping_thread ( void* arg ) {
@@ -72,6 +54,7 @@ void housekeeping_thread ( void* arg ) {
     sound_dp.value_set( 3, 3, 0x80 );
     sound_dp.connect_on();
 */
+    /*
     vTaskDelay(2000);
         shdn_obj.set();
         out_reg( 0, 0x80, 0, 0x80 );
@@ -81,7 +64,7 @@ void housekeeping_thread ( void* arg ) {
         out_reg( 2, 0x80, 2, 0x80 );
         vTaskDelay(10);
         out_reg( 3, 0x80, 3, 0x80 );
-        vTaskDelay(10);
+        vTaskDelay(10);*/
 
 
     //microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
@@ -108,24 +91,6 @@ void housekeeping_thread ( void* arg ) {
 
 vTaskDelay(1000);*/
 /*
-    volatile FRESULT ress;
-    ( void )ress;
-    ress = f_mount(&fat, "", 0);
-
-    char name[256];
-    uint32_t len;
-
-    volatile EC_AY_FILE_MODE r;
-    ( void )r;
-
-    char path[256] = "0:/";
-
-
- while( true ) {
-     if (ay_file_mode.find_psg_file( path ) != EC_AY_FILE_MODE::OK ) continue;
-   if (  ay_file_mode.psg_file_get_name( path, 0, name, len ) != EC_AY_FILE_MODE::OK ) continue;
-     if (ay_file_mode.psg_file_play( path, 0 ) != EC_AY_FILE_MODE::OK ) continue;
-
 
     };*/
     while( true ) {
@@ -134,7 +99,7 @@ vTaskDelay(1000);*/
 }
 
 // 400 байт задаче.
-#define AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE       1500
+#define AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE       50
 static StaticTask_t     ayplayer_housekeeping_task_buffer;
 static StackType_t      ayplayer_housekeeping_task_stack[ AY_PLAYER_HOUSEKEEPING_TASK_STACK_SIZE ];
 
@@ -150,10 +115,3 @@ void ayplayer_housekeeping_init ( void ) {
                        ayplayer_housekeeping_task_stack,
                        &ayplayer_housekeeping_task_buffer );
 }
-
-
-/*
-
-
-
-  */

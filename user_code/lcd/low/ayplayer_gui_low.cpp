@@ -18,6 +18,7 @@ uint8_t m_driver_start ( MakiseGUI* gui ) {
     ( void )gui;
     ayplayer_lcd.reset();
     ayplayer_lcd.set_contrast( contrast_lcd );
+    ayplayer_lcd.clear();
     ayplayer_lcd.on();
     return M_OK;
 }
@@ -114,4 +115,13 @@ MakiseGUI m_gui = {
 //**********************************************************************
 void ayplayer_gui_low_init ( void ) {
     makise_start( &m_gui );
+}
+
+MHost           host;
+
+// Перерисовывает GUI и обновляет экран.
+void gui_update ( void ) {
+    makise_g_host_call( &host, M_G_CALL_PREDRAW );
+    makise_g_host_call( &host, M_G_CALL_DRAW );
+    m_gui_update( &m_gui );
 }

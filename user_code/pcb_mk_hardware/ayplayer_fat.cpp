@@ -1,4 +1,4 @@
-/*#include "ayplayer_fat.h"
+#include "ayplayer_fat.h"
 
 extern microsd_spi sd2;
 
@@ -64,10 +64,10 @@ DRESULT disk_ioctl ( BYTE pdrv, BYTE cmd, void* buff ) {
     return RES_OK;
 }
 
-}*/
+}
 
+// Из примера.
 /*
-Из примера.
 DWORD get_fattime (void)
 {
     RTCTIME rtc;
@@ -82,5 +82,4 @@ DWORD get_fattime (void)
             | ((DWORD)rtc.hour << 11)
             | ((DWORD)rtc.min << 5)
             | ((DWORD)rtc.sec >> 1);
-}
-  */
+}*/

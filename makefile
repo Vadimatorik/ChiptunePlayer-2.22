@@ -17,11 +17,11 @@ FAT_FS_OPTIMIZATION			:= -g3 -Og
 MAKISE_GUI_OPTIMIZATION			:= -g3 -Og
 BUT_OPTIMIZATION			:= -g3 -Og
 
-LD_FILES = -T stm32f2_api/ld/stm32f205xB_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
+LD_FILES = -T stm32f2_api/ld/stm32f205xC_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
-MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
+MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft 
 
-C_FLAGS			:= $(MK_FLAGS)
+C_FLAGS			:= $(MK_FLAGS) 
 # Все предупреждения == ошибки.
 #C_FLAGS			+= -Werror
 # Выдавать предупреждения (ошибки) о сомнительных констукциях.
@@ -47,7 +47,8 @@ LDFLAGS			+= $(LD_FILES)
 # Размещает каждую функцию в отдельной секции.
 LDFLAGS			+= -ffunction-sections -fdata-sections
 # Убираем неиспользуемые функции из .elf.
-LDFLAGS			+= -Wl,--gc-sections
+LDFLAGS			+= -Wl,--gc-sections 
+
 # Формируем map файл.
 #LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
 
