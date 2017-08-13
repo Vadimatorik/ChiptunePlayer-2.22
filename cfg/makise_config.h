@@ -36,8 +36,7 @@ extern "C" {
 #define MAKISE_E_TOGGLE             1
 
 // Enable debug output.
-#define MAKISE_ENABLE_DEBUG_OUTPUT  0
-#define MAKISE_DEBUG_OUTPUT         printf          // Only if debug output is enabled.
+#define MAKISE_DEBUG_OUTPUT                         // Only if debug output is enabled.
 
 #ifdef __cplusplus
 }
