@@ -4,7 +4,7 @@
 // sr_out_buf[1] - 28-ка ногая.
 uint8_t sr_out_buf[2] = { 0 };
 
-USER_OS_STATIC_MUTEX_BUFFER     sr_mutex_buf = USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE;
+USER_OS_STATIC_MUTEX_BUFFER     sr_mutex_buf;
 USER_OS_STATIC_MUTEX            sr_mutex     = nullptr;
 
 const module_shift_register_cfg_t sr_cfg_sr_cfg = {

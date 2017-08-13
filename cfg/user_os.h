@@ -13,19 +13,6 @@
 
 // Буффер по данные очереди.
 #define USER_OS_STATIC_QUEUE_STRUCT                                             StaticQueue_t
-// Данные, которыми будет заполнена переменная-буффер при старте.
-#define USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE                  \
-{                                                               \
-    .pvDummy1 = {nullptr, nullptr, nullptr},                    \
-    .u = {                                                      \
-        .pvDummy2 = NULL,                                       \
-    },                                                          \
-    .xDummy3 = { { 0,nullptr, { 0,{ nullptr, nullptr } } },     \
-                 { 0,nullptr, { 0,{ nullptr, nullptr } } } },   \
-    .uxDummy4 = { 0, 0, 0 },                                    \
-    .ucDummy5 = { 0, 0 },                                       \
-    .ucDummy6 = 0                                               \
-}
 // Тип переменной-очереди.
 #define USER_OS_STATIC_QUEUE                                                    QueueHandle_t
 
@@ -48,8 +35,6 @@
  */
 // Тип переменной-буфера, в которую будет создан mutex.
 #define USER_OS_STATIC_MUTEX_BUFFER                         StaticSemaphore_t
-// Начальное значение буфера.
-#define USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE              USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE
 // Тип переменной mutex-а, который будет создан статически и в него будут помещены данные.
 #define USER_OS_STATIC_MUTEX                                SemaphoreHandle_t
 // Метод должен создать в заранее выделенной переменной-буфере mutex.
@@ -68,8 +53,6 @@
  */
 // Тип переменной-буфера, в которую будет создан бинарный semaphore.
 #define USER_OS_STATIC_BIN_SEMAPHORE_BUFFER                 StaticSemaphore_t
-// Данные, которыми будет заполнена переменная-буффер при старте.
-#define USER_OS_STATIC_BIN_SEMAPHORE_BUFFER_INIT_VALUE      USER_OS_STATIC_QUEUE_STRUCT_INIT_VALUE
 // Тип переменной бинарного semaphore-а, который будет создан статически и в него будут помещены данные.
 #define USER_OS_STATIC_BIN_SEMAPHORE                        SemaphoreHandle_t
 // Метод должен создать в заранее выделенной переменной-буфере бинарный semaphore.
@@ -94,18 +77,6 @@
 #define USER_OS_STATIC_TASK_CREATE(FUNC,STRING_NAME,STACK_SIZE,PARAM,PRIO,P_STACK,P_STUCT)     xTaskCreateStatic( FUNC, STRING_NAME, STACK_SIZE, PARAM, PRIO, P_STACK, P_STUCT )
 #define USER_OS_STATIC_STACK_TYPE                                                              StackType_t
 #define USER_OS_STATIC_TASK_STRUCT_TYPE                                                        StaticTask_t
-#define USER_OS_STATIC_TASK_STRUCT_INIT_VALUE                                                                           \
-{                                                                                                                       \
-    .pxDummy1       = nullptr,                                                                                          \
-    .xDummy3        = { { 0, { nullptr, nullptr, nullptr, nullptr } }, { 0, { nullptr, nullptr, nullptr, nullptr } } }, \
-    .uxDummy5       = 0,                                                                                                \
-    .pxDummy6       = nullptr,                                                                                          \
-    .ucDummy7       = { 0 },                                                                                            \
-    .uxDummy12      = { 0 },                                                                                            \
-    .ulDummy18      = 0,                                                                                                \
-    .ucDummy19      = 0,                                                                                                \
-    .uxDummy20      = 0                                                                                                 \
-}
 
 /*
  * Прочее.

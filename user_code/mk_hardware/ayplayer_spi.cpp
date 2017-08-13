@@ -1,10 +1,6 @@
 #include "ayplayer_spi.h"
 
-USER_OS_STATIC_MUTEX_BUFFER mutex_spi_buf[3] = {
-    USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE,
-    USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE,
-    USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE
-};
+USER_OS_STATIC_MUTEX_BUFFER mutex_spi_buf[3];
 
 USER_OS_STATIC_MUTEX mutex_spi[3] = { nullptr, nullptr, nullptr };
 
@@ -31,7 +27,7 @@ spi_master_8bit_hardware_os < SPI3_CFG_OBJ_PARAM > spi3( &spi1_cfg );
 // отдавать SPI другим устройствам (например, когда программный CS и после
 // передачи чип должен еще что-то сделать и дернуть CS сам. В это время нельзя
 // совершать иных передач.
-USER_OS_STATIC_MUTEX_BUFFER spi3_mutex_buf = USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE;
+USER_OS_STATIC_MUTEX_BUFFER spi3_mutex_buf;
 USER_OS_STATIC_MUTEX        spi3_mutex     = nullptr;
 
 int ayplayer_spi_init ( void ) {
