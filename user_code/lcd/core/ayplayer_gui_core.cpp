@@ -44,7 +44,6 @@ void ayplayer_gui_core_task ( void* param ) {
 
     m_slist_add( &sl, &ms );
 
-
     while( true ) {
         m_progress_bar_set_duty( &pb, pb_duty );
         pb_duty++;
