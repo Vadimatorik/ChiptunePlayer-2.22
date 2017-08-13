@@ -13,7 +13,6 @@ void ayplayer_gui_low_init ( void );
 extern "C" {
 
 extern MakiseGUI m_gui;
-void m_gui_update ( MakiseGUI* gui );
 
 }
 

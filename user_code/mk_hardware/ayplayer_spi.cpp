@@ -28,7 +28,7 @@ spi_master_8bit_hardware_os < SPI3_CFG_OBJ_PARAM > spi3( &spi1_cfg );
 // передачи чип должен еще что-то сделать и дернуть CS сам. В это время нельзя
 // совершать иных передач.
 USER_OS_STATIC_MUTEX_BUFFER spi3_mutex_buf;
-USER_OS_STATIC_MUTEX        spi3_mutex     = nullptr;
+USER_OS_STATIC_MUTEX        spi3_mutex = nullptr;
 
 int ayplayer_spi_init ( void ) {
     mutex_spi[0] = USER_OS_STATIC_MUTEX_CREATE( &mutex_spi_buf[0] );

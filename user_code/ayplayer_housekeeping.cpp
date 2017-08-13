@@ -67,11 +67,6 @@ void housekeeping_thread ( void* arg ) {
         vTaskDelay(10);*/
 
 
-    //microsd_mutex = USER_OS_STATIC_MUTEX_CREATE( &microsd_mutex_buf );
-
-
-
-
 /*
     ayplayer_note_mode.write_note_to_channel( 0, 0, 40 );
     ayplayer_note_mode.write_note_to_channel( 0, 1, 20 );

@@ -18,7 +18,7 @@ void ayplayer_gui_core_init ( void ) {
 
 extern MHost           host;
 MContainer             c;
-char                   path_dir[512] = "./";
+char                   path_dir[512] = "0:/";
 FATFS                  fat;
 
 //**********************************************************************
