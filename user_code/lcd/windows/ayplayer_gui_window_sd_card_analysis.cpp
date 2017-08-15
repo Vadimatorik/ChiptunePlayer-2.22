@@ -6,21 +6,13 @@
 extern const MakiseFont F_minecraft_rus_regular_8;
 
 // Используемые стили элементов.
-MakiseStyle_ProgressBar makise_progress_bar_style = {
+MakiseStyle_ProgressBar smpb = {
     .bg_color           = MC_White,
     .border_color       = MC_Black,
     .duty_color         = MC_Black
 };
 
-MakiseStyle_Lable makise_lable_style = {
-    .font                = &F_minecraft_rus_regular_8,
-    .font_col            = MC_Black,
-    .bg_color            = MC_White,
-    .border_c            = MC_White,
-    .double_border       = 0
-};
-
-MakiseStyle_SList sl_style = {
+MakiseStyle_SList slist = {
     .font               = &F_minecraft_rus_regular_8,
     .font_line_spacing  = 0,
 
@@ -37,7 +29,7 @@ MakiseStyle_SList sl_style = {
     .active             = { MC_White, MC_Black, MC_Black, 0 }   // Фокус.
 };
 
-MakiseStyle_SListItem sl_item_style = {
+MakiseStyle_SListItem sl_item = {
     .font               = &F_minecraft_rus_regular_8,
     .font_line_spacing  = 0,
 
@@ -48,26 +40,21 @@ MakiseStyle_SListItem sl_item_style = {
 
 // Надписи.
 char string_scanning_dir[] = "Сканирование папки:"; //"Производится сканирование директории:";
+//char s_scan_ok[] = "Сканирование директории завершено успешно!";
+//char s_scan_ok[] = "Проблемы с microSD карто!";
 
 MPosition m_pos;
 
 // Заполняем контейнер окна.
-void ayplayer_gui_window_sd_card_analysis_creature ( MContainer* c, MProgressBar* pb, MLable* l, MSList* sl ) {
+void ayplayer_gui_window_sd_card_analysis_creature ( MContainer* c, MProgressBar* pb, MSList* sl ) {
     makise_g_cont_clear( c );                                          // Чистим контейнер.
-
-    (void)l;
-    /*m_create_lable( l, c,
-                    mp_rel( 0,     0,
-                            128,   12 ),
-                    string_scanning_dir,
-                    &makise_lable_style );*/
 
     m_create_progress_bar( pb, c,
                            mp_rel( 0,   0,
                                    128, 6 ),
                            0,
                            1,
-                           &makise_progress_bar_style );
+                           &smpb );
 
     m_create_slist( sl, c,
                     mp_rel( 0,   7,
@@ -76,8 +63,8 @@ void ayplayer_gui_window_sd_card_analysis_creature ( MContainer* c, MProgressBar
                     nullptr,
                     nullptr,
                     MSList_List,
-                    &sl_style,
-                    &sl_item_style );
+                    &slist,
+                    &sl_item );
 }
 
 
@@ -91,15 +78,23 @@ void item_shift ( MSList_Item* i_ar, uint32_t cout, char* new_st ) {
     i_ar[0].text = new_st;
 }
 
-// Метод производит сканирование карты и создание списка файлов директории.
-EC_SD_CARD_SCAN_ANSWER ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
+bool check_fat_err ( MContainer* c, FRESULT r ) {
+    if ( r != FR_OK ) {
+        ayplayer_error_microsd_draw( c, r );
+        gui_update();
+        USER_OS_GIVE_MUTEX( spi3_mutex );   // sdcard свободна.
+        return true;
+    }
+    return false;
+}
 
+// Метод производит сканирование карты и создание списка файлов директории.
+bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     MProgressBar    pb;
-    MLable          l;
     MSList          sl;
 
     // Инициализируем окно.
-    ayplayer_gui_window_sd_card_analysis_creature( c, &pb, &l, &sl );
+    ayplayer_gui_window_sd_card_analysis_creature( c, &pb, &sl );
 
     USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );    // sdcard занята нами.
 
@@ -107,9 +102,6 @@ EC_SD_CARD_SCAN_ANSWER ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     FILINFO     fi;
     FRESULT     r;
     FIL         file_list;
-
-    (void)r;
-    (void)file_list;
 
     //**********************************************************************
     // Получаем колличество файлов в директории.
@@ -121,22 +113,14 @@ EC_SD_CARD_SCAN_ANSWER ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
         r = f_findnext( &d, &fi );
     }
 
-    if ( r != FR_OK ) {     // Защита на случай неудачного чтения.
-        while( true );
-    }
-
+    if ( check_fat_err( c, r ) == true ) return false;                  // Проверяем на ошибку SD.
     gui_update();
 
     //**********************************************************************
     // Создаем файл со списком.
     //**********************************************************************
     r = f_open( &file_list, "psg_list.txt", FA_CREATE_ALWAYS | FA_READ | FA_WRITE );
-    if ( r != FR_OK ) {
-        f_close( &file_list );
-        f_closedir( &d );
-        USER_OS_GIVE_MUTEX( spi3_mutex );   // sdcard свободна.
-        while( true );
-    }
+    if ( check_fat_err( c, r ) == true ) return false;                  // Проверяем на ошибку SD.
 
     //**********************************************************************
     // Анализируем файлы.
@@ -175,9 +159,7 @@ EC_SD_CARD_SCAN_ANSWER ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
 
         UINT l;                                                         // Количество записанных байт (должно быть 512).
         r = f_write( &file_list, b, 512, &l );
-        if ( r != FR_OK ) {
-            while( true );
-        }
+        if ( check_fat_err( c, r ) == true ) return false;              // Проверяем на ошибку SD.
 
         if ( l != 512 ) {                                               // Если запись не прошла - аварийный выход.
             while( true );
@@ -196,12 +178,10 @@ EC_SD_CARD_SCAN_ANSWER ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     }
 
     // Если не удалось связаться с картой, то выходим без закрытия.
-    if ( r == FR_OK ) {
-        f_close( &file_list );
-        f_closedir( &d );
-    }
+    if ( check_fat_err( c, r ) == true ) return false;                  // Проверяем на ошибку SD.
 
     USER_OS_GIVE_MUTEX( spi3_mutex );
+
 
     /*
     if ( ay_file_mode.find_psg_file( dir ) == EC_AY_FILE_MODE::OK ) {
@@ -224,7 +204,7 @@ EC_SD_CARD_SCAN_ANSWER ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
 
     //m_slist_add( &sl, &ms );
 
-    return EC_SD_CARD_SCAN_ANSWER::OK;
+    return true;
 }
 
 

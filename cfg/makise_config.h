@@ -20,20 +20,21 @@ extern "C" {
 
 //Control section
 //len of buffer with input events
-#define MAKISE_GUI_INPUT_BUFFER_LEN 10
+#define MAKISE_GUI_INPUT_BUFFER_LEN     10
 //use x-y pointing control devices. like mouse or touchscreen
 #define MAKISE_GUI_INPUT_POINTER_ENABLE 1
 
 // Enable element support.
-#define MAKISE_E_BUTTONS            1
-#define MAKISE_E_CANVAS             1
-#define MAKISE_E_LABLE              1
-#define MAKISE_E_PROGRESS_BAR       1
-#define MAKISE_E_SLIDER             1
-#define MAKISE_E_SLIST              1
-#define MAKISE_E_TABS               1
-#define MAKISE_E_TEXT_FIELD         1
-#define MAKISE_E_TOGGLE             1
+#define MAKISE_E_BUTTONS                1
+#define MAKISE_E_CANVAS                 1
+#define MAKISE_E_LABLE                  1
+#define MAKISE_E_PROGRESS_BAR           1
+#define MAKISE_E_SLIDER                 1
+#define MAKISE_E_SLIST                  1
+#define MAKISE_E_TABS                   1
+#define MAKISE_E_TEXT_FIELD             1
+#define MAKISE_E_TOGGLE                 1
+#define MAKISE_E_MESSAGE_WINDOW         1
 
 // Enable debug output.
 #define MAKISE_DEBUG_OUTPUT                         // Only if debug output is enabled.

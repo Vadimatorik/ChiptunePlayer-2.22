@@ -12,9 +12,7 @@
 #include "ay_ym_low_lavel.h"
 #include "ay_ym_file_mode.h"
 
+// Вывод ошибки.
+#include "ayplayer_gui_window_sd_card_error.h"
 
-enum class EC_SD_CARD_SCAN_ANSWER {
-    OK                  = 0                     // Сканирование прошло удачно.
-};
-
-EC_SD_CARD_SCAN_ANSWER ayplayer_sd_card_scan ( char* dir, MContainer* c );
+bool ayplayer_sd_card_scan ( char* dir, MContainer* c );
