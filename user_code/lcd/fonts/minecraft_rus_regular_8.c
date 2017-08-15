@@ -51,7 +51,7 @@ const MakiseFont F_minecraft_rus_regular_8 = {
 #if MAKISE_UNICODE
     160,
 #endif
-    2
+    0
 };
 
 #endif

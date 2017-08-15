@@ -47,7 +47,7 @@ MakiseStyle_SListItem sl_item_style = {
 };
 
 // Надписи.
-char string_scanning_dir[] = "The directory is scanned:"; //"Производится сканирование директории:";
+char string_scanning_dir[] = "Сканирование папки:"; //"Производится сканирование директории:";
 
 MPosition m_pos;
 
