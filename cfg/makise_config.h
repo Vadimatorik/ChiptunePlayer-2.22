@@ -38,6 +38,10 @@ extern "C" {
 // Enable debug output.
 #define MAKISE_DEBUG_OUTPUT                         // Only if debug output is enabled.
 
+#define MAKISE_UNICODE              1
+// Учитываем инверсию дисплея.
+#define MAKISEGUI_DISPLAY_INVERTED  1
+
 #ifdef __cplusplus
 }
 #endif

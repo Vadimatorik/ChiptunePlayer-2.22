@@ -245,10 +245,34 @@ DP_PATH		:= $(addprefix -I, $(DP_DIR))
 #**********************************************************************
 USER_H_FILE		:= $(shell find user_code/ -maxdepth 5 -type f -name "*.h" )
 USER_CPP_FILE		:= $(shell find user_code/ -maxdepth 5 -type f -name "*.cpp" )
+USER_C_FILE		:= $(shell find user_code/ -maxdepth 5 -type f -name "*.c" )
 USER_DIR		:= $(shell find user_code/ -maxdepth 5 -type d -name "*" )
 USER_PATH		:= $(addprefix -I, $(USER_DIR))
 USER_OBJ_FILE		:= $(addprefix build/obj/, $(USER_CPP_FILE))
+USER_OBJ_FILE		+= $(addprefix build/obj/, $(USER_C_FILE))
 USER_OBJ_FILE		:= $(patsubst %.cpp, %.o, $(USER_OBJ_FILE))
+USER_OBJ_FILE		:= $(patsubst %.c, %.o, $(USER_OBJ_FILE))
+
+build/obj/%.o:	%.c	
+	@echo [CC] $<
+	@mkdir -p $(dir $@)
+	@$(CC) $(C_FLAGS) 				\
+	$(USER_PATH) 					\
+	$(MAKISE_GUI_PATH)				\
+	$(FAT_FS_PATH) 					\
+	$(MK_INTER_PATH)  				\
+	$(STM32_F2_API_PATH) 				\
+	$(USER_CFG_PATH) 				\
+	$(FREE_RTOS_PATH) 				\
+	$(LCD_LIB_PATH) 				\
+	$(MICRO_SD_DRIVER_PATH) 			\
+	$(SH_PATH) 					\
+	$(MOD_CHIP_PATH) 				\
+	$(DP_PATH)					\
+	$(BUT_PATH)					\
+	$(USER_CODE_OPTIMIZATION)			\
+	-c $< -o $@
+	
 build/obj/%.o:	%.cpp	
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
@@ -268,6 +292,8 @@ build/obj/%.o:	%.cpp
 	$(BUT_PATH)					\
 	$(USER_CODE_OPTIMIZATION)			\
 	-c $< -o $@
+
+
 
 #**********************************************************************
 # Компановка проекта.

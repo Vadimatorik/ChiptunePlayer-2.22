@@ -3,6 +3,7 @@
 //**********************************************************************
 // Данное окно будет возникать в моменты анализа SD карты.
 //**********************************************************************
+extern const MakiseFont F_minecraft_rus_regular_8;
 
 // Используемые стили элементов.
 MakiseStyle_ProgressBar makise_progress_bar_style = {
@@ -12,7 +13,7 @@ MakiseStyle_ProgressBar makise_progress_bar_style = {
 };
 
 MakiseStyle_Lable makise_lable_style = {
-    .font                = &F_Arial12,
+    .font                = &F_minecraft_rus_regular_8,
     .font_col            = MC_Black,
     .bg_color            = MC_White,
     .border_c            = MC_White,
@@ -20,12 +21,29 @@ MakiseStyle_Lable makise_lable_style = {
 };
 
 MakiseStyle_SList sl_style = {
-    &F_Arial12,
-    0,
+    .font               = &F_minecraft_rus_regular_8,
+    .font_line_spacing  = 0,
+
+    .left_margin        = 0,
+    .item_margin        = 0,
+
+    .scroll_width       = 0,
+    .scroll_bg_color    = 0,
+    .scroll_color       = 0,
+
     // Фон     Шрифт     Ободок    Доп. ширина.
-    { MC_White, MC_Black, MC_Black, 0 },  // Не активен.
-    { MC_White, MC_Black, MC_Black, 0 },  // Нормальный.
-    { MC_White, MC_Black, MC_Black, 0 },  // Фокус.
+    .normal             = { MC_White, MC_Black, MC_Black, 0 },  // Не активен.
+    .focused            = { MC_White, MC_Black, MC_Black, 0 },  // Нормальный.
+    .active             = { MC_White, MC_Black, MC_Black, 0 }   // Фокус.
+};
+
+MakiseStyle_SListItem sl_item_style = {
+    .font               = &F_minecraft_rus_regular_8,
+    .font_line_spacing  = 0,
+
+    .normal             = { MC_White, MC_Black, MC_Black, 0 },  // Не активен.
+    .focused            = { MC_White, MC_Black, MC_Black, 0 },  // Нормальный.
+    .active             = { MC_White, MC_Black, MC_Black, 0 }   // Фокус.
 };
 
 // Надписи.
@@ -59,8 +77,7 @@ void ayplayer_gui_window_sd_card_analysis_creature ( MContainer* c, MProgressBar
                     nullptr,
                     MSList_List,
                     &sl_style,
-                    &sl_style,
-                    0, 0, 0, 0, 1 );
+                    &sl_item_style );
 }
 
 
