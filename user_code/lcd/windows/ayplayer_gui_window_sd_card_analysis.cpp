@@ -80,7 +80,8 @@ void item_shift ( MSList_Item* i_ar, uint32_t cout, char* new_st ) {
 
 bool check_fat_err ( MContainer* c, FRESULT r ) {
     if ( r != FR_OK ) {
-        ayplayer_error_microsd_draw( c, r );
+        MMessageWindow mw;
+        ayplayer_error_microsd_draw( c, r, &mw );
         gui_update();
         USER_OS_GIVE_MUTEX( spi3_mutex );   // sdcard свободна.
         return true;

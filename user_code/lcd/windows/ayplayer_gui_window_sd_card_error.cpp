@@ -66,8 +66,7 @@ MakiseStyle_SMessageWindow smw = {
     .border_color       = MC_Black,
 };
 
-void ayplayer_error_microsd_draw ( MContainer* c, FRESULT r ) {
-    MMessageWindow mw;
+void ayplayer_error_microsd_draw ( MContainer* c, FRESULT r, MMessageWindow* mw ) {
     char *s;
     switch ( r ) {
     case FR_DISK_ERR:               s = s_err_disk_err;                 break;
@@ -94,6 +93,5 @@ void ayplayer_error_microsd_draw ( MContainer* c, FRESULT r ) {
         return;
     }
 
-    m_create_message_window( &mw, c, mp_rel( 9, 10, 108, 44 ), s, &smw );
-    gui_update();
+    m_create_message_window( mw, c, mp_rel( 9, 10, 108, 44 ), s, &smw );
 }
