@@ -8,6 +8,7 @@ int main (void){
     ayplayer_spi_init();
     ayplayer_housekeeping_init();
     ayplayer_timers_init();
+
     ayplayer_gui_core_init();
     ayplayer_shift_register();
     ayplayer_ay_init();
