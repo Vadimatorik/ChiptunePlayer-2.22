@@ -21,6 +21,8 @@ MContainer             c;
 char                   path_dir[512] = "0:/";
 FATFS                  fat;
 
+extern  USER_OS_STATIC_QUEUE         ay_b_queue;
+
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
@@ -35,8 +37,16 @@ void ayplayer_gui_core_task ( void* param ) {
     FRESULT fr = f_mount( &fat, "", 0 );
     if ( fr != FR_OK ) while( true );
 
+    while(1){
+    uint8_t b_buf_nember;
+
+    USER_OS_QUEUE_RECEIVE( ay_b_queue, &b_buf_nember, portMAX_DELAY );
+    }
+
     // Пытаемся просканировать карту.
     ayplayer_sd_card_scan( path_dir, &c );
+
+
 
     while( true ) {
      //   m_progress_bar_set_duty( &pb, pb_duty );

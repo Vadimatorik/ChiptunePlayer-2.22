@@ -7,6 +7,9 @@
 #include "ayplayer_microsd_card.h"
 #include "ayplayer_fat.h"
 
+// Rнопки.
+#include "ayplayer_button.h"
+
 // 400 байт задаче.
 #define AY_PLAYER_GUI_TASK_STACK_SIZE       10000
 

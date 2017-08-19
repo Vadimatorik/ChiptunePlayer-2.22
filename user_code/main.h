@@ -13,5 +13,6 @@
 #include "ayplayer_timers.h"
 #include "ayplayer_shift_register.h"
 #include "ayplayer_ay_low.h"
+#include "ayplayer_button.h"
 
 #include <stdint.h>

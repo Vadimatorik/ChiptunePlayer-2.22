@@ -1,27 +1,22 @@
 #include "ayplayer_button.h"
 
+#define AY_BUTTON_QUEUE_SIZE    1
+
+uint8_t ay_b_queue_buf[ AY_BUTTON_QUEUE_SIZE ] = { 0 };
+USER_OS_STATIC_QUEUE_STRUCT  ay_b_queue_st;
+USER_OS_STATIC_QUEUE         ay_b_queue;
+
 sr_one_in_button_status_struct b_s_ar[7];
 
+// При опуске коротком или длинном - одна и та же очередь.
 sr_one_in_button_item_cfg ayplayer_button_cfg[7] = {
-    {
-        .byte                   = 0,
-        .bit                    = 0,
-        .ms_stabil              = 50,
-        .dl_delay_ms            = 700,
-        .s_press                = nullptr,
-        .q_press                = nullptr,
-        .v_press                = 0,
-        .s_start_long_press     = nullptr,
-        .q_start_long_press     = nullptr,
-        .v_start_long_press     = 0,
-        .s_release_long_click   = nullptr,
-        .q_release_long_click   = nullptr,
-        .v_release_long_click   = 0,
-        .s_release_click        = nullptr,
-        .q_release_click        = nullptr,
-        .v_release_click        = 0,
-        .status                 = &b_s_ar[0]
-    }
+    { 0, 0, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::UP ),  nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::UP ),      &b_s_ar[0] },
+    { 0, 1, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::DOWN), nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::DOWN),     &b_s_ar[1] },
+    { 0, 2, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::LEFT),  nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::LEFT),    &b_s_ar[2] },
+    { 0, 3, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT), nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT),   &b_s_ar[3] },
+    { 0, 4, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::ENTER), nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::ENTER),   &b_s_ar[4] },
+    { 0, 5, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::MENU),  nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::MENU),    &b_s_ar[5] },
+    { 0, 6, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::BACK),  nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::BACK),    &b_s_ar[6] },
 };
 
 extern USER_OS_STATIC_MUTEX         spi3_mutex;
@@ -41,3 +36,8 @@ buttons_through_shift_register_one_in_cfg b_sr_cfg = {
 };
 
 buttons_through_shift_register_one_in ayplayer_button( &b_sr_cfg );
+
+void ayplayer_button_init ( void ) {
+    ay_b_queue = USER_OS_STATIC_QUEUE_CREATE( AY_BUTTON_QUEUE_SIZE, sizeof( uint8_t ), ay_b_queue_buf, &ay_b_queue_st );
+    ayplayer_button.init();
+}
