@@ -18,7 +18,6 @@ const module_shift_register_cfg_t sr_cfg_sr_cfg = {
 
 module_shift_register   sr( &sr_cfg_sr_cfg );
 
-
 void ayplayer_shift_register ( void ) {
     sr_mutex = USER_OS_STATIC_MUTEX_CREATE( &sr_mutex_buf );
     sr.init();

@@ -22,6 +22,9 @@ pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_6 >  bc1_obj;
 pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_14 > dp_cs_res_obj;
 pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_6 >  shdn_obj;
 
+// Общий вход кнопок.
+pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_7 > b_in;
+
 int ayplayer_port_init ( void ) {
     return ( ayplayer_global_port.reinit_all_ports() == EC_ANSWER_GP::SUCCESS ) ? 0 : -1;
 }

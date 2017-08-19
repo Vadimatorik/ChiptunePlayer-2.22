@@ -70,7 +70,7 @@ const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_14, EC_PIN_
 //
 // SPI клавиатура ( SPI общий AY, тут только вход ).
 //
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_7,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        button_in;
+const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_7,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::DOWN,     EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        button_in;
 
 //
 // SWD.
@@ -125,22 +125,25 @@ const constexpr pin_config_t ayplayer_global_port_pin_cfg[] = {
 
 const constexpr global_port ayplayer_global_port( ayplayer_global_port_pin_cfg, M_SIZE_ARRAY(ayplayer_global_port_pin_cfg) );
 
-extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_4 >  lcd_res_obj;
-extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_5 >  lcd_dc_obj;
-extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_2 >  lcd_cs_obj;
+extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_4 >      lcd_res_obj;
+extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_5 >      lcd_dc_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_2 >      lcd_cs_obj;
 
 // MICROSD 2.
-extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_7 >  sd2_cs_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_7 >      sd2_cs_obj;
 
 // Защелка сдвигового регистра.
-extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_8 >  spi_audio_st_reg_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_8 >      spi_audio_st_reg_obj;
 
 // AY_YM.
-extern pin< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_10 > bdir_obj;
-extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_6 >  bc1_obj;
+extern pin< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_10 >     bdir_obj;
+extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_6 >      bc1_obj;
 
 // Потенциометры.
-extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_14 > dp_cs_res_obj;
-extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_6 >  shdn_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_14 >     dp_cs_res_obj;
+extern pin< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_6 >      shdn_obj;
+
+// Общий вход кнопок.
+extern pin< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_7 >      b_in;
 
 int ayplayer_port_init ( void );
