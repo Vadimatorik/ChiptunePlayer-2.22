@@ -49,8 +49,6 @@ extern spi_master_8bit_hardware_os < SPI2_SLOW_CFG_OBJ_PARAM > spi2_slow;
 extern spi_master_8bit_hardware_os < SPI2_FAST_CFG_OBJ_PARAM > spi2_fast;
 extern spi_master_8bit_hardware_os < SPI3_CFG_OBJ_PARAM > spi3;
 
-extern USER_OS_STATIC_MUTEX        spi3_mutex;
-
 int ayplayer_spi_init ( void );
 
 

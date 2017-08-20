@@ -30,11 +30,16 @@ spi_master_8bit_hardware_os < SPI3_CFG_OBJ_PARAM > spi3( &spi1_cfg );
 USER_OS_STATIC_MUTEX_BUFFER spi3_mutex_buf;
 USER_OS_STATIC_MUTEX        spi3_mutex = nullptr;
 
+// Для SPI SD карты.
+USER_OS_STATIC_MUTEX_BUFFER spi2_mutex_buf;
+USER_OS_STATIC_MUTEX        spi2_mutex = nullptr;
+
 int ayplayer_spi_init ( void ) {
     mutex_spi[0] = USER_OS_STATIC_MUTEX_CREATE( &mutex_spi_buf[0] );
     mutex_spi[1] = USER_OS_STATIC_MUTEX_CREATE( &mutex_spi_buf[1] );
     mutex_spi[2] = USER_OS_STATIC_MUTEX_CREATE( &mutex_spi_buf[2] );
 
+    spi2_mutex   = USER_OS_STATIC_MUTEX_CREATE( &spi2_mutex_buf );
     spi3_mutex   = USER_OS_STATIC_MUTEX_CREATE( &spi3_mutex_buf );
 
     spi1.reinit();

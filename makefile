@@ -83,20 +83,6 @@ USER_CFG_PATH		:= -I$(USER_CFG_DIR)
 MK_INTER_H_FILE		:= $(wildcard mk_hardware_interfaces/*.h)
 MK_INTER_DIR		:= mk_hardware_interfaces
 MK_INTER_PATH		:= -I$(MK_INTER_DIR)
-
-#**********************************************************************
-# Для сборки FatFS.
-#**********************************************************************
-MAKISE_GUI_H_FILE	:= $(shell find MakiseGUI/ -maxdepth 10 -type f -name "*.h" )
-MAKISE_GUI_C_FILE	:= $(shell find MakiseGUI/ -maxdepth 10 -type f -name "*.c" )
-MAKISE_GUI_DIR		:= $(shell find MakiseGUI/ -maxdepth 10 -type d -name "*" )
-MAKISE_GUI_PATH		:= $(addprefix -I, $(MAKISE_GUI_DIR))
-MAKISE_GUI_OBJ_FILE	:= $(addprefix build/obj/, $(MAKISE_GUI_C_FILE))
-MAKISE_GUI_OBJ_FILE	:= $(patsubst %.c, %.o, $(MAKISE_GUI_OBJ_FILE))
-build/obj/MakiseGUI/%.o:	MakiseGUI/%.c $(USER_CFG_H_FILE) 
-	@echo [CC] $<
-	@mkdir -p $(dir $@)
-	@$(CC) $(C_FLAGS) $(USER_CFG_PATH) $(MAKISE_GUI_PATH) $(MAKISE_GUI_OPTIMIZATION) -c $< -o $@
 	
 #**********************************************************************
 # Для сборки FreeRTOS.
@@ -147,7 +133,21 @@ build/obj/module_fat_fs_by_chan/%.o:	module_fat_fs_by_chan/%.c $(USER_CFG_H_FILE
 	@echo [CC] $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(C_FAT_FS_FLAGS) $(FAT_FS_PATH) $(USER_CFG_PATH) $(FAT_FS_OPTIMIZATION) -c $< -o $@
-	
+
+#**********************************************************************
+# Для сборки FatFS.
+#**********************************************************************
+MAKISE_GUI_H_FILE	:= $(shell find MakiseGUI/ -maxdepth 10 -type f -name "*.h" )
+MAKISE_GUI_C_FILE	:= $(shell find MakiseGUI/ -maxdepth 10 -type f -name "*.c" )
+MAKISE_GUI_DIR		:= $(shell find MakiseGUI/ -maxdepth 10 -type d -name "*" )
+MAKISE_GUI_PATH		:= $(addprefix -I, $(MAKISE_GUI_DIR))
+MAKISE_GUI_OBJ_FILE	:= $(addprefix build/obj/, $(MAKISE_GUI_C_FILE))
+MAKISE_GUI_OBJ_FILE	:= $(patsubst %.c, %.o, $(MAKISE_GUI_OBJ_FILE))
+build/obj/MakiseGUI/%.o:	MakiseGUI/%.c $(USER_CFG_H_FILE) 
+	@echo [CC] $<
+	@mkdir -p $(dir $@)
+	@$(CC) $(C_FLAGS) $(FAT_FS_PATH) $(USER_CFG_PATH) $(MAKISE_GUI_PATH) $(MAKISE_GUI_OPTIMIZATION) -c $< -o $@
+
 #**********************************************************************
 # Для сборки stm32f2_api.
 #**********************************************************************

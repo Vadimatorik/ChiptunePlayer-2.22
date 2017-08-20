@@ -23,7 +23,7 @@ ay_ym_connection_chip_cfg_t array_connect_cfg[] = {
 };
 
 extern module_shift_register        sr;
-
+extern USER_OS_STATIC_MUTEX        spi3_mutex;
 const ay_ym_low_lavel_cfg_t ay_low_cfg {
     .sr                 = &sr,
     .mutex              = &spi3_mutex,

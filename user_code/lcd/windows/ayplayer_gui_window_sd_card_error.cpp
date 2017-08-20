@@ -68,6 +68,7 @@ MakiseStyle_SMessageWindow smw = {
 
 void ayplayer_error_microsd_draw ( MContainer* c, FRESULT r, MMessageWindow* mw ) {
     char *s;
+
     switch ( r ) {
     case FR_DISK_ERR:               s = s_err_disk_err;                 break;
     case FR_INT_ERR:                s = s_err_int_err;                  break;

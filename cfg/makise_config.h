@@ -35,6 +35,7 @@ extern "C" {
 #define MAKISE_E_TEXT_FIELD             1
 #define MAKISE_E_TOGGLE                 1
 #define MAKISE_E_MESSAGE_WINDOW         1
+#define MAKISE_E_FSVIEWER               MAKISE_E_FSVIEWER_FATFS
 
 // Enable debug output.
 #define MAKISE_DEBUG_OUTPUT                         // Only if debug output is enabled.

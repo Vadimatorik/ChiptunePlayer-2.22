@@ -38,12 +38,10 @@ MakiseStyle_SListItem sl_item = {
     .active             = { MC_White, MC_Black, MC_Black, 0 }   // Фокус.
 };
 
+extern USER_OS_STATIC_MUTEX        spi2_mutex;
+
 // Надписи.
 char string_scanning_dir[] = "Сканирование папки:"; //"Производится сканирование директории:";
-//char s_scan_ok[] = "Сканирование директории завершено успешно!";
-//char s_scan_ok[] = "Проблемы с microSD карто!";
-
-MPosition m_pos;
 
 // Заполняем контейнер окна.
 void ayplayer_gui_window_sd_card_analysis_creature ( MContainer* c, MProgressBar* pb, MSList* sl ) {
@@ -78,31 +76,35 @@ void item_shift ( MSList_Item* i_ar, uint32_t cout, char* new_st ) {
     i_ar[0].text = new_st;
 }
 
-bool check_fat_err ( MContainer* c, FRESULT r ) {
+bool check_fat_err ( MContainer* c, FRESULT r, MMessageWindow* mw ) {
     if ( r != FR_OK ) {
-        MMessageWindow mw;
-        ayplayer_error_microsd_draw( c, r, &mw );
+        ayplayer_error_microsd_draw( c, r, mw );
         gui_update();
-        USER_OS_GIVE_MUTEX( spi3_mutex );   // sdcard свободна.
+        USER_OS_GIVE_MUTEX( spi2_mutex );   // sdcard свободна.
         return true;
     }
     return false;
+}
+
+void ayplayer_sd_card_scan_abort ( MContainer* c, USER_OS_STATIC_MUTEX m ) {
+    makise_g_cont_clear( c );
+    USER_OS_GIVE_MUTEX( m );
 }
 
 // Метод производит сканирование карты и создание списка файлов директории.
 bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     MProgressBar    pb;
     MSList          sl;
+    DIR             d;
+    FILINFO         fi;
+    FRESULT         r;
+    FIL             file_list;
+    MMessageWindow  mw;
 
     // Инициализируем окно.
     ayplayer_gui_window_sd_card_analysis_creature( c, &pb, &sl );
 
-    USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );    // sdcard занята нами.
-
-    DIR         d;
-    FILINFO     fi;
-    FRESULT     r;
-    FIL         file_list;
+    USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );    // sdcard занята нами.
 
     //**********************************************************************
     // Получаем колличество файлов в директории.
@@ -114,23 +116,29 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
         r = f_findnext( &d, &fi );
     }
 
-    if ( check_fat_err( c, r ) == true ) return false;                  // Проверяем на ошибку SD.
+    if ( check_fat_err( c, r, &mw ) == true ) {                             // Проверяем на ошибку SD.
+        ayplayer_sd_card_scan_abort( c, spi2_mutex);
+        return false;
+    }
     gui_update();
 
     //**********************************************************************
     // Создаем файл со списком.
     //**********************************************************************
     r = f_open( &file_list, "psg_list.txt", FA_CREATE_ALWAYS | FA_READ | FA_WRITE );
-    if ( check_fat_err( c, r ) == true ) return false;                  // Проверяем на ошибку SD.
+    if ( check_fat_err( c, r, &mw ) == true ) {                             // Проверяем на ошибку SD.
+        ayplayer_sd_card_scan_abort( c, spi2_mutex);
+        return false;
+    }
 
     //**********************************************************************
     // Анализируем файлы.
     //**********************************************************************
-    uint32_t valid_file_count = 0;                                      // Число валидных.
+    uint32_t valid_file_count = 0;                                          // Число валидных.
 
-    MSList_Item sl_i[4];                                                // Для отображения просканированного.
-    char s[4][256];                                                     // Строки для списка.
-    uint8_t p_s = 0;                                                    // Указатель на строку, которую нужно будет перезаписать.
+    MSList_Item sl_i[4];                                                    // Для отображения просканированного.
+    char s[4][256];                                                         // Строки для списка.
+    uint8_t p_s = 0;                                                        // Указатель на строку, которую нужно будет перезаписать.
 
     for ( int i = 0; i < 4; i++ ) {
         sl_i[i].text = nullptr;
@@ -139,6 +147,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
 
     uint8_t scan_repeat = 0;
     r = f_findfirst( &d, &fi, dir, "*.psg" );
+
     while ( ( r == FR_OK ) && ( fi.fname[0] != 0 ) ) {
         uint32_t len;
         EC_AY_FILE_MODE r_psg_get;
@@ -148,7 +157,6 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
         valid_file_count++;
 
         // Для каждого удачного файла - сохранение на 512 байт.
-
         char b[512] = {0};
 
         // Имя может быть длинным или коротким.
@@ -160,7 +168,10 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
 
         UINT l;                                                         // Количество записанных байт (должно быть 512).
         r = f_write( &file_list, b, 512, &l );
-        if ( check_fat_err( c, r ) == true ) return false;              // Проверяем на ошибку SD.
+        if ( check_fat_err( c, r, &mw ) == true ) {                             // Проверяем на ошибку SD.
+            ayplayer_sd_card_scan_abort( c, spi2_mutex);
+            return false;
+        }
 
         if ( l != 512 ) {                                               // Если запись не прошла - аварийный выход.
             while( true );
@@ -179,33 +190,34 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     }
 
     // Если не удалось связаться с картой, то выходим без закрытия.
-    if ( check_fat_err( c, r ) == true ) return false;                  // Проверяем на ошибку SD.
+    if ( check_fat_err( c, r, &mw ) == true ) {                             // Проверяем на ошибку SD.
+        ayplayer_sd_card_scan_abort( c, spi2_mutex);
+        return false;
+    }
 
-    USER_OS_GIVE_MUTEX( spi3_mutex );
-
-
-    /*
-    if ( ay_file_mode.find_psg_file( dir ) == EC_AY_FILE_MODE::OK ) {
-        return EC_SD_CARD_SCAN_ANSWER::OK;
-    }*/
-
-    /*
-    char        name[256];
-    uint32_t    len;
-
-    volatile EC_AY_FILE_MODE r;
-    ( void )r;
-
-    char path[256] = "0:/";*/
-
-
-  // if (  ay_file_mode.psg_file_get_name( path, 0, name, len ) != EC_AY_FILE_MODE::OK ) continue;
-  //   if (ay_file_mode.psg_file_play( path, 0 ) != EC_AY_FILE_MODE::OK ) continue;
-
-
-    //m_slist_add( &sl, &ms );
-
+    makise_g_cont_clear( c );
+    USER_OS_GIVE_MUTEX( spi2_mutex );
     return true;
 }
 
+/*
+if ( ay_file_mode.find_psg_file( dir ) == EC_AY_FILE_MODE::OK ) {
+    return EC_SD_CARD_SCAN_ANSWER::OK;
+}*/
+
+/*
+char        name[256];
+uint32_t    len;
+
+volatile EC_AY_FILE_MODE r;
+( void )r;
+
+char path[256] = "0:/";*/
+
+
+// if (  ay_file_mode.psg_file_get_name( path, 0, name, len ) != EC_AY_FILE_MODE::OK ) continue;
+//   if (ay_file_mode.psg_file_play( path, 0 ) != EC_AY_FILE_MODE::OK ) continue;
+
+
+//m_slist_add( &sl, &ms );
 
