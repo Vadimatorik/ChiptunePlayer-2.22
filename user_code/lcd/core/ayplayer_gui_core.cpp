@@ -37,11 +37,11 @@ void ayplayer_gui_core_task ( void* param ) {
     FRESULT fr = f_mount( &fat, "", 0 );
     if ( fr != FR_OK ) while( true );
 
+    /*
     while(1){
-    uint8_t b_buf_nember;
-
-    USER_OS_QUEUE_RECEIVE( ay_b_queue, &b_buf_nember, portMAX_DELAY );
-    }
+        uint8_t b_buf_nember;
+        USER_OS_QUEUE_RECEIVE( ay_b_queue, &b_buf_nember, portMAX_DELAY );
+    }*/
 
     // Пытаемся просканировать карту.
     ayplayer_sd_card_scan( path_dir, &c );
