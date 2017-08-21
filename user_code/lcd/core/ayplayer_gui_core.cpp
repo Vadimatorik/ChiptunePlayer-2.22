@@ -45,8 +45,9 @@ void ayplayer_gui_core_task ( void* param ) {
 
     // Пытаемся просканировать карту.
     ayplayer_sd_card_scan( path_dir, &c );
-    MFSViewer   fv;
-    ayplayer_gui_window_file_list_creature( &c, &fv, path_dir );
+    MPlayList           pl;
+    MPlayList_Item      pl_item_array[3];
+    ayplayer_gui_window_file_list_creature( &c, &pl, pl_item_array, 3, path_dir );
     gui_update();
 
     while( true ) {
