@@ -56,7 +56,7 @@ MakiseStyle_PlayList s_pl_st = {
 MPlayList_CallbackFunc pl_func_st = {
     .item_selected      = nullptr,
     .item_click         = nullptr,
-    .get_item_count     = nullptr
+    .get_file_count_of_dir     = nullptr
 };
 
 static char s_file_manager[] = "Выбор трека:";
@@ -67,6 +67,7 @@ void ayplayer_gui_window_file_list_creature ( MContainer* c, MPlayList* pl, MPla
                          mp_rel( 0,   0,
                                  128, 64 ),
                          s_file_manager,
+                         dir,
                          &pl_func_st,
                          &s_pl_st,
                          &s_pl_item_st );
