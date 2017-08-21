@@ -196,6 +196,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     }
 
     makise_g_cont_clear( c );
+    f_close( &file_list );
     USER_OS_GIVE_MUTEX( spi2_mutex );
     return true;
 }
