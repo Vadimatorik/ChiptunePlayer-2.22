@@ -104,6 +104,7 @@ void convert_tic_to_char_time ( uint32_t tic, char* array ) {
 void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_number ) {
     if ( treck_number >= count_file_in_dir ) {          // Если такого трека нет, а поле есть.
         selected_item->name[0] = 0;
+        selected_item->time[0] = 0;
         return;
     }
 
@@ -118,6 +119,7 @@ void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_numb
     r = f_read( &file_list, &time_tic, 4, &l );    if ( r != FR_OK ) while ( true ) {};
     convert_tic_to_char_time( time_tic, selected_item->time );
     if ( l != 4 ) while ( true );
+    f_close( &file_list );
 }
 
 void get_item_click ( MPlayList_Item* selected_item ) {
@@ -140,8 +142,8 @@ MakiseStyle_PlayListItem s_pl_item_st = {
     .font_line_spacing          = 0,
 
     { MC_White, MC_Black, MC_Black, 0 },              // Нормальный.
-    { MC_White, MC_Black, MC_Black, 0 },              // Играет.
-    { MC_White, MC_Black, MC_Black, 0 },              // Выбран.
+    { MC_Black, MC_White, MC_Black, 0 },              // Играет.
+    { MC_Black, MC_White, MC_Black, 0 },              // Выбран.
 };
 
 MakiseStyle_PlayList s_pl_st = {
@@ -170,7 +172,7 @@ void ayplayer_gui_window_file_list_creature ( MContainer* c, MPlayList* pl, MPla
 
     m_create_play_list ( pl, c,
                          mp_rel( 0,   0,
-                                 128, 64 ),
+                                 128, 57 ),
                          s_file_manager,
                          dir,
                          &pl_func_st,
