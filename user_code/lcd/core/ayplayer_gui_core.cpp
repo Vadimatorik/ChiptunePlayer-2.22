@@ -48,14 +48,20 @@ void ayplayer_gui_core_task ( void* param ) {
     MPlayList           pl;
     MPlayList_Item      pl_item_array[4];
     ayplayer_gui_window_file_list_creature( &c, &pl, pl_item_array, path_dir );
+    makise_g_focus( &pl.e, M_G_FOCUS_GET );
     gui_update();
 
     while( true ) {
-     //   m_progress_bar_set_duty( &pb, pb_duty );
-    //    pb_duty++;
-        //gui_update();
-
+        makise_gui_input_send_button( &host, M_KEY_UP, M_INPUT_CLICK, 100 );
+        makise_gui_input_perform( &host );
+        gui_update();
 
         vTaskDelay(800);
     }
+
+
+
+    //   m_progress_bar_set_duty( &pb, pb_duty );
+   //    pb_duty++;
+       //gui_update();
 }

@@ -22,7 +22,7 @@ extern "C" {
 //len of buffer with input events
 #define MAKISE_GUI_INPUT_BUFFER_LEN     10
 //use x-y pointing control devices. like mouse or touchscreen
-#define MAKISE_GUI_INPUT_POINTER_ENABLE 1
+#define MAKISE_GUI_INPUT_POINTER_ENABLE 0
 
 // Enable element support.
 #define MAKISE_E_BUTTONS                1
