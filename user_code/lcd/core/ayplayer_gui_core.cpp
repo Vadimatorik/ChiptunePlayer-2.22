@@ -52,7 +52,7 @@ void ayplayer_gui_core_task ( void* param ) {
     gui_update();
 
     while( true ) {
-        makise_gui_input_send_button( &host, M_KEY_UP, M_INPUT_CLICK, 100 );
+        makise_gui_input_send_button( &host, M_KEY_DOWN, M_INPUT_CLICK, 100 );
         makise_gui_input_perform( &host );
         gui_update();
 
