@@ -33,15 +33,11 @@ void ayplayer_gui_core_task ( void* param ) {
     host.host       = &c;
     c = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
 
+    uint8_t b_buf_nember;
+
     // Инициализация FAT объекта (общий на обе карты).
     FRESULT fr = f_mount( &fat, "", 0 );
     if ( fr != FR_OK ) while( true );
-
-    /*
-    while(1){
-        uint8_t b_buf_nember;
-        USER_OS_QUEUE_RECEIVE( ay_b_queue, &b_buf_nember, portMAX_DELAY );
-    }*/
 
     // Пытаемся просканировать карту.
   //  ayplayer_sd_card_scan( path_dir, &c );
@@ -51,12 +47,21 @@ void ayplayer_gui_core_task ( void* param ) {
     makise_g_focus( &pl.e, M_G_FOCUS_GET );
     gui_update();
 
-    while( true ) {
-        makise_gui_input_send_button( &host, M_KEY_DOWN, M_INPUT_CLICK, 100 );
+    while ( true ) {
+        USER_OS_QUEUE_RECEIVE( ay_b_queue, &b_buf_nember, portMAX_DELAY );
+        switch ( b_buf_nember ) {
+        case M_EC_TO_U8( EC_BUTTON_NAME::DOWN ):
+            makise_gui_input_send_button( &host, M_KEY_DOWN, M_INPUT_CLICK, 0 );
+            break;
+        case M_EC_TO_U8( EC_BUTTON_NAME::UP ):
+            makise_gui_input_send_button( &host, M_KEY_UP, M_INPUT_CLICK, 0 );
+            break;
+        default:
+            break;
+        }
+
         makise_gui_input_perform( &host );
         gui_update();
-
-        vTaskDelay(800);
     }
 
 
