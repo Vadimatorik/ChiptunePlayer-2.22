@@ -7,8 +7,14 @@ extern const MakiseFont F_minecraft_rus_regular_8;
 //**********************************************************************
 static MPlayList_Item*  item_pl_array           = nullptr;
 static uint32_t         count_file_in_dir       = 0;
+static char             item_time[4][9]         = { 0 };
+static char             item_name[4][256]       = { 0 };
+
 MPlayList_Item* create_array_item ( uint32_t len ) {                       // Эмулируем динамическое выделение памяти на 4 элемента.
-    (void)len;
+    for ( uint32_t l = 0; l < len; l++ ) {                                 // Привязываем элементы и массивы строк.
+        item_pl_array[l].name = &item_name[ l ][ 0 ];
+        item_pl_array[l].time = &item_time[ l ][ 0 ];
+    }
     return item_pl_array;
 }
 
