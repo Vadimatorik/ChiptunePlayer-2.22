@@ -184,16 +184,4 @@ void ayplayer_gui_window_file_list_creature ( MContainer* c, MPlayList* pl, MPla
                          &pl_func_st,
                          &s_pl_st,
                          &s_pl_item_st );
-
-  /*  m_create_fsviewer( fv, c,
-                       mp_rel( 0,   0,
-                               128, 64 ),
-                       dir,
-                       nullptr,
-                       nullptr,
-                       MFSViewer_SingleSelect,
-                       &fv_st,
-                       &fv_item_st );
-
-    fsviewer_open( fv, dir );*/
 }
