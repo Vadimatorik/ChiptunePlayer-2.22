@@ -12,6 +12,7 @@ int ayplayer_clock_init ( void ) {
     ayplayer_rcc.spi3_clk_on();
 
     ayplayer_rcc.tim1_clk_on();
+    ayplayer_rcc.tim3_clk_on();
     ayplayer_rcc.tim6_clk_on();
 
     return 0;
