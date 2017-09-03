@@ -14,5 +14,6 @@
 #include "ayplayer_shift_register.h"
 #include "ayplayer_ay_low.h"
 #include "ayplayer_button.h"
+#include "play_task.h"
 
 #include <stdint.h>

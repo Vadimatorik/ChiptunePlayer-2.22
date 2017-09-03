@@ -40,7 +40,7 @@ void ayplayer_gui_core_task ( void* param ) {
     if ( fr != FR_OK ) while( true );
 
     // Пытаемся просканировать карту.
-  //  ayplayer_sd_card_scan( path_dir, &c );
+    ayplayer_sd_card_scan( path_dir, &c );
     MPlayList           pl;
     MPlayList_Item      pl_item_array[4];
     ayplayer_gui_window_file_list_creature( &c, &pl, pl_item_array, path_dir );
@@ -55,6 +55,9 @@ void ayplayer_gui_core_task ( void* param ) {
             break;
         case M_EC_TO_U8( EC_BUTTON_NAME::UP ):
             makise_gui_input_send_button( &host, M_KEY_UP, M_INPUT_CLICK, 0 );
+            break;
+        case M_EC_TO_U8( EC_BUTTON_NAME::ENTER ):
+            makise_gui_input_send_button( &host, M_KEY_OK, M_INPUT_CLICK, 0 );
             break;
         default:
             break;

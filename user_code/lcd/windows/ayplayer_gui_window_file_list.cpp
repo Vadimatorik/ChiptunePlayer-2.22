@@ -128,8 +128,9 @@ void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_numb
     f_close( &file_list );
 }
 
-void get_item_click ( MPlayList_Item* selected_item ) {
-    (void)selected_item;
+extern USER_OS_STATIC_QUEUE ayplayer_play_queue;
+void item_click ( MPlayList_Item* click_item ) {
+    USER_OS_QUEUE_SEND( ayplayer_play_queue,&click_item->name, 0 );
 }
 
 uint32_t get_file_count_of_dir ( char* dir ) {
@@ -166,7 +167,7 @@ MakiseStyle_PlayList s_pl_st = {
 MPlayList_CallbackFunc pl_func_st = {
     .create_array_item          = create_array_item,
     .item_selected              = item_selected,
-    .get_item_click             = get_item_click,
+    .item_click                 = item_click,
     .get_item_name_and_time     = get_item_name_and_time,
     .get_file_count_of_dir      = get_file_count_of_dir
 };

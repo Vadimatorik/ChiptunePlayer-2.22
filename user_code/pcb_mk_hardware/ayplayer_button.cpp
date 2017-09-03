@@ -10,8 +10,8 @@ sr_one_in_button_status_struct b_s_ar[7];
 
 // При опуске коротком или длинном - одна и та же очередь.
 sr_one_in_button_item_cfg ayplayer_button_cfg[7] = {
-    { 0, 0, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::UP ),  nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::UP ),      &b_s_ar[0] },
-    { 0, 1, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::DOWN), nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::DOWN),     &b_s_ar[1] },
+    { 0, 0, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::UP ),   nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::UP ),     &b_s_ar[0] },
+    { 0, 1, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::DOWN),  nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::DOWN),    &b_s_ar[1] },
     { 0, 2, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::LEFT),  nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::LEFT),    &b_s_ar[2] },
     { 0, 3, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT), nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT),   &b_s_ar[3] },
     { 0, 4, 50, 700, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::ENTER), nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::ENTER),   &b_s_ar[4] },

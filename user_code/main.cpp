@@ -12,7 +12,7 @@ int main (void){
     ayplayer_gui_core_init();
     ayplayer_shift_register();
     ayplayer_ay_init();
-
+    ayplayer_play_task_init();
     vTaskStartScheduler();
     while ( true ) {};
 }
