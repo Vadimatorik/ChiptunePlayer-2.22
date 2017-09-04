@@ -52,44 +52,30 @@ void housekeeping_thread ( void* arg ) {
     sound_dp.value_set( 3, 3, 0x80 );
     sound_dp.connect_on();
 */
-    USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );    // sdcard занята нами.
+    USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );
+ shdn_obj.set();
+        out_reg( 0, 0xFF, 0, 0xFF );
+        out_reg( 1, 0xFF, 1, 0xFF );
+        out_reg( 2, 0, 2, 0xFF );
+        out_reg( 3, 0, 3, 0xFF );
 
-        out_reg( 0, 0x80, 0, 0x80 );
-       vTaskDelay(10);
-        out_reg( 1, 0x80, 1, 0x80 );
-        vTaskDelay(10);
-        out_reg( 2, 0x80, 2, 0x80 );
-        vTaskDelay(10);
-        out_reg( 3, 0x80, 3, 0x80 );
-        vTaskDelay(10);
-        shdn_obj.set();
     USER_OS_GIVE_MUTEX( spi3_mutex );
 
 
 
-/*
+
+ USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );
     ayplayer_note_mode.reinit( 1 );
     ayplayer_note_mode.reinit( 0 );
+ USER_OS_GIVE_MUTEX( spi3_mutex );
+   USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );  ayplayer_note_mode.write_note_to_channel( 1, 0, 20 );   USER_OS_GIVE_MUTEX( spi3_mutex ); vTaskDelay(100);
+    USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY ); ayplayer_note_mode.set_volume_channel( 1, 0, 15 ); USER_OS_GIVE_MUTEX( spi3_mutex );vTaskDelay(100);
 
-    ayplayer_note_mode.write_note_to_channel( 1, 2, 50 );   vTaskDelay(1000);
-    ayplayer_note_mode.set_volume_channel( 1, 2, 15 );vTaskDelay(1000);
+   USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );  ayplayer_note_mode.write_note_to_channel( 1, 1, 25 );   USER_OS_GIVE_MUTEX( spi3_mutex ); vTaskDelay(100);
+    USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY ); ayplayer_note_mode.set_volume_channel( 1, 1, 15 );  USER_OS_GIVE_MUTEX( spi3_mutex ); vTaskDelay(100);
 
-    ayplayer_note_mode.write_note_to_channel( 1, 0, 40 );   vTaskDelay(1000);
-    ayplayer_note_mode.set_volume_channel( 1, 20, 15 );  vTaskDelay(1000);
-
-    ayplayer_note_mode.write_note_to_channel( 1, 1, 60 );   vTaskDelay(1000);
-     ayplayer_note_mode.set_volume_channel( 1, 1, 15 );vTaskDelay(1000);*/
-
-
-
-
-
-
-
-
-
-
-
+   USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );  ayplayer_note_mode.write_note_to_channel( 1, 2, 60 );   USER_OS_GIVE_MUTEX( spi3_mutex ); vTaskDelay(100);
+   USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );  ayplayer_note_mode.set_volume_channel( 1, 2, 15 ); USER_OS_GIVE_MUTEX( spi3_mutex );vTaskDelay(100);
 
 
 

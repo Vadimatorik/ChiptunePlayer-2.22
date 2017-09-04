@@ -16,13 +16,15 @@ USER_OS_STATIC_QUEUE            ayplayer_play_queue;
 //**********************************************************************
 extern USER_OS_STATIC_MUTEX        spi2_mutex;
 
+char sss[] = "MmcM - Its life (2003).psg";
+
 static void ayplayer_play_task ( void* p_obj ) {
     ( void )p_obj;
     char* name;
     while ( true ) {
         USER_OS_QUEUE_RECEIVE( ayplayer_play_queue, &name, portMAX_DELAY );
         USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );    // sdcard занята нами.
-        ay_file_mode.psg_file_play( name, 0 );
+        ay_file_mode.psg_file_play( sss, 0 );
         USER_OS_GIVE_MUTEX( spi2_mutex );
 
     }
