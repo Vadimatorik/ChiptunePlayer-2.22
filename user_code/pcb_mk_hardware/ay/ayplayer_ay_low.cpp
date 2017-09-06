@@ -1,6 +1,6 @@
 #include "ayplayer_ay_low.h"
 
-extern uint8_t sr_out_buf[2];
+extern uint8_t sr_out_buf_ay[2];
 
 // В этих очередях содержатся данные для каждого AY.
 // Они (данные) будут выдаваться в прерывании с заданной частотой.
@@ -22,12 +22,12 @@ ay_ym_connection_chip_cfg_t array_connect_cfg[] = {
     // 0 - 40 пиновый, 1 - 28.
 };
 
-extern module_shift_register        sr;
+extern module_shift_register       sr_ay;
 extern USER_OS_STATIC_MUTEX        spi3_mutex;
 const ay_ym_low_lavel_cfg_t ay_low_cfg {
-    .sr                 = &sr,
+    .sr                 = &sr_ay,
     .mutex              = &spi3_mutex,
-    .p_sr_data          = &sr_out_buf[0],
+    .p_sr_data          = &sr_out_buf_ay[0],
     .semaphore_sec_out  = nullptr,
     .bdir               = &bdir_obj,
     .bc1                = &bc1_obj,

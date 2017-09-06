@@ -53,16 +53,15 @@ void housekeeping_thread ( void* arg ) {
     sound_dp.connect_on();
 */
     USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );
- shdn_obj.set();
-        out_reg( 0, 0xFF, 0, 0xFF );
-        out_reg( 1, 0xFF, 1, 0xFF );
-        out_reg( 2, 0, 2, 0xFF );
-        out_reg( 3, 0, 3, 0xFF );
-
+    shdn_obj.set();
+    out_reg( 0, 0xFF, 0, 0xFF );
+    out_reg( 1, 0xFF, 1, 0xFF );
+    out_reg( 2, 0xC0, 2, 0xFF );
+    out_reg( 3, 0xC0, 3, 0xFF );
     USER_OS_GIVE_MUTEX( spi3_mutex );
 
 
-
+/*
 
  USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );
     ayplayer_note_mode.reinit( 1 );
@@ -81,15 +80,21 @@ void housekeeping_thread ( void* arg ) {
 
 
 
+ USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );
+   out_reg( 2, 0x80, 2, 0xFF );
+   out_reg( 3, 0x80, 3, 0xFF );
 
+   out_reg( 2, 0xF0, 2, 0xFF );
+   out_reg( 3, 0xF0, 3, 0xFF );
 
+   out_reg( 2, 0x00, 2, 0xFF );
+   out_reg( 3, 0x00, 3, 0xFF );
+ USER_OS_GIVE_MUTEX( spi3_mutex );
 
-
-
-
-
+*/
 
     while( true ) {
+
         vTaskDelay(1000);
     }
 }

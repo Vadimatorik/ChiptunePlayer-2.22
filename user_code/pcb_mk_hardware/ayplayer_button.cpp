@@ -20,17 +20,17 @@ sr_one_in_button_item_cfg ayplayer_button_cfg[7] = {
 };
 
 extern USER_OS_STATIC_MUTEX         spi3_mutex;
-extern module_shift_register        sr;
-extern uint8_t                      sr_out_buf[2];
+extern module_shift_register        sr_button;
+extern uint8_t                      sr_out_buf_button[1];
 
 buttons_through_shift_register_one_in_cfg b_sr_cfg = {
     .p_in_pin                   = &b_in,
-    .p_sr                       = &sr,
+    .p_sr                       = &sr_button,
     .p_pin_conf_array           = ayplayer_button_cfg,
     .pin_count                  = 7,
     .delay_ms                   = 10,
     .prio                       = 1,
-    .p_button_array             = &sr_out_buf[1],
+    .p_button_array             = &sr_out_buf_button[0],
     .sr_buffer_byte_count       = 1,
     .mutex                      = &spi3_mutex
 };

@@ -23,7 +23,7 @@
                                   EC_SPI_CFG_NUMBER_LINE     :: LINE_2,         \
                                   EC_SPI_CFG_ONE_LINE_MODE   :: USE_2_LINE,     \
                                   EC_SPI_CFG_FRAME_FORMAT    :: MOTOROLA,       \
-                                  EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_256
+                                  EC_SPI_CFG_BAUD_RATE_DEV   :: DEV_2
 
 #define SPI2_FAST_CFG_OBJ_PARAM   EC_SPI_NAME                :: SPI2,           \
                                   EC_SPI_CFG_CLK_POLARITY    :: IDLE_0,         \
