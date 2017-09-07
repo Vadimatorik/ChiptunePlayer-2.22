@@ -3,6 +3,7 @@
 extern "C" {
 
 int main (void){
+    ayplayer_wdt_init();
     ayplayer_clock_init();
     ayplayer_port_init();
     ayplayer_spi_init();

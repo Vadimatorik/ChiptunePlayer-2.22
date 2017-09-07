@@ -9,7 +9,7 @@
 // AHB  =  8 000 000
 // APB1 =  8 000 000
 // APB2 =  8 000 000
-const constexpr src_dev_cfg< EC_RCC_AHB_DIV::DIV_2, EC_RCC_APB1_DIV::DIV_1, EC_RCC_APB2_DIV::DIV_1 >pll_hse_max;
+const constexpr src_dev_cfg < EC_RCC_AHB_DIV::DIV_2, EC_RCC_APB1_DIV::DIV_1, EC_RCC_APB2_DIV::DIV_1 > pll_hse_max;
 
 const constexpr rcc_cfg ayplayer_rcc_cfg = {
     .main_pll_cfg   = nullptr,//&pll_max,

@@ -17,6 +17,4 @@ void ayplayer_timers_init ( void ) {
     ay_player_lcd_pwm.reinit();
     ay_player_lcd_pwm.duty_set(0.4);
     ay_player_lcd_pwm.on();
-    ay_player_interrupt_ay.on();
-    ay_player_clk_tim.on();
 }

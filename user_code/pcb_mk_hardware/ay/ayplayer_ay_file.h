@@ -6,3 +6,6 @@
 
 // OS.
 #include "user_os.h"
+
+// Пины питания.
+#include "ayplayer_port.h"

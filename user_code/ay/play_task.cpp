@@ -22,7 +22,7 @@ static void ayplayer_play_task ( void* p_obj ) {
     while ( true ) {
         USER_OS_QUEUE_RECEIVE( ayplayer_play_queue, &name, portMAX_DELAY );
         USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );    // sdcard занята нами.
-        ay_file_mode.psg_file_play( name, 0 );
+        ay_file_mode.psg_file_play( name, 1 );
         USER_OS_GIVE_MUTEX( spi2_mutex );
 
     }

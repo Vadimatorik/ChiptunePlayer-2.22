@@ -137,7 +137,8 @@ uint32_t get_file_count_of_dir ( char* dir ) {
     FIL             file_list;
     FRESULT         r;
     (void)dir;
-    r = f_open( &file_list, "psg_list.txt", FA_READ );      if ( r != FR_OK ) while (1) {};
+    r = f_open( &file_list, "psg_list.txt", FA_READ );
+    if ( r != FR_OK ) while (1) {};
     uint32_t size = f_size( &file_list );
     r = f_close( &file_list );
     count_file_in_dir = size / 512;  // 1 файл - 512 байт.

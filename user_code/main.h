@@ -6,6 +6,7 @@
 #include "ayplayer_port.h"
 #include "ayplayer_spi.h"
 
+#include "ayplayer_wdt.h"
 #include "ayplayer_housekeeping.h"
 #include "ayplayer_lcd_driver.h"
 #include "ayplayer_gui_core.h"

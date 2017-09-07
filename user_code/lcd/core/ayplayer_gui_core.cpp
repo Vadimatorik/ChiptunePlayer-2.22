@@ -39,8 +39,11 @@ void ayplayer_gui_core_task ( void* param ) {
     FRESULT fr = f_mount( &fat, "", 0 );
     if ( fr != FR_OK ) while( true );
 
-    // Пытаемся просканировать карту.
-    ayplayer_sd_card_scan( path_dir, &c );
+    // Составить список PSG файлов, если нет такого на карте.
+    FIL file_list;
+    if ( f_open( &file_list, "psg_list.txt", FA_READ ) == FR_NO_FILE ) {
+        ayplayer_sd_card_scan( path_dir, &c );
+    }
     MPlayList           pl;
     MPlayList_Item      pl_item_array[4];
     ayplayer_gui_window_file_list_creature( &c, &pl, pl_item_array, path_dir );
