@@ -50,7 +50,7 @@
 #define MODULE_RCC
 #define MODULE_SPI
 #define MODULE_TIMER
-
+#define MODULE_WDT
 
 
 //**********************************************************************

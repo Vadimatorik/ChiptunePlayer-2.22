@@ -81,5 +81,7 @@
 /*
  * Прочее.
  */
-
-#define USER_OS_DELAY_MS(DELAY_MS)                          vTaskDelay( (TickType_t)DELAY_MS )
+#define USER_OS_TICK_TYPE                                   TickType_t
+#define USER_OS_DELAY_MS(DELAY_MS)                          vTaskDelay( ( TickType_t )DELAY_MS )
+#define USER_OS_TASK_GET_TICK_COUNT                         xTaskGetTickCount
+#define USER_OS_TASK_DELAY_UNTIL(LWT,D)                     vTaskDelayUntil(LWT,D)              // last_wake_time, time_out.
