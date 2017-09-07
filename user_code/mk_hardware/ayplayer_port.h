@@ -1,8 +1,8 @@
 #pragma once
 
-#include "stm32_f20x_f21x_pin_config_check_param.h"
-#include "stm32_f20x_f21x_pin.h"
-#include "stm32_f20x_f21x_port.h"
+#include "pin_cfg_check_param.h"
+#include "pin.h"
+#include "port.h"
 
 //
 // Структуры конфигурации выводов.
