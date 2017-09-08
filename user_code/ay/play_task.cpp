@@ -14,7 +14,8 @@ USER_OS_STATIC_QUEUE            ayplayer_play_queue;
 // который требуется воспроизвести и пытается воспроизвести его.
 // После открытия файла - строка с его именем не нужна.
 //**********************************************************************
-extern USER_OS_STATIC_MUTEX        spi2_mutex;
+extern USER_OS_STATIC_MUTEX         spi2_mutex;
+extern ayplayer_state               ayplayer_control;
 
 static void ayplayer_play_task ( void* p_obj ) {
     ( void )p_obj;
@@ -22,9 +23,10 @@ static void ayplayer_play_task ( void* p_obj ) {
     while ( true ) {
         USER_OS_QUEUE_RECEIVE( ayplayer_play_queue, &name, portMAX_DELAY );
         USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );    // sdcard занята нами.
+        ayplayer_control.play_state_set( EC_AY_PLAY_STATE::PLAY );
         ay_file_mode.psg_file_play( name, 1 );
+        ayplayer_control.play_state_set( EC_AY_PLAY_STATE::STOP );
         USER_OS_GIVE_MUTEX( spi2_mutex );
-
     }
 }
 

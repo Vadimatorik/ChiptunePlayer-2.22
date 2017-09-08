@@ -11,6 +11,8 @@
 // Rнопки.
 #include "ayplayer_button.h"
 
+#include "ayplayer_core_struct.h"
+
 // 400 байт задаче.
 #define AY_PLAYER_GUI_TASK_STACK_SIZE       10000
 

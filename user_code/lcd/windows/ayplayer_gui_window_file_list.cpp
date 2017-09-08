@@ -2,6 +2,7 @@
 
 extern const MakiseFont F_minecraft_rus_regular_8;
 
+extern ayplayer_state ayplayer_control;
 //**********************************************************************
 // Функции, используемые плей-листом.
 //**********************************************************************
@@ -129,8 +130,43 @@ void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_numb
 }
 
 extern USER_OS_STATIC_QUEUE ayplayer_play_queue;
-void item_click ( MPlayList_Item* click_item ) {
-    USER_OS_QUEUE_SEND( ayplayer_play_queue,&click_item->name, 0 );
+
+extern ay_ym_file_mode ay_file_mode;
+extern ay_ym_low_lavel ay;
+
+uint8_t item_click ( MPlayList_Item* click_item ) {
+    EC_AY_PLAY_STATE s = ayplayer_control.play_state_get();
+    switch ( M_EC_TO_U32( s ) ) {
+
+    // Если трек играл - на паузу.
+    case M_EC_TO_U32( EC_AY_PLAY_STATE::PLAY ):
+        if ( click_item->play_state == 0 ) {                                // Если играл трек, но мы решилы начать играть другой.
+            ay_file_mode.psg_file_stop();                                       // Говорим, что со старым надо кончать.
+            USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name, portMAX_DELAY );
+            return 0;
+        }
+        ay.play_state_set( false );                                         // Останавливаем железо.
+        ayplayer_control.play_state_set( EC_AY_PLAY_STATE::POUSE );         // Говорим, что пауза.
+        return 0;
+
+    case M_EC_TO_U32( EC_AY_PLAY_STATE::POUSE ):
+        if ( click_item->play_state == 1 ) {                            // Если решили воспроизвести тот же трек, что и был.
+            ay.play_state_set( true );
+            ayplayer_control.play_state_set( EC_AY_PLAY_STATE::PLAY );
+            return 0;
+        }
+        // Если тут, то трек новый.
+        ay_file_mode.psg_file_stop();                                       // Говорим, что со старым надо кончать.
+        ay.play_state_set( true );                                          // Даем возможность сделать это.
+        USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name, portMAX_DELAY );
+        return 0;
+
+    // Просто новый трек с нуля.
+    case M_EC_TO_U32( EC_AY_PLAY_STATE::STOP ):
+        USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name, portMAX_DELAY );
+        return 0;
+    }
+    return 0;
 }
 
 uint32_t get_file_count_of_dir ( char* dir ) {

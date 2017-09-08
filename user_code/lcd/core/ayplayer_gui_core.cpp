@@ -14,6 +14,8 @@ void ayplayer_gui_core_init ( void ) {
                        &ayplayer_gui_task_buffer );
 }
 
+ayplayer_state ayplayer_control;
+
 // Внутренние объекты (общие для всех окон).
 
 extern MHost           host;
