@@ -29,37 +29,35 @@ void out_reg ( uint8_t reg2, uint8_t value2, uint8_t reg1, uint8_t value1) {
 //extern microsd_spi sd2;
 
 #include "ayplayer_digital_potentiometer.h"
-
-
-
-//extern ay_ym_low_lavel ay;
 extern USER_OS_STATIC_MUTEX spi3_mutex;
+
 
 void housekeeping_thread ( void* arg ) {
     (void)arg;
 
     //vTaskDelay(2000);
-    /*
-    sound_dp.connect_off();
-    sound_dp.value_set( 0, 0, 0x80 );
-    sound_dp.value_set( 0, 1, 0x80 );
-    sound_dp.value_set( 0, 2, 0x80 );
-    sound_dp.value_set( 0, 3, 0x80 );
 
-    sound_dp.value_set( 0, 0, 0x80 );
-    sound_dp.value_set( 1, 1, 0x80 );
-    sound_dp.value_set( 2, 2, 0x80 );
-    sound_dp.value_set( 3, 3, 0x80 );
     sound_dp.connect_on();
-*/
+    sound_dp.value_set( 0, 0, 0x0 );
+    sound_dp.value_set( 0, 1, 0x0 );
+    sound_dp.value_set( 0, 2, 0x0 );
+    sound_dp.value_set( 0, 3, 0x0 );
+
+    sound_dp.value_set( 0, 0, 0x0 );
+    sound_dp.value_set( 1, 1, 0x0 );
+    sound_dp.value_set( 2, 2, 0x0 );
+    sound_dp.value_set( 3, 3, 0x0 );
+
+
+/*
     USER_OS_TAKE_MUTEX( spi3_mutex, portMAX_DELAY );
     shdn_obj.set();
     out_reg( 0, 0xFF, 0, 0xFF );
     out_reg( 1, 0xFF, 1, 0xFF );
-    out_reg( 2, 0xC0, 2, 0xFF );
-    out_reg( 3, 0xC0, 3, 0xFF );
+    out_reg( 2, 0x0, 2, 0xFF );
+    out_reg( 3, 0x0, 3, 0xFF );
     USER_OS_GIVE_MUTEX( spi3_mutex );
-
+*/
 
 /*
 
@@ -93,9 +91,9 @@ void housekeeping_thread ( void* arg ) {
 
 */
 
+//    uint8_t aaa = 0;
     while( true ) {
-
-        vTaskDelay(1000);
+        vTaskDelay(10000);
     }
 }
 

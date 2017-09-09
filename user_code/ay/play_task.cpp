@@ -16,6 +16,7 @@ USER_OS_STATIC_QUEUE            ayplayer_play_queue;
 //**********************************************************************
 extern USER_OS_STATIC_MUTEX         spi2_mutex;
 extern ayplayer_state               ayplayer_control;
+extern MHost                        host;
 
 static void ayplayer_play_task ( void* p_obj ) {
     ( void )p_obj;
@@ -26,6 +27,10 @@ static void ayplayer_play_task ( void* p_obj ) {
         ayplayer_control.play_state_set( EC_AY_PLAY_STATE::PLAY );
         ay_file_mode.psg_file_play( name, 1 );
         ayplayer_control.play_state_set( EC_AY_PLAY_STATE::STOP );
+
+        // Переходим на следующий трек.
+        makise_gui_input_send_button( &host, M_KEY_DOWN, M_INPUT_CLICK, 0 );
+        makise_gui_input_send_button( &host, M_KEY_UP, M_INPUT_CLICK, 0 );
         USER_OS_GIVE_MUTEX( spi2_mutex );
     }
 }

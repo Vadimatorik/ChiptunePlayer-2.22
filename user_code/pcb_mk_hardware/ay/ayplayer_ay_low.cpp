@@ -51,7 +51,12 @@ void ayplayer_ay_init (void) {
 }
 
 void ayplayer_pwr_5_v_set ( bool state ) {
-    pwr_5_v_on_obj.set( state );
+    if ( state == 1 ) {
+        pwr_5_v_on_obj.set( true );
+    } else {
+        pwr_5_v_on_obj.set( false );
+    }
+    vTaskDelay(10);
 }
 
 extern "C" {
