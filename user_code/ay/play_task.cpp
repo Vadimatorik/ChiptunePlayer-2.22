@@ -25,11 +25,9 @@ static void ayplayer_play_task ( void* p_obj ) {
     EC_AY_FILE_MODE_ANSWER  r;
     while ( true ) {
         USER_OS_QUEUE_RECEIVE( ayplayer_play_queue, &name, portMAX_DELAY );
-        USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );    // sdcard занята нами.
         ayplayer_control.play_state_set( EC_AY_PLAY_STATE::PLAY );
         r = ay_file_mode.psg_file_play( name, 1 );
         ayplayer_control.play_state_set( EC_AY_PLAY_STATE::STOP );
-        USER_OS_GIVE_MUTEX( spi2_mutex );
 
         // Переходим на следующий трек.
         if ( r == EC_AY_FILE_MODE_ANSWER::TRACK_END ) {

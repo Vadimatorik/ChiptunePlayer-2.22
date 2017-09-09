@@ -108,7 +108,10 @@ void convert_tic_to_char_time ( uint32_t tic, char* array ) {
     *p = 0;
 }
 
+extern USER_OS_STATIC_MUTEX spi2_mutex;
+
 void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_number ) {
+    USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );
     if ( treck_number >= count_file_in_dir ) {          // Если такого трека нет, а поле есть.
         selected_item->name[0] = 0;
         selected_item->time[0] = 0;
@@ -127,6 +130,7 @@ void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_numb
     convert_tic_to_char_time( time_tic, selected_item->time );
     if ( l != 4 ) while ( true );
     f_close( &file_list );
+    USER_OS_GIVE_MUTEX( spi2_mutex );
 }
 
 extern USER_OS_STATIC_QUEUE ayplayer_play_queue;
