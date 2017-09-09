@@ -54,27 +54,25 @@ void ayplayer_gui_core_task ( void* param ) {
 
     while ( true ) {
         USER_OS_QUEUE_RECEIVE( ay_b_queue, &b_buf_nember, portMAX_DELAY );
-        switch ( b_buf_nember ) {
-        case M_EC_TO_U8( EC_BUTTON_NAME::DOWN ):
-            makise_gui_input_send_button( &host, M_KEY_DOWN, M_INPUT_CLICK, 0 );
-            break;
-        case M_EC_TO_U8( EC_BUTTON_NAME::UP ):
-            makise_gui_input_send_button( &host, M_KEY_UP, M_INPUT_CLICK, 0 );
-            break;
-        case M_EC_TO_U8( EC_BUTTON_NAME::ENTER ):
-            makise_gui_input_send_button( &host, M_KEY_OK, M_INPUT_CLICK, 0 );
-            break;
-        default:
-            break;
+
+        switch ( M_EC_TO_U32( ayplayer_control.active_window_get() ) ) {
+         case M_EC_TO_U32( EC_AY_ACTIVE_WINDOW::PLAY_LIST ):
+            switch ( b_buf_nember ) {
+            case M_EC_TO_U8( EC_BUTTON_NAME::DOWN ):
+                makise_gui_input_send_button( &host, M_KEY_DOWN, M_INPUT_CLICK, 0 );
+                break;
+            case M_EC_TO_U8( EC_BUTTON_NAME::UP ):
+                makise_gui_input_send_button( &host, M_KEY_UP, M_INPUT_CLICK, 0 );
+                break;
+            case M_EC_TO_U8( EC_BUTTON_NAME::ENTER ):
+                makise_gui_input_send_button( &host, M_KEY_OK, M_INPUT_CLICK, 0 );
+                break;
+            default:
+                break;
+            }
         }
 
         makise_gui_input_perform( &host );
         gui_update();
     }
-
-
-
-    //   m_progress_bar_set_duty( &pb, pb_duty );
-   //    pb_duty++;
-       //gui_update();
 }
