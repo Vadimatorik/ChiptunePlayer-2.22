@@ -16,6 +16,7 @@ USER_OS_STATIC_QUEUE            ayplayer_play_queue;
 //**********************************************************************
 extern USER_OS_STATIC_MUTEX         spi2_mutex;
 extern ayplayer_state               ayplayer_control;
+extern MPlayList                    pl;
 extern MHost                        host;
 
 static void ayplayer_play_task ( void* p_obj ) {
@@ -32,9 +33,8 @@ static void ayplayer_play_task ( void* p_obj ) {
 
         // Переходим на следующий трек.
         if ( r == EC_AY_FILE_MODE_ANSWER::TRACK_END ) {
-            makise_gui_input_send_button( &host, M_KEY_DOWN,    M_INPUT_CLICK, 0 );
-            makise_gui_input_send_button( &host, M_KEY_OK,      M_INPUT_CLICK, 0 );
-            makise_gui_input_perform( &host );
+            m_click_play_list( &pl, M_KEY_DOWN );
+            m_click_play_list( &pl, M_KEY_OK );
             gui_update();
         }
     }

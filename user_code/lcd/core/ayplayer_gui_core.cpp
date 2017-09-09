@@ -22,7 +22,7 @@ extern MHost           host;
 MContainer             c;
 char                   path_dir[512] = "0:/";
 FATFS                  fat;
-
+MPlayList              pl;
 extern  USER_OS_STATIC_QUEUE         ay_b_queue;
 
 //**********************************************************************
@@ -46,7 +46,7 @@ void ayplayer_gui_core_task ( void* param ) {
     if ( f_open( &file_list, "psg_list.txt", FA_READ ) == FR_NO_FILE ) {
         ayplayer_sd_card_scan( path_dir, &c );
     }
-    MPlayList           pl;
+
     MPlayList_Item      pl_item_array[4];
     ayplayer_gui_window_file_list_creature( &c, &pl, pl_item_array, path_dir );
     makise_g_focus( &pl.e, M_G_FOCUS_GET );
