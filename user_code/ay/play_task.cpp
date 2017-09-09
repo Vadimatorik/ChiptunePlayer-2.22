@@ -21,17 +21,22 @@ extern MHost                        host;
 static void ayplayer_play_task ( void* p_obj ) {
     ( void )p_obj;
     char* name;
+    EC_AY_FILE_MODE_ANSWER  r;
     while ( true ) {
         USER_OS_QUEUE_RECEIVE( ayplayer_play_queue, &name, portMAX_DELAY );
         USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );    // sdcard занята нами.
         ayplayer_control.play_state_set( EC_AY_PLAY_STATE::PLAY );
-        ay_file_mode.psg_file_play( name, 1 );
+        r = ay_file_mode.psg_file_play( name, 1 );
         ayplayer_control.play_state_set( EC_AY_PLAY_STATE::STOP );
+        USER_OS_GIVE_MUTEX( spi2_mutex );
 
         // Переходим на следующий трек.
-        makise_gui_input_send_button( &host, M_KEY_DOWN, M_INPUT_CLICK, 0 );
-        makise_gui_input_send_button( &host, M_KEY_UP, M_INPUT_CLICK, 0 );
-        USER_OS_GIVE_MUTEX( spi2_mutex );
+        if ( r == EC_AY_FILE_MODE_ANSWER::TRACK_END ) {
+            makise_gui_input_send_button( &host, M_KEY_DOWN,    M_INPUT_CLICK, 0 );
+            makise_gui_input_send_button( &host, M_KEY_OK,      M_INPUT_CLICK, 0 );
+            makise_gui_input_perform( &host );
+            gui_update();
+        }
     }
 }
 
