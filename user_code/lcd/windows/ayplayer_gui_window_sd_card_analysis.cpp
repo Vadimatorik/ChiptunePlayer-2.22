@@ -117,7 +117,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     }
 
     if ( check_fat_err( c, r, &mw ) == true ) {                             // Проверяем на ошибку SD.
-        ayplayer_sd_card_scan_abort( c, spi2_mutex);
+        ayplayer_sd_card_scan_abort( c, spi2_mutex );
         return false;
     }
     gui_update();
