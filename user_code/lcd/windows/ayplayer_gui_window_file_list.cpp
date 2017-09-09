@@ -13,8 +13,8 @@ static char             item_name[4][256]       = { 0 };
 
 MPlayList_Item* create_array_item ( uint32_t len ) {                       // Эмулируем динамическое выделение памяти на 4 элемента.
     for ( uint32_t l = 0; l < len; l++ ) {                                 // Привязываем элементы и массивы строк.
-        item_pl_array[l].name = &item_name[ l ][ 0 ];
-        item_pl_array[l].time = &item_time[ l ][ 0 ];
+        item_pl_array[l].name_string = &item_name[ l ][ 0 ];
+        item_pl_array[l].time_string = &item_time[ l ][ 0 ];
     }
     return item_pl_array;
 }
@@ -113,8 +113,8 @@ extern USER_OS_STATIC_MUTEX spi2_mutex;
 void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_number ) {
     USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );
     if ( treck_number >= count_file_in_dir ) {          // Если такого трека нет, а поле есть.
-        selected_item->name[0] = 0;
-        selected_item->time[0] = 0;
+        selected_item->name_string[0] = 0;
+        selected_item->time_string[0] = 0;
         return;
     }
 
@@ -123,11 +123,13 @@ void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_numb
     UINT            l;
     r = f_open( &file_list, "psg_list.txt", FA_READ );      if ( r != FR_OK ) while ( true ) {};
     r = f_lseek( &file_list, 512 * treck_number );          if ( r != FR_OK ) while ( true ) {};
-    r = f_read( &file_list, selected_item->name, 256, &l );  if ( r != FR_OK ) while ( true ) {};
+    r = f_read( &file_list, selected_item->name_string, 256, &l );  if ( r != FR_OK ) while ( true ) {};
     if ( l != 256 ) while ( true );
     uint32_t time_tic;
     r = f_read( &file_list, &time_tic, 4, &l );    if ( r != FR_OK ) while ( true ) {};
-    convert_tic_to_char_time( time_tic, selected_item->time );
+    convert_tic_to_char_time( time_tic, selected_item->time_string );
+    selected_item->time_sec = time_tic / 50;                    // Не забываем положить время еще и в секундах.
+    selected_item->time_sec += ( time_tic % 50 ) ? 1 : 0;        // Если на цело не делится (больше секунды), то 1 секунда.
     if ( l != 4 ) while ( true );
     f_close( &file_list );
     USER_OS_GIVE_MUTEX( spi2_mutex );
@@ -135,9 +137,9 @@ void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_numb
 
 extern USER_OS_STATIC_QUEUE ayplayer_play_queue;
 
-extern ay_ym_file_mode ay_file_mode;
-extern ay_ym_low_lavel ay;
-
+extern ay_ym_file_mode  ay_file_mode;
+extern ay_ym_low_lavel  ay;
+extern MPlayBar         gui_e_pb;
 uint8_t item_click ( MPlayList_Item* click_item ) {
     EC_AY_PLAY_STATE s = ayplayer_control.play_state_get();
     switch ( M_EC_TO_U32( s ) ) {
@@ -146,7 +148,8 @@ uint8_t item_click ( MPlayList_Item* click_item ) {
     case M_EC_TO_U32( EC_AY_PLAY_STATE::PLAY ):
         if ( click_item->play_state == 0 ) {                                // Если играл трек, но мы решилы начать играть другой.
             ay_file_mode.psg_file_stop();                                       // Говорим, что со старым надо кончать.
-            USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name, portMAX_DELAY );
+            m_play_bar_set_new_track( &gui_e_pb, click_item->time_sec );
+            USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name_string, portMAX_DELAY );
             return 0;
         }
         ay.play_state_set( false );                                         // Останавливаем железо.
@@ -154,7 +157,7 @@ uint8_t item_click ( MPlayList_Item* click_item ) {
         return 0;
 
     case M_EC_TO_U32( EC_AY_PLAY_STATE::POUSE ):
-        if ( click_item->play_state == 1 ) {                            // Если решили воспроизвести тот же трек, что и был.
+        if ( click_item->play_state == 1 ) {                                // Если решили воспроизвести тот же трек, что и был.
             ay.play_state_set( true );
             ayplayer_control.play_state_set( EC_AY_PLAY_STATE::PLAY );
             return 0;
@@ -162,12 +165,14 @@ uint8_t item_click ( MPlayList_Item* click_item ) {
         // Если тут, то трек новый.
         ay_file_mode.psg_file_stop();                                       // Говорим, что со старым надо кончать.
         ay.play_state_set( true );                                          // Даем возможность сделать это.
-        USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name, portMAX_DELAY );
+        m_play_bar_set_new_track( &gui_e_pb, click_item->time_sec );
+        USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name_string, portMAX_DELAY );
         return 0;
 
     // Просто новый трек с нуля.
     case M_EC_TO_U32( EC_AY_PLAY_STATE::STOP ):
-        USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name, portMAX_DELAY );
+        m_play_bar_set_new_track( &gui_e_pb, click_item->time_sec );
+        USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name_string, portMAX_DELAY );
         return 0;
     }
     return 0;

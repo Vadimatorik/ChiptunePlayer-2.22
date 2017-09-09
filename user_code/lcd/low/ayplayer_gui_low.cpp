@@ -121,6 +121,7 @@ MHost           host;
 
 // Перерисовывает GUI и обновляет экран.
 void gui_update ( void ) {
+    ayplayer_lcd.buf_clear();
     makise_g_host_call( &host, M_G_CALL_PREDRAW );
     makise_g_host_call( &host, M_G_CALL_DRAW );
     m_gui_update( &m_gui );

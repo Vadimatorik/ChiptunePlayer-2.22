@@ -12,6 +12,7 @@ USER_OS_STATIC_QUEUE_STRUCT  ay_low_q_1_st;
 
 USER_OS_STATIC_QUEUE         ay_low_p_queue_array[2];
 
+extern USER_OS_STATIC_BIN_SEMAPHORE        ayplayer_play_tic_semaphore;
 uint8_t r7_array[2] = { 0 };
 
 ay_ym_connection_chip_cfg_t ay_connect_cfg = { 0, 1, 2, 3, 4, 5, 6, 7 };
@@ -30,7 +31,7 @@ const ay_ym_low_lavel_cfg_t ay_low_cfg {
     .sr                 = &sr_ay,
     .mutex              = &spi3_mutex,
     .p_sr_data          = &sr_out_buf_ay[0],
-    .semaphore_sec_out  = nullptr,
+    .semaphore_sec_out  = &ayplayer_play_tic_semaphore,
     .bdir               = &bdir_obj,
     .bc1                = &bc1_obj,
     .queue_array        = ay_low_p_queue_array,

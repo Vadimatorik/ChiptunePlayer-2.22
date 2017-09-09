@@ -45,11 +45,31 @@ static void container_set_to_mhost () {
 
 extern  USER_OS_STATIC_QUEUE         ay_b_queue;
 extern  USER_OS_STATIC_MUTEX         spi2_mutex;
+
+MPlayBar gui_e_pb;
+
+extern const MakiseFont F_minecraft_rus_regular_8;
+
+MakiseStyle_PlayBar gui_pb_style = {
+    .bg_color           = MC_White,
+    .border_color       = MC_Black,
+    .duty_color         = MC_Black,
+    .time_color         = MC_Black,
+    .font               = &F_minecraft_rus_regular_8
+};
+
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
 void ayplayer_gui_core_task ( void* param ) {
     ( void )param;
+    // Потом вынести!
+    m_create_play_bar( &gui_e_pb,
+                       &ayplayer_gui_win_play,
+                       mp_rel( 0,   0,
+                               128, 7 ),
+                       0,
+                       &gui_pb_style );
 
     // Готовим низкий уровень GUI и все необходимые структуры.
     ayplayer_gui_low_init();
@@ -93,6 +113,7 @@ void ayplayer_gui_core_task ( void* param ) {
             case M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_CLICK ):
             case M_EC_TO_U8( EC_BUTTON_NAME::LONG_RIGHT_CLICK ):
                 ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::MAIN );
+                container_set_to_mhost();
                 break;
             }
         case M_EC_TO_U32( EC_AY_ACTIVE_WINDOW::MAIN ):
@@ -100,6 +121,7 @@ void ayplayer_gui_core_task ( void* param ) {
             case M_EC_TO_U8( EC_BUTTON_NAME::LEFT_CLICK ):
             case M_EC_TO_U8( EC_BUTTON_NAME::LONG_LEFT_CLICK ):
                 ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::PLAY_LIST );
+                container_set_to_mhost();
                 break;
             }
         }
