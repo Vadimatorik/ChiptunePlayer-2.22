@@ -93,6 +93,7 @@ void ayplayer_gui_core_task ( void* param ) {
     gui_update();
 
     while ( true ) {
+        USER_OS_QUEUE_RESET( ay_b_queue );  // Старые команды нас не интересуют.
         USER_OS_QUEUE_RECEIVE( ay_b_queue, &b_buf_nember, portMAX_DELAY );
 
         switch ( M_EC_TO_U32( ayplayer_control.active_window_get() ) ) {
@@ -111,22 +112,39 @@ void ayplayer_gui_core_task ( void* param ) {
                 break;
 
             case M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_CLICK ):
-            case M_EC_TO_U8( EC_BUTTON_NAME::LONG_RIGHT_CLICK ):
                 ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::MAIN );
                 container_set_to_mhost();
                 break;
             }
+            makise_gui_input_perform( &host );
+            gui_update();
+            break;
+
         case M_EC_TO_U32( EC_AY_ACTIVE_WINDOW::MAIN ):
             switch ( b_buf_nember ) {
-            case M_EC_TO_U8( EC_BUTTON_NAME::LEFT_CLICK ):
-            case M_EC_TO_U8( EC_BUTTON_NAME::LONG_LEFT_CLICK ):
+            case M_EC_TO_U8( EC_BUTTON_NAME::LEFT_LONG_PRESS ):
                 ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::PLAY_LIST );
                 container_set_to_mhost();
                 break;
+
+            // Эмулируем проход по play_list.
+            case M_EC_TO_U8( EC_BUTTON_NAME::LEFT_CLICK ):
+                m_click_play_list( &pl, M_KEY_UP );
+                m_click_play_list( &pl, M_KEY_OK );
+                break;
+
+            case M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_CLICK ):
+                m_click_play_list( &pl, M_KEY_DOWN );
+                m_click_play_list( &pl, M_KEY_OK );
+                break;
+
+            case M_EC_TO_U8( EC_BUTTON_NAME::ENTER ):
+                m_click_play_list( &pl, M_KEY_OK );
+                break;
             }
+            gui_update();
+            break;
         }
 
-        makise_gui_input_perform( &host );
-        gui_update();
     }
 }
