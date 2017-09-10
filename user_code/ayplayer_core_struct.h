@@ -7,8 +7,9 @@ enum class EC_AY_PLAY_STATE {
 };
 
 enum class EC_AY_ACTIVE_WINDOW {
-    MAIN                = 0,
-    PLAY_LIST
+    MAIN                = 0,                // Окно с текущим треком.
+    PLAY_LIST,                              // Список треков на карте.
+    SYSTEM                                  // Системное окно с предупреждениями.
 };
 
 class ayplayer_state {
@@ -22,5 +23,5 @@ public:
 
 private:
     EC_AY_PLAY_STATE        play_state          = EC_AY_PLAY_STATE::STOP;
-    EC_AY_ACTIVE_WINDOW     active_window       = EC_AY_ACTIVE_WINDOW::MAIN;   // Поменять на main потом.
+    EC_AY_ACTIVE_WINDOW     active_window       = EC_AY_ACTIVE_WINDOW::SYSTEM;
 };

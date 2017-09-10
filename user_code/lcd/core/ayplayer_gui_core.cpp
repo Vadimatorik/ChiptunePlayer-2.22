@@ -26,6 +26,7 @@ extern MHost           host;
 // Окна.
 MContainer             ayplayer_gui_win_play_list   = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
 MContainer             ayplayer_gui_win_play        = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
+MContainer             ayplayer_gui_win_system      = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
 
 // Элементы GUI.
 MPlayList              pl;
@@ -33,6 +34,10 @@ MPlayList_Item         pl_item_array[4];
 
 static void container_set_to_mhost () {
     switch ( M_EC_TO_U32( ayplayer_control.active_window_get() ) ) {
+    case M_EC_TO_U32( EC_AY_ACTIVE_WINDOW::SYSTEM ):
+        host.host = &ayplayer_gui_win_system;
+        break;
+
     case M_EC_TO_U32( EC_AY_ACTIVE_WINDOW::PLAY_LIST ):
         host.host = &ayplayer_gui_win_play_list;
         break;
@@ -66,14 +71,14 @@ void ayplayer_gui_core_task ( void* param ) {
     // Потом вынести!
     m_create_play_bar( &gui_e_pb,
                        &ayplayer_gui_win_play,
-                       mp_rel( 0,   0,
+                       mp_rel( 0,   57,
                                128, 7 ),
-                       0,
+                       1,
                        &gui_pb_style );
 
     // Готовим низкий уровень GUI и все необходимые структуры.
     ayplayer_gui_low_init();
-    container_set_to_mhost();
+    container_set_to_mhost();                                           // Выбираем системное окно.
 
     uint8_t b_buf_nember;
 
@@ -86,9 +91,12 @@ void ayplayer_gui_core_task ( void* param ) {
     USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );
     fr = f_open( &file_list, "psg_list.txt", FA_READ );
     USER_OS_GIVE_MUTEX( spi2_mutex );
-    if ( fr == FR_NO_FILE )     ayplayer_sd_card_scan( path_dir, &ayplayer_gui_win_play_list );
+    if ( fr == FR_NO_FILE )     ayplayer_sd_card_scan( path_dir, &ayplayer_gui_win_system );
 
-    ayplayer_gui_window_file_list_creature( &ayplayer_gui_win_play_list, &pl, pl_item_array, path_dir );
+    ayplayer_gui_window_play_list_creature( &ayplayer_gui_win_play_list, &pl, pl_item_array, path_dir );
+    ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::MAIN );
+    container_set_to_mhost();
+
     makise_g_focus( &pl.e, M_G_FOCUS_GET );
     gui_update();
 

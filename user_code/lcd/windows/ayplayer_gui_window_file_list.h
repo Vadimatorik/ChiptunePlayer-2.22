@@ -5,4 +5,4 @@
 #include "ayplayer_ay_file.h"
 #include "makise_e.h"
 
-void ayplayer_gui_window_file_list_creature ( MContainer* c, MPlayList* pl, MPlayList_Item* pl_array, char* dir );
+void ayplayer_gui_window_play_list_creature ( MContainer* c, MPlayList* pl, MPlayList_Item* pl_array, char* dir );

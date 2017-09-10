@@ -50,29 +50,21 @@ uint32_t uint32_t_to_2_char ( uint32_t& number, char* p, bool flag_senior_charac
 // Преобразовываем время в "тиках" в привычное глазу ЧЧ:ММ:СС.
 void convert_tic_to_char_time ( uint32_t tic, char* array ) {
     // Константы соответствия времени и тиков.
-    const uint32_t one_sec  = 50;
-    const uint32_t one_min  = one_sec * 60;
+    const uint32_t one_min  = 60;
     const uint32_t one_hour = 60 * one_min;
 
     // Разложим тики на часы, минуты и секунды.
     uint32_t hour       = 0;
     uint32_t min        = 0;
-    uint32_t sec        = 0;
+    uint32_t sec        = tic / 50;
+             sec        += ( tic % 50 ) ? 1 : 0;            // Если не вышло целого количества секунд - +1.
 
-    while ( tic > one_hour ) {
-        tic -= one_hour;
-        hour++;
-    }
+    hour      = sec / one_hour;
+    sec      -= hour * one_hour;
 
-    while ( tic > one_min ) {
-        tic -= one_min;
-        min++;
-    }
+    min       = sec / one_min;
+    sec      -= min * one_min;
 
-    while ( tic > one_sec ) {
-        tic -= one_sec;
-        sec++;
-    }
 
     if ( tic != 0 ) sec++;              // То, что меньше секунды, все равно приписываем к 1 секунде +.
 
@@ -220,7 +212,7 @@ MPlayList_CallbackFunc pl_func_st = {
 
 static char s_file_manager[] = "Выбор трека:";
 
-void ayplayer_gui_window_file_list_creature ( MContainer* c, MPlayList* pl, MPlayList_Item* pl_array, char* dir ) {
+void ayplayer_gui_window_play_list_creature ( MContainer* c, MPlayList* pl, MPlayList_Item* pl_array, char* dir ) {
     item_pl_array = pl_array;
 
     m_create_play_list ( pl, c,
