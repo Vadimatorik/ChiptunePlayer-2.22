@@ -3,6 +3,7 @@
 // Конфигурации окон.
 #include "ayplayer_gui_window_sd_card_analysis.h"
 #include "ayplayer_gui_window_file_list.h"
+#include "ayplayer_gui_window_main.h"
 
 // SD + FATFS
 #include "ayplayer_microsd_card.h"

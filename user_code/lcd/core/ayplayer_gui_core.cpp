@@ -29,8 +29,9 @@ MContainer             ayplayer_gui_win_play        = { &m_gui, nullptr, nullptr
 MContainer             ayplayer_gui_win_system      = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
 
 // Элементы GUI.
-MPlayList              pl;
-MPlayList_Item         pl_item_array[4];
+MPlayList              gui_pl;
+MPlayList_Item         gui_pl_item_array[4];
+MPlayBar               gui_e_pb;
 
 //**********************************************************************
 // Mutex служит для предотвращения одновременной отрисовки окна Makise и
@@ -60,17 +61,6 @@ static void container_set_to_mhost () {
 extern  USER_OS_STATIC_QUEUE         ay_b_queue;
 extern  USER_OS_STATIC_MUTEX         spi2_mutex;
 
-MPlayBar gui_e_pb;
-
-extern const MakiseFont F_minecraft_rus_regular_8;
-
-MakiseStyle_PlayBar gui_pb_style = {
-    .bg_color           = MC_White,
-    .border_color       = MC_Black,
-    .duty_color         = MC_Black,
-    .time_color         = MC_Black,
-    .font               = &F_minecraft_rus_regular_8
-};
 
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
@@ -78,14 +68,6 @@ MakiseStyle_PlayBar gui_pb_style = {
 void ayplayer_gui_core_task ( void* param ) {
     ( void )param;
     mhost_mutex = USER_OS_STATIC_MUTEX_CREATE( &mhost_mutex_buf );
-
-    // Потом вынести!
-    m_create_play_bar( &gui_e_pb,
-                       &ayplayer_gui_win_play,
-                       mp_rel( 0,   57,
-                               128, 7 ),
-                       1,
-                       &gui_pb_style );
 
     // Готовим низкий уровень GUI и все необходимые структуры.
     ayplayer_gui_low_init();
@@ -104,11 +86,14 @@ void ayplayer_gui_core_task ( void* param ) {
     USER_OS_GIVE_MUTEX( spi2_mutex );
     if ( fr == FR_NO_FILE )     ayplayer_sd_card_scan( path_dir, &ayplayer_gui_win_system );
 
-    ayplayer_gui_window_play_list_creature( &ayplayer_gui_win_play_list, &pl, pl_item_array, path_dir );
+    // Конфигурируем постоянные окна (которые живут все время).
+    ayplayer_gui_window_play_list_creature( &ayplayer_gui_win_play_list, &gui_pl, gui_pl_item_array, path_dir );
+    ayplayer_gui_window_main_creature( &ayplayer_gui_win_play, &gui_e_pb );
+
     ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::MAIN );
     container_set_to_mhost();
 
-    makise_g_focus( &pl.e, M_G_FOCUS_GET );
+    makise_g_focus( &gui_pl.e, M_G_FOCUS_GET );
     gui_update();
 
     while ( true ) {
@@ -148,17 +133,17 @@ void ayplayer_gui_core_task ( void* param ) {
 
             // Эмулируем проход по play_list.
             case M_EC_TO_U8( EC_BUTTON_NAME::LEFT_CLICK ):
-                m_click_play_list( &pl, M_KEY_UP );
-                m_click_play_list( &pl, M_KEY_OK );
+                m_click_play_list( &gui_pl, M_KEY_UP );
+                m_click_play_list( &gui_pl, M_KEY_OK );
                 break;
 
             case M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_CLICK ):
-                m_click_play_list( &pl, M_KEY_DOWN );
-                m_click_play_list( &pl, M_KEY_OK );
+                m_click_play_list( &gui_pl, M_KEY_DOWN );
+                m_click_play_list( &gui_pl, M_KEY_OK );
                 break;
 
             case M_EC_TO_U8( EC_BUTTON_NAME::ENTER ):
-                m_click_play_list( &pl, M_KEY_OK );
+                m_click_play_list( &gui_pl, M_KEY_OK );
                 break;
             }
             gui_update();
