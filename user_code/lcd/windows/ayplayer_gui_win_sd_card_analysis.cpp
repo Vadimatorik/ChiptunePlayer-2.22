@@ -1,4 +1,4 @@
-#include "ayplayer_gui_window_sd_card_analysis.h"
+#include "ayplayer_gui_win_sd_card_analysis.h"
 
 //**********************************************************************
 // Данное окно будет возникать в моменты анализа SD карты.

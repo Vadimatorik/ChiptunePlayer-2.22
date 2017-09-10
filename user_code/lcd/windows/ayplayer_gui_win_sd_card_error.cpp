@@ -1,4 +1,4 @@
-#include "ayplayer_gui_window_sd_card_error.h"
+#include "ayplayer_gui_win_sd_card_error.h"
 
 char s_err_disk_err[]           = "DISK ERR!";          // Произошла невосстановимая ошибка на низком уровне (функции I/O диска).
 

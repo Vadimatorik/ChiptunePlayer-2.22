@@ -13,6 +13,6 @@
 #include "ay_ym_file_mode.h"
 
 // Вывод ошибки.
-#include "ayplayer_gui_window_sd_card_error.h"
+#include "ayplayer_gui_win_sd_card_error.h"
 
 bool ayplayer_sd_card_scan ( char* dir, MContainer* c );

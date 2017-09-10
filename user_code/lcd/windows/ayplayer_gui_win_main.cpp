@@ -1,4 +1,4 @@
-#include "ayplayer_gui_window_main.h"
+#include "ayplayer_gui_win_main.h"
 
 extern const MakiseFont F_minecraft_rus_regular_8;
 
