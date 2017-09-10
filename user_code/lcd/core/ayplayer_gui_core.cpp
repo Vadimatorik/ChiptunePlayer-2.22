@@ -32,7 +32,15 @@ MContainer             ayplayer_gui_win_system      = { &m_gui, nullptr, nullptr
 MPlayList              pl;
 MPlayList_Item         pl_item_array[4];
 
+//**********************************************************************
+// Mutex служит для предотвращения одновременной отрисовки окна Makise и
+// смены окна container_set_to_mhost.
+//**********************************************************************
+USER_OS_STATIC_MUTEX_BUFFER mhost_mutex_buf;
+USER_OS_STATIC_MUTEX        mhost_mutex = nullptr;
+
 static void container_set_to_mhost () {
+    USER_OS_TAKE_MUTEX( mhost_mutex, portMAX_DELAY );
     switch ( M_EC_TO_U32( ayplayer_control.active_window_get() ) ) {
     case M_EC_TO_U32( EC_AY_ACTIVE_WINDOW::SYSTEM ):
         host.host = &ayplayer_gui_win_system;
@@ -46,6 +54,7 @@ static void container_set_to_mhost () {
         host.host = &ayplayer_gui_win_play;
         break;
     }
+    USER_OS_GIVE_MUTEX( mhost_mutex );
 }
 
 extern  USER_OS_STATIC_QUEUE         ay_b_queue;
@@ -68,6 +77,8 @@ MakiseStyle_PlayBar gui_pb_style = {
 //**********************************************************************
 void ayplayer_gui_core_task ( void* param ) {
     ( void )param;
+    mhost_mutex = USER_OS_STATIC_MUTEX_CREATE( &mhost_mutex_buf );
+
     // Потом вынести!
     m_create_play_bar( &gui_e_pb,
                        &ayplayer_gui_win_play,
