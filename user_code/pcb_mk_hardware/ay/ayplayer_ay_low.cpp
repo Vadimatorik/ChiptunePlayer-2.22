@@ -57,7 +57,6 @@ void ayplayer_pwr_5_v_set ( bool state ) {
     } else {
         pwr_5_v_on_obj.set( false );
     }
-    vTaskDelay(10);
 }
 
 extern "C" {

@@ -145,6 +145,16 @@ void ayplayer_gui_core_task ( void* param ) {
             case M_EC_TO_U8( EC_BUTTON_NAME::ENTER ):
                 m_click_play_list( &gui_pl, M_KEY_OK );
                 break;
+
+            // Началась перемотка вперед.
+            case M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_PRESS ):
+                ay_player_interrupt_ay.period_dev( 2 );
+                break;
+
+            // Перемотка назад закончилась.
+            case M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_CLICK ):
+                ay_player_interrupt_ay.period_reset();
+                break;
             }
             gui_update();
             break;

@@ -17,6 +17,8 @@
 // 400 байт задаче.
 #define AY_PLAYER_GUI_TASK_STACK_SIZE       10000
 
+#include "ayplayer_timers.h"
+
 // Вызвать до запуска ОС.
 void ayplayer_gui_core_init ( void );                   // Создает задачу для контроля всей графики.
 
