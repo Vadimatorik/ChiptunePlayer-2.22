@@ -51,7 +51,7 @@
 #define MODULE_SPI
 #define MODULE_TIMER
 #define MODULE_WDT
-
+#define MODULE_ADC
 
 //**********************************************************************
 //								Определения, не касающиеся основных модулей.
