@@ -38,6 +38,7 @@ extern "C" {
 #define MAKISE_E_FSVIEWER               MAKISE_E_FSVIEWER_FATFS
 #define MAKISE_E_PLAY_LIST              1
 #define MAKISE_E_PLAY_BAR               1
+#define MAKISE_E_STATUS_BAR             1
 
 // Enable debug output.
 #define MAKISE_DEBUG_OUTPUT                         // Only if debug output is enabled.

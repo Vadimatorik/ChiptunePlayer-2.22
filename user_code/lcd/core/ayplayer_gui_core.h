@@ -4,6 +4,7 @@
 #include "ayplayer_gui_win_sd_card_analysis.h"
 #include "ayplayer_gui_win_file_list.h"
 #include "ayplayer_gui_win_main.h"
+#include "ayplayer_gui_player_status_bar.h"
 
 // SD + FATFS
 #include "ayplayer_microsd_card.h"
