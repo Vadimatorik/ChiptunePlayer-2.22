@@ -17,16 +17,12 @@ MPlayerStatusBar_CallbackFunc psb_cbf = {
     .get_percent_battery    = &ayplayer_get_percent_battery
 };
 
-void ayplayer_gui_player_status_bar_creature ( MPlayerStatusBar* psb, MakiseGUI* gui ) {
-    m_create_player_status_bar( psb, gui,
+void ayplayer_gui_player_status_bar_creature ( MContainer* c, MPlayerStatusBar* psb ) {
+    m_create_player_status_bar( psb, c,
                                 mp_rel( 0,   0,
                                         128, 12 ),
                                 &psb_s,
                                 &psb_cbf );
-}
-
-void ayplayer_gui_player_status_bar_add_to_container ( MContainer* c, MPlayerStatusBar* psb ) {
-    m_player_status_bar_add_to_container( c, psb );
 }
 
 extern ayplayer_state ayplayer_control;
@@ -36,10 +32,10 @@ uint32_t ayplayer_get_state_play ( void ) {
 }
 
 uint32_t ayplayer_get_percent_battery   ( void ) {
-    uint32_t v = ayplayer_control.battery_voltage_mv_get();
+    float v = ayplayer_control.battery_voltage_get();
     if ( v > 3700 ) v = 3700;
     if ( v < 3400 ) v = 3400;
 
-    uint32_t p = (float)( 100 / 3700 - 3400 ) * (v - 3400);
+    uint32_t p = (float)100 / (float)( 3700 - 3400 ) * (float)(v - 3400);
     return p;
 }

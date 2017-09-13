@@ -7,15 +7,39 @@ extern ayplayer_state ayplayer_control;
 
 static void battery_check_thread ( void* arg ) {
     ( void )arg;
-    uint32_t        adc_value;
+    uint32_t        adc_value   = 0;
+
+    float        adc_res_array[100] = { 0 };
+    for ( int i = 0; i < 100; i++ ) {
+        adc_input.start_measurement();
+        USER_OS_DELAY_MS( 1 );
+        adc_input.get_measurement( adc_value );
+        adc_res_array[i] = adc_value;
+        i++;
+    }
+
+    uint32_t i = 0;
     while ( true ) {
         adc_input.start_measurement();
-        USER_OS_DELAY_MS( 10 );
+        USER_OS_DELAY_MS( 1 );
+
         adc_input.get_measurement( adc_value );
-        uint32_t battery_voltage_mv;
-        battery_voltage_mv = adc_value * 3300 / 255 * 2;
-        ayplayer_control.battery_voltage_mv_set( battery_voltage_mv );
-        USER_OS_DELAY_MS( 990 );
+        adc_res_array[i] = adc_value;
+
+
+
+        float adc_sr = 0;
+        for ( int i = 0; i < 100; i++ ) {
+            adc_sr += adc_res_array[i];
+        }
+        adc_sr /= (float)100;
+
+        uint32_t battery_voltage;
+        battery_voltage = adc_sr * (float)3300 / (float)4096 * (float)2;
+        ayplayer_control.battery_voltage_set( battery_voltage );
+
+        i++;
+        if ( i == 100 ) i = 0;
     }
 }
 

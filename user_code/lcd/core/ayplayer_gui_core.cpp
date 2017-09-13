@@ -32,7 +32,9 @@ MContainer             ayplayer_gui_win_system      = { &m_gui, nullptr, nullptr
 MPlayList              gui_pl;
 MPlayList_Item         gui_pl_item_array[4];
 MPlayBar               gui_e_pb;
-MPlayerStatusBar       gui_e_psb;
+
+MPlayerStatusBar       gui_e_psb_copy_0;
+MPlayerStatusBar       gui_e_psb_copy_1;
 
 extern MakiseGUI    m_gui;
 
@@ -90,9 +92,8 @@ void ayplayer_gui_core_task ( void* param ) {
     if ( fr == FR_NO_FILE )     ayplayer_sd_card_scan( path_dir, &ayplayer_gui_win_system );
 
     // Статус бар. Он есть во всех неигровых окнах.
-    ayplayer_gui_player_status_bar_creature( &gui_e_psb, &m_gui );
-    m_player_status_bar_add_to_container( &ayplayer_gui_win_play_list, &gui_e_psb );
-    m_player_status_bar_add_to_container( &ayplayer_gui_win_play, &gui_e_psb );
+    ayplayer_gui_player_status_bar_creature( &ayplayer_gui_win_play_list, &gui_e_psb_copy_0 );
+    ayplayer_gui_player_status_bar_creature( &ayplayer_gui_win_play, &gui_e_psb_copy_1 );
 
     // Конфигурируем постоянные окна (которые живут все время).
     ayplayer_gui_window_play_list_creature( &ayplayer_gui_win_play_list, &gui_pl, gui_pl_item_array, path_dir );

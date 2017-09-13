@@ -23,11 +23,11 @@ public:
     void active_window_set ( EC_AY_ACTIVE_WINDOW win );
     EC_AY_ACTIVE_WINDOW active_window_get ( void );
 
-    void battery_voltage_mv_set ( uint32_t battery_voltage_mv );
-    uint32_t battery_voltage_mv_get ( void );
+    void battery_voltage_set ( uint32_t battery_voltage );
+    float battery_voltage_get ( void );
 
 private:
     EC_AY_PLAY_STATE        play_state          = EC_AY_PLAY_STATE::STOP;
     EC_AY_ACTIVE_WINDOW     active_window       = EC_AY_ACTIVE_WINDOW::SYSTEM;
-    uint32_t                battery_voltage_mv  = 0;
+    float                   battery_voltage  = 0;
 };

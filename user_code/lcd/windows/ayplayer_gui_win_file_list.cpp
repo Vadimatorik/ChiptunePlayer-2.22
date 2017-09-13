@@ -210,15 +210,13 @@ MPlayList_CallbackFunc pl_func_st = {
     .get_file_count_of_dir      = get_file_count_of_dir
 };
 
-static char s_file_manager[] = "Выбор трека:";
-
 void ayplayer_gui_window_play_list_creature ( MContainer* c, MPlayList* pl, MPlayList_Item* pl_array, char* dir ) {
     item_pl_array = pl_array;
 
     m_create_play_list ( pl, c,
-                         mp_rel( 0,   0,
-                                 128, 57 ),
-                         s_file_manager,
+                         mp_rel( 0,   11,
+                                 128, 52 ),
+                         nullptr,
                          dir,
                          &pl_func_st,
                          &s_pl_st,
