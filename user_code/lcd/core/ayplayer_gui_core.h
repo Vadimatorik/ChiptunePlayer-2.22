@@ -17,7 +17,7 @@
 
 // 400 байт задаче.
 #define AY_PLAYER_GUI_TASK_STACK_SIZE       10000
-
+#define STATUS_BAR_UPDATE_TASK_STACK_SIZE   400
 #include "ayplayer_timers.h"
 
 // Вызвать до запуска ОС.
@@ -25,3 +25,6 @@ void ayplayer_gui_core_init ( void );                   // Создает зад
 
 // Основная задача ядра GUI.
 void ayplayer_gui_core_task ( void* param );
+
+// Обновление окна раз в секунду.
+void ayplayer_gui_update_task ( void* param );

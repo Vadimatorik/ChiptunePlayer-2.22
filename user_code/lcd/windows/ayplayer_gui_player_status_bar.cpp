@@ -33,9 +33,9 @@ uint32_t ayplayer_get_state_play ( void ) {
 
 uint32_t ayplayer_get_percent_battery   ( void ) {
     float v = ayplayer_control.battery_voltage_get();
-    if ( v > 3700 ) v = 3700;
-    if ( v < 3400 ) v = 3400;
+    if ( v > 3.7 ) v = 3.7;
+    if ( v < 3.5 ) v = 3.5;
 
-    uint32_t p = (float)100 / (float)( 3700 - 3400 ) * (float)(v - 3400);
+    uint32_t p = 100 / ( 3.7 - 3.5 ) * (v - 3.5);
     return p;
 }

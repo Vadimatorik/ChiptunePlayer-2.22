@@ -119,6 +119,7 @@ void ayplayer_gui_low_init ( void ) {
 
 MHost           host;
 extern USER_OS_STATIC_MUTEX        mhost_mutex;
+extern USER_OS_STATIC_BIN_SEMAPHORE        ayplayer_gui_update_semaphore;
 // Перерисовывает GUI и обновляет экран.
 void gui_update ( void ) {
     USER_OS_TAKE_MUTEX( mhost_mutex, portMAX_DELAY );
@@ -126,5 +127,6 @@ void gui_update ( void ) {
     makise_g_host_call( &host, M_G_CALL_PREDRAW );
     makise_g_host_call( &host, M_G_CALL_DRAW );
     m_gui_update( &m_gui );
+    USER_OS_GIVE_BIN_SEMAPHORE( ayplayer_gui_update_semaphore );
     USER_OS_GIVE_MUTEX( mhost_mutex );
 }

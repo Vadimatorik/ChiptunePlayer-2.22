@@ -3,6 +3,11 @@
 static StaticTask_t     ayplayer_gui_task_buffer;
 static StackType_t      ayplayer_gui_task_stack[ AY_PLAYER_GUI_TASK_STACK_SIZE ];
 
+static StaticTask_t     ayplayer_gui_status_bar_update_task_buffer;
+static StackType_t      ayplayer_gui_status_bar_update_task_stack[ STATUS_BAR_UPDATE_TASK_STACK_SIZE ];
+
+       USER_OS_STATIC_BIN_SEMAPHORE        ayplayer_gui_update_semaphore;
+static USER_OS_STATIC_BIN_SEMAPHORE_BUFFER ayplayer_gui_update_semaphore_buf;
 // Задача GUI.
 void ayplayer_gui_core_init ( void ) {
     xTaskCreateStatic( ayplayer_gui_core_task,
@@ -12,6 +17,16 @@ void ayplayer_gui_core_init ( void ) {
                        3,
                        ayplayer_gui_task_stack,
                        &ayplayer_gui_task_buffer );
+
+    xTaskCreateStatic( ayplayer_gui_update_task,
+                       "gui_up",
+                       STATUS_BAR_UPDATE_TASK_STACK_SIZE,
+                       NULL,
+                       2,
+                       ayplayer_gui_status_bar_update_task_stack,
+                       &ayplayer_gui_status_bar_update_task_buffer );
+
+    ayplayer_gui_update_semaphore = USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &ayplayer_gui_update_semaphore_buf );
 }
 
 ayplayer_state ayplayer_control;
@@ -36,7 +51,7 @@ MPlayBar               gui_e_pb;
 MPlayerStatusBar       gui_e_psb_copy_0;
 MPlayerStatusBar       gui_e_psb_copy_1;
 
-extern MakiseGUI    m_gui;
+extern MakiseGUI       m_gui;
 
 //**********************************************************************
 // Mutex служит для предотвращения одновременной отрисовки окна Makise и
@@ -66,6 +81,16 @@ static void container_set_to_mhost () {
 extern  USER_OS_STATIC_QUEUE         ay_b_queue;
 extern  USER_OS_STATIC_MUTEX         spi2_mutex;
 
+
+// Обновляет экран раз в секунду, если никто другой не обновил за это время.
+void ayplayer_gui_update_task ( void* param ) {
+    (void)param;
+    while ( true ) {
+        if ( USER_OS_TAKE_BIN_SEMAPHORE( ayplayer_gui_update_semaphore, 1000 ) == pdFALSE ) {
+            gui_update();
+        }
+    }
+}
 
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
