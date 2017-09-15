@@ -18,7 +18,7 @@ static void battery_check_thread ( void* arg ) {
         // то ловить мы можем максимум 1.65 В и выше. Но для питания от Li-ION большего и не нужно.
         USER_OS_DELAY_MS( 10 );
         adc_input.get_measurement( adc_value );
-        float battery_voltage = adc_value * 3.3 / 256 * 2;
+        float battery_voltage = adc_value * 3.3 / 4096 * 2;
         ayplayer_control.battery_voltage_set( battery_voltage );
     }
 }

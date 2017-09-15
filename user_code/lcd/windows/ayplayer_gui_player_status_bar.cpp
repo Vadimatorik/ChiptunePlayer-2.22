@@ -31,11 +31,15 @@ uint32_t ayplayer_get_state_play ( void ) {
     return ( uint32_t )ayplayer_control.play_state_get();
 }
 
+
+#define AY_PLAYER_BAT_MAX           4.2
+#define AY_PLAYER_BAT_MIN           3.5
+
 uint32_t ayplayer_get_percent_battery   ( void ) {
     float v = ayplayer_control.battery_voltage_get();
-    if ( v > 3.7 ) v = 3.7;
-    if ( v < 3.5 ) v = 3.5;
+    if ( v > AY_PLAYER_BAT_MAX ) v = AY_PLAYER_BAT_MAX;
+    if ( v < AY_PLAYER_BAT_MIN ) v = AY_PLAYER_BAT_MIN;
 
-    uint32_t p = 100 / ( 3.7 - 3.5 ) * (v - 3.5);
+    uint32_t p = 100 / ( AY_PLAYER_BAT_MAX - AY_PLAYER_BAT_MIN ) * ( v - AY_PLAYER_BAT_MIN );
     return p;
 }
