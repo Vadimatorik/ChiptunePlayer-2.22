@@ -30,6 +30,10 @@ pin< SHDN_PIN_HEADING >                 shdn_obj;
 // Общий вход кнопок.
 pin< B_IN_PIN_HEADING >                 b_in;
 
+// + - громкость.
+pin< BUTTON_INC >                       b_inc;
+pin< BUTTON_DEC >                       b_dec;
+
 int ayplayer_port_init ( void ) {
     return ( ayplayer_global_port.reinit_all_ports() == EC_ANSWER_GP::SUCCESS ) ? 0 : -1;
 }

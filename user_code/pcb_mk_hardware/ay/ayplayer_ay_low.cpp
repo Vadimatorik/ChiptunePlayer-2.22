@@ -51,9 +51,14 @@ void ayplayer_ay_init (void) {
     ay_low_p_queue_array[1] = USER_OS_STATIC_QUEUE_CREATE( AY_LOW_QUEUE_BUF_SIZE, sizeof( ay_low_out_data_struct ), ay_low_queue_1_buf, &ay_low_q_1_st );
 }
 
+extern uint8_t v_table[16];
+extern int32_t current_volume;
+
 void ayplayer_pwr_5_v_set ( bool state ) {
     if ( state == 1 ) {
-        pwr_5_v_on_obj.set( true );
+        pwr_5_v_on_obj.set( true );             // Пережидаем щелчок.
+        sound_dp.value_set( 1, 2, v_table[ current_volume ] );           // Левый наушник.
+        sound_dp.value_set( 1, 3, v_table[ current_volume ] );           // Правый.
     } else {
         pwr_5_v_on_obj.set( false );
     }

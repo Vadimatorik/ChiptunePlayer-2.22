@@ -17,8 +17,10 @@ const pin_config_adc_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1 >    
 //
 // EXTI кнопки.
 //
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_1,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        b_v_up;
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_2,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        b_v_down;
+#define BUTTON_INC      EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_1
+#define BUTTON_DEC      EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_2
+const pin_config_check_param< BUTTON_INC,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        b_v_up;
+const pin_config_check_param< BUTTON_DEC,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        b_v_down;
 
 //
 // MIDI ( USART2 ).
@@ -132,6 +134,7 @@ const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_11, EC_PIN_
 // Глобальный порт.
 //
 const constexpr pin_config_t ayplayer_global_port_pin_cfg[] = {
+    b_v_up, b_v_down,
     adc_bat, adc_right, adc_left,                                                                           // ADC.
     midi_uart_rx,                                                                                           // MIDI (USART2).
     lcd_clk, lcd_pwm, lcd_mosi, lcd_res, lcd_dc, lcd_cs,                                                    // LCD (SPI1 + TIMx).
@@ -172,5 +175,9 @@ extern pin< SHDN_PIN_HEADING >                              shdn_obj;
 
 // Общий вход кнопок.
 extern pin< B_IN_PIN_HEADING >                              b_in;
+
+// + - громкость.
+extern pin< BUTTON_INC >                                    b_inc;
+extern pin< BUTTON_DEC >                                    b_dec;
 
 int ayplayer_port_init ( void );

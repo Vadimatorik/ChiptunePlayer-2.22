@@ -67,6 +67,7 @@ public:
     void battery_voltage_set ( float battery_voltage );
     float battery_voltage_get ( void );
 
+
 private:
     EC_AY_PLAY_STATE        play_state          = EC_AY_PLAY_STATE::STOP;
     EC_AY_ACTIVE_WINDOW     active_window       = EC_AY_ACTIVE_WINDOW::SYSTEM;

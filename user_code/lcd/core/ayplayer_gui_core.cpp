@@ -99,6 +99,19 @@ void ayplayer_gui_core_task ( void* param ) {
     ( void )param;
     mhost_mutex = USER_OS_STATIC_MUTEX_CREATE( &mhost_mutex_buf );
 
+    sound_dp.connect_on();
+
+    sound_dp.value_set( 0, 0, 0xFF );           // B
+    sound_dp.value_set( 0, 1, 0x80 );           // C
+    sound_dp.value_set( 0, 2, 0xFF );           // A
+
+    sound_dp.value_set( 0, 3, 0XFF );           // A1
+    sound_dp.value_set( 1, 0, 0x80 );           // B2
+    sound_dp.value_set( 1, 1, 0xFF );           // C1
+
+    sound_dp.value_set( 1, 2, 0x80 );           // Левый наушник.
+    sound_dp.value_set( 1, 3, 0x80 );           // Правый.
+
     // Готовим низкий уровень GUI и все необходимые структуры.
     ayplayer_gui_low_init();
     container_set_to_mhost();                                           // Выбираем системное окно.

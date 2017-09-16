@@ -12,6 +12,7 @@
 
 // Rнопки.
 #include "ayplayer_button.h"
+#include "ayplayer_digital_potentiometer.h"
 
 #include "ayplayer_core_struct.h"
 

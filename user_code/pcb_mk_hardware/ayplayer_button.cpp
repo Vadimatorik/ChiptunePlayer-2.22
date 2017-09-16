@@ -37,7 +37,65 @@ buttons_through_shift_register_one_in_cfg b_sr_cfg = {
 
 buttons_through_shift_register_one_in ayplayer_button( &b_sr_cfg );
 
+
+#define INC_AND_DEC_STABIL      10
+int32_t current_volume = 4;
+
+#include "ayplayer_digital_potentiometer.h"
+
+uint8_t v_table[16] = { 0x0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 0x90, 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xFF };
+
+// Детектирование изменения уровня громкости.
+void ayplayer_button_inc_and_dec_detect ( void* param ) {
+    ( void )param;
+    uint8_t inc = INC_AND_DEC_STABIL;
+    uint8_t dec = INC_AND_DEC_STABIL;
+    while ( true ) {
+        vTaskDelay( 10 );
+
+        if ( b_inc.read() == false ) {
+            if ( inc > 0 ) inc--;
+        } else {
+            if ( inc == 0 ) {
+                if ( current_volume < 15 )
+                    current_volume++;
+                inc = INC_AND_DEC_STABIL;
+                sound_dp.value_set( 1, 2, v_table[ current_volume ] );           // Левый наушник.
+                sound_dp.value_set( 1, 3, v_table[ current_volume ] );           // Правый.
+                continue;
+            }
+        }
+
+        if ( b_dec.read() == false ) {
+            if ( dec > 0 ) dec--;
+        } else {
+            if ( dec == 0 ) {
+                if ( current_volume > 0 )
+                    current_volume--;
+                dec = INC_AND_DEC_STABIL;
+                sound_dp.value_set( 1, 2, v_table[ current_volume ] );           // Левый наушник.
+                sound_dp.value_set( 1, 3, v_table[ current_volume ] );           // Правый.
+                continue;
+            }
+        }
+
+
+
+    }
+}
+
+static StaticTask_t     ayplayer_inc_and_dec_detect_task_buffer;
+static StackType_t      ayplayer_inc_and_dec_detect_task_stack[ AY_PLAYER_B_INC_DEC_TASK_STACK_SIZE ];
+
 void ayplayer_button_init ( void ) {
     ay_b_queue = USER_OS_STATIC_QUEUE_CREATE( AY_BUTTON_QUEUE_SIZE, sizeof( uint8_t ), ay_b_queue_buf, &ay_b_queue_st );
     ayplayer_button.init();
+
+    xTaskCreateStatic( ayplayer_button_inc_and_dec_detect,
+                       "b_incdec",
+                       AY_PLAYER_B_INC_DEC_TASK_STACK_SIZE,
+                       NULL,
+                       3,
+                       ayplayer_inc_and_dec_detect_task_stack,
+                       &ayplayer_inc_and_dec_detect_task_buffer );
 }
