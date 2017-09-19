@@ -22,6 +22,7 @@ pin< CHIP_2_PWR_ON_PIN_HEADING >        chip_2_pwr_on_obj;
 
 // PWR.
 pin< PWR_5_V_IN_PIN_HEADING >           pwr_5_v_on_obj;
+pin< PWR_ON_PIN_HEADING >               pwr_on_obj;
 
 // Потенциометры.
 pin< DP_CS_PIN_HEADING >                dp_cs_res_obj;

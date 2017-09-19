@@ -39,6 +39,8 @@ buttons_through_shift_register_one_in ayplayer_button( &b_sr_cfg );
 
 
 #define INC_AND_DEC_STABIL      10
+#define OFF_WITE                100
+
 int32_t current_volume = 4;
 
 #include "ayplayer_digital_potentiometer.h"
@@ -50,10 +52,27 @@ void ayplayer_button_inc_and_dec_detect ( void* param ) {
     ( void )param;
     uint8_t inc = INC_AND_DEC_STABIL;
     uint8_t dec = INC_AND_DEC_STABIL;
+    uint8_t off_time = OFF_WITE;
+    bool inc_f = false;
+    bool dec_f = false;
+
     while ( true ) {
         vTaskDelay( 10 );
 
-        if ( b_inc.read() == false ) {
+        inc_f = b_inc.read();
+        dec_f = b_dec.read();
+
+        if ( ( inc_f == false ) && ( dec_f == false ) ) {
+            if ( off_time > 0 ) {
+                off_time--;
+            } else {
+                pwr_on_obj.reset();
+            }
+        } else {
+            off_time = OFF_WITE;
+        }
+
+        if ( inc_f == false ) {
             if ( inc > 0 ) inc--;
         } else {
             if ( inc == 0 ) {
@@ -66,7 +85,7 @@ void ayplayer_button_inc_and_dec_detect ( void* param ) {
             }
         }
 
-        if ( b_dec.read() == false ) {
+        if ( dec_f == false ) {
             if ( dec > 0 ) dec--;
         } else {
             if ( dec == 0 ) {

@@ -7,6 +7,9 @@
 
 void housekeeping_thread ( void* arg ) {
     (void)arg;
+    // Минимальное время, чтобы напряжениен а схеме установилось и можно было считать, что плеер включили.
+    vTaskDelay(300);
+    pwr_on_obj.set();
     while( true ) {
         vTaskDelay(10000);
     }

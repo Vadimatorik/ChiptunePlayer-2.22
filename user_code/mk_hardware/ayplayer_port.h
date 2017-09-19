@@ -104,9 +104,10 @@ const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_14, EC_PIN_
 #define PWR_5_V_IN_PIN_HEADING              EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_8
 #define CHIP_1_PWR_ON_PIN_HEADING           EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_4
 #define CHIP_2_PWR_ON_PIN_HEADING           EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_10
+#define PWR_ON_PIN_HEADING                  EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_1
 
 const pin_config_check_param< PWR_5_V_IN_PIN_HEADING,                    EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >           on_5v;
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_1,  EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >             power_on;
+const pin_config_check_param< PWR_ON_PIN_HEADING,                        EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >           power_on;
 const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_14, EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >          tp_st;
 const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_15, EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >          tp_ch;
 const pin_config_check_param< CHIP_1_PWR_ON_PIN_HEADING,                 EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >           ay1_on;
@@ -179,5 +180,7 @@ extern pin< B_IN_PIN_HEADING >                              b_in;
 // + - громкость.
 extern pin< BUTTON_INC >                                    b_inc;
 extern pin< BUTTON_DEC >                                    b_dec;
+
+extern pin< PWR_ON_PIN_HEADING >                            pwr_on_obj;
 
 int ayplayer_port_init ( void );
