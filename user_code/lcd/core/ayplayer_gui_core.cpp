@@ -79,20 +79,21 @@ void ayplayer_gui_core_task ( void* param ) {
     sound_dp.value_set( 1, 2, 0x80 );           // Левый наушник.
     sound_dp.value_set( 1, 3, 0x80 );           // Правый.
 
-    // Готовим низкий уровень GUI и все необходимые структуры.
-    ayplayer_gui_low_init();
-    container_set_to_mhost();                                           // Выбираем системное окно.
-
-    uint8_t b_buf_nember;
-
     // Инициализация FAT объекта (общий на обе карты).
     FRESULT fr = f_mount( &fat, "", 0 );
     if ( fr != FR_OK ) while( true );
+
+    uint8_t b_buf_nember;
+
 
     // Составить список PSG файлов, если нет такого на карте.
     FIL file_list;
     fr = f_open( &file_list, "psg_list.txt", FA_READ );
     if ( fr == FR_NO_FILE )     ayplayer_sd_card_scan( path_dir, &ayplayer_gui_win_system );
+
+    // Готовим низкий уровень GUI и все необходимые структуры.
+    ayplayer_gui_low_init();
+    container_set_to_mhost();                                           // Выбираем системное окно.
 
     // Статус бар. Он есть во всех неигровых окнах.
     ayplayer_gui_player_status_bar_creature( &ayplayer_gui_win_play_list, &gui_e_psb_copy_0 );
