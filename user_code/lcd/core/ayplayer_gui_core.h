@@ -16,10 +16,8 @@
 
 #include "ayplayer_core_struct.h"
 
-// 400 байт задаче.
-#define AY_PLAYER_GUI_TASK_STACK_SIZE       10000
-#define STATUS_BAR_UPDATE_TASK_STACK_SIZE   400
 #include "ayplayer_timers.h"
+#include "ayplayer_os_object.h"
 
 // Вызвать до запуска ОС.
 void ayplayer_gui_core_init ( void );                   // Создает задачу для контроля всей графики.

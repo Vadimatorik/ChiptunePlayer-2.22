@@ -15,6 +15,6 @@ void ayplayer_timers_init ( void ) {
     ayplayer_nvic.irq_enable( IRQ_NAME::TIM6 );
     ay_player_clk_tim.reinit();
     ay_player_lcd_pwm.reinit();
-    ay_player_lcd_pwm.duty_set(0.4);
+    ay_player_lcd_pwm.duty_set(0.4);        // ВЫПЕЛИТЬ КОСТЫЛЬ!!!
     ay_player_lcd_pwm.on();
 }

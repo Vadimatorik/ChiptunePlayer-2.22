@@ -50,6 +50,6 @@ static void ayplayer_play_tic ( void* p_obj ) {
 void ayplayer_play_task_init ( void ) {
     q_play_init();
     s_play_tic_init();
-    USER_OS_STATIC_TASK_CREATE( ayplayer_play_task, "ay_play", AY_PLAYER_PLAY_TASK_STACK_SIZE, nullptr, 4, tb_play, &ts_play );
-    USER_OS_STATIC_TASK_CREATE( ayplayer_play_tic, "play_tic", AY_PLAYER_PLAY_TIC_TASK_STACK_SIZE, nullptr, 3, tb_play_tic, &ts_play_tic );
+    USER_OS_STATIC_TASK_CREATE( ayplayer_play_task, "ay_play", TB_PLAY_SIZE, nullptr, 4, tb_play, &ts_play );
+    USER_OS_STATIC_TASK_CREATE( ayplayer_play_tic, "play_tic", TB_PLAY_TIC_SIZE, nullptr, 3, tb_play_tic, &ts_play_tic );
 }

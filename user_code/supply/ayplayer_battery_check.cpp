@@ -1,10 +1,6 @@
 #include "ayplayer_battery_check.h"
 
-static StaticTask_t     ayplayer_battery_check_task_buffer;
-static StackType_t      ayplayer_battery_check_task_stack[ AY_PLAYER_BATTERY_CHECK_TASK_STACK_SIZE ];
-
 extern ayplayer_state ayplayer_control;
-
 
 static void battery_check_thread ( void* arg ) {
     ( void )arg;
@@ -24,11 +20,5 @@ static void battery_check_thread ( void* arg ) {
 }
 
 void ayplayer_battery_check_init ( void ) {
-    xTaskCreateStatic( battery_check_thread,
-                       "bat_chack",
-                       AY_PLAYER_BATTERY_CHECK_TASK_STACK_SIZE,
-                       NULL,
-                       2,
-                       ayplayer_battery_check_task_stack,
-                       &ayplayer_battery_check_task_buffer );
+    USER_OS_STATIC_TASK_CREATE( battery_check_thread, "bat_chack", TB_BATTERY_CHECK_SIZE, NULL, 2, tb_battery_check, &ts_battery_check );
 }

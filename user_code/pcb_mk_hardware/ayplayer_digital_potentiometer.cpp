@@ -1,9 +1,8 @@
 #include "ayplayer_digital_potentiometer.h"
 
-extern USER_OS_STATIC_MUTEX        spi3_mutex;
 ad5204_struct_cfg_t sound_dp_cfg = {
     .spi        = &spi3,
-    .mutex      = &spi3_mutex,
+    .mutex      = &m_spi3,
     .cs         = &dp_cs_res_obj,
     .shdn       = &shdn_obj
 };

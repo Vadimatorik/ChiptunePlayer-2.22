@@ -63,40 +63,40 @@ extern MakiseGUI    m_gui;
 extern uint8_t      lcd_buffer[1024];
 
 const MakiseDriver m_driver = {
-    gui            : &m_gui,                       // Структура используемого GUI объекта.
-    lcd_height     : 64,                           // Реальная высота экрана.
-    lcd_width      : 128,                          // Реальная ширина экрана.
-    buffer_height  : MAKISE_BUF_H,                 // Ширина/высота буфера.
-    buffer_width   : MAKISE_BUF_W,
-    pixeldepth     : MAKISEGUI_DRIVER_DEPTH,       // Глубина цвета в LCD.
-    buffer         : (uint32_t*)lcd_buffer,        // Буфер на отправку в LCD.
-    size           : 256,                          // Его размер.
-    posx           : 0,                            // позиция плавающего буфера(если размера буфера на отправку должен быть меньше чем буфер гуя).
-    posy           : 0,
+    .gui            = &m_gui,                       // Структура используемого GUI объекта.
+    .lcd_height     = 64,                           // Реальная высота экрана.
+    .lcd_width      = 128,                          // Реальная ширина экрана.
+    .buffer_height  = MAKISE_BUF_H,                 // Ширина/высота буфера.
+    .buffer_width   = MAKISE_BUF_W,
+    .pixeldepth     = MAKISEGUI_DRIVER_DEPTH,       // Глубина цвета в LCD.
+    .buffer         = (uint32_t*)lcd_buffer,        // Буфер на отправку в LCD.
+    .size           = 256,                          // Его размер.
+    .posx           = 0,                            // позиция плавающего буфера(если размера буфера на отправку должен быть меньше чем буфер гуя).
+    .posy           = 0,
 
     // Методы для взаимодействия с LCD.
-    init           : m_driver_init,                // Первичная инициализация экрана.
-    start          : m_driver_start,               // Старт работы экрана.
-    sleep          : m_driver_sleep,               // Переход экрана в спящий режим.
-    awake          : m_driver_awake,               // Выход экрана из спящего режима.
-    set_backlight  : m_driver_set_backlight        // Управление подсветкой.
+    .init           = m_driver_init,                // Первичная инициализация экрана.
+    .start          = m_driver_start,               // Старт работы экрана.
+    .sleep          = m_driver_sleep,               // Переход экрана в спящий режим.
+    .awake          = m_driver_awake,               // Выход экрана из спящего режима.
+    .set_backlight  = m_driver_set_backlight        // Управление подсветкой.
 };
 
 const MakiseBuffer m_buf_st = {
-    gui            : &m_gui,                        // Структура используемого GUI объекта.
-    height         : 64,                            // Реальная высота экрана.
-    width          : 128,                           // Реальная ширина экрана.
-    pixeldepth     : MAKISEGUI_BUFFER_DEPTH,        // Глубина цвета в виртуальном буфере.
-    depthmask      : MAKISEGUI_BUFFER_DEPTHMASK,    // Как правильно записать?...
-    buffer         : (uint32_t*)lcd_buffer,         // Виртуальный буфер ( совпадает с драйвером ).
-    size           : 256,                           // Его размер.
-    border         : {                              // Границы рабочей области ГУИ
-        x          : 0,
-        y          : 0,
-        w          : 128,
-        h          : 64,
-        ex         : 128,
-        ey         : 64
+    .gui            = &m_gui,                        // Структура используемого GUI объекта.
+    .height         = 64,                            // Реальная высота экрана.
+    .width          = 128,                           // Реальная ширина экрана.
+    .pixeldepth     = MAKISEGUI_BUFFER_DEPTH,        // Глубина цвета в виртуальном буфере.
+    .depthmask      = MAKISEGUI_BUFFER_DEPTHMASK,    // Как правильно записать?...
+    .buffer         = (uint32_t*)lcd_buffer,         // Виртуальный буфер ( совпадает с драйвером ).
+    .size           = 256,                           // Его размер.
+    .border         = {                              // Границы рабочей области ГУИ
+        .x          = 0,
+        .y          = 0,
+        .w          = 128,
+        .h          = 64,
+        .ex         = 128,
+        .ey         = 64
     }
 };
 
@@ -119,14 +119,14 @@ void ayplayer_gui_low_init ( void ) {
 
 MHost           host;
 extern USER_OS_STATIC_MUTEX        mhost_mutex;
-extern USER_OS_STATIC_BIN_SEMAPHORE        ayplayer_gui_update_semaphore;
+extern USER_OS_STATIC_BIN_SEMAPHORE        s_gui_update;
 // Перерисовывает GUI и обновляет экран.
 void gui_update ( void ) {
-    USER_OS_TAKE_MUTEX( mhost_mutex, portMAX_DELAY );
+    USER_OS_TAKE_MUTEX( m_mhost, portMAX_DELAY );
     ayplayer_lcd.buf_clear();
     makise_g_host_call( &host, M_G_CALL_PREDRAW );
     makise_g_host_call( &host, M_G_CALL_DRAW );
     m_gui_update( &m_gui );
-    USER_OS_GIVE_BIN_SEMAPHORE( ayplayer_gui_update_semaphore );
-    USER_OS_GIVE_MUTEX( mhost_mutex );
+    USER_OS_GIVE_BIN_SEMAPHORE( s_gui_update );
+    USER_OS_GIVE_MUTEX( m_mhost );
 }

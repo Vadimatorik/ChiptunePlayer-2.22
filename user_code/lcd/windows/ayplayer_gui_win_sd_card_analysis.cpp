@@ -38,8 +38,6 @@ MakiseStyle_SListItem sl_item = {
     .active             = { MC_White, MC_Black, MC_Black, 0 }   // Фокус.
 };
 
-extern USER_OS_STATIC_MUTEX        spi2_mutex;
-
 // Надписи.
 char string_scanning_dir[] = "Сканирование папки:"; //"Производится сканирование директории:";
 
@@ -104,14 +102,10 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     // Получаем колличество файлов в директории.
     //**********************************************************************
     uint32_t file_count = 0;
-    USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );    // sdcard занята нами.
     r = f_findfirst( &d, &fi, dir, "*.psg" );
-    USER_OS_GIVE_MUTEX( spi2_mutex );
     while ( ( r == FR_OK ) && ( fi.fname[0] != 0 ) ) {
         file_count++;
-        USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );
         r = f_findnext( &d, &fi );
-        USER_OS_GIVE_MUTEX( spi2_mutex );
     }
 
     if ( check_fat_err( c, r, &mw ) == true ) {                             // Проверяем на ошибку SD.
@@ -123,9 +117,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     //**********************************************************************
     // Создаем файл со списком.
     //**********************************************************************
-    USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );
     r = f_open( &file_list, "psg_list.txt", FA_CREATE_ALWAYS | FA_READ | FA_WRITE );
-    USER_OS_GIVE_MUTEX( spi2_mutex );
     if ( check_fat_err( c, r, &mw ) == true ) return false;                 // Проверяем на ошибку SD.
 
     //**********************************************************************
@@ -144,9 +136,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
 
     uint8_t scan_repeat = 0;
 
-    USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );
     r = f_findfirst( &d, &fi, dir, "*.psg" );
-    USER_OS_GIVE_MUTEX( spi2_mutex );
 
     while ( ( r == FR_OK ) && ( fi.fname[0] != 0 ) ) {
         uint32_t len;
@@ -181,10 +171,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
         if ( p_s == 4 ) p_s = 0;
 
         // Ищем следующий файл.
-        USER_OS_TAKE_MUTEX( spi2_mutex, portMAX_DELAY );
         r = f_findnext( &d, &fi );
-        USER_OS_GIVE_MUTEX( spi2_mutex );
-
     }
 
     // Если не удалось связаться с картой, то выходим без закрытия.
