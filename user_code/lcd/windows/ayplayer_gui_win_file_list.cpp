@@ -127,7 +127,7 @@ void get_item_name_and_time ( MPlayList_Item* selected_item, uint32_t treck_numb
     USER_OS_GIVE_MUTEX( spi2_mutex );
 }
 
-extern USER_OS_STATIC_QUEUE ayplayer_play_queue;
+extern USER_OS_STATIC_QUEUE q_play;
 
 extern ay_ym_file_mode  ay_file_mode;
 extern ay_ym_low_lavel  ay;
@@ -141,7 +141,7 @@ uint8_t item_click ( MPlayList_Item* click_item ) {
         if ( click_item->play_state == 0 ) {                                // Если играл трек, но мы решилы начать играть другой.
             ay_file_mode.psg_file_stop();                                       // Говорим, что со старым надо кончать.
             m_play_bar_set_new_track( &gui_e_pb, click_item->time_sec );
-            USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name_string, portMAX_DELAY );
+            USER_OS_QUEUE_SEND( q_play, &click_item->name_string, portMAX_DELAY );
             return 0;
         }
         ay.play_state_set( false );                                         // Останавливаем железо.
@@ -158,13 +158,13 @@ uint8_t item_click ( MPlayList_Item* click_item ) {
         ay_file_mode.psg_file_stop();                                       // Говорим, что со старым надо кончать.
         ay.play_state_set( true );                                          // Даем возможность сделать это.
         m_play_bar_set_new_track( &gui_e_pb, click_item->time_sec );
-        USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name_string, portMAX_DELAY );
+        USER_OS_QUEUE_SEND( q_play, &click_item->name_string, portMAX_DELAY );
         return 0;
 
     // Просто новый трек с нуля.
     case M_EC_TO_U32( EC_AY_PLAY_STATE::STOP ):
         m_play_bar_set_new_track( &gui_e_pb, click_item->time_sec );
-        USER_OS_QUEUE_SEND( ayplayer_play_queue, &click_item->name_string, portMAX_DELAY );
+        USER_OS_QUEUE_SEND( q_play, &click_item->name_string, portMAX_DELAY );
         return 0;
     }
     return 0;

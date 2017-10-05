@@ -71,16 +71,16 @@
 // Должно вернуть true если успех и false - есл провал.
 #define USER_OS_TAKE_BIN_SEMAPHORE(SEMAPHORE,EXPECTATION)   xSemaphoreTake( SEMAPHORE, ( TickType_t )EXPECTATION )
 
-/*
- * Созданиче задач.
- */
-#define USER_OS_STATIC_TASK_CREATE(FUNC,STRING_NAME,STACK_SIZE,PARAM,PRIO,P_STACK,P_STUCT)     xTaskCreateStatic( FUNC, STRING_NAME, STACK_SIZE, PARAM, PRIO, P_STACK, P_STUCT )
+//**********************************************************************
+// Созданиче задач.
+//**********************************************************************
+#define USER_OS_STATIC_TASK_CREATE(FUNC,STRING_NAME,STACK_SIZE,PARAM,PRIO,P_STACK,P_STRUCT)     xTaskCreateStatic( FUNC, STRING_NAME, STACK_SIZE, PARAM, PRIO, P_STACK, P_STRUCT )
 #define USER_OS_STATIC_STACK_TYPE                                                              StackType_t
 #define USER_OS_STATIC_TASK_STRUCT_TYPE                                                        StaticTask_t
 
-/*
- * Прочее.
- */
+//**********************************************************************
+// Прочее.
+//**********************************************************************
 #define USER_OS_TICK_TYPE                                   TickType_t
 #define USER_OS_DELAY_MS(DELAY_MS)                          vTaskDelay( ( TickType_t )DELAY_MS )
 #define USER_OS_TASK_GET_TICK_COUNT                         xTaskGetTickCount

@@ -1,8 +1,6 @@
 #include "ayplayer_ay_file.h"
 #include "ayplayer_core_struct.h"
 #include "ayplayer_gui_win_file_list.h"
-
-#define AY_PLAYER_PLAY_TASK_STACK_SIZE             5000
-#define AY_PLAYER_PLAY_TIC_TASK_STACK_SIZE          500
+#include "ayplayer_os_object.h"
 
 void ayplayer_play_task_init ( void );
