@@ -4,4 +4,4 @@
 #include "ayplayer_fat.h"
 #include "ayplayer_gui_low.h"
 
-void ayplayer_error_microsd_draw ( MContainer* c, FRESULT r );
+void ayplayer_error_string_draw ( MContainer* c, char* s );

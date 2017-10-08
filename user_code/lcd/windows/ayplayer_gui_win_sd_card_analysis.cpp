@@ -74,9 +74,9 @@ void item_shift ( MSList_Item* i_ar, uint32_t cout, char* new_st ) {
     i_ar[0].text = new_st;
 }
 
-bool check_fat_err ( MContainer* c, FRESULT r, MMessageWindow* mw ) {
+bool check_fat_err ( MContainer* c, FRESULT r ) {
     if ( r != FR_OK ) {
-        ayplayer_error_microsd_draw( c, r, mw );
+        ayplayer_error_microsd_draw( c, r );
         gui_update();
         return true;
     }
@@ -91,7 +91,6 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     FILINFO         fi;
     FRESULT         r;
     FIL             file_list;
-    MMessageWindow  mw;
 
     // Инициализируем окно.
     ayplayer_gui_window_sd_card_analysis_creature( c, &pb, &sl );
@@ -106,7 +105,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
         r = f_findnext( &d, &fi );
     }
 
-    if ( check_fat_err( c, r, &mw ) == true ) {                             // Проверяем на ошибку SD.
+    if ( check_fat_err( c, r ) == true ) {                             // Проверяем на ошибку SD.
         return false;
     }
 
@@ -116,7 +115,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     // Создаем файл со списком.
     //**********************************************************************
     r = f_open( &file_list, "psg_list.txt", FA_CREATE_ALWAYS | FA_READ | FA_WRITE );
-    if ( check_fat_err( c, r, &mw ) == true ) return false;                 // Проверяем на ошибку SD.
+    if ( check_fat_err( c, r ) == true ) return false;                 // Проверяем на ошибку SD.
 
     //**********************************************************************
     // Анализируем файлы.
@@ -156,7 +155,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
 
         UINT l;                                                         // Количество записанных байт (должно быть 512).
         r = f_write( &file_list, b, 512, &l );
-        if ( check_fat_err( c, r, &mw ) == true ) return false;         // Проверяем на ошибку SD.
+        if ( check_fat_err( c, r ) == true ) return false;         // Проверяем на ошибку SD.
 
         if ( l != 512 ) return false;                                   // Если запись не прошла - аварийный выход.
 
@@ -173,7 +172,7 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
     }
 
     // Если не удалось связаться с картой, то выходим без закрытия.
-    if ( check_fat_err( c, r, &mw ) == true ) return false;                             // Проверяем на ошибку SD.
+    if ( check_fat_err( c, r ) == true ) return false;                             // Проверяем на ошибку SD.
 
     makise_g_cont_clear( c );
     f_close( &file_list );

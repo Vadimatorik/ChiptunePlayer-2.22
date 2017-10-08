@@ -29,20 +29,35 @@ void ayplayer_gui_update_task ( __attribute__((unused)) void* param ) {
     }
 }
 
+char sd2_not_presence[] = "System microsd not presence!";
+
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
 void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
+    // Настраиваем потенциометры.
     sound_dp.connect_on();
     ayplayer_control.dp_update_value();
+
+    // Проверяем наличие SD карты.
+    while(1){
+
+    if ( !sd2_get_presence_state() ) {
+        ayplayer_error_string_draw( &m_cont, sd2_not_presence );
+    }
+}
 
     // Инициализация FAT объекта (общий на обе карты).
     FRESULT fr = f_mount( &fat, "", 0 );
     if ( fr != FR_OK ) {
-        MMessageWindow  mmw;
-        makise_g_cont_clear( &m_cont );
-        ayplayer_error_microsd_draw( &m_cont, fr, &mmw );
+        ayplayer_error_microsd_draw( &m_cont, fr );
     }
+
+
+
+
+
+
 
     //uint8_t b_buf_nember;
 
