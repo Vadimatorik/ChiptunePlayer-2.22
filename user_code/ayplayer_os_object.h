@@ -2,6 +2,9 @@
 
 #include "user_os.h"
 
+//**********************************************************************
+// Размеры steck-ов задач.
+//**********************************************************************
 #define TB_PLAY_SIZE                    5000
 #define TB_PLAY_TIC_SIZE                1000
 #define TB_GUI_SIZE                     10000
@@ -9,6 +12,17 @@
 #define TB_B_INC_DEC_SIZE               1000
 #define TB_HOUSEKEEPING_SIZE            1000
 #define TB_BATTERY_CHECK_SIZE           1000
+
+//**********************************************************************
+// Приоритеты задач.
+//**********************************************************************
+#define GUI_CORE_TASK_PRIO              3
+#define GUI_UPDATE_TASK_PRIO            2
+
+
+
+
+
 
 #define QB_BUTTON_SIZE                  1
 

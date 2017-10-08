@@ -25,3 +25,23 @@ void ayplayer_state::battery_voltage_set ( float battery_voltage ) {
 float ayplayer_state::battery_voltage_get ( void ) {
     return this->battery_voltage.get_and_reset();
 }
+
+EC_AD5204_ANSWER ayplayer_state::dp_update_value ( void ) {
+    EC_AD5204_ANSWER    r;
+    r = sound_dp.value_set( 0, 0, this->dp_low.b );
+    if ( r != EC_AD5204_ANSWER::OK ) return r;
+    r = sound_dp.value_set( 0, 1, this->dp_low.c );
+    if ( r != EC_AD5204_ANSWER::OK ) return r;
+    r = sound_dp.value_set( 0, 2, this->dp_low.a );
+    if ( r != EC_AD5204_ANSWER::OK ) return r;
+    r = sound_dp.value_set( 0, 3, this->dp_low.a1 );
+    if ( r != EC_AD5204_ANSWER::OK ) return r;
+    r = sound_dp.value_set( 1, 0, this->dp_low.b1 );
+    if ( r != EC_AD5204_ANSWER::OK ) return r;
+    r = sound_dp.value_set( 1, 1, this->dp_low.c1 );
+    if ( r != EC_AD5204_ANSWER::OK ) return r;
+    r = sound_dp.value_set( 1, 2, this->dp_low.left);
+    if ( r != EC_AD5204_ANSWER::OK ) return r;
+    r = sound_dp.value_set( 1, 3, this->dp_low.right );
+    return r;
+}
