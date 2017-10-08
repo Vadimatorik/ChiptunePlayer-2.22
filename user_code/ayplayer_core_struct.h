@@ -73,3 +73,5 @@ private:
     EC_AY_ACTIVE_WINDOW     active_window       = EC_AY_ACTIVE_WINDOW::SYSTEM;
     arithmetic_mean         battery_voltage;
 };
+
+extern ayplayer_state ayplayer_control;

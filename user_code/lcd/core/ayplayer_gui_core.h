@@ -27,3 +27,5 @@ void ayplayer_gui_core_task ( void* param );
 
 // Обновление окна раз в секунду.
 void ayplayer_gui_update_task ( void* param );
+
+extern MPlayList              gui_pl;

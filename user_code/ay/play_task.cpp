@@ -1,16 +1,10 @@
 #include "play_task.h"
 
-extern ay_ym_file_mode ay_file_mode;
-
 //**********************************************************************
 // Задача ожидает появления в очереди указателя на полный путь до файла,
 // который требуется воспроизвести и пытается воспроизвести его.
 // После открытия файла - строка с его именем не нужна.
 //**********************************************************************
-extern ayplayer_state               ayplayer_control;
-extern MPlayList                    gui_pl;
-extern MHost                        host;
-
 static void ayplayer_play_task ( void* p_obj ) {
     ( void )p_obj;
     char* name;

@@ -4,10 +4,9 @@
 void ayplayer_gui_core_init ( void ) {
     USER_OS_STATIC_TASK_CREATE( ayplayer_gui_core_task, "gui_main", TB_GUI_SIZE, NULL, 3, tb_gui, &ts_gui );
     USER_OS_STATIC_TASK_CREATE( ayplayer_gui_update_task, "gui_up", TB_STATUS_BAR_UPDATE_SIZE, NULL, 2, tb_gui_status_bar_update, &ts_gui_status_bar_update );
+    m_mhost_init();
     s_gui_update_init();
 }
-
-ayplayer_state ayplayer_control;
 
 // Внутренние объекты (общие для всех окон).
 
@@ -64,7 +63,7 @@ void ayplayer_gui_update_task ( void* param ) {
 //**********************************************************************
 void ayplayer_gui_core_task ( void* param ) {
     ( void )param;
-    m_mhost_init();
+
 
     sound_dp.connect_on();
 
@@ -84,7 +83,6 @@ void ayplayer_gui_core_task ( void* param ) {
     if ( fr != FR_OK ) while( true );
 
     uint8_t b_buf_nember;
-
 
     // Составить список PSG файлов, если нет такого на карте.
     FIL file_list;
@@ -172,6 +170,5 @@ void ayplayer_gui_core_task ( void* param ) {
             gui_update();
             break;
         }
-
     }
 }
