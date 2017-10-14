@@ -49,3 +49,7 @@ EC_AD5204_ANSWER ayplayer_state::dp_update_value ( void ) {
 EC_AY_STATE ayplayer_state::stait_get ( void ) {
     return this->stait;
 }
+
+void ayplayer_state::stait_set ( EC_AY_STATE stait ) {
+    this->stait = stait;
+}

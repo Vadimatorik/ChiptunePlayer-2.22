@@ -10,8 +10,7 @@ MPlayList              gui_pl;
 MPlayList_Item         gui_pl_item_array[4];
 MPlayBar               gui_e_pb;
 
-MPlayerStatusBar       gui_e_psb_copy_0;
-MPlayerStatusBar       gui_e_psb_copy_1;
+MPlayerStatusBar       gui_e_psb;
   //USER_OS_TAKE_MUTEX( m_mhost, portMAX_DELAY );
 //ayplayer_control.active_window_get()
 // USER_OS_GIVE_MUTEX( m_mhost );
@@ -31,6 +30,23 @@ void ayplayer_gui_update_task ( __attribute__((unused)) void* param ) {
 }
 
 char sd2_not_responding[] = "System microsd not responding!";
+
+void select_window_main ( void ) {
+    USER_OS_TAKE_MUTEX( m_mhost, portMAX_DELAY );
+    ayplayer_gui_player_status_bar_creature( &m_cont, &gui_e_psb );
+    ayplayer_gui_window_main_creature( &m_cont, &gui_e_pb );
+    ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::MAIN );
+    USER_OS_GIVE_MUTEX( m_mhost );
+}
+
+void select_window_play_list ( void ) {
+    USER_OS_TAKE_MUTEX( m_mhost, portMAX_DELAY );
+    ayplayer_gui_player_status_bar_creature( &m_cont, &gui_e_psb );
+    ayplayer_gui_window_play_list_creature( &m_cont, &gui_pl, gui_pl_item_array, path_dir );
+    makise_g_focus( &gui_pl.e, M_G_FOCUS_GET );
+    ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::PLAY_LIST );
+    USER_OS_GIVE_MUTEX( m_mhost );
+}
 
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
@@ -79,22 +95,13 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
         ayplayer_sd_card_scan( path_dir, &m_cont );
     }
 
-    //uint8_t b_buf_nember;
-    /*
+    // Формируем главное окно.
+    select_window_main();
 
-    // Статус бар. Он есть во всех неигровых окнах.
-    ayplayer_gui_player_status_bar_creature( &ayplayer_gui_win_play_list, &gui_e_psb_copy_0 );
-    ayplayer_gui_player_status_bar_creature( &ayplayer_gui_win_play, &gui_e_psb_copy_1 );
-
-    // Конфигурируем постоянные окна (которые живут все время).
-    ayplayer_gui_window_play_list_creature( &ayplayer_gui_win_play_list, &gui_pl, gui_pl_item_array, path_dir );
-    ayplayer_gui_window_main_creature( &ayplayer_gui_win_play, &gui_e_pb );
-
-    ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::MAIN );
-    container_set_to_mhost();
-
-    makise_g_focus( &gui_pl.e, M_G_FOCUS_GET );
     gui_update();
+    ayplayer_control.stait_set( EC_AY_STATE::RUN );
+
+    uint8_t b_buf_nember;
 
     while ( true ) {
         USER_OS_QUEUE_RESET( q_ay_button );  // Старые команды нас не интересуют.
@@ -116,8 +123,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
                 break;
 
             case M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_CLICK ):
-                ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::MAIN );
-                container_set_to_mhost();
+                select_window_main();
                 break;
             }
             makise_gui_input_perform( &host );
@@ -127,8 +133,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
         case M_EC_TO_U32( EC_AY_ACTIVE_WINDOW::MAIN ):
             switch ( b_buf_nember ) {
             case M_EC_TO_U8( EC_BUTTON_NAME::LEFT_LONG_PRESS ):
-                ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::PLAY_LIST );
-                container_set_to_mhost();
+                select_window_play_list();
                 break;
 
             // Эмулируем проход по play_list.
@@ -159,7 +164,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
             gui_update();
             break;
         }
-    }*/
+    }
 }
 
 //**********************************************************************

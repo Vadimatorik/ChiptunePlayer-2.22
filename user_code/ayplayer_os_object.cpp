@@ -24,6 +24,7 @@ uint8_t                                 qb_ay_button        [ QB_BUTTON_SIZE ]  
 USER_OS_STATIC_QUEUE_STRUCT             qs_play;
 USER_OS_STATIC_QUEUE_STRUCT             qs_ay_low[2];
 USER_OS_STATIC_QUEUE_STRUCT             qs_ay_button;
+
 //**********************************************************************
 // Mutex.
 //**********************************************************************
