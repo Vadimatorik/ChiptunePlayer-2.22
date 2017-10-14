@@ -45,3 +45,7 @@ EC_AD5204_ANSWER ayplayer_state::dp_update_value ( void ) {
     r = sound_dp.value_set( 1, 3, this->dp_low.right );
     return r;
 }
+
+EC_AY_STATE ayplayer_state::stait_get ( void ) {
+    return this->stait;
+}

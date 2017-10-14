@@ -16,7 +16,7 @@ MPlayerStatusBar       gui_e_psb_copy_1;
 //ayplayer_control.active_window_get()
 // USER_OS_GIVE_MUTEX( m_mhost );
 extern MakiseGUI       m_gui;  
-
+extern MHost           host;
 //**********************************************************************
 // Обновляет экран раз в секунду,
 // если никто другой не обновил за это время.
@@ -24,28 +24,25 @@ extern MakiseGUI       m_gui;
 void ayplayer_gui_update_task ( __attribute__((unused)) void* param ) {
     while ( true ) {
         if ( USER_OS_TAKE_BIN_SEMAPHORE( s_gui_update, 1000 ) == pdFALSE ) {
+            if ( ayplayer_control.stait_get() == EC_AY_STATE::RUN )
             gui_update();
         }
     }
 }
 
-char sd2_not_presence[] = "System microsd not presence!";
+char sd2_not_responding[] = "System microsd not responding!";
 
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
 void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
+    // Готовим низкий уровень GUI и все необходимые структуры.
+    ayplayer_gui_low_init();
+    host.host = &m_cont;
+
     // Настраиваем потенциометры.
     sound_dp.connect_on();
     ayplayer_control.dp_update_value();
-
-    // Проверяем наличие SD карты.
-    while(1){
-
-    if ( !sd2_get_presence_state() ) {
-        ayplayer_error_string_draw( &m_cont, sd2_not_presence );
-    }
-}
 
     // Инициализация FAT объекта (общий на обе карты).
     FRESULT fr = f_mount( &fat, "", 0 );
@@ -53,24 +50,38 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
         ayplayer_error_microsd_draw( &m_cont, fr );
     }
 
+    // Ждем стабилизации питания.
+    USER_OS_DELAY_MS(500);
 
+    // Проверяем наличие SD карты.
+    DSTATUS r;
+    for ( int l = 0; l < 5; l++) {      // Даем 5 попыток инициализировать карту.
+        r = disk_initialize(0);
+        if ( r == RES_OK ) break;
+    }
 
+    // Если карты нет, то каждые 200 мс пытаемся ее найти.
+    if ( r != RES_OK )  {
+        ayplayer_error_string_draw( &m_cont, sd2_not_responding );
+        while( true ) {
+            DSTATUS r;
+            r = disk_initialize(0);
+            if ( r == RES_OK ) break;
+            USER_OS_DELAY_MS(200);
+        }
+    }
 
-
-
-
-    //uint8_t b_buf_nember;
-
+    // Сюда пришли точно с рабочей картой.
     // Составить список PSG файлов, если нет такого на карте.
     FIL file_list;
     fr = f_open( &file_list, "psg_list.txt", FA_READ );
-
     if ( fr == FR_NO_FILE )     ayplayer_sd_card_scan( path_dir, &m_cont );
 
+    //uint8_t b_buf_nember;
+    while(1){};
+
+
     /*
-    // Готовим низкий уровень GUI и все необходимые структуры.
-    ayplayer_gui_low_init();
-    container_set_to_mhost();                                           // Выбираем системное окно.
 
     // Статус бар. Он есть во всех неигровых окнах.
     ayplayer_gui_player_status_bar_creature( &ayplayer_gui_win_play_list, &gui_e_psb_copy_0 );

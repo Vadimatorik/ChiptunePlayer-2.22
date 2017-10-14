@@ -16,6 +16,11 @@ enum class EC_AY_ACTIVE_WINDOW {
     SYSTEM                                  // Системное окно с предупреждениями.
 };
 
+enum class EC_AY_STATE {
+    INIT = 0,
+    RUN = 1,
+};
+
 class arithmetic_mean {
     public:
         arithmetic_mean () {}
@@ -82,9 +87,11 @@ public:
 
     EC_AD5204_ANSWER dp_update_value ( void );
 
+    EC_AY_STATE stait_get ( void );
 private:
     EC_AY_PLAY_STATE        play_state          = EC_AY_PLAY_STATE::STOP;
     EC_AY_ACTIVE_WINDOW     active_window       = EC_AY_ACTIVE_WINDOW::SYSTEM;
+    EC_AY_STATE             stait               = EC_AY_STATE::INIT;
     dp_low_value_t          dp_low              = {
         .a      = 0xFF,
         .b      = 0xFF,

@@ -117,8 +117,7 @@ const pin_config_check_param< CHIP_2_PWR_ON_PIN_HEADING,                 EC_PIN_
 // MICRO-SD SPI2 ( SPI2 + GPIO ).
 //
 
-#define SD2_CS_PIN_HEADING                  EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_7
-
+#define SD2_CS_PIN_HEADING                  EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_7          
 const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_2,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::UP,            EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_rx;
 const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_3,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,        EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_tx;
 const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_13, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,        EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_clk;
@@ -184,8 +183,5 @@ extern pin< BUTTON_INC >                                    b_inc;
 extern pin< BUTTON_DEC >                                    b_dec;
 
 extern pin< PWR_ON_PIN_HEADING >                            pwr_on_obj;
-
-extern pin< SD2_PUSH_PIN_HEADING >                          sd2_push_obj;
-
 
 int ayplayer_port_init ( void );
