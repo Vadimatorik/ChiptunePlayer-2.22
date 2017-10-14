@@ -75,12 +75,11 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
     // Составить список PSG файлов, если нет такого на карте.
     FIL file_list;
     fr = f_open( &file_list, "psg_list.txt", FA_READ );
-    if ( fr == FR_NO_FILE )     ayplayer_sd_card_scan( path_dir, &m_cont );
+    if ( fr == FR_NO_FILE ) {
+        ayplayer_sd_card_scan( path_dir, &m_cont );
+    }
 
     //uint8_t b_buf_nember;
-    while(1){};
-
-
     /*
 
     // Статус бар. Он есть во всех неигровых окнах.
