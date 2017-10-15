@@ -139,7 +139,10 @@ bool ayplayer_sd_card_scan ( char* dir, MContainer* c ) {
         uint32_t len;
         EC_AY_FILE_MODE_ANSWER r_psg_get;
         r_psg_get = ay_file_mode.psg_file_get_long( fi.fname, len );    // Проверяем валидность файла.
-        if ( r_psg_get != EC_AY_FILE_MODE_ANSWER::OK ) continue;        // Если файл бракованный - выходим.
+        if ( r_psg_get != EC_AY_FILE_MODE_ANSWER::OK ) {                // Если файл бракованный - пропускаем его.
+            r = f_findnext( &d, &fi );
+            continue;
+        }
         // Файл рабочий.
         valid_file_count++;
 
