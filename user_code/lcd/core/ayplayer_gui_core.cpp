@@ -61,7 +61,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
     ayplayer_control.dp_update_value();
 
     // Инициализация FAT объекта (общий на обе карты).
-    FRESULT fr = f_mount( &fat, "", 0 );
+    FRESULT fr = f_mount( &fat, "0:", 0 );
     if ( fr != FR_OK ) {
         ayplayer_error_microsd_draw( &m_cont, fr );
     }
@@ -89,8 +89,8 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
 
     // Сюда пришли точно с рабочей картой.
     // Составить список PSG файлов, если нет такого на карте.
-    FIL file_list;
-    fr = f_open( &file_list, "psg_list.txt", FA_READ );
+    //FIL file_list;
+  //  fr = f_open( &file_list, "psg_list.txt", FA_READ );
   //  if ( fr == FR_NO_FILE ) {
         ayplayer_sd_card_scan( path_dir, &m_cont );
  //   }
