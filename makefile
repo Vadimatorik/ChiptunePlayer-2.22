@@ -68,6 +68,10 @@ OBJDUMP	= $(TOOLCHAIN_PATH)-objdump
 GDB	= $(TOOLCHAIN_PATH)-gdb
 SIZE	= $(TOOLCHAIN_PATH)-size
 
+# Все субмодули пишут в эти переменные.
+PROJECT_OBJ_FILE 	:=
+PROJECT_PATH		:=
+
 #**********************************************************************
 # Конфигурация проекта пользователя.
 #**********************************************************************
@@ -133,6 +137,20 @@ build/obj/module_fat_fs_by_chan/%.o:	module_fat_fs_by_chan/%.c $(USER_CFG_H_FILE
 	@echo [CC] $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(C_FAT_FS_FLAGS) $(FAT_FS_PATH) $(USER_CFG_PATH) $(FAT_FS_OPTIMIZATION) -c $< -o $@
+
+#**********************************************************************
+# Для сборки module_math.
+#**********************************************************************
+MODULE_MATH_H_FILE			:= $(shell find module_math/ -maxdepth 3 -type f -name "*.h" )
+MODULE_MATH_CPP_FILE		:= $(shell find module_math/ -maxdepth 3 -type f -name "*.c" )
+MODULE_MATH_DIR	:= $(shell find module_math/ -maxdepth 3 -type d -name "*" )
+MODULE_MATH_PATH	:= $(addprefix -I, $(MODULE_MATH_DIR))
+MODULE_MATH_OBJ_FILE	:= $(addprefix build/obj/, $(MODULE_MATH_H_FILE))
+MODULE_MATH_OBJ_FILE	:= $(patsubst %.c, %.o, $(MODULE_MATH_OBJ_FILE))
+build/obj/module_math/%.o:	module_math/%.c $(USER_CFG_H_FILE)
+	@echo [CC] $<
+	@mkdir -p $(dir $@)
+	@$(CC) $(C_FAT_FS_FLAGS) $(MODULE_MATH_PATH) $(USER_CFG_PATH) $(FAT_FS_OPTIMIZATION) -c $< -o $@
 
 #**********************************************************************
 # Для сборки FatFS.
@@ -270,6 +288,7 @@ build/obj/%.o:	%.c
 	$(MOD_CHIP_PATH) 				\
 	$(DP_PATH)					\
 	$(BUT_PATH)					\
+	$(MODULE_MATH_PATH)			\
 	$(USER_CODE_OPTIMIZATION)			\
 	-c $< -o $@
 	
@@ -289,6 +308,7 @@ build/obj/%.o:	%.cpp
 	$(SH_PATH) 					\
 	$(MOD_CHIP_PATH) 				\
 	$(DP_PATH)					\
+	$(MODULE_MATH_PATH)			\
 	$(BUT_PATH)					\
 	$(USER_CODE_OPTIMIZATION)			\
 	-c $< -o $@

@@ -21,7 +21,7 @@
 #include "ayplayer_os_object.h"
 
 // Вызвать до запуска ОС.
-void ayplayer_gui_core_init ( void );                   // Создает задачу для контроля всей графики.
+void ayplayer_core_init ( void );                   // Создает задачу для контроля всей графики.
 
 // Основная задача ядра GUI.
 void ayplayer_gui_core_task ( void* param );

@@ -34,3 +34,6 @@
 [submodule "module_button_api"]
 	path = module_button_api
 	url = https://github.com/Vadimatorik/module_button_api
+[submodule "module_math"]
+	path = module_math
+	url = git@github.com:Vadimatorik/module_math.git

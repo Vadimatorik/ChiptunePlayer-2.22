@@ -1,4 +1,4 @@
-#include "ayplayer_gui_core.h"
+#include "ayplayer_core.h"
 
 FATFS                  fat;
 char                   path_dir[512] = "0:/";
@@ -170,7 +170,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
 //**********************************************************************
 // Задача GUI.
 //**********************************************************************
-void ayplayer_gui_core_init ( void ) {
+void ayplayer_core_init ( void ) {
     USER_OS_STATIC_TASK_CREATE( ayplayer_gui_core_task, "gui_main", TB_GUI_SIZE, NULL, GUI_CORE_TASK_PRIO, tb_gui, &ts_gui );
     USER_OS_STATIC_TASK_CREATE( ayplayer_gui_update_task, "gui_up", TB_STATUS_BAR_UPDATE_SIZE, NULL, GUI_UPDATE_TASK_PRIO, tb_gui_status_bar_update, &ts_gui_status_bar_update );
     m_mhost_init();

@@ -17,8 +17,8 @@ static void ayplayer_play_task ( void* p_obj ) {
 
         // Переходим на следующий трек.
         if ( r == EC_AY_FILE_MODE_ANSWER::TRACK_END ) {
-            m_click_play_list( &gui_pl, M_KEY_DOWN );
-            m_click_play_list( &gui_pl, M_KEY_OK );
+      //      m_click_play_list( &gui_pl, M_KEY_DOWN );
+       //     m_click_play_list( &gui_pl, M_KEY_OK );
             gui_update();
         }
     }
