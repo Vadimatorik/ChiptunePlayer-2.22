@@ -11,7 +11,6 @@
 #include "ayplayer_housekeeping.h"
 #include "ayplayer_microsd_card.h"
 #include "ayplayer_lcd_driver.h"
-#include "ayplayer_gui_core.h"
 #include "ayplayer_timers.h"
 #include "ayplayer_ay_low.h"
 #include "ayplayer_button.h"
@@ -19,5 +18,6 @@
 #include "ayplayer_adc.h"
 #include "play_task.h"
 
+#include "ayplayer_core.h"
 
 #include <stdint.h>

@@ -3,19 +3,18 @@
 #**********************************************************************
 # Параметры сборки проекта.
 #**********************************************************************
-FREE_RTOS_OPTIMIZATION						:= -g3 -Og
-STM32_F2_API_OPTIMIZATION					:= -g3 -Og
-USER_CODE_OPTIMIZATION						:= -g3 -Og
-LCD_LIB_OPTIMIZATION						:= -g3 -Og
-SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION		:= -g3 -Og
-MINI_GUI_BY_VADIMATORIK_OPTIMIZATION		:= -g3 -Og
-MICRO_SD_DRIVER_OPTIMIZATION				:= -g3 -Og
-SH_OPTIMIZATION								:= -g3 -Og
-MOD_CHIP_OPTIMIZATION						:= -g3 -Og
-FAT_FS_OPTIMIZATION							:= -g3 -Og
-FAT_FS_OPTIMIZATION							:= -g3 -Og
-MAKISE_GUI_OPTIMIZATION						:= -g3 -Og
-BUT_OPTIMIZATION							:= -g3 -Og
+FREE_RTOS_OPTIMIZATION						:= -g3 -O0
+STM32_F2_API_OPTIMIZATION					:= -g3 -O0
+USER_CODE_OPTIMIZATION						:= -g3 -O0
+LCD_LIB_OPTIMIZATION						:= -g3 -O0
+SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION		:= -g3 -O0
+MICRO_SD_DRIVER_OPTIMIZATION				:= -g3 -O0
+SH_OPTIMIZATION								:= -g3 -O0
+MOD_CHIP_OPTIMIZATION						:= -g3 -O0
+FAT_FS_OPTIMIZATION							:= -g3 -O0
+FAT_FS_OPTIMIZATION							:= -g3 -O0
+MAKISE_GUI_OPTIMIZATION						:= -g3 -O0
+BUT_OPTIMIZATION							:= -g3 -O0
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xG_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
@@ -52,6 +51,10 @@ LDFLAGS			+= -Wl,--gc-sections
 # Формируем map файл.
 #LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
 
+FREE_RTOS_C_FLAGS		:=	$(C_FLAGS)
+
+
+
 #**********************************************************************
 # Параметры toolchain-а.
 #**********************************************************************
@@ -68,6 +71,10 @@ OBJDUMP			= $(TOOLCHAIN_PATH)-objdump
 GDB				= $(TOOLCHAIN_PATH)-gdb
 SIZE			= $(TOOLCHAIN_PATH)-size
 
+# Все субмодули пишут в эти переменные.
+PROJECT_OBJ_FILE 	:=
+PROJECT_PATH		:=
+
 #**********************************************************************
 # Конфигурация проекта пользователя.
 #**********************************************************************
@@ -76,200 +83,45 @@ USER_CFG_H_FILE		:= $(wildcard cfg/*.h)
 USER_CFG_DIR		:= cfg
 USER_CFG_PATH		:= -I$(USER_CFG_DIR)
 
-#**********************************************************************
-# Интерфейсы микроконтроллера.
-#**********************************************************************
-# Все файлы из папки cfg в каталоге проекта.
-MK_INTER_H_FILE		:= $(wildcard mk_hardware_interfaces/*.h)
-MK_INTER_DIR		:= mk_hardware_interfaces
-MK_INTER_PATH		:= -I$(MK_INTER_DIR)
-	
-#**********************************************************************
-# Для сборки FreeRTOS.
-#**********************************************************************
-# Собираем все необходимые .h файлы FreeRTOS.
-# FreeRTOS.h должен обязательно идти первым! 
-FREE_RTOS_H_FILE	:= FreeRTOS_for_stm32f2/FreeRTOS.h
-FREE_RTOS_H_FILE	+= $(wildcard FreeRTOS_for_stm32f2/include/*.h)
+PROJECT_PATH		+= $(USER_CFG_PATH)
 
-# Директории, в которых лежат файлы FreeRTOS.
-FREE_RTOS_DIR		:= FreeRTOS_for_stm32f2
-FREE_RTOS_DIR		+= FreeRTOS_for_stm32f2/include
 
-# Подставляем перед каждым путем директории префикс -I.
-FREE_RTOS_PATH		:= $(addprefix -I, $(FREE_RTOS_DIR))
+include FreeRTOS_for_stm32f2/makefile
+include mk_hardware_interfaces/makefile
+include module_fat_fs_by_chan/makefile
+include module_math/makefile
+include MakiseGUI/makefile
+include stm32f2_api/makefile
+include mono_lcd_lib/makefile
+include micro_sd_driver_by_vadimatorik/makefile
+include module_shift_register/makefile
+include module_chiptune/makefile
+include module_button_api/makefile
+include module_digital_potentiometer/makefile
 
-# Получаем список .c файлов ( путь + файл.c ).
-FREE_RTOS_C_FILE	:= $(wildcard FreeRTOS_for_stm32f2/*.c)
-
-# Получаем список .o файлов ( путь + файл.o ).
-# Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
-# с сохранением иерархии.
-FREE_RTOS_OBJ_FILE	:= $(addprefix build/obj/, $(FREE_RTOS_C_FILE))
-# Затем меняем у всех .c на .o.
-FREE_RTOS_OBJ_FILE	:= $(patsubst %.c, %.o, $(FREE_RTOS_OBJ_FILE))
-
-FREE_RTOS_INCLUDE_FILE	:= -include"./FreeRTOS_for_stm32f2/include/StackMacros.h"
-# Сборка FreeRTOS.
-# $< - текущий .c файл (зависемость).
-# $@ - текущая цель (создаваемый .o файл).
-# $(dir путь) - создает папки для того, чтобы путь файла существовал.
-build/obj/FreeRTOS_for_stm32f2/%.o:	FreeRTOS_for_stm32f2/%.c 
-	@echo [CC] $<
-	@mkdir -p $(dir $@)
-	@$(CC) $(C_FLAGS) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(FREE_RTOS_INCLUDE_FILE) -c $< -o $@
-
-	
-#**********************************************************************
-# Для сборки FatFS.
-#**********************************************************************
-FAT_FS_H_FILE	:= $(shell find module_fat_fs_by_chan/ -maxdepth 3 -type f -name "*.h" )
-FAT_FS_CPP_FILE	:= $(shell find module_fat_fs_by_chan/ -maxdepth 3 -type f -name "*.c" )
-FAT_FS_DIR	:= $(shell find module_fat_fs_by_chan/ -maxdepth 3 -type d -name "*" )
-FAT_FS_PATH	:= $(addprefix -I, $(FAT_FS_DIR))
-FAT_FS_OBJ_FILE	:= $(addprefix build/obj/, $(FAT_FS_CPP_FILE))
-FAT_FS_OBJ_FILE	:= $(patsubst %.c, %.o, $(FAT_FS_OBJ_FILE))
-build/obj/module_fat_fs_by_chan/%.o:	module_fat_fs_by_chan/%.c $(USER_CFG_H_FILE)
-	@echo [CC] $<
-	@mkdir -p $(dir $@)
-	@$(CC) $(C_FAT_FS_FLAGS) $(FAT_FS_PATH) $(USER_CFG_PATH) $(FAT_FS_OPTIMIZATION) -c $< -o $@
-
-#**********************************************************************
-# Для сборки FatFS.
-#**********************************************************************
-MAKISE_GUI_H_FILE	:= $(shell find MakiseGUI/ -maxdepth 10 -type f -name "*.h" )
-MAKISE_GUI_C_FILE	:= $(shell find MakiseGUI/ -maxdepth 10 -type f -name "*.c" )
-MAKISE_GUI_DIR		:= $(shell find MakiseGUI/ -maxdepth 10 -type d -name "*" )
-MAKISE_GUI_PATH		:= $(addprefix -I, $(MAKISE_GUI_DIR))
-MAKISE_GUI_OBJ_FILE	:= $(addprefix build/obj/, $(MAKISE_GUI_C_FILE))
-MAKISE_GUI_OBJ_FILE	:= $(patsubst %.c, %.o, $(MAKISE_GUI_OBJ_FILE))
-build/obj/MakiseGUI/%.o:	MakiseGUI/%.c $(USER_CFG_H_FILE) 
-	@echo [CC] $<
-	@mkdir -p $(dir $@)
-	@$(CC) $(C_FLAGS) $(FAT_FS_PATH) $(USER_CFG_PATH) $(MAKISE_GUI_PATH) $(MAKISE_GUI_OPTIMIZATION) -c $< -o $@
-
-#**********************************************************************
-# Для сборки stm32f2_api.
-#**********************************************************************
-STM32_F2_API_H_FILE	:= $(shell find stm32f2_api/ -maxdepth 3 -type f -name "*.h" )
-STM32_F2_API_CPP_FILE	:= $(shell find stm32f2_api/ -maxdepth 3 -type f -name "*.cpp" )
-STM32_F2_API_DIR	:= $(shell find stm32f2_api/ -maxdepth 3 -type d -name "*" )
-STM32_F2_API_PATH	:= $(addprefix -I, $(STM32_F2_API_DIR))
-STM32_F2_API_OBJ_FILE	:= $(addprefix build/obj/, $(STM32_F2_API_CPP_FILE))
-STM32_F2_API_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(STM32_F2_API_OBJ_FILE))
-build/obj/stm32f2_api/%.o:	stm32f2_api/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE) $(MK_INTER_H_FILE)
-	@echo [CPP] $<
-	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(STM32_F2_API_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(STM32_F2_API_OPTIMIZATION) $(MK_INTER_PATH) -c $< -o $@
-
-#**********************************************************************
-# Для сборки библиотеки LCD драйверов (mono_lcd_lib).
-#**********************************************************************
-LCD_LIB_H_FILE		:= $(shell find mono_lcd_lib/ -maxdepth 3 -type f -name "*.h" )
-LCD_LIB_CPP_FILE	:= $(shell find mono_lcd_lib/ -maxdepth 3 -type f -name "*.cpp" )
-LCD_LIB_DIR		:= $(shell find mono_lcd_lib/ -maxdepth 3 -type d -name "*" )
-LCD_LIB_PATH		:= $(addprefix -I, $(LCD_LIB_DIR))
-LCD_LIB_OBJ_FILE	:= $(addprefix build/obj/, $(LCD_LIB_CPP_FILE))
-LCD_LIB_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(LCD_LIB_OBJ_FILE))
-build/obj/mono_lcd_lib/%.o:	mono_lcd_lib/%.cpp $(USER_CFG_H_FILE) $(FREE_RTOS_H_FILE) $(MK_INTER_H_FILE)
-	@echo [CPP] $<
-	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(LCD_LIB_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(LCD_LIB_OPTIMIZATION) $(MK_INTER_PATH) -c $< -o $@
-
-#**********************************************************************
-# Драйвер SD карты (micro_sd_driver_by_vadimatorik).
-#**********************************************************************
-MICRO_SD_DRIVER_H_FILE		:= $(shell find micro_sd_driver_by_vadimatorik/ -maxdepth 3 -type f -name "*.h" )
-MICRO_SD_DRIVER_CPP_FILE	:= $(shell find micro_sd_driver_by_vadimatorik/ -maxdepth 3 -type f -name "*.cpp" )
-MICRO_SD_DRIVER_DIR		:= $(shell find micro_sd_driver_by_vadimatorik/ -maxdepth 3 -type d -name "*" )
-MICRO_SD_DRIVER_PATH		:= $(addprefix -I, $(MICRO_SD_DRIVER_DIR))
-MICRO_SD_DRIVER_OBJ_FILE	:= $(addprefix build/obj/, $(MICRO_SD_DRIVER_CPP_FILE))
-MICRO_SD_DRIVER_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(MICRO_SD_DRIVER_OBJ_FILE))
-build/obj/micro_sd_driver_by_vadimatorik/%.o:	micro_sd_driver_by_vadimatorik/%.cpp
-	@echo [CPP] $<
-	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(MICRO_SD_DRIVER_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH)  $(MICRO_SD_DRIVER_OPTIMIZATION) -c $< -o $@
-	
-#**********************************************************************
-# module_shift_register
-#**********************************************************************
-SH_H_FILE	:= $(shell find module_shift_register/ -maxdepth 3 -type f -name "*.h" )
-SH_CPP_FILE	:= $(shell find module_shift_register/ -maxdepth 3 -type f -name "*.cpp" )
-SH_DIR		:= $(shell find module_shift_register/ -maxdepth 3 -type d -name "*" )
-SH_PATH		:= $(addprefix -I, $(SH_DIR))
-SH_OBJ_FILE	:= $(addprefix build/obj/, $(SH_CPP_FILE))
-SH_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(SH_OBJ_FILE))
-build/obj/module_shift_register/%.o:	module_shift_register/%.cpp
-	@echo [CPP] $<
-	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(SH_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH)  $(SH_OPTIMIZATION) -c $< -o $@
-
-#**********************************************************************
-# module_chiptune
-#**********************************************************************
-MOD_CHIP_H_FILE		:= $(shell find module_chiptune/ -maxdepth 3 -type f -name "*.h" )
-MOD_CHIP_CPP_FILE	:= $(shell find module_chiptune/ -maxdepth 3 -type f -name "*.cpp" )
-MOD_CHIP_DIR		:= $(shell find module_chiptune/ -maxdepth 3 -type d -name "*" )
-MOD_CHIP_PATH		:= $(addprefix -I, $(MOD_CHIP_DIR))
-MOD_CHIP_OBJ_FILE	:= $(addprefix build/obj/, $(MOD_CHIP_CPP_FILE))
-MOD_CHIP_OBJ_FILE	:= $(patsubst %.cpp, %.o, $(MOD_CHIP_OBJ_FILE))
-build/obj/module_chiptune/%.o:	module_chiptune/%.cpp
-	@echo [CPP] $<
-	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(FAT_FS_PATH) $(MOD_CHIP_PATH) $(USER_CFG_PATH) $(STM32_F2_API_PATH) $(FREE_RTOS_PATH) $(SH_PATH) $(MOD_CHIP_OPTIMIZATION) -c $< -o $@
-	
-#**********************************************************************
-# module_button_api
-#**********************************************************************
-BUT_H_FILE		:= $(shell find module_button_api/ -maxdepth 3 -type f -name "*.h" )
-BUT_CPP_FILE		:= $(shell find module_button_api/ -maxdepth 3 -type f -name "*.cpp" )
-BUT_DIR			:= $(shell find module_button_api/ -maxdepth 3 -type d -name "*" )
-BUT_PATH		:= $(addprefix -I, $(BUT_DIR))
-BUT_OBJ_FILE		:= $(addprefix build/obj/, $(BUT_CPP_FILE))
-BUT_OBJ_FILE		:= $(patsubst %.cpp, %.o, $(BUT_OBJ_FILE))
-build/obj/module_button_api/%.o:	module_button_api/%.cpp
-	@echo [CPP] $<
-	@mkdir -p $(dir $@)
-	@$(CPP) $(CPP_FLAGS) $(MK_INTER_PATH) $(BUT_PATH) $(USER_CFG_PATH) $(FREE_RTOS_PATH) $(SH_PATH) $(BUT_OPTIMIZATION) -c $< -o $@
-	
-#**********************************************************************
-# module_digital_potentiometer (сделано на шаблонах, все .h).
-#**********************************************************************
-DP_H_FILE	:= $(shell find module_digital_potentiometer/ -maxdepth 3 -type f -name "*.h" )
-DP_DIR		:= $(shell find module_digital_potentiometer/ -maxdepth 3 -type d -name "*" )
-DP_PATH		:= $(addprefix -I, $(DP_DIR))
 	
 #**********************************************************************
 # Сборка кода пользователя.
 # Весь код пользователя должен быть в корневой папке.
 #**********************************************************************
-USER_H_FILE		:= $(shell find user_code/ -maxdepth 5 -type f -name "*.h" )
-USER_CPP_FILE		:= $(shell find user_code/ -maxdepth 5 -type f -name "*.cpp" )
-USER_C_FILE		:= $(shell find user_code/ -maxdepth 5 -type f -name "*.c" )
-USER_DIR		:= $(shell find user_code/ -maxdepth 5 -type d -name "*" )
-USER_PATH		:= $(addprefix -I, $(USER_DIR))
-USER_OBJ_FILE		:= $(addprefix build/obj/, $(USER_CPP_FILE))
-USER_OBJ_FILE		+= $(addprefix build/obj/, $(USER_C_FILE))
-USER_OBJ_FILE		:= $(patsubst %.cpp, %.o, $(USER_OBJ_FILE))
-USER_OBJ_FILE		:= $(patsubst %.c, %.o, $(USER_OBJ_FILE))
+USER_H_FILE				:= $(shell find user_code/ -maxdepth 5 -type f -name "*.h" )
+USER_CPP_FILE			:= $(shell find user_code/ -maxdepth 5 -type f -name "*.cpp" )
+USER_C_FILE				:= $(shell find user_code/ -maxdepth 5 -type f -name "*.c" )
+USER_DIR				:= $(shell find user_code/ -maxdepth 5 -type d -name "*" )
+USER_PATH				:= $(addprefix -I, $(USER_DIR))
+USER_OBJ_FILE			:= $(addprefix build/obj/, $(USER_CPP_FILE))
+USER_OBJ_FILE			+= $(addprefix build/obj/, $(USER_C_FILE))
+USER_OBJ_FILE			:= $(patsubst %.cpp, %.o, $(USER_OBJ_FILE))
+USER_OBJ_FILE			:= $(patsubst %.c, %.o, $(USER_OBJ_FILE))
+
+PROJECT_PATH			+= $(USER_PATH)
+PROJECT_OBJ_FILE		+= $(USER_OBJ_FILE)
 
 build/obj/%.o:	%.c	
 	@echo [CC] $<
 	@mkdir -p $(dir $@)
-	@$(CC) $(C_FLAGS) 				\
-	$(USER_PATH) 					\
-	$(MAKISE_GUI_PATH)				\
-	$(FAT_FS_PATH) 					\
-	$(MK_INTER_PATH)  				\
-	$(STM32_F2_API_PATH) 				\
-	$(USER_CFG_PATH) 				\
-	$(FREE_RTOS_PATH) 				\
-	$(LCD_LIB_PATH) 				\
-	$(MICRO_SD_DRIVER_PATH) 			\
-	$(SH_PATH) 					\
-	$(MOD_CHIP_PATH) 				\
-	$(DP_PATH)					\
-	$(BUT_PATH)					\
+	@$(CC) $(C_FLAGS) 					\
+	$(PROJECT_PATH)						\
 	$(USER_CODE_OPTIMIZATION)			\
 	-c $< -o $@
 	
@@ -277,37 +129,9 @@ build/obj/%.o:	%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) 				\
-	$(USER_PATH) 					\
-	$(MAKISE_GUI_PATH)				\
-	$(FAT_FS_PATH) 					\
-	$(MK_INTER_PATH)  				\
-	$(STM32_F2_API_PATH) 				\
-	$(USER_CFG_PATH) 				\
-	$(FREE_RTOS_PATH) 				\
-	$(LCD_LIB_PATH) 				\
-	$(MICRO_SD_DRIVER_PATH) 			\
-	$(SH_PATH) 					\
-	$(MOD_CHIP_PATH) 				\
-	$(DP_PATH)					\
-	$(BUT_PATH)					\
 	$(USER_CODE_OPTIMIZATION)			\
+	$(PROJECT_PATH)						\
 	-c $< -o $@
-
-
-
-#**********************************************************************
-# Компановка проекта.
-#**********************************************************************
-PROJECT_OBJ_FILE	:= 	$(MAKISE_GUI_OBJ_FILE)				\
-				$(FAT_FS_OBJ_FILE) 				\
-				$(FREE_RTOS_OBJ_FILE) 				\
-				$(STM32_F2_API_OBJ_FILE) 			\
-				$(LCD_LIB_OBJ_FILE) 				\
-				$(USER_OBJ_FILE)				\
-				$(MICRO_SD_DRIVER_OBJ_FILE) 			\
-				$(SH_OBJ_FILE) 					\
-				$(MOD_CHIP_OBJ_FILE)				\
-				$(BUT_OBJ_FILE)
 
 build/$(PROJECT_NAME).elf:	$(PROJECT_OBJ_FILE)
 	@$(LD) $(LDFLAGS) $(PROJECT_OBJ_FILE)  -o build/$(PROJECT_NAME).elf

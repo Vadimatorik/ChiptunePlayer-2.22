@@ -13,7 +13,6 @@ extern "C" {
 #define configMINIMAL_STACK_SIZE        ( ( unsigned short ) 300 )
 #define configTOTAL_HEAP_SIZE           ( ( size_t ) ( 5 * 1024 ) )
 #define configMAX_TASK_NAME_LEN         ( 10 )
-#define configUSE_TRACE_FACILITY        0
 #define configUSE_16_BIT_TICKS          0
 #define configIDLE_SHOULD_YIELD         1
 #define configUSE_MUTEXES               1
@@ -24,6 +23,8 @@ extern "C" {
 #define configUSE_APPLICATION_TASK_TAG  0
 #define configUSE_COUNTING_SEMAPHORES   1
 #define configGENERATE_RUN_TIME_STATS   0
+#define configUSE_TRACE_FACILITY        1
+#define configGDB_HELPER				1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES           0
@@ -50,7 +51,6 @@ priority values, 0 to 15.  This must correspond to the
 configKERNEL_INTERRUPT_PRIORITY setting.  Here 15 corresponds to the lowest
 NVIC value of 255. */
 #define configLIBRARY_KERNEL_INTERRUPT_PRIORITY	15
-
 /*
  * Разрешаем работу нужных нам функций.
  */

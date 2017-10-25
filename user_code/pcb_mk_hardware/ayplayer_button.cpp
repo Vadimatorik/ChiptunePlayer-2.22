@@ -1,27 +1,17 @@
 #include "ayplayer_button.h"
 
-#define AY_BUTTON_QUEUE_SIZE    1
-
-uint8_t ay_b_queue_buf[ AY_BUTTON_QUEUE_SIZE ] = { 0 };
-USER_OS_STATIC_QUEUE_STRUCT  ay_b_queue_st;
-USER_OS_STATIC_QUEUE         ay_b_queue;
-
 sr_one_in_button_status_struct b_s_ar[7];
 
 // При опуске коротком или длинном - одна и та же очередь.
 sr_one_in_button_item_cfg ayplayer_button_cfg[7] = {
-    { 0, 0, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::UP ),                 nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::UP ),                  &b_s_ar[0] },
-    { 0, 1, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::DOWN ),               nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::DOWN),                 &b_s_ar[1] },
-    { 0, 2, 50, 700, nullptr, nullptr, 0, nullptr, &ay_b_queue,     M_EC_TO_U8( EC_BUTTON_NAME::LEFT_LONG_PRESS ),  nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::LEFT_LONG_CLICK ),    nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::LEFT_CLICK),           &b_s_ar[2] },
-    { 0, 3, 50, 700, nullptr, nullptr, 0, nullptr, &ay_b_queue,     M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_PRESS ), nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_CLICK ),   nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_CLICK),          &b_s_ar[3] },
-    { 0, 4, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::ENTER ),              nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::ENTER),                &b_s_ar[4] },
-    { 0, 5, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::MENU ),               nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::MENU),                 &b_s_ar[5] },
-    { 0, 6, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::BACK ),               nullptr, &ay_b_queue, M_EC_TO_U8( EC_BUTTON_NAME::BACK),                 &b_s_ar[6] },
+    { 0, 0, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::UP ),                 nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::UP ),                  &b_s_ar[0] },
+    { 0, 1, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::DOWN ),               nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::DOWN),                 &b_s_ar[1] },
+    { 0, 2, 50, 700, nullptr, nullptr, 0, nullptr, &q_ay_button,    M_EC_TO_U8( EC_BUTTON_NAME::LEFT_LONG_PRESS ),  nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::LEFT_LONG_CLICK ),    nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::LEFT_CLICK),           &b_s_ar[2] },
+    { 0, 3, 50, 700, nullptr, nullptr, 0, nullptr, &q_ay_button,    M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_PRESS ), nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_CLICK ),   nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_CLICK),          &b_s_ar[3] },
+    { 0, 4, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::ENTER ),              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::ENTER),                &b_s_ar[4] },
+    { 0, 5, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::MENU ),               nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::MENU),                 &b_s_ar[5] },
+    { 0, 6, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::BACK ),               nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::BACK),                 &b_s_ar[6] },
 };
-
-extern USER_OS_STATIC_MUTEX         spi3_mutex;
-extern module_shift_register        sr_button;
-extern uint8_t                      sr_out_buf_button[1];
 
 buttons_through_shift_register_one_in_cfg b_sr_cfg = {
     .p_in_pin                   = &b_in,
@@ -32,7 +22,7 @@ buttons_through_shift_register_one_in_cfg b_sr_cfg = {
     .prio                       = 1,
     .p_button_array             = &sr_out_buf_button[0],
     .sr_buffer_byte_count       = 1,
-    .mutex                      = &spi3_mutex
+    .mutex                      = &m_spi3
 };
 
 buttons_through_shift_register_one_in ayplayer_button( &b_sr_cfg );
@@ -97,24 +87,11 @@ void ayplayer_button_inc_and_dec_detect ( void* param ) {
                 continue;
             }
         }
-
-
-
     }
 }
 
-static StaticTask_t     ayplayer_inc_and_dec_detect_task_buffer;
-static StackType_t      ayplayer_inc_and_dec_detect_task_stack[ AY_PLAYER_B_INC_DEC_TASK_STACK_SIZE ];
-
 void ayplayer_button_init ( void ) {
-    ay_b_queue = USER_OS_STATIC_QUEUE_CREATE( AY_BUTTON_QUEUE_SIZE, sizeof( uint8_t ), ay_b_queue_buf, &ay_b_queue_st );
+    q_ay_button_init();
     ayplayer_button.init();
-
-    xTaskCreateStatic( ayplayer_button_inc_and_dec_detect,
-                       "b_incdec",
-                       AY_PLAYER_B_INC_DEC_TASK_STACK_SIZE,
-                       NULL,
-                       3,
-                       ayplayer_inc_and_dec_detect_task_stack,
-                       &ayplayer_inc_and_dec_detect_task_buffer );
+    USER_OS_STATIC_TASK_CREATE( ayplayer_button_inc_and_dec_detect, "b_incdec", TB_B_INC_DEC_SIZE,  NULL, 3, tb_inc_dec_detect, &ts_inc_dec_detect );
 }

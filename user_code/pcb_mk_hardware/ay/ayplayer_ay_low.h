@@ -7,6 +7,7 @@
 #include "ayplayer_shift_register.h"
 #include "ayplayer_timers.h"
 #include "ayplayer_port.h"
+#include "ayplayer_os_object.h"
 
 extern ay_ym_low_lavel ay;
 

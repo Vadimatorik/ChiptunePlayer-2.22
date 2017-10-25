@@ -57,7 +57,7 @@ char s_err_invalid_parameter[]       = "INVALID PARAMETER!";    // казанн�
 
 extern const MakiseFont F_minecraft_rus_regular_8;
 
-MakiseStyle_SMessageWindow smw = {
+static MakiseStyle_SMessageWindow smw = {
     .font               = &F_minecraft_rus_regular_8,
     .font_line_spacing  = 2,
 
@@ -66,7 +66,7 @@ MakiseStyle_SMessageWindow smw = {
     .border_color       = MC_Black,
 };
 
-void ayplayer_error_microsd_draw ( MContainer* c, FRESULT r, MMessageWindow* mw ) {
+void ayplayer_error_microsd_draw ( MContainer* c, FRESULT r ) {
     char *s;
 
     switch ( r ) {
@@ -94,5 +94,8 @@ void ayplayer_error_microsd_draw ( MContainer* c, FRESULT r, MMessageWindow* mw 
         return;
     }
 
-    m_create_message_window( mw, c, mp_rel( 9, 10, 108, 44 ), s, &smw );
+    MMessageWindow  mmw;
+    makise_g_cont_clear( c );
+    m_create_message_window( &mmw, c, mp_rel( 9, 10, 108, 44 ), s, &smw );
+    gui_update();
 }

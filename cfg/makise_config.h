@@ -33,9 +33,9 @@ extern "C" {
 #define MAKISE_E_SLIST                  1
 #define MAKISE_E_TABS                   1
 #define MAKISE_E_TEXT_FIELD             1
-#define MAKISE_E_TOGGLE                 1
+#define MAKISE_E_TOGGLE                 0
 #define MAKISE_E_MESSAGE_WINDOW         1
-#define MAKISE_E_FSVIEWER               MAKISE_E_FSVIEWER_FATFS
+#define MAKISE_E_FSVIEWER               0
 #define MAKISE_E_PLAY_LIST              1
 #define MAKISE_E_PLAY_BAR               1
 #define MAKISE_E_STATUS_BAR             1

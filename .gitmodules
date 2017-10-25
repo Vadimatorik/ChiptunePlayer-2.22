@@ -25,3 +25,12 @@
 [submodule "module_makise_gui"]
 	path = module_makise_gui
 	url = git@github.com:Vadimatorik/module_makise_gui.git
+[submodule "ayplayer_board"]
+	path = ayplayer_board
+	url = git@github.com:Vadimatorik/ayplayer_board.git
+[submodule "module_fat_fs_by_chan"]
+	path = module_fat_fs_by_chan
+	url = git@github.com:Vadimatorik/module_fat_fs_by_chan.git
+[submodule "module_math"]
+	path = module_math
+	url = git@github.com:Vadimatorik/module_math.git

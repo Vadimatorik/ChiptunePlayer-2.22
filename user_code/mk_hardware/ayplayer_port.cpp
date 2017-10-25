@@ -10,6 +10,7 @@ pin< LCD_CS_PIN_HEADING >               lcd_cs_obj;
 
 // MICROSD 2.
 pin< SD2_CS_PIN_HEADING >               sd2_cs_obj;
+pin< SD2_PUSH_PIN_HEADING >             sd2_push_obj;
 
 // Защелка сдвигового регистра.
 pin< SPI_AUDIO_ST_REG_PIN_HEADING >     spi_audio_st_reg_obj;

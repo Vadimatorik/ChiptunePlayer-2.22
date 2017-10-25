@@ -9,3 +9,5 @@
 
 // Пины питания.
 #include "ayplayer_port.h"
+
+extern ay_ym_file_mode ay_file_mode;
