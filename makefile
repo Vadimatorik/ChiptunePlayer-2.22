@@ -3,44 +3,44 @@
 #**********************************************************************
 # Параметры сборки проекта.
 #**********************************************************************
-FREE_RTOS_OPTIMIZATION			:= -g3 -Og
-STM32_F2_API_OPTIMIZATION		:= -g3 -Og
-USER_CODE_OPTIMIZATION			:= -g3 -Og
-LCD_LIB_OPTIMIZATION			:= -g3 -Og
-SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION	:= -g3 -Og
-MINI_GUI_BY_VADIMATORIK_OPTIMIZATION	:= -g3 -Og
-MICRO_SD_DRIVER_OPTIMIZATION		:= -g3 -Og
-SH_OPTIMIZATION				:= -g3 -Og
-MOD_CHIP_OPTIMIZATION			:= -g3 -Og
-FAT_FS_OPTIMIZATION			:= -g3 -Og
-FAT_FS_OPTIMIZATION			:= -g3 -Og
-MAKISE_GUI_OPTIMIZATION			:= -g3 -Og
-BUT_OPTIMIZATION			:= -g3 -Og
+FREE_RTOS_OPTIMIZATION						:= -g3 -Og
+STM32_F2_API_OPTIMIZATION					:= -g3 -Og
+USER_CODE_OPTIMIZATION						:= -g3 -Og
+LCD_LIB_OPTIMIZATION						:= -g3 -Og
+SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION		:= -g3 -Og
+MINI_GUI_BY_VADIMATORIK_OPTIMIZATION		:= -g3 -Og
+MICRO_SD_DRIVER_OPTIMIZATION				:= -g3 -Og
+SH_OPTIMIZATION								:= -g3 -Og
+MOD_CHIP_OPTIMIZATION						:= -g3 -Og
+FAT_FS_OPTIMIZATION							:= -g3 -Og
+FAT_FS_OPTIMIZATION							:= -g3 -Og
+MAKISE_GUI_OPTIMIZATION						:= -g3 -Og
+BUT_OPTIMIZATION							:= -g3 -Og
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xG_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
-MK_FLAGS		:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft 
+MK_FLAGS									:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft 
 
-C_FLAGS			:= $(MK_FLAGS) 
+C_FLAGS										:= $(MK_FLAGS) 
 # Все предупреждения == ошибки.
 #C_FLAGS			+= -Werror
 # Выдавать предупреждения (ошибки) о сомнительных констукциях.
 #C_FLAGS			+= -Wall
 # Выдавать предупреждение (ошибку) о любых сомнительных действиях.
 #C_FLAGS			+= -Wextra 
-C_FLAGS			+= -std=c99 
+C_FLAGS										+= -std=c99 
 # Если переменная объявлена как enum, то она должна иметь возможность
 # хранить в себе всевозможные состояния этого enum-а (а не только текущее).
-C_FLAGS			+= -fshort-enums
+C_FLAGS										+= -fshort-enums
 # Развертывание циклов.
-C_FLAGS			+= -funroll-loops
+C_FLAGS										+= -funroll-loops
 
-C_FAT_FS_FLAGS		:= $(MK_FLAGS) -std=gnu89
+C_FAT_FS_FLAGS								:= $(MK_FLAGS) -std=gnu89
 
-CPP_FLAGS		:= $(MK_FLAGS)     
-CPP_FLAGS		+= -Werror -Wall -Wextra
-CPP_FLAGS		+= -std=c++1z
-CPP_FLAGS		+= -funroll-loops
+CPP_FLAGS									:= $(MK_FLAGS)     
+CPP_FLAGS									+= -Werror -Wall -Wextra
+CPP_FLAGS									+= -std=c++1z
+CPP_FLAGS									+= -funroll-loops
 
 LDFLAGS			:= $(MK_FLAGS)
 LDFLAGS			+= $(LD_FILES)
@@ -57,16 +57,16 @@ LDFLAGS			+= -Wl,--gc-sections
 #**********************************************************************
 TOOLCHAIN_PATH	= arm-none-eabi
 
-CC	= $(TOOLCHAIN_PATH)-gcc
-CPP	= $(TOOLCHAIN_PATH)-g++
-CCDEP	= $(TOOLCHAIN_PATH)-gcc
-LD	= $(TOOLCHAIN_PATH)-g++
-AR	= $(TOOLCHAIN_PATH)-ar
-AS	= $(TOOLCHAIN_PATH)-gcc
-OBJCOPY	= $(TOOLCHAIN_PATH)-objcopy
-OBJDUMP	= $(TOOLCHAIN_PATH)-objdump
-GDB	= $(TOOLCHAIN_PATH)-gdb
-SIZE	= $(TOOLCHAIN_PATH)-size
+CC				= $(TOOLCHAIN_PATH)-gcc
+CPP				= $(TOOLCHAIN_PATH)-g++
+CCDEP			= $(TOOLCHAIN_PATH)-gcc
+LD				= $(TOOLCHAIN_PATH)-g++
+AR				= $(TOOLCHAIN_PATH)-ar
+AS				= $(TOOLCHAIN_PATH)-gcc
+OBJCOPY			= $(TOOLCHAIN_PATH)-objcopy
+OBJDUMP			= $(TOOLCHAIN_PATH)-objdump
+GDB				= $(TOOLCHAIN_PATH)-gdb
+SIZE			= $(TOOLCHAIN_PATH)-size
 
 #**********************************************************************
 # Конфигурация проекта пользователя.
