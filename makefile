@@ -16,7 +16,7 @@ FAT_FS_OPTIMIZATION							:= -g3 -O0
 MAKISE_GUI_OPTIMIZATION						:= -g3 -O0
 BUT_OPTIMIZATION							:= -g3 -O0
 
-LD_FILES = -T stm32f2_api/ld/stm32f205xG_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
+LD_FILES = -T module_stm32f2_low_level/ld/stm32f205xG_mem.ld -T module_stm32f2_low_level/ld/stm32f2_section.ld
 
 MK_FLAGS									:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft 
 
@@ -85,21 +85,19 @@ USER_CFG_PATH		:= -I$(USER_CFG_DIR)
 
 PROJECT_PATH		+= $(USER_CFG_PATH)
 
-
-include FreeRTOS_for_stm32f2/makefile
-include mk_hardware_interfaces/makefile
-include module_fat_fs_by_chan/makefile
-include module_math/makefile
-include MakiseGUI/makefile
-include stm32f2_api/makefile
-include mono_lcd_lib/makefile
-include micro_sd_driver_by_vadimatorik/makefile
-include module_shift_register/makefile
+include module_button/makefile
 include module_chiptune/makefile
-include module_button_api/makefile
 include module_digital_potentiometer/makefile
+include module_fatfs_by_chan/makefile
+include module_makise_gui/makefile
+include module_math/makefile
+include module_mc_hardware_interfaces/makefile
+include	module_microsd_low_level_driver/makefile
+include	module_shift_register/makefile
+include	module_stm32f2_low_level/makefile
+include module_freertos_for_stm32f2/makefile
+include module_mono_lcd_lib/makefile
 
-	
 #**********************************************************************
 # Сборка кода пользователя.
 # Весь код пользователя должен быть в корневой папке.

@@ -34,3 +34,9 @@
 [submodule "module_math"]
 	path = module_math
 	url = git@github.com:Vadimatorik/module_math.git
+[submodule "module_freertos_for_stm32f2"]
+	path = module_freertos_for_stm32f2
+	url = git@github.com:Vadimatorik/module_freertos_for_stm32f2.git
+[submodule "module_mono_lcd_lib"]
+	path = module_mono_lcd_lib
+	url = git@github.com:Vadimatorik/module_mono_lcd_lib.git
