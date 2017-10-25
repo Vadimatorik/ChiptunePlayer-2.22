@@ -3,19 +3,18 @@
 #**********************************************************************
 # Параметры сборки проекта.
 #**********************************************************************
-FREE_RTOS_OPTIMIZATION			:= -g3 -O0
-STM32_F2_API_OPTIMIZATION		:= -g3 -O0
-USER_CODE_OPTIMIZATION			:= -g3 -O0
-LCD_LIB_OPTIMIZATION			:= -g3 -O0
-SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION	:= -g3 -O0
-MINI_GUI_BY_VADIMATORIK_OPTIMIZATION	:= -g3 -O0
-MICRO_SD_DRIVER_OPTIMIZATION		:= -g3 -O0
-SH_OPTIMIZATION				:= -g3 -O0
-MOD_CHIP_OPTIMIZATION			:= -g3 -O0
-FAT_FS_OPTIMIZATION			:= -g3 -O0
-FAT_FS_OPTIMIZATION			:= -g3 -O0
-MAKISE_GUI_OPTIMIZATION			:= -g3 -O0
-BUT_OPTIMIZATION			:= -g3 -O0
+FREE_RTOS_OPTIMIZATION						:= -g3 -O0
+STM32_F2_API_OPTIMIZATION					:= -g3 -O0
+USER_CODE_OPTIMIZATION						:= -g3 -O0
+LCD_LIB_OPTIMIZATION						:= -g3 -O0
+SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION		:= -g3 -O0
+MICRO_SD_DRIVER_OPTIMIZATION				:= -g3 -O0
+SH_OPTIMIZATION								:= -g3 -O0
+MOD_CHIP_OPTIMIZATION						:= -g3 -O0
+FAT_FS_OPTIMIZATION							:= -g3 -O0
+FAT_FS_OPTIMIZATION							:= -g3 -O0
+MAKISE_GUI_OPTIMIZATION						:= -g3 -O0
+BUT_OPTIMIZATION							:= -g3 -O0
 
 LD_FILES = -T stm32f2_api/ld/stm32f205xG_mem.ld -T stm32f2_api/ld/stm32f2_section.ld
 
@@ -51,6 +50,9 @@ LDFLAGS			+= -Wl,--gc-sections
 
 # Формируем map файл.
 #LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
+FREE_RTOS_C_FLAGS		:=	$(C_FLAGS)
+
+
 
 #**********************************************************************
 # Параметры toolchain-а.
@@ -72,6 +74,8 @@ SIZE	= $(TOOLCHAIN_PATH)-size
 PROJECT_OBJ_FILE 	:=
 PROJECT_PATH		:=
 
+include FreeRTOS_for_stm32f2/makefile
+
 #**********************************************************************
 # Конфигурация проекта пользователя.
 #**********************************************************************
@@ -88,42 +92,7 @@ MK_INTER_H_FILE		:= $(wildcard mk_hardware_interfaces/*.h)
 MK_INTER_DIR		:= mk_hardware_interfaces
 MK_INTER_PATH		:= -I$(MK_INTER_DIR)
 	
-#**********************************************************************
-# Для сборки FreeRTOS.
-#**********************************************************************
-# Собираем все необходимые .h файлы FreeRTOS.
-# FreeRTOS.h должен обязательно идти первым! 
-FREE_RTOS_H_FILE	:= FreeRTOS_for_stm32f2/FreeRTOS.h
-FREE_RTOS_H_FILE	+= $(wildcard FreeRTOS_for_stm32f2/include/*.h)
 
-# Директории, в которых лежат файлы FreeRTOS.
-FREE_RTOS_DIR		:= FreeRTOS_for_stm32f2
-FREE_RTOS_DIR		+= FreeRTOS_for_stm32f2/include
-
-# Подставляем перед каждым путем директории префикс -I.
-FREE_RTOS_PATH		:= $(addprefix -I, $(FREE_RTOS_DIR))
-
-# Получаем список .c файлов ( путь + файл.c ).
-FREE_RTOS_C_FILE	:= $(wildcard FreeRTOS_for_stm32f2/*.c)
-
-# Получаем список .o файлов ( путь + файл.o ).
-# Сначала прибавляем префикс ( чтобы все .o лежали в отдельной директории
-# с сохранением иерархии.
-FREE_RTOS_OBJ_FILE	:= $(addprefix build/obj/, $(FREE_RTOS_C_FILE))
-# Затем меняем у всех .c на .o.
-FREE_RTOS_OBJ_FILE	:= $(patsubst %.c, %.o, $(FREE_RTOS_OBJ_FILE))
-
-FREE_RTOS_INCLUDE_FILE	:= -include"./FreeRTOS_for_stm32f2/include/StackMacros.h"
-# Сборка FreeRTOS.
-# $< - текущий .c файл (зависемость).
-# $@ - текущая цель (создаваемый .o файл).
-# $(dir путь) - создает папки для того, чтобы путь файла существовал.
-build/obj/FreeRTOS_for_stm32f2/%.o:	FreeRTOS_for_stm32f2/%.c 
-	@echo [CC] $<
-	@mkdir -p $(dir $@)
-	@$(CC) $(C_FLAGS) $(FREE_RTOS_PATH) $(USER_CFG_PATH) $(FREE_RTOS_INCLUDE_FILE) -c $< -o $@
-
-	
 #**********************************************************************
 # Для сборки FatFS.
 #**********************************************************************
@@ -289,6 +258,7 @@ build/obj/%.o:	%.c
 	$(DP_PATH)					\
 	$(BUT_PATH)					\
 	$(MODULE_MATH_PATH)			\
+	$(PROJECT_PATH)						\
 	$(USER_CODE_OPTIMIZATION)			\
 	-c $< -o $@
 	
@@ -311,6 +281,7 @@ build/obj/%.o:	%.cpp
 	$(MODULE_MATH_PATH)			\
 	$(BUT_PATH)					\
 	$(USER_CODE_OPTIMIZATION)			\
+	$(PROJECT_PATH)						\
 	-c $< -o $@
 
 
@@ -318,7 +289,7 @@ build/obj/%.o:	%.cpp
 #**********************************************************************
 # Компановка проекта.
 #**********************************************************************
-PROJECT_OBJ_FILE	:= 	$(MAKISE_GUI_OBJ_FILE)				\
+PROJECT_OBJ_FILE	+= 	$(MAKISE_GUI_OBJ_FILE)				\
 				$(FAT_FS_OBJ_FILE) 				\
 				$(FREE_RTOS_OBJ_FILE) 				\
 				$(STM32_F2_API_OBJ_FILE) 			\
