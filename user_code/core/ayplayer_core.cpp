@@ -53,12 +53,13 @@ void select_window_play_list ( void ) {
 //**********************************************************************
 void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
     // Готовим низкий уровень GUI и все необходимые структуры.
-    ayplayer_gui_low_init();
     host.host = &m_cont;
+    ayplayer_gui_low_init();
 
     // Настраиваем потенциометры.
-    sound_dp.connect_on();
+    sound_dp.connect_off();
     ayplayer_control.dp_update_value();
+    sound_dp.connect_on();
 
     // Инициализация FAT объекта (общий на обе карты).
     FRESULT fr = f_mount( &fat, "0:", 0 );
