@@ -1,6 +1,6 @@
 #include "ayplayer_core.h"
 
-FATFS                  fat;
+
 char                   path_dir[512] = "0:/";
 
 // Элементы GUI.
@@ -29,8 +29,6 @@ void ayplayer_gui_update_task ( __attribute__((unused)) void* param ) {
     }
 }
 
-char sd2_not_responding[] = "System microsd not responding!";
-
 void select_window_main ( void ) {
     USER_OS_TAKE_MUTEX( m_mhost, portMAX_DELAY );
     ayplayer_gui_player_status_bar_creature( &m_cont, &gui_e_psb );
@@ -48,40 +46,36 @@ void select_window_play_list ( void ) {
     USER_OS_GIVE_MUTEX( m_mhost );
 }
 
+static void delay_max ( void ) {
+    while( true ) {
+        USER_OS_DELAY_MS( 1000 );
+    }
+}
+
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
 void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
-    // Готовим низкий уровень GUI и все необходимые структуры.
-    host.host = &m_cont;
+    host.host = &m_cont;                                                                        // Готовим низкий уровень GUI и все необходимые структуры.
     ayplayer_gui_low_init();
 
-    // Настраиваем потенциометры.
-    sound_dp.connect_off();
+    sound_dp.connect_off();                                                                     // Настраиваем потенциометры.
     ayplayer_control.dp_update_value();
     sound_dp.connect_on();
 
-    // Инициализация FAT объекта (общий на обе карты).
-    FRESULT fr = f_mount( &fat, "0:", 0 );
-    if ( fr != FR_OK ) {
-        ayplayer_error_microsd_draw( &m_cont, fr );
+    if ( !fat_init() ) {                                                                        // Решаем вопрос с системной картой.
+        const char er[] = "E:F:0";
+        ayplayer_error_string_draw( &m_cont, er );
+        delay_max();
     }
 
-    // Ждем стабилизации питания.
-    USER_OS_DELAY_MS(100);
+    USER_OS_DELAY_MS(50);                                                                       // Ждем стабилизации питания.
 
-    // Проверяем наличие SD карты.
-    DSTATUS r;
-    for ( int l = 0; l < 5; l++) {      // Даем 5 попыток инициализировать карту.
-        r = disk_initialize(0);
-        if ( r == RES_OK ) break;
-    }
-
-    // Если карты нет, то каждые 200 мс пытаемся ее найти.
-    if ( r != RES_OK )  {
-        ayplayer_error_string_draw( &m_cont, sd2_not_responding );
+    if ( !system_card_chack() ) {                                                               // Проверяем системную карту.
+        const char er[] = "E:SD2:0";                                                            // Если карты нет, то каждые 200 мс пытаемся ее найти.
+        ayplayer_error_string_draw( &m_cont, er );
+        DSTATUS r;
         while( true ) {
-            DSTATUS r;
             r = disk_initialize(0);
             if ( r == RES_OK ) break;
             USER_OS_DELAY_MS(200);
@@ -91,9 +85,13 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
     // Сюда пришли точно с рабочей картой.
     // Составить список PSG файлов, если нет такого на карте.
     FIL file_list;
-    fr = f_open( &file_list, "psg_list.txt", FA_READ );
-    if ( fr == FR_NO_FILE ) {
+    DSTATUS fr = f_open( &file_list, "playlist.sys", FA_READ );
+    if ( fr == FR_NO_FILE ) {                                                                   // Если файл просто не был найден - составляем список.
         ayplayer_sd_card_scan( path_dir, &m_cont );
+    } else if ( fr != FR_OK ) {                                                                 // Если просто какой-то баг при открытии.
+        const char er[] = "E:SD2:1";
+        ayplayer_error_string_draw( &m_cont, er );
+        delay_max();
     }
 
     // Формируем главное окно.

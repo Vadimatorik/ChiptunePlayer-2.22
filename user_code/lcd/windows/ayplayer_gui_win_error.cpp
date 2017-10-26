@@ -11,9 +11,9 @@ MakiseStyle_SMessageWindow smw = {
     .border_color       = MC_Black,
 };
 
-void ayplayer_error_string_draw ( MContainer* c, char* s ) {
+void ayplayer_error_string_draw ( MContainer* c, const char* s ) {
     makise_g_cont_clear( c );
     MMessageWindow mw;
-    m_create_message_window( &mw, c, mp_rel( 9, 10, 108, 44 ), s, &smw );
+    m_create_message_window( &mw, c, mp_rel( 9, 10, 108, 44 ), (char*)s, &smw );
     gui_update();
 }

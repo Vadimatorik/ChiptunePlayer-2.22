@@ -9,7 +9,7 @@
 
 // SD + FATFS
 #include "ayplayer_microsd_card.h"
-#include "ayplayer_fat.h"
+#include "ayplayer_fat_love_level.h"
 
 // Rнопки.
 #include "ayplayer_button.h"
@@ -19,6 +19,8 @@
 
 #include "ayplayer_timers.h"
 #include "ayplayer_os_object.h"
+
+#include "ayplayer_fat_api.h"
 
 // Вызвать до запуска ОС.
 void ayplayer_core_init ( void );                   // Создает задачу для контроля всей графики.
