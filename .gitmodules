@@ -40,3 +40,6 @@
 [submodule "module_mono_lcd_lib"]
 	path = module_mono_lcd_lib
 	url = git@github.com:Vadimatorik/module_mono_lcd_lib.git
+[submodule "module_fsm"]
+	path = module_fsm
+	url = git@github.com:Vadimatorik/module_fsm.git
