@@ -85,6 +85,7 @@ USER_CFG_PATH		:= -I$(USER_CFG_DIR)
 
 PROJECT_PATH		+= $(USER_CFG_PATH)
 
+include module_fsm/makefile
 include module_button/makefile
 include module_chiptune/makefile
 include module_digital_potentiometer/makefile
