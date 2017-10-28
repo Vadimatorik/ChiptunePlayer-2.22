@@ -98,6 +98,7 @@ include	module_shift_register/makefile
 include	module_stm32f2_low_level/makefile
 include module_freertos_for_stm32f2/makefile
 include module_mono_lcd_lib/makefile
+include module_system_dummy/makefile 
 
 #**********************************************************************
 # Сборка кода пользователя.

@@ -1,5 +1,5 @@
 #include "ayplayer_core.h"
-
+#include <stdio.h>
 
 char                   path_dir[512] = "0:/";
 
@@ -46,28 +46,110 @@ void select_window_play_list ( void ) {
     USER_OS_GIVE_MUTEX( m_mhost );
 }
 
-static void delay_max ( void ) {
+/*
+static bool delay_max ( const fsm_step* previous_step ) {
+    ( void )previous_step;
     while( true ) {
         USER_OS_DELAY_MS( 1000 );
     }
+    return false;
+}*/
+
+// Готовим низкий уровень GUI и все необходимые структуры.
+static bool init_gui ( const fsm_step* previous_step ) {
+    ( void )previous_step;
+    printf("MakiseGUI start...\t\t\t\t\t");
+    host.host                       = &m_cont;
+    uint8_t result;
+    result = makise_start( &m_gui );
+
+    if ( result == 0 ) {
+        printf("Success!\n\r");
+    } else {
+        printf("Error: %X\n\r", result);
+    }
+
+    return true;
 }
+
+// Настраиваем потенциометры.
+static bool dp_init ( const fsm_step* previous_step ) {
+    ( void )previous_step;
+    sound_dp.connect_off();
+    ayplayer_control.dp_update_value();
+    sound_dp.connect_on();
+    return true;
+}
+
+extern FATFS                   fat;
+bool fat_init ( const fsm_step* previous_step ) {
+    ( void )previous_step;
+    FRESULT fr;
+    fr = f_mount( &fat, "0:", 0 );
+
+    if ( fr != FR_OK ) {                                                                        // Решаем вопрос с системной картой.
+        const char er[] = "E:F:0";
+        ayplayer_error_string_draw( &m_cont, er );
+        return false;
+    }
+    return true;
+}
+/*
+static const fsm_step cs_dp_init             = { &dp_init,               nullptr,                            &cs_delay_max,                 1 };
+
+*/
+static const fsm_step core_step_map[] = {
+    { &init_gui,            &core_step_map[1],      nullptr, 0 },                   // Инициализируем GUI.
+    { &dp_init,             &core_step_map[2],      nullptr, 0 },
+    { &fat_init,            &core_step_map[3],      nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+    { nullptr, nullptr, nullptr, 0 },
+
+    //{ &init_gui,              &cs_dp_init,                  &cs_delay_max,                          1 },
+   // { &delay_max,             nullptr,                      nullptr,                                REPEAT_STEP_MAX },
+};
+
 
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
 void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
-    host.host = &m_cont;                                                                        // Готовим низкий уровень GUI и все необходимые структуры.
-    ayplayer_gui_low_init();
+    fsm core( core_step_map );
+    core.start();
+/*
 
-    sound_dp.connect_off();                                                                     // Настраиваем потенциометры.
-    ayplayer_control.dp_update_value();
-    sound_dp.connect_on();
 
-    if ( !fat_init() ) {                                                                        // Решаем вопрос с системной картой.
-        const char er[] = "E:F:0";
-        ayplayer_error_string_draw( &m_cont, er );
-        delay_max();
-    }
+
+
+
 
     USER_OS_DELAY_MS(50);                                                                       // Ждем стабилизации питания.
 
@@ -163,7 +245,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
             gui_update();
             break;
         }
-    }
+    }*/
 }
 
 //**********************************************************************

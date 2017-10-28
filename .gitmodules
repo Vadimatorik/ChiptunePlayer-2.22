@@ -43,3 +43,6 @@
 [submodule "module_fsm"]
 	path = module_fsm
 	url = git@github.com:Vadimatorik/module_fsm.git
+[submodule "module_system_dummy"]
+	path = module_system_dummy
+	url = git@github.com:Vadimatorik/module_system_dummy.git

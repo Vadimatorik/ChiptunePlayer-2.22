@@ -1,4 +1,4 @@
-#include "ayplayer_core_struct.h"
+#include "ayplayer_core_obj.h"
 
 ayplayer_state ayplayer_control;
 

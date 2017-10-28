@@ -7,9 +7,6 @@
 #include "makise.h"
 #include "makise_gui.h"
 
-// Конфигурацию нижнего уровня GUI вызывать только из под какой-либо задачи ОС!
-void ayplayer_gui_low_init ( void );
-
 extern "C" {
 
 extern MakiseGUI m_gui;

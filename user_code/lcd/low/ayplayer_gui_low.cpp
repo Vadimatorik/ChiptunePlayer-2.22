@@ -110,14 +110,6 @@ MakiseGUI m_gui = {
 
 }
 
-//**********************************************************************
-// Конфигурация уровня связки.
-//**********************************************************************
-void ayplayer_gui_low_init ( void ) {
-    makise_start( &m_gui );
-}
-
-
 MHost           host;
 
 extern USER_OS_STATIC_MUTEX        mhost_mutex;

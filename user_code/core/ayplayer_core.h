@@ -15,12 +15,15 @@
 #include "ayplayer_button.h"
 #include "ayplayer_digital_potentiometer.h"
 
-#include "ayplayer_core_struct.h"
+#include "ayplayer_core_obj.h"
 
 #include "ayplayer_timers.h"
 #include "ayplayer_os_object.h"
 
 #include "ayplayer_fat_api.h"
+
+// FSM.
+#include "core_fsm.h"
 
 // Вызвать до запуска ОС.
 void ayplayer_core_init ( void );                   // Создает задачу для контроля всей графики.
