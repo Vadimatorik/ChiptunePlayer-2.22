@@ -1,6 +1,3 @@
-[submodule "module_stm32f2_low_level"]
-	path = module_stm32f2_low_level
-	url = git@github.com:Vadimatorik/module_stm32f2_low_level.git
 [submodule "module_shift_register"]
 	path = module_shift_register
 	url = git@github.com:Vadimatorik/module_shift_register.git
