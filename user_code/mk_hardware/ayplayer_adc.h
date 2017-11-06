@@ -1,8 +1,8 @@
 #pragma once
 
-#include "include_module_lib.h"
+#include "adc.h"
 
-#define ADC_BATTERY_CHANNEL_CFG                 ADC::CFG::NAME::ADC1, 0, ADC::CFG::RES::R_12BIT, ADC::CFG::SAMPLING_TIME::C_480
-extern const adc_one_channel< ADC_BATTERY_CHANNEL_CFG > adc_input;
+//#define ADC_BATTERY_CHANNEL_CFG                 ADC::CFG::NAME::ADC1, 0, ADC::CFG::RES::R_12BIT, ADC::CFG::SAMPLING_TIME::C_480
+extern adc_one_channel adc_input_obj;
 
 void ayplayer_adc_init ( void );

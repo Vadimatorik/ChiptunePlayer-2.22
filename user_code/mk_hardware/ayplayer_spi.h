@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ayplayer_os_object.h"
+#include "spi.h"
 
 //**********************************************************************
 // Для LCD.
@@ -43,12 +44,9 @@
                                   SPI::CFG::FRAME_FORMAT    :: MOTOROLA,       \
                                   SPI::CFG::BAUDRATE_DEV    :: DEV_2
 
-extern spi_master_8bit_hardware_os < SPI1_CFG_OBJ_PARAM > spi1;
-extern spi_master_8bit_hardware_os < SPI2_SLOW_CFG_OBJ_PARAM > spi2_slow;
-extern spi_master_8bit_hardware_os < SPI2_FAST_CFG_OBJ_PARAM > spi2_fast;
-extern spi_master_8bit_hardware_os < SPI3_CFG_OBJ_PARAM > spi3;
+extern spi_master_8bit spi1_obj;
+extern spi_master_8bit spi2_slow;
+extern spi_master_8bit spi2_fast;
+extern spi_master_8bit spi3;
 
 int ayplayer_spi_init ( void );
-
-
-

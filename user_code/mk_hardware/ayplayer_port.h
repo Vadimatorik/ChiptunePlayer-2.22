@@ -1,5 +1,6 @@
 #pragma once
 
+#include "user_os.h"
 #include "pin.h"
 #include "port.h"
 
