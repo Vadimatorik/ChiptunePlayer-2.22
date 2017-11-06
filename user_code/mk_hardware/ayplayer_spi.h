@@ -1,7 +1,5 @@
 #pragma once
 
-#include "include_module_lib.h"
-#include "ayplayer_nvic.h"
 #include "ayplayer_os_object.h"
 
 //**********************************************************************

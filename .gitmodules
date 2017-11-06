@@ -43,3 +43,6 @@
 [submodule "module_system_dummy"]
 	path = module_system_dummy
 	url = git@github.com:Vadimatorik/module_system_dummy.git
+[submodule "module_stm32f2_low_level_by_st"]
+	path = module_stm32f2_low_level_by_st
+	url = git@github.com:Vadimatorik/module_stm32f2_low_level_by_st.git

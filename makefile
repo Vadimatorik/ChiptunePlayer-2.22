@@ -16,7 +16,11 @@ FAT_FS_OPTIMIZATION							:= -g3 -O0
 MAKISE_GUI_OPTIMIZATION						:= -g3 -O0
 BUT_OPTIMIZATION							:= -g3 -O0
 
-LD_FILES = -T module_stm32f2_low_level/ld/stm32f205xG_mem.ld -T module_stm32f2_low_level/ld/stm32f2_section.ld
+DEFINE_PROJ	:= -DSTM32F205xx
+
+
+
+LD_FILES = -T module_stm32f2_low_level_by_st/LD/STM32F205xG.ld
 
 MK_FLAGS									:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft 
 
@@ -95,7 +99,7 @@ include module_math/makefile
 include module_mc_hardware_interfaces/makefile
 include	module_microsd_low_level_driver/makefile
 include	module_shift_register/makefile
-include	module_stm32f2_low_level/makefile
+include	module_stm32f2_low_level_by_st/makefile
 include module_freertos_for_stm32f2/makefile
 include module_mono_lcd_lib/makefile
 include module_system_dummy/makefile 
@@ -121,6 +125,7 @@ build/obj/%.o:	%.c
 	@echo [CC] $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(C_FLAGS) 					\
+	$(DEFINE_PROJ)						\
 	$(PROJECT_PATH)						\
 	$(USER_CODE_OPTIMIZATION)			\
 	-c $< -o $@
@@ -129,6 +134,7 @@ build/obj/%.o:	%.cpp
 	@echo [CPP] $<
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) 				\
+	$(DEFINE_PROJ)						\
 	$(USER_CODE_OPTIMIZATION)			\
 	$(PROJECT_PATH)						\
 	-c $< -o $@

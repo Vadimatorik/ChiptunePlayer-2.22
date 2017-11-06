@@ -1,187 +1,135 @@
 #pragma once
 
-#include "pin_cfg_check_param.h"
 #include "pin.h"
 #include "port.h"
 
-//
+//**********************************************************************
 // Структуры конфигурации выводов.
-//
-//
+//**********************************************************************
 // ADC.
-//
-const pin_config_adc_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_0 >      adc_bat;
-const pin_config_adc_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_4 >      adc_right;
-const pin_config_adc_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_1 >      adc_left;
+const pin_cfg adc_bat_pin_cfg               = { GPIOA, { GPIO_PIN_0, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg adc_right_pin_cfg             = { GPIOA, { GPIO_PIN_4, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg adc_left_pin_cfg              = { GPIOB, { GPIO_PIN_1, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
 
-//
 // EXTI кнопки.
-//
-#define BUTTON_INC      EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_1
-#define BUTTON_DEC      EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_2
-const pin_config_check_param< BUTTON_INC,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        b_v_up;
-const pin_config_check_param< BUTTON_DEC,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        b_v_down;
+const pin_cfg b_v_up_pin_cfg                = { GPIOA, { GPIO_PIN_1, GPIO_MODE_INPUT, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg b_v_down_pin_cfg              = { GPIOA, { GPIO_PIN_2, GPIO_MODE_INPUT, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, 0 } };
 
-//
 // MIDI ( USART2 ).
-//
-const pin_config_check_param<EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_3,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::USART2,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        midi_uart_rx;
+const pin_cfg midi_uart_rx_pin_cfg          = { GPIOA, { GPIO_PIN_3, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF7_USART2 } };
 
-//
 // LCD ( SPI1 + TIMx ).
-//
+const pin_cfg lcd_clk_pin_cfg               = { GPIOA, { GPIO_PIN_5, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF5_SPI1 } };
+const pin_cfg lcd_pwm_pin_cfg               = { GPIOA, { GPIO_PIN_6, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF2_TIM3 } };
+const pin_cfg lcd_mosi_pin_cfg              = { GPIOA, { GPIO_PIN_7, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF5_SPI1} };
+const pin_cfg lcd_res_pin_cfg               = { GPIOC, { GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg lcd_dc_pin_cfg                = { GPIOC, { GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0 } };
+const pin_cfg lcd_cs_pin_cfg                = { GPIOB, { GPIO_PIN_2, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0 } };
 
-#define LCD_RES_PIN_HEADING             EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_4
-#define LCD_DC_PIN_HEADING              EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_5
-#define LCD_CS_PIN_HEADING              EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_2
-
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_5,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::SPI1,          EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        lcd_clk;
-// Вывод MISO используется как PWM для подцветки.
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_6,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::TIM3,          EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        lcd_pwm;
-//const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_6,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::SPI1,          EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        lcd_miso;
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_7,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::SPI1,          EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        lcd_mosi;
-const pin_config_check_param< LCD_RES_PIN_HEADING,                       EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM, EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >           lcd_res;
-const pin_config_check_param< LCD_DC_PIN_HEADING,                        EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM, EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         lcd_dc;
-const pin_config_check_param< LCD_CS_PIN_HEADING,                        EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM, EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >           lcd_cs;
-
-//
 // micro-sd ( SDIO + GPIO ).
-//
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_0,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd1_push;
-const pin_config_check_param< EC_PORT_NAME::D, EC_PORT_PIN_NAME::PIN_2,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::FAST,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::SDIO,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd1_smd;
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_8,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::FAST,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::SDIO,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd1_d0;
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_9,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::FAST,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::SDIO,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd1_d1;
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_10, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::FAST,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::SDIO,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd1_d2;
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_11, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::FAST,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::SDIO,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd1_d3;
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_12, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::FAST,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::SDIO,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd1_clk;
+const pin_cfg sd1_push_pin_cfg              = { GPIOC, { GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg sd1_smd_pin_cfg               = { GPIOD, { GPIO_PIN_2, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg sd1_d0_pin_cfg                = { GPIOC, { GPIO_PIN_8, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg sd1_d1_pin_cfg                = { GPIOC, { GPIO_PIN_9, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg sd1_d2_pin_cfg                = { GPIOC, { GPIO_PIN_10, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg sd1_d3_pin_cfg                = { GPIOC, { GPIO_PIN_11, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg sd1_clk_pin_cfg               = { GPIOC, { GPIO_PIN_12, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
 
-//
 // USB ( USB_FS + GPIO ).
-//
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_9,  EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        otg_fs_vbus;
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_11, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::OTG_FS,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        usb_dm;
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_12, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::OTG_FS,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        usb_dp;
+const pin_cfg otg_fs_vbus_pin_cfg           = { GPIOA, { GPIO_PIN_9, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg usb_dm_pin_cfg                = { GPIOA, { GPIO_PIN_11, GPIO_MODE_AF_PP, GPIO_NOPULL,GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF10_OTG_FS } };
+const pin_cfg usb_dp_pin_cfg                = { GPIOA, { GPIO_PIN_12, GPIO_MODE_AF_PP, GPIO_NOPULL,GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF10_OTG_FS } };
 
-//
 // AY ( GPIO + TIM1 + SPI3 )
-//
+const pin_cfg bdir_pin_cfg                  = { GPIOB, { GPIO_PIN_12, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0 } };
+const pin_cfg ay_1_res_pin_cfg              = { GPIOA, { GPIO_PIN_15, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg ay_2_res_pin_cfg              = { GPIOB, { GPIO_PIN_15, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg bc1_pin_cfg                   = { GPIOC, { GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 0 } };
+const pin_cfg ay_clk_pin_cfg                = { GPIOB, { GPIO_PIN_0, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF1_TIM1 } };
+const pin_cfg spi_audio_clk_pin_cfg         = { GPIOB, { GPIO_PIN_3, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, GPIO_AF6_SPI3 } };
+const pin_cfg spi_audio_tx_pin_cfg          = { GPIOB, { GPIO_PIN_5, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 0 } };
+const pin_cfg shdn_pin_cfg                  = { GPIOB, { GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg spi_audio_st_reg_pin_cfg      = { GPIOB, { GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 0 } };
+const pin_cfg dp_cs_res_pin_cfg             = { GPIOB, { GPIO_PIN_14, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0 } };
 
-#define SHDN_PIN_HEADING                EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_6
-#define DP_CS_PIN_HEADING               EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_14
-#define BC1_PIN_HEADING                 EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_6
-#define BDIR_PIN_HEADING                EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_12
-#define SPI_AUDIO_ST_REG_PIN_HEADING    EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_8
-
-const pin_config_check_param< BDIR_PIN_HEADING,                          EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         bdir;
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_15, EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         ay_1_res;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_15, EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         ay_2_res;
-const pin_config_check_param< BC1_PIN_HEADING,                           EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         bc1;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_0,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::FAST,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::TIM1,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        ay_clk;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_3,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::SPI3,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        spi_audio_clk;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_5,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::SPI3,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        spi_audio_tx;
-const pin_config_check_param< SHDN_PIN_HEADING,                          EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         shdn;
-const pin_config_check_param< SPI_AUDIO_ST_REG_PIN_HEADING,              EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >         spi_audio_st_reg;
-const pin_config_check_param< DP_CS_PIN_HEADING,                         EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::FAST,     EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >           dp_cs_res;
-
-//
 // SPI клавиатура ( SPI общий AY, тут только вход ).
-//
+const pin_cfg button_in_pin_cfg             = { GPIOC, { GPIO_PIN_7, GPIO_MODE_INPUT, GPIO_PULLDOWN, GPIO_SPEED_FREQ_LOW, 0 } };
 
-#define B_IN_PIN_HEADING            EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_7
-
-const pin_config_check_param< B_IN_PIN_HEADING,                          EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::DOWN,     EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >           button_in;
-
-//
 // SWD.
-//
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_13, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::UP,        EC_PIN_AF::SYS,         EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >          swd_io;
-const pin_config_check_param< EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_14, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::DOWN,      EC_PIN_AF::SYS,         EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >          swd_clk;
+const pin_cfg swd_io_pin_cfg                = { GPIOA, { GPIO_PIN_13, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF0_SWJ } };
+const pin_cfg swd_clk_pin_cfg               = { GPIOA, { GPIO_PIN_14, GPIO_MODE_AF_PP, GPIO_PULLDOWN, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF0_SWJ } };
 
-//
 // PWR.
-//
+const pin_cfg on_5v_pin_cfg                 = { GPIOA, { GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg power_on_pin_cfg              = { GPIOC, { GPIO_PIN_1, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg tp_st_pin_cfg                 = { GPIOC, { GPIO_PIN_14, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg tp_ch_pin_cfg                 = { GPIOC, { GPIO_PIN_15, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg ay1_on_pin_cfg                = { GPIOB, { GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 0 } };
+const pin_cfg ay2_on_pin_cfg                = { GPIOA, { GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 0 } };
 
-#define PWR_5_V_IN_PIN_HEADING              EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_8
-#define CHIP_1_PWR_ON_PIN_HEADING           EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_4
-#define CHIP_2_PWR_ON_PIN_HEADING           EC_PORT_NAME::A, EC_PORT_PIN_NAME::PIN_10
-#define PWR_ON_PIN_HEADING                  EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_1
+// MICRO-SD SPI2 ( SPI2 + GPIO ).          
+const pin_cfg sd2_rx_pin_cfg                = { GPIOC, { GPIO_PIN_2, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF5_SPI2 } };
+const pin_cfg sd2_tx_pin_cfg                = { GPIOC, { GPIO_PIN_3, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF5_SPI2 } };
+const pin_cfg sd2_clk_pin_cfg               = { GPIOB, { GPIO_PIN_13, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF5_SPI2 } };
+const pin_cfg sd2_cs_pin_cfg                = { GPIOB, { GPIO_PIN_7, GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, 0 } };
 
-const pin_config_check_param< PWR_5_V_IN_PIN_HEADING,                    EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >           on_5v;
-const pin_config_check_param< PWR_ON_PIN_HEADING,                        EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >           power_on;
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_14, EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >          tp_st;
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_15, EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,      EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >          tp_ch;
-const pin_config_check_param< CHIP_1_PWR_ON_PIN_HEADING,                 EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >           ay1_on;
-const pin_config_check_param< CHIP_2_PWR_ON_PIN_HEADING,                 EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::MEDIUM,   EC_PIN_PULL::NO_USE,    EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::RESET >           ay2_on;
-
-//
-// MICRO-SD SPI2 ( SPI2 + GPIO ).
-//
-
-#define SD2_CS_PIN_HEADING                  EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_7          
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_2,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::UP,            EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_rx;
-const pin_config_check_param< EC_PORT_NAME::C, EC_PORT_PIN_NAME::PIN_3,  EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,        EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_tx;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_13, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,        EC_PIN_AF::SPI2,        EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_clk;
-const pin_config_check_param< SD2_CS_PIN_HEADING,                        EC_PIN_MODE::OUTPUT,    EC_PIN_OUTPUT_CFG::PUSH_PULL,   EC_PIN_SPEED::HIGH,   EC_PIN_PULL::NO_USE,        EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::SET >           sd2_cs;
-
-#define SD2_PUSH_PIN_HEADING                EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_9
-const pin_config_check_param< SD2_PUSH_PIN_HEADING,                      EC_PIN_MODE::INPUT,     EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::LOW,    EC_PIN_PULL::UP,            EC_PIN_AF::NO_USE,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >        sd2_push;
-
+const pin_cfg sd2_push_pin_cfg              = { GPIOB, { GPIO_PIN_9, GPIO_MODE_INPUT, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, 0 } };
 //
 // BOOT-USART ( USART3 )
 //
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_10, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::MEDIUM,EC_PIN_PULL::NO_USE,     EC_PIN_AF::USART3,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >            boot_tx;
-const pin_config_check_param< EC_PORT_NAME::B, EC_PORT_PIN_NAME::PIN_11, EC_PIN_MODE::AF,        EC_PIN_OUTPUT_CFG::NO_USE,      EC_PIN_SPEED::MEDIUM,EC_PIN_PULL::NO_USE,     EC_PIN_AF::USART3,      EC_LOCKED::LOCKED,      EC_PIN_STATE_AFTER_INIT::NO_USE >            boot_rx;
+const pin_cfg boot_tx_pin_cfg               = { GPIOB, { GPIO_PIN_10, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, GPIO_AF7_USART3 } };
+const pin_cfg boot_rx_pin_cfg               = { GPIOB, { GPIO_PIN_11, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, GPIO_AF7_USART3 } };
 
 //
 // Глобальный порт.
 //
-const constexpr pin_config_t ayplayer_global_port_pin_cfg[] = {
-    b_v_up, b_v_down,
-    adc_bat, adc_right, adc_left,                                                                           // ADC.
-    midi_uart_rx,                                                                                           // MIDI (USART2).
-    lcd_clk, lcd_pwm, lcd_mosi, lcd_res, lcd_dc, lcd_cs,                                                    // LCD (SPI1 + TIMx).
-    sd1_push, sd1_smd, sd1_d0, sd1_d1, sd1_d2, sd1_d3, sd1_clk,                                             // micro-sd (SDIO + GPIO).
-    otg_fs_vbus, usb_dm, usb_dp,                                                                            // USB (USB_FS + GPIO).
-    bdir, ay_1_res, ay_2_res, bc1, ay_clk, spi_audio_clk, spi_audio_tx, shdn, spi_audio_st_reg, dp_cs_res,  // AY (GPIO + TIM1 + SPI3)
-    button_in,                                                                                              // SPI клавиатура (SPI общий AY, тут только вход).
-    on_5v, power_on, tp_st, tp_ch, ay1_on, ay2_on,                                                          // PWR.
-    sd2_rx, sd2_tx, sd2_clk, sd2_cs, sd2_push,                                                              // MICRO-SD SPI2 (SPI2 + GPIO).
-    boot_tx, boot_rx,                                                                                       // BOOT-USART (USART3).
-    swd_io, swd_clk,                                                                                        // SWD.
+const pin_cfg ayplayer_global_port_pin_cfg[] = {
+    b_v_up_pin_cfg, b_v_down_pin_cfg,
+    adc_bat_pin_cfg, adc_right_pin_cfg, adc_left_pin_cfg,                                                                                                                                   // ADC.
+    midi_uart_rx_pin_cfg,                                                                                                                                                                   // MIDI (USART2).
+    lcd_clk_pin_cfg, lcd_pwm_pin_cfg, lcd_mosi_pin_cfg, lcd_res_pin_cfg, lcd_dc_pin_cfg, lcd_cs_pin_cfg,                                                                                    // LCD (SPI1 + TIMx).
+    sd1_push_pin_cfg, sd1_smd_pin_cfg, sd1_d0_pin_cfg, sd1_d1_pin_cfg, sd1_d2_pin_cfg, sd1_d3_pin_cfg, sd1_clk_pin_cfg,                                                                     // micro-sd (SDIO + GPIO).
+    otg_fs_vbus_pin_cfg, usb_dm_pin_cfg, usb_dp_pin_cfg,                                                                                                                                    // USB (USB_FS + GPIO).
+    bdir_pin_cfg, ay_1_res_pin_cfg, ay_2_res_pin_cfg, bc1_pin_cfg, ay_clk_pin_cfg, spi_audio_clk_pin_cfg, spi_audio_tx_pin_cfg, shdn_pin_cfg, spi_audio_st_reg_pin_cfg, dp_cs_res_pin_cfg,  // AY (GPIO + TIM1 + SPI3)
+    button_in_pin_cfg,                                                                                                                                                                      // SPI клавиатура (SPI общий AY, тут только вход).
+    on_5v_pin_cfg, power_on_pin_cfg, tp_st_pin_cfg, tp_ch_pin_cfg, ay1_on_pin_cfg, ay2_on_pin_cfg,                                                                                          // PWR.
+    sd2_rx_pin_cfg, sd2_tx_pin_cfg, sd2_clk_pin_cfg, sd2_cs_pin_cfg, sd2_push_pin_cfg,                                                                                                      // MICRO-SD SPI2 (SPI2 + GPIO).
+    boot_tx_pin_cfg, boot_rx_pin_cfg,                                                                                                                                                       // BOOT-USART (USART3).
+    swd_io_pin_cfg, swd_clk_pin_cfg,                                                                                                                                                        // SWD.
 };
 
-const constexpr global_port ayplayer_global_port( ayplayer_global_port_pin_cfg, M_SIZE_ARRAY(ayplayer_global_port_pin_cfg) );
+const global_port ayplayer_global_port_obj( ayplayer_global_port_pin_cfg, M_SIZE_ARRAY(ayplayer_global_port_pin_cfg) );
 
-extern pin< LCD_RES_PIN_HEADING >                           lcd_res_obj;
-extern pin< LCD_DC_PIN_HEADING >                            lcd_dc_obj;
-extern pin< LCD_CS_PIN_HEADING >                            lcd_cs_obj;
+extern pin lcd_res_pin_obj;
+extern pin lcd_dc_pin_obj;
+extern pin lcd_cs_pin_obj;
 
 // MICROSD 2.
-extern pin< SD2_CS_PIN_HEADING >                            sd2_cs_obj;
+extern pin sd2_cs_pin_obj;
 
 // Защелка сдвигового регистра.
-extern pin< SPI_AUDIO_ST_REG_PIN_HEADING >                  spi_audio_st_reg_obj;
+extern pin spi_audio_st_reg_pin_obj;
 
 // AY_YM.
-extern pin< BDIR_PIN_HEADING >                              bdir_obj;
-extern pin< BC1_PIN_HEADING >                               bc1_obj;
-extern pin< CHIP_1_PWR_ON_PIN_HEADING >                     chip_1_pwr_on_obj;
-extern pin< CHIP_2_PWR_ON_PIN_HEADING >                     chip_2_pwr_on_obj;
+extern pin bdir_pin_obj;
+extern pin bc1_pin_obj;
+extern pin chip_1_pwr_on_pin_obj;
+extern pin chip_2_pwr_on_pin_obj;
 
 // PWR.
-extern pin< PWR_5_V_IN_PIN_HEADING >                        pwr_5_v_on_obj;
+extern pin pwr_5_v_on_pin_obj;
 
 // Потенциометры.
-extern pin< DP_CS_PIN_HEADING >                             dp_cs_res_obj;
-extern pin< SHDN_PIN_HEADING >                              shdn_obj;
+extern pin dp_cs_res_pin_obj;
+extern pin shdn_pin_obj;
 
 // Общий вход кнопок.
-extern pin< B_IN_PIN_HEADING >                              b_in;
+extern pin b_in_pin_obj;
 
 // + - громкость.
-extern pin< BUTTON_INC >                                    b_inc;
-extern pin< BUTTON_DEC >                                    b_dec;
+extern pin b_inc_pin_obj;
+extern pin b_dec_pin_obj;
 
-extern pin< PWR_ON_PIN_HEADING >                            pwr_on_obj;
+extern pin pwr_on_pin_obj;
 
 int ayplayer_port_init ( void );
