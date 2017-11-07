@@ -14,7 +14,7 @@ sr_one_in_button_item_cfg ayplayer_button_cfg[7] = {
 };
 
 buttons_through_shift_register_one_in_cfg b_sr_cfg = {
-    .p_in_pin                   = &b_in,
+    .p_in_pin                   = &button_in_pin_obj,
     .p_sr                       = &sr_button,
     .p_pin_conf_array           = ayplayer_button_cfg,
     .pin_count                  = 7,
@@ -49,14 +49,14 @@ void ayplayer_button_inc_and_dec_detect ( void* param ) {
     while ( true ) {
         vTaskDelay( 10 );
 
-        inc_f = b_inc.read();
-        dec_f = b_dec.read();
+        inc_f = button_inc_pin_obj.read();
+        dec_f = button_dec_pin_obj.read();
 
         if ( ( inc_f == false ) && ( dec_f == false ) ) {
             if ( off_time > 0 ) {
                 off_time--;
             } else {
-                pwr_on_obj.reset();
+                pwr_on_pin_obj.reset();
             }
         } else {
             off_time = OFF_WITE;

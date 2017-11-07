@@ -1,8 +1,8 @@
 #include "ayplayer_adc.h"
 
-const constexpr adc_one_channel< ADC_BATTERY_CHANNEL_CFG > adc_input;
+adc_one_channel adc_input_obj( nullptr );
 
 void ayplayer_adc_init ( void ) {
-    adc_input.reinit();
-    adc_input.on();
+    adc_input_obj.reinit();
+    adc_input_obj.on();
 }

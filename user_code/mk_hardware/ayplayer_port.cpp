@@ -1,41 +1,44 @@
 #include "ayplayer_port.h"
 
+global_port ayplayer_global_port_obj( ayplayer_global_port_pin_cfg, M_SIZE_ARRAY(ayplayer_global_port_pin_cfg) );
+
 //
 // Объекты pin (ручное управление выводами).
 //
 // LCD.
-pin< LCD_RES_PIN_HEADING >              lcd_res_obj;
-pin< LCD_DC_PIN_HEADING >               lcd_dc_obj;
-pin< LCD_CS_PIN_HEADING >               lcd_cs_obj;
+pin lcd_res_pin_obj( &lcd_res_pin_cfg );
+pin lcd_dc_pin_obj( &lcd_dc_pin_cfg );
+pin lcd_cs_pin_obj( &lcd_cs_pin_cfg );
 
 // MICROSD 2.
-pin< SD2_CS_PIN_HEADING >               sd2_cs_obj;
-pin< SD2_PUSH_PIN_HEADING >             sd2_push_obj;
+pin sd2_cs_pin_obj( &sd2_cs_pin_cfg );
+pin sd2_push_pin_obj( &sd2_push_pin_cfg );
 
 // Защелка сдвигового регистра.
-pin< SPI_AUDIO_ST_REG_PIN_HEADING >     spi_audio_st_reg_obj;
+pin spi_audio_st_reg_pin_obj( &spi_audio_st_reg_pin_cfg );
 
 // AY_YM.
-pin< BDIR_PIN_HEADING >                 bdir_obj;
-pin< BC1_PIN_HEADING >                  bc1_obj;
-pin< CHIP_1_PWR_ON_PIN_HEADING >        chip_1_pwr_on_obj;
-pin< CHIP_2_PWR_ON_PIN_HEADING >        chip_2_pwr_on_obj;
+pin bdir_pin_obj( &bdir_pin_cfg );
+pin bc1_pin_obj( &bc1_pin_cfg );
+pin chip_1_pwr_on_pin_obj( &chip_1_pwr_on_pin_cfg );
+pin chip_2_pwr_on_pin_obj( &chip_2_pwr_on_pin_cfg );
 
 // PWR.
-pin< PWR_5_V_IN_PIN_HEADING >           pwr_5_v_on_obj;
-pin< PWR_ON_PIN_HEADING >               pwr_on_obj;
+pin pwr_5_v_on_pin_obj( &pwr_5_v_on_pin_cfg );
+pin pwr_on_pin_obj( &pwr_on_pin_cfg );
 
 // Потенциометры.
-pin< DP_CS_PIN_HEADING >                dp_cs_res_obj;
-pin< SHDN_PIN_HEADING >                 shdn_obj;
+pin dp_cs_res_pin_obj( &dp_cs_res_pin_cfg );
+pin shdn_pin_obj( &shdn_pin_cfg );
 
 // Общий вход кнопок.
-pin< B_IN_PIN_HEADING >                 b_in;
+pin button_in_pin_obj( &button_in_pin_cfg );
 
 // + - громкость.
-pin< BUTTON_INC >                       b_inc;
-pin< BUTTON_DEC >                       b_dec;
+pin button_inc_pin_obj( &button_inc_pin_cfg );
+pin button_dec_pin_obj( &button_dec_pin_cfg );
 
 int ayplayer_port_init ( void ) {
-    return ( ayplayer_global_port.reinit_all_ports() == EC_ANSWER_GP::SUCCESS ) ? 0 : -1;
+    ayplayer_global_port_obj.reinit_all_ports();
+    return 0;
 }

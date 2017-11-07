@@ -13,7 +13,7 @@ ay_ym_file_mode ay_file_mode(&ay_f_mode_cfg);
 
 void pwr_chip_on ( uint32_t chip, bool state ) {
     switch ( chip ) {
-    case 0: chip_2_pwr_on_obj.set( state ); break;
-    case 1: chip_1_pwr_on_obj.set( state ); break;
+    case 0: chip_2_pwr_on_pin_obj.set( state ); break;
+    case 1: chip_1_pwr_on_pin_obj.set( state ); break;
     }
 }

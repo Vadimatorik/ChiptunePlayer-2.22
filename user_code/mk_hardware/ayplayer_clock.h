@@ -1,7 +1,6 @@
 #pragma once
 
-#include "include_module_lib.h"
-#include "ayplayer_port.h"
+#include "rcc.h"
 
 //const constexpr pll_cfg< EC_RCC_PLL_SOURCE::HSE, 25, 240, EC_RCC_PLL_P::DIV_2, 5, EC_RCC_AHB_DIV::DIV_1, EC_RCC_APB1_DIV::DIV_4, EC_RCC_APB2_DIV::DIV_2, 3300 >pll_max;
 
@@ -9,6 +8,7 @@
 // AHB  =  8 000 000
 // APB1 =  8 000 000
 // APB2 =  8 000 000
+/*
 const constexpr src_dev_cfg < EC_RCC_AHB_DIV::DIV_2, EC_RCC_APB1_DIV::DIV_1, EC_RCC_APB2_DIV::DIV_1 > pll_hse_max;
 
 const constexpr rcc_cfg ayplayer_rcc_cfg = {
@@ -18,5 +18,5 @@ const constexpr rcc_cfg ayplayer_rcc_cfg = {
     .src_cfg_count  = 1,
     .gb             = &ayplayer_global_port
 };
-
+*/
 int ayplayer_clock_init ( void );
