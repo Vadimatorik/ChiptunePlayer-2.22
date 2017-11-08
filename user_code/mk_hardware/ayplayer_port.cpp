@@ -40,5 +40,10 @@ pin button_dec_pin_obj( &button_dec_pin_cfg );
 
 int ayplayer_port_init ( void ) {
     ayplayer_global_port_obj.reinit_all_ports();
+    lcd_res_pin_obj.set(1);
+    lcd_dc_pin_obj.set(1);
+    pwr_5_v_on_pin_obj.set(1);
+    pwr_on_pin_obj.set(1);
+
     return 0;
 }

@@ -56,16 +56,13 @@ NVIC value of 255. */
  */
 #define INCLUDE_vTaskDelayUntil         1
 #define INCLUDE_vTaskDelay              1
-extern void xPortPendSVHandler( void ) __attribute__ (( naked ));
-extern void xPortSysTickHandler( void );
-extern void vPortSVCHandler( void ) __attribute__ (( naked ));
 
 /*
  * FreeRTOS забирает себе эти 2 handler-а.
  */
-#define sv_call_handler     vPortSVCHandler
-#define pend_sv_handler     xPortPendSVHandler
-#define sys_tick_handler    xPortSysTickHandler
+#define      vPortSVCHandler    SVC_Handler
+#define      xPortPendSVHandler PendSV_Handler
+#define     xPortSysTickHandler SysTick_Handler
 
 #ifdef __cplusplus
 }

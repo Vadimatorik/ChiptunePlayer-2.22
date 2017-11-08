@@ -61,3 +61,21 @@ int ayplayer_spi_init ( void ) {
     spi3_obj.on();
     return 0;
 }
+
+extern "C" void DMA2_Stream5_IRQHandler (void) {
+    spi1_obj.handler();
+}
+
+extern "C" void DMA1_Stream3_IRQHandler (void) {
+    spi2_slow_obj.handler();
+    spi2_fast_obj.handler();
+}
+
+extern "C" void DMA1_Stream4_IRQHandler (void) {
+    spi2_slow_obj.handler();
+    spi2_fast_obj.handler();
+}
+
+extern "C" void DMA1_Stream7_IRQHandler (void) {
+    spi3_obj.handler();
+}

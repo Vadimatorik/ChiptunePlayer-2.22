@@ -142,14 +142,9 @@ static const fsm_step core_step_map[] = {
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
 void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
-    fsm core( core_step_map );
-    core.start();
-/*
-
-
-
-
-
+  //  fsm core( core_step_map );
+  //  core.start();
+    init_gui(nullptr);
 
     USER_OS_DELAY_MS(50);                                                                       // Ждем стабилизации питания.
 
@@ -173,7 +168,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
     } else if ( fr != FR_OK ) {                                                                 // Если просто какой-то баг при открытии.
         const char er[] = "E:SD2:1";
         ayplayer_error_string_draw( &m_cont, er );
-        delay_max();
+        //delay_max();
     }
 
     // Формируем главное окно.
@@ -234,18 +229,18 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
 
             // Началась перемотка вперед.
             case M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_PRESS ):
-                ay_player_interrupt_ay.period_dev( 2 );
+               //ay_player_interrupt_ay.period_dev( 2 );
                 break;
 
             // Перемотка назад закончилась.
             case M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_CLICK ):
-                ay_player_interrupt_ay.period_reset();
+                //ay_player_interrupt_ay.period_reset();
                 break;
             }
             gui_update();
             break;
         }
-    }*/
+    }
 }
 
 //**********************************************************************
