@@ -45,8 +45,8 @@
                                   SPI::CFG::BAUDRATE_DEV    :: DEV_2
 
 extern spi_master_8bit spi1_obj;
-extern spi_master_8bit spi2_slow;
-extern spi_master_8bit spi2_fast;
-extern spi_master_8bit spi3;
+extern spi_master_8bit spi2_slow_obj;
+extern spi_master_8bit spi2_fast_obj;
+extern spi_master_8bit spi3_obj;
 
 int ayplayer_spi_init ( void );

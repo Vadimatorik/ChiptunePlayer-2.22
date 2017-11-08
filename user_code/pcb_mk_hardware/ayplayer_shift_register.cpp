@@ -13,7 +13,7 @@ const module_shift_register_cfg_t sr_ay_cfg_cfg = {
     .st                     = &spi_audio_st_reg_pin_obj,
     .number_output_byte     = 2,
     .strob_active           = true,
-    .p_spi                  = &spi3,
+    .p_spi                  = &spi3_obj,
     .mutex                  = nullptr
 };
 module_shift_register   sr_ay( &sr_ay_cfg_cfg );
@@ -22,7 +22,7 @@ const module_shift_register_cfg_t sr_button_cfg_cfg = {
     .st                     = &spi_audio_st_reg_pin_obj,
     .number_output_byte     = 1,
     .strob_active           = true,
-    .p_spi                  = &spi3,
+    .p_spi                  = &spi3_obj,
     .mutex                  = nullptr
 };
 module_shift_register   sr_button( &sr_button_cfg_cfg );

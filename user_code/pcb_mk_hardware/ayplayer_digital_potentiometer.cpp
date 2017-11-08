@@ -1,7 +1,7 @@
 #include "ayplayer_digital_potentiometer.h"
 
 ad5204_struct_cfg_t sound_dp_cfg = {
-    .spi        = &spi3,
+    .spi        = &spi3_obj,
     .mutex      = &m_spi3,
     .cs         = &dp_cs_res_pin_obj,
     .shdn       = &shdn_pin_obj

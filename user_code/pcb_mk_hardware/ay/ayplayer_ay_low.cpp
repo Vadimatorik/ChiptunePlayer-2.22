@@ -26,8 +26,8 @@ const ay_ym_low_lavel_cfg_t ay_low_cfg {
     .ay_number          = 2,
     .con_cfg            = array_connect_cfg,
     .task_prio          = 3,
-    .tim_frequency_ay   = &ay_player_clk_tim,
-    .tim_interrupt_task = &ay_player_interrupt_ay,
+    .tim_frequency_ay   = &clk_tim_obj,
+    .tim_interrupt_task = &interrupt_ay_obj,
     .pwr_set            = ayplayer_pwr_5_v_set
 };
 
