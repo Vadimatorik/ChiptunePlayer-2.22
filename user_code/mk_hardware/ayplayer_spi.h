@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ayplayer_os_object.h"
+#include "ayplayer_port.h"
 #include "spi.h"
 
 //**********************************************************************

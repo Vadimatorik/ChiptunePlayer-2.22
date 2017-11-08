@@ -1,17 +1,52 @@
 #include "ayplayer_spi.h"
 
-spi_cfg spi1_cfg = {
+spi_master_8bit_cfg spi1_cfg = {
+    .SPIx               = SPI1,
+    .pin_cs             = &lcd_cs_pin_obj,
+    .clk_polarity       = SPI_POLARITY_HIGH,
+    .clk_phase          = SPI_PHASE_2EDGE,
+    .allowed_baudrate   = SPI_BAUDRATEPRESCALER_2,
+    .dma_tx             = DMA2_Stream5,
+    .dma_rx             = nullptr,
+    .dma_tx_ch          = DMA_CHANNEL_3,
+    .dma_rx_ch          = 0
 };
 
-spi_cfg spi2_slow_cfg = {
+spi_master_8bit_cfg spi2_slow_cfg = {
+    .SPIx               = SPI2,
+    .pin_cs             = &sd2_cs_pin_obj,
+    .clk_polarity       = SPI_POLARITY_LOW,
+    .clk_phase          = SPI_PHASE_1EDGE,
+    .allowed_baudrate   = SPI_BAUDRATEPRESCALER_2,
+    .dma_tx             = DMA1_Stream4,
+    .dma_rx             = DMA1_Stream3,
+    .dma_tx_ch          = DMA_CHANNEL_0,
+    .dma_rx_ch          = DMA_CHANNEL_0
 };
 
-spi_cfg spi2_fast_cfg = {
+spi_master_8bit_cfg spi2_fast_cfg = {
+    .SPIx               = SPI2,
+    .pin_cs             = &sd2_cs_pin_obj,
+    .clk_polarity       = SPI_POLARITY_LOW,
+    .clk_phase          = SPI_PHASE_1EDGE,
+    .allowed_baudrate   = SPI_BAUDRATEPRESCALER_2,
+    .dma_tx             = DMA1_Stream4,
+    .dma_rx             = DMA1_Stream3,
+    .dma_tx_ch          = DMA_CHANNEL_0,
+    .dma_rx_ch          = DMA_CHANNEL_0
 };
 
-spi_cfg spi3_cfg = {
+spi_master_8bit_cfg spi3_cfg = {
+    .SPIx               = SPI3,
+    .pin_cs             = &sd2_cs_pin_obj,
+    .clk_polarity       = SPI_POLARITY_LOW,
+    .clk_phase          = SPI_PHASE_1EDGE,
+    .allowed_baudrate   = SPI_BAUDRATEPRESCALER_2,
+    .dma_tx             = DMA1_Stream7,
+    .dma_rx             = nullptr,
+    .dma_tx_ch          = DMA_CHANNEL_0,
+    .dma_rx_ch          = 0
 };
-
 
 spi_master_8bit spi1_obj( &spi1_cfg );
 spi_master_8bit spi2_slow_obj( &spi2_slow_cfg );
