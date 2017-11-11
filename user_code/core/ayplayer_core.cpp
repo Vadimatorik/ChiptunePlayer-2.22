@@ -145,7 +145,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
 
     USER_OS_DELAY_MS(50);                                                                       // Ждем стабилизации питания.
 
-    if ( !system_card_chack() ) {                                                               // Проверяем системную карту.
+    if ( system_card_chack() ) {                                                               // Проверяем системную карту.
         const char er[] = "E:SD2:0";                                                            // Если карты нет, то каждые 200 мс пытаемся ее найти.
         ayplayer_error_string_draw( &m_cont, er );
         DSTATUS r;
@@ -155,6 +155,8 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
             USER_OS_DELAY_MS(200);
         }
     }
+
+    fat_init(nullptr);
 
     // Сюда пришли точно с рабочей картой.
     // Составить список PSG файлов, если нет такого на карте.
