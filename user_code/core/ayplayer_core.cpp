@@ -1,6 +1,8 @@
 #include "ayplayer_core.h"
 #include <stdio.h>
 
+
+
 char                   path_dir[512] = "0:/";
 
 // Элементы GUI.
@@ -56,19 +58,9 @@ static bool delay_max ( const fsm_step* previous_step ) {
 }*/
 
 // Готовим низкий уровень GUI и все необходимые структуры.
-static bool init_gui ( const fsm_step* previous_step ) {
-    ( void )previous_step;
-    printf("MakiseGUI start...\t\t\t\t\t");
+static bool init_gui ( __attribute__((unused)) const fsm_step* previous_step ) {
     host.host                       = &m_cont;
-    uint8_t result;
-    result = makise_start( &m_gui );
-
-    if ( result == 0 ) {
-        printf("Success!\n\r");
-    } else {
-        printf("Error: %X\n\r", result);
-    }
-
+    makise_start( &m_gui );
     return true;
 }
 
@@ -80,6 +72,11 @@ static bool dp_init ( const fsm_step* previous_step ) {
     sound_dp.connect_on();
     return true;
 }
+
+// @startuml
+// state NotShooting {
+// }
+// @enduml
 
 extern FATFS                   fat;
 bool fat_init ( const fsm_step* previous_step ) {
@@ -248,7 +245,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
 //**********************************************************************
 void ayplayer_core_init ( void ) {
     USER_OS_STATIC_TASK_CREATE( ayplayer_gui_core_task, "gui_main", TB_GUI_SIZE, NULL, GUI_CORE_TASK_PRIO, tb_gui, &ts_gui );
-    USER_OS_STATIC_TASK_CREATE( ayplayer_gui_update_task, "gui_up", TB_STATUS_BAR_UPDATE_SIZE, NULL, GUI_UPDATE_TASK_PRIO, tb_gui_status_bar_update, &ts_gui_status_bar_update );
+    //USER_OS_STATIC_TASK_CREATE( ayplayer_gui_update_task, "gui_up", TB_STATUS_BAR_UPDATE_SIZE, NULL, GUI_UPDATE_TASK_PRIO, tb_gui_status_bar_update, &ts_gui_status_bar_update );
     m_mhost_init();
     s_gui_update_init();
 }
