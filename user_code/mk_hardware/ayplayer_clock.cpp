@@ -1,6 +1,5 @@
 #include "ayplayer_clock.h"
-
-//const constexpr src_dev_cfg < EC_RCC_AHB_DIV::DIV_2, EC_RCC_APB1_DIV::DIV_1, EC_RCC_APB2_DIV::DIV_1 > pll_hse_max;
+#include <stdlib.h>
 
 const rcc_cfg ay_player_clock_cfg[] = {
     {
@@ -27,13 +26,14 @@ const rcc_cfg ay_player_clock_cfg[] = {
             .APB1CLKDivider = RCC_HCLK_DIV1,
             .APB2CLKDivider = RCC_HCLK_DIV1,
         },
-        . f_latency = FLASH_LATENCY_0
+        .f_latency = FLASH_LATENCY_0
     }
 };
 
 rcc ayplayer_rcc( ay_player_clock_cfg, 1 );
 
-int ayplayer_clock_init ( void ) {
-    while( ayplayer_rcc.set_cfg( 0 ) != RCC_RESULT::OK );
-    return 0;
+void ayplayer_clock_init ( void ) {
+    if ( ayplayer_rcc.set_cfg( 0 ) != RCC_RESULT::OK ) {
+    	abort();
+    }
 }

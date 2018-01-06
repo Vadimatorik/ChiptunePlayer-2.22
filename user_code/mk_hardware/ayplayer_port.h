@@ -82,9 +82,9 @@ const pin_cfg sd2_push_pin_cfg              = { GPIOB, { GPIO_PIN_9, GPIO_MODE_I
 const pin_cfg boot_tx_pin_cfg               = { GPIOB, { GPIO_PIN_10, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, GPIO_AF7_USART3 } };
 const pin_cfg boot_rx_pin_cfg               = { GPIOB, { GPIO_PIN_11, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, GPIO_AF7_USART3 } };
 
-//
+//**********************************************************************
 // Глобальный порт.
-//
+//**********************************************************************
 const pin_cfg ayplayer_global_port_pin_cfg[] = {
     button_inc_pin_cfg, button_dec_pin_cfg,                                                                                                                                                 // BUTTON, EXTI.
     adc_bat_pin_cfg, adc_right_pin_cfg, adc_left_pin_cfg,                                                                                                                                   // ADC.
@@ -136,4 +136,4 @@ extern pin button_inc_pin_obj;
 extern pin button_dec_pin_obj;
 
 
-int ayplayer_port_init ( void );
+void ayplayer_port_init ( void );

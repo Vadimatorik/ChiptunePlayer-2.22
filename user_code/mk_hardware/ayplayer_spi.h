@@ -8,4 +8,4 @@ extern spi_master_8bit spi1_obj;
 extern spi_master_8bit spi2_obj;
 extern spi_master_8bit spi3_obj;
 
-int ayplayer_spi_init ( void );
+void ayplayer_spi_init ( void );

@@ -19,4 +19,4 @@ const constexpr rcc_cfg ayplayer_rcc_cfg = {
     .gb             = &ayplayer_global_port
 };
 */
-int ayplayer_clock_init ( void );
+void ayplayer_clock_init ( void );

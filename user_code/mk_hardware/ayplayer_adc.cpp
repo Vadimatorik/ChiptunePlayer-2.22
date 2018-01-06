@@ -1,6 +1,6 @@
 #include "ayplayer_adc.h"
 
-adc_one_channel_cfg adc_bat = {
+const adc_one_channel_cfg adc_bat = {
     .ADCx               = ADC1,
     .clock_prescaler    = ADC_CLOCK_SYNC_PCLK_DIV8,
     .resolution         = ADC_RESOLUTION_12B,

@@ -50,7 +50,7 @@ spi_master_8bit spi1_obj( &spi1_cfg );
 spi_master_8bit spi2_obj( &spi2_cfg );
 spi_master_8bit spi3_obj( &spi3_cfg );
 
-int ayplayer_spi_init ( void ) {
+void ayplayer_spi_init ( void ) {
     m_spi3_init();
     spi1_obj.reinit();
     spi2_obj.reinit();
@@ -58,21 +58,13 @@ int ayplayer_spi_init ( void ) {
     spi1_obj.on();
     spi2_obj.on();
     spi3_obj.on();
-    return 0;
 }
 
-extern "C" void DMA2_Stream5_IRQHandler (void) {
-    spi1_obj.handler();
-}
+extern "C" {
 
-extern "C" void DMA1_Stream3_IRQHandler (void) {
-    spi2_obj.handler();
-}
+void DMA2_Stream5_IRQHandler ( void ) { spi1_obj.handler(); }
+void DMA1_Stream3_IRQHandler ( void ) { spi2_obj.handler(); }
+void DMA1_Stream4_IRQHandler ( void ) { spi2_obj.handler(); }
+void DMA1_Stream7_IRQHandler ( void ) { spi3_obj.handler(); }
 
-extern "C" void DMA1_Stream4_IRQHandler (void) {
-    spi2_obj.handler();
-}
-
-extern "C" void DMA1_Stream7_IRQHandler (void) {
-    spi3_obj.handler();
 }
