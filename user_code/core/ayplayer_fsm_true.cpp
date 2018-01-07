@@ -9,7 +9,6 @@ extern const fsm_step step_fat_init;
 
 
 
-
 const fsm_step step_gui_init = {
 	.func_step				= &init_gui,
 	.number_step_true		= &step_dp_init,

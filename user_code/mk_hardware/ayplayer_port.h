@@ -76,9 +76,7 @@ const pin_cfg sd2_cs_pin_cfg                = { GPIOB, { GPIO_PIN_7, GPIO_MODE_O
 
 const pin_cfg sd2_push_pin_cfg              = { GPIOB, { GPIO_PIN_9, GPIO_MODE_INPUT, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, 0 } };
 
-//
-// BOOT-USART ( USART3 )
-//
+// BOOT-USART ( USART3 ). Отладочный.
 const pin_cfg boot_tx_pin_cfg               = { GPIOB, { GPIO_PIN_10, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, GPIO_AF7_USART3 } };
 const pin_cfg boot_rx_pin_cfg               = { GPIOB, { GPIO_PIN_11, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, GPIO_AF7_USART3 } };
 

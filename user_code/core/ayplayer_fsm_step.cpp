@@ -42,6 +42,7 @@ bool dp_init ( __attribute__((unused)) const fsm_step* previous_step ) {
     return true;
 }
 
+// Инициализация FAT.
 bool fat_init ( __attribute__((unused)) const fsm_step* previous_step ) {
     FRESULT fr;
     fr = f_mount( &fat, "0:", 0 );
