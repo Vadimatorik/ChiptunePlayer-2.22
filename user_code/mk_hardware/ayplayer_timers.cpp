@@ -1,6 +1,6 @@
 #include "ayplayer_timers.h"
 
-const tim_comp_one_channel_cfg		ay_f_cfg = {
+const tim_comp_one_channel_cfg		ay_clk_cfg = {
 	.tim			= TIM1,
 	.tim_channel	= HAL_TIM_ACTIVE_CHANNEL_1,
 	.period			= 1,
@@ -10,26 +10,34 @@ const tim_comp_one_channel_cfg		ay_f_cfg = {
 	.pulse			= 1,
 };
 
-// Генератор частоты AY.
-tim_comp_one_channel clk_tim_obj( &ay_f_cfg );
+tim_comp_one_channel ay_clk_obj( &ay_clk_cfg );					// Генератор частоты AY.
 
-// Генератор прерываний.
-//tim6_and_7_interrupt< TIM6_OR_TIM7::TIM6, 400, 400 > ay_player_interrupt_ay;
-tim_interrupt interrupt_ay_obj( nullptr );
+const tim_interrupt_cfg		interrupt_ay_cfg = {
+	.tim			= TIM6,
+	.tim_channel	= HAL_TIM_ACTIVE_CHANNEL_1,
+	.period			= 400,
+	.prescaler		= 400
+};
 
-// Подцветка дисплея.
-//tim3_and_4_pwm_one_channel< TIM3_OR_TIM4::TIM3, 290, 100, EC_TIM_3_AND_4_CH::CH_1 > ay_player_lcd_pwm;
+tim_interrupt interrupt_ay_obj( &interrupt_ay_cfg );			// Генератор прерываний.
+
+const tim_pwm_one_channel_cfg	lcd_pwm_cfg = {
+	.tim			= TIM3,
+	.tim_channel	= HAL_TIM_ACTIVE_CHANNEL_1,
+	.period			= 290,
+	.prescaler		= 100,
+	.out_channel	= TIM_CHANNEL_1,
+	.polarity		= TIM_OCPOLARITY_LOW
+};
+
+tim_pwm_one_channel lcd_pwm_obj( &lcd_pwm_cfg );				// Подцветка дисплея.
 
 void ayplayer_timers_init ( void ) {
-	clk_tim_obj.reinit();
-	clk_tim_obj.on();
-
-	/*
-	ay_player_interrupt_ay.reinit();
-	ayplayer_nvic.irq_set_priority( IRQ_NAME::TIM6, IRQ_PRIO::PRIO_5 );
-	ayplayer_nvic.irq_enable( IRQ_NAME::TIM6 );
-	ay_player_clk_tim.reinit();
-	ay_player_lcd_pwm.reinit();
-	ay_player_lcd_pwm.duty_set(0.4);        // ВЫПЕЛИТЬ КОСТЫЛЬ!!!
-	ay_player_lcd_pwm.on();*/
+	ay_clk_obj.reinit();
+	ay_clk_obj.on();
+	lcd_pwm_obj.reinit();
+	lcd_pwm_obj.on();
+	interrupt_ay_obj.reinit();
+	interrupt_ay_obj.on();
+	NVIC_EnableIRQ( TIM6_DAC_IRQn );
 }
