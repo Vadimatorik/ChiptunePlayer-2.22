@@ -28,8 +28,7 @@ buttons_through_shift_register_one_in_cfg b_sr_cfg = {
 buttons_through_shift_register_one_in ayplayer_button( &b_sr_cfg );
 
 
-#define INC_AND_DEC_STABIL      10
-#define OFF_WITE                100
+
 
 int32_t current_volume = 4;
 
@@ -37,53 +36,61 @@ int32_t current_volume = 4;
 
 uint8_t v_table[16] = { 0x0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 0x90, 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xFF };
 
+static void device_power_off ( void ) {								// Отключает всю цепь питания устройства.
+	pwr_on_pin_obj.reset();
+}
+
+static void volume_set( uint8_t left, uint8_t right) {
+	sound_dp.value_set( 1, 2, left );						// Левый наушник.
+	sound_dp.value_set( 1, 3, right );						// Правый.
+}
+
 // Детектирование изменения уровня громкости.
 void ayplayer_button_inc_and_dec_detect ( void* param ) {
     ( void )param;
-    uint8_t inc = INC_AND_DEC_STABIL;
-    uint8_t dec = INC_AND_DEC_STABIL;
-    uint8_t off_time = OFF_WITE;
+
+    int32_t inc_stabil_time = INC_AND_DEC_STABIL_TIME;
+    int32_t dec_stabil_time = INC_AND_DEC_STABIL_TIME;
+    int32_t off_time = OFF_WAIT_TIME;
+
     bool inc_f = false;
     bool dec_f = false;
 
     while ( true ) {
-        vTaskDelay( 10 );
+    	USER_OS_DELAY_MS( PERIOD_DETECT_PRESS_BUTTON_INC_DEC );
 
         inc_f = button_inc_pin_obj.read();
         dec_f = button_dec_pin_obj.read();
 
+        // Обе зажатые клавиши - старт отсчета времени нажатия для отключения.
         if ( ( inc_f == false ) && ( dec_f == false ) ) {
             if ( off_time > 0 ) {
-                off_time--;
+                off_time -= PERIOD_DETECT_PRESS_BUTTON_INC_DEC;
             } else {
-                pwr_on_pin_obj.reset();
+            	device_power_off();
             }
         } else {
-            off_time = OFF_WITE;
+            off_time = OFF_WAIT_TIME;
         }
 
         if ( inc_f == false ) {
-            if ( inc > 0 ) inc--;
+            if ( inc_stabil_time > 0 ) inc_stabil_time -= PERIOD_DETECT_PRESS_BUTTON_INC_DEC;
         } else {
-            if ( inc == 0 ) {
-                if ( current_volume < 15 )
-                    current_volume++;
-                inc = INC_AND_DEC_STABIL;
-                sound_dp.value_set( 1, 2, v_table[ current_volume ] );           // Левый наушник.
-                sound_dp.value_set( 1, 3, v_table[ current_volume ] );           // Правый.
+            if ( inc_stabil_time == 0 ) {
+                if ( current_volume < 15 )	current_volume++;
+                inc_stabil_time = INC_AND_DEC_STABIL_TIME;
+                volume_set( v_table[ current_volume ], v_table[ current_volume ] );
                 continue;
             }
         }
 
         if ( dec_f == false ) {
-            if ( dec > 0 ) dec--;
+            if ( dec_stabil_time > 0 ) dec_stabil_time -= PERIOD_DETECT_PRESS_BUTTON_INC_DEC;
         } else {
-            if ( dec == 0 ) {
-                if ( current_volume > 0 )
-                    current_volume--;
-                dec = INC_AND_DEC_STABIL;
-                sound_dp.value_set( 1, 2, v_table[ current_volume ] );           // Левый наушник.
-                sound_dp.value_set( 1, 3, v_table[ current_volume ] );           // Правый.
+            if ( dec_stabil_time == 0 ) {
+                if ( current_volume > 0 )	current_volume--;
+                dec_stabil_time = INC_AND_DEC_STABIL_TIME;
+                volume_set( v_table[ current_volume ], v_table[ current_volume ] );
                 continue;
             }
         }
