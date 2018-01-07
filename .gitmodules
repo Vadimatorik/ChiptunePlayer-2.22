@@ -46,3 +46,6 @@
 [submodule "module_stm32f2_low_level_by_st"]
 	path = module_stm32f2_low_level_by_st
 	url = git@github.com:Vadimatorik/module_stm32f2_low_level_by_st.git
+[submodule "module_run_time_logger"]
+	path = module_run_time_logger
+	url = git@github.com:Vadimatorik/module_run_time_logger.git
