@@ -6,11 +6,10 @@ int main ( void ) {
 	ayplayer_mc_hardware();
 	ayplayer_housekeeping_init();
 	ayplayer_button_init();
-  //  ayplayer_core_init();
-  /*  ayplayer_shift_register();
-    ayplayer_ay_init();
-    ayplayer_play_task_init();
-    ayplayer_battery_check_init();*/
+	ayplayer_shift_register();
+	ayplayer_ay_init();
+	ayplayer_core_init();
+
     vTaskStartScheduler();
     while ( true );
 }

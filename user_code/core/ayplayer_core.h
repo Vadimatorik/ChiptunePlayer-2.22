@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ayplayer_gui_low.h"
 
 // Конфигурации окон.
@@ -11,7 +13,7 @@
 #include "ayplayer_microsd_card.h"
 #include "ayplayer_fat_love_level.h"
 
-// Rнопки.
+// Кнопки.
 #include "ayplayer_button.h"
 #include "ayplayer_digital_potentiometer.h"
 
@@ -29,7 +31,7 @@
 void ayplayer_core_init ( void );                   // Создает задачу для контроля всей графики.
 
 // Основная задача ядра GUI.
-void ayplayer_gui_core_task ( void* param );
+void ayplayer_core_task ( void* param );
 
 // Обновление окна раз в секунду.
 void ayplayer_gui_update_task ( void* param );

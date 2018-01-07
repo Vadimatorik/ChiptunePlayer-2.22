@@ -13,6 +13,7 @@ ay_ym_connection_chip_cfg_t array_connect_cfg[] = {
 };
 
 void ayplayer_pwr_5_v_set ( bool state );
+
 extern module_shift_register       sr_ay;
 
 const ay_ym_low_lavel_cfg_t ay_low_cfg {
@@ -33,7 +34,6 @@ const ay_ym_low_lavel_cfg_t ay_low_cfg {
 
 ay_ym_low_lavel ay( &ay_low_cfg );
 
-
 void ayplayer_ay_init (void) {
     q_ay_low_init();
 }
@@ -42,13 +42,7 @@ extern uint8_t v_table[16];
 extern int32_t current_volume;
 
 void ayplayer_pwr_5_v_set ( bool state ) {
-    if ( state == 1 ) {
-        pwr_5_v_on_pin_obj.set( true );             // Пережидаем щелчок.
-        sound_dp.value_set( 1, 2, v_table[ current_volume ] );           // Левый наушник.
-        sound_dp.value_set( 1, 3, v_table[ current_volume ] );           // Правый.
-    } else {
-        pwr_5_v_on_pin_obj.set( false );
-    }
+	pwr_5_v_on_pin_obj.set( state );
 }
 
 extern "C" {

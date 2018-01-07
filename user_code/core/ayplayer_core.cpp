@@ -1,8 +1,6 @@
 #include "ayplayer_core.h"
 #include <stdio.h>
 
-
-
 char                   path_dir[512] = "0:/";
 
 // Элементы GUI.
@@ -57,91 +55,36 @@ static bool delay_max ( const fsm_step* previous_step ) {
     return false;
 }*/
 
-// Готовим низкий уровень GUI и все необходимые структуры.
-static bool init_gui ( __attribute__((unused)) const fsm_step* previous_step ) {
-    host.host                       = &m_cont;
-    makise_start( &m_gui );
-    return true;
-}
 
 // Настраиваем потенциометры.
+/*
 static bool dp_init ( const fsm_step* previous_step ) {
     ( void )previous_step;
     sound_dp.connect_off();
     ayplayer_control.dp_update_value();
     sound_dp.connect_on();
     return true;
-}
+}*/
 
 // @startuml
 // state NotShooting {
 // }
 // @enduml
 
-extern FATFS                   fat;
-bool fat_init ( const fsm_step* previous_step ) {
-    ( void )previous_step;
-    FRESULT fr;
-    fr = f_mount( &fat, "0:", 0 );
 
-    if ( fr != FR_OK ) {                                                                        // Решаем вопрос с системной картой.
-        const char er[] = "E:F:0";
-        ayplayer_error_string_draw( &m_cont, er );
-        return false;
-    }
-    return true;
-}
-/*
-static const fsm_step cs_dp_init             = { &dp_init,               nullptr,                            &cs_delay_max,                 1 };
-
-*/
-static const fsm_step core_step_map[] = {
-    { &init_gui,            &core_step_map[1],      nullptr, 0 },                   // Инициализируем GUI.
-    { &dp_init,             &core_step_map[2],      nullptr, 0 },
-    { &fat_init,            &core_step_map[3],      nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-    { nullptr, nullptr, nullptr, 0 },
-
-    //{ &init_gui,              &cs_dp_init,                  &cs_delay_max,                          1 },
-   // { &delay_max,             nullptr,                      nullptr,                                REPEAT_STEP_MAX },
-};
-
+extern const fsm_step step_gui_init;
+fsm core_fsm( &step_gui_init );
 
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
-void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
-  //  fsm core( core_step_map );
-  //  core.start();
-    init_gui(nullptr);
+void ayplayer_core_task ( __attribute__((unused)) void* param ) {
+	core_fsm.start();
+
+
+	while(1) vTaskDelay(1000);
+
+ //   init_gui(nullptr);
 
     USER_OS_DELAY_MS(50);                                                                       // Ждем стабилизации питания.
 
@@ -156,7 +99,7 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
         }
     }
 
-    fat_init(nullptr);
+  //  fat_init(nullptr);
 
     // Сюда пришли точно с рабочей картой.
     // Составить список PSG файлов, если нет такого на карте.
@@ -246,8 +189,8 @@ void ayplayer_gui_core_task ( __attribute__((unused)) void* param ) {
 // Задача GUI.
 //**********************************************************************
 void ayplayer_core_init ( void ) {
-    USER_OS_STATIC_TASK_CREATE( ayplayer_gui_core_task, "gui_main", TB_GUI_SIZE, NULL, GUI_CORE_TASK_PRIO, tb_gui, &ts_gui );
+    USER_OS_STATIC_TASK_CREATE( ayplayer_core_task, "gui_main", TB_GUI_SIZE, NULL, CORE_TASK_PRIO, tb_gui, &ts_gui );
     //USER_OS_STATIC_TASK_CREATE( ayplayer_gui_update_task, "gui_up", TB_STATUS_BAR_UPDATE_SIZE, NULL, GUI_UPDATE_TASK_PRIO, tb_gui_status_bar_update, &ts_gui_status_bar_update );
-    m_mhost_init();
-    s_gui_update_init();
+    //m_mhost_init();
+    //s_gui_update_init();
 }
