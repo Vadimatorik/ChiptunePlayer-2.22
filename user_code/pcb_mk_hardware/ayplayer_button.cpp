@@ -9,8 +9,8 @@ sr_one_in_button_item_cfg ayplayer_button_cfg[7] = {
     { 0, 2, 50, 700, nullptr, nullptr, 0, nullptr, &q_ay_button,    M_EC_TO_U8( EC_BUTTON_NAME::LEFT_LONG_PRESS ),  nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::LEFT_LONG_CLICK ),    nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::LEFT_CLICK),           &b_s_ar[2] },
     { 0, 3, 50, 700, nullptr, nullptr, 0, nullptr, &q_ay_button,    M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_PRESS ), nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_LONG_CLICK ),   nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::RIGHT_CLICK),          &b_s_ar[3] },
     { 0, 4, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::ENTER ),              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::ENTER),                &b_s_ar[4] },
-    { 0, 5, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::MENU ),               nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::MENU),                 &b_s_ar[5] },
-    { 0, 6, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::BACK ),               nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::BACK),                 &b_s_ar[6] },
+    { 0, 6, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::BACK ),               nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::BACK),                 &b_s_ar[5] },
+	{ 0, 5, 50, 700, nullptr, nullptr, 0, nullptr, nullptr,         0,                                              nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::MENU ),               nullptr, &q_ay_button, M_EC_TO_U8( EC_BUTTON_NAME::MENU),                 &b_s_ar[6] },
 };
 
 buttons_through_shift_register_one_in_cfg b_sr_cfg = {

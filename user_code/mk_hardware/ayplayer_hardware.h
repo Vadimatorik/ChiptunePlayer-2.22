@@ -7,4 +7,4 @@
 #include "ayplayer_spi.h"
 #include "ayplayer_timers.h"
 
-void ayplayer_hardware ( void );
+void ayplayer_mc_hardware ( void );

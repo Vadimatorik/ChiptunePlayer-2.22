@@ -9,8 +9,8 @@ const adc_one_channel_cfg adc_bat = {
     .sampling_time      = ADC_SAMPLETIME_480CYCLES
 };
 
-adc_one_channel adc_input_obj( &adc_bat );
+adc_one_channel adc_bat_obj( &adc_bat );
 
 void ayplayer_adc_init ( void ) {
-    adc_input_obj.reinit();
+	adc_bat_obj.reinit();
 }

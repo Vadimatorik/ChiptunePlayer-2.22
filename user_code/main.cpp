@@ -3,10 +3,9 @@
 extern "C" {
 
 int main ( void ) {
-	ayplayer_hardware();
+	ayplayer_mc_hardware();
 	ayplayer_housekeeping_init();
-
-   // ayplayer_button_init();
+	ayplayer_button_init();
   //  ayplayer_core_init();
   /*  ayplayer_shift_register();
     ayplayer_ay_init();

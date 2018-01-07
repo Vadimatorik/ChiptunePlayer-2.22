@@ -1,6 +1,6 @@
 #include "ayplayer_hardware.h"
 
-void ayplayer_hardware ( void ) {
+void ayplayer_mc_hardware ( void ) {
 	ayplayer_wdt_init();
 	ayplayer_port_init();
 	ayplayer_clock_init();

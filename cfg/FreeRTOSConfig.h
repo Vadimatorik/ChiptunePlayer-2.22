@@ -11,7 +11,6 @@ extern "C" {
 #define configTICK_RATE_HZ              ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES            ( 5 )
 #define configMINIMAL_STACK_SIZE        ( ( unsigned short ) 300 )
-#define configTOTAL_HEAP_SIZE           ( ( size_t ) ( 5 * 1024 ) )
 #define configMAX_TASK_NAME_LEN         ( 10 )
 #define configUSE_16_BIT_TICKS          0
 #define configIDLE_SHOULD_YIELD         1
@@ -36,7 +35,8 @@ extern "C" {
 #define configTIMER_TASK_STACK_DEPTH    ( configMINIMAL_STACK_SIZE * 2 )
 
 // Разрешаем использовать статическое выделение памяти.
-#define configSUPPORT_STATIC_ALLOCATION 1
+#define configSUPPORT_STATIC_ALLOCATION		1
+#define configSUPPORT_DYNAMIC_ALLOCATION	0
 
 /* This is the raw value as per the Cortex-M3 NVIC.  Values can be 255
 (lowest) to 0 (1?) (highest). */
@@ -60,9 +60,9 @@ NVIC value of 255. */
 /*
  * FreeRTOS забирает себе эти 2 handler-а.
  */
-#define      vPortSVCHandler    SVC_Handler
-#define      xPortPendSVHandler PendSV_Handler
-#define     xPortSysTickHandler SysTick_Handler
+#define		vPortSVCHandler		SVC_Handler
+#define		xPortPendSVHandler	PendSV_Handler
+#define		xPortSysTickHandler	SysTick_Handler
 
 #ifdef __cplusplus
 }
