@@ -89,6 +89,10 @@ USER_CFG_PATH		:= -I$(USER_CFG_DIR)
 
 PROJECT_PATH		+= $(USER_CFG_PATH)
 
+# В эту переменную инклуды запишет module_stm32f2_low_level_by_st. 
+# Так же ее использует module_system_dummy затем.
+PATH_USER_MC_LOW_LAVEL	:=
+
 include module_fsm/makefile
 include module_button/makefile
 include module_chiptune/makefile
