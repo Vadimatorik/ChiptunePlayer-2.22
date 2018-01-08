@@ -5,7 +5,7 @@ extern const fsm_step step_gui_init;
 extern const fsm_step step_dp_init;
 extern const fsm_step step_fat_init;
 extern const fsm_step step_waiting_for_food_stabilization;
-extern const fsm_step step_sd2_connect;
+extern const fsm_step step_sd2_chack;
 
 const fsm_step step_gui_init = {
 	.func_step				= &init_gui,
@@ -30,14 +30,14 @@ const fsm_step step_fat_init = {
 
 const fsm_step step_waiting_for_food_stabilization = {
 	.func_step				= &waiting_for_food_stabilization,
-	.number_step_true		= &step_sd2_connect,
+	.number_step_true		= &step_sd2_chack,
 	.number_step_false		= nullptr,
 	.repeat_step			= 0
 };
 
-const fsm_step step_sd2_connect = {
-	.func_step				= &sd2_connect,
+const fsm_step step_sd2_chack = {
+	.func_step				= &sd2_chack,
 	.number_step_true		= nullptr,
 	.number_step_false		= nullptr,
-	.repeat_step			= 0
+	.repeat_step			= REPEAT_STEP_MAX									// Ждем, пока карту вставят.
 };

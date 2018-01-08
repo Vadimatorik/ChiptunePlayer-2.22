@@ -20,15 +20,14 @@
 #include "ayplayer_timers.h"
 #include "ayplayer_os_object.h"
 
-#include "ayplayer_fat_api.h"
-
 #include "run_time_logger.h"
 #include <errno.h>
 
 extern MakiseGUI						m_gui;
 extern MHost							host;
 extern MContainer						m_cont;
-extern FATFS							fat;
+
+FATFS							fat;
 
 extern run_time_logger					ay_log_obj;
 
@@ -76,8 +75,24 @@ bool waiting_for_food_stabilization ( __attribute__((unused)) const fsm_step* pr
 	return true;
 }
 
-bool sd2_connect ( __attribute__((unused)) const fsm_step* previous_step ) {
-	while(1) ayplayer_error_string_draw( &m_cont, "Attempt to discover SD2..." );
+bool sd2_chack ( __attribute__((unused)) const fsm_step* previous_step ) {
+	EC_MICRO_SD_TYPE r;
+	r = sd2.initialize();
+	if ( r == EC_MICRO_SD_TYPE::ERROR ) {
+		ay_log_obj.send_message( RTL_TYPE_M::INIT_ISSUE, "SD2 missing!" );
+		ayplayer_error_string_draw( &m_cont, "SD2 missing!" );
+		USER_OS_DELAY_MS(50);
+		return false;
+	} else {
+		ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "SD2 is detected!" );
+		ayplayer_error_string_draw( &m_cont, "SD2 is detected!" );
+		return true;
+	}
+}
+
+
+
+/*
 	if ( system_card_chack() == ECONNREFUSED ) {										// Проверяем наличие карты SD2.
 		ay_log_obj.send_message( RTL_TYPE_M::INIT_ISSUE, "No SD2!" );					// Если карты нет, то делаем 5 попыток ее обноружить.
 		DSTATUS r;
@@ -86,6 +101,7 @@ bool sd2_connect ( __attribute__((unused)) const fsm_step* previous_step ) {
 			ay_log_obj.send_message( RTL_TYPE_M::INIT_ISSUE, "Attempt to discover SD2..." );
 			r = disk_initialize(0);
 			if ( r == RES_OK ) {
+				ayplayer_error_string_draw( &m_cont, "SD2 is detected!" );
 				ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "SD2 is detected!" );
 				break;
 			}
@@ -99,5 +115,5 @@ bool sd2_connect ( __attribute__((unused)) const fsm_step* previous_step ) {
 
 	// Не важно, есть флешка или нет. Мы просто сохраним в объект, что флешка отсутствует.
 	return true;
-}
+}*/
 

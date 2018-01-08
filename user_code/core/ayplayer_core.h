@@ -22,8 +22,6 @@
 #include "ayplayer_timers.h"
 #include "ayplayer_os_object.h"
 
-#include "ayplayer_fat_api.h"
-
 // FSM.
 #include "core_fsm.h"
 

@@ -16,4 +16,6 @@ void ayplayer_error_string_draw ( MContainer* c, const char* s ) {
     MMessageWindow mw;
     m_create_message_window( &mw, c, mp_rel( 9, 10, 108, 44 ), (char*)s, &smw );
     gui_update();
+    makise_g_cont_clear( c );				// Чистим потом, потому что mw потом будет удален при выходе из функции, а в с
+    										// он останется.
 }
