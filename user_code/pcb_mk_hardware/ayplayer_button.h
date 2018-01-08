@@ -9,7 +9,7 @@ void ayplayer_button_init ( void );
 
 #define INC_AND_DEC_STABIL_TIME  			    	100
 #define OFF_WAIT_TIME             				   	3000
-#define PERIOD_DETECT_PRESS_BUTTON_INC_DEC			100
+#define PERIOD_DETECT_PRESS_BUTTON_INC_DEC			10
 
 enum class EC_BUTTON_NAME {
     UP              = 0,

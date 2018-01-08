@@ -9,7 +9,7 @@
 #define TB_PLAY_TIC_SIZE                1000
 #define TB_GUI_SIZE                     5000
 #define TB_STATUS_BAR_UPDATE_SIZE       1000
-#define TB_B_INC_DEC_SIZE               1000
+#define TB_B_INC_DEC_SIZE               200
 #define TB_HOUSEKEEPING_SIZE            1000
 #define TB_BATTERY_CHECK_SIZE           1000
 

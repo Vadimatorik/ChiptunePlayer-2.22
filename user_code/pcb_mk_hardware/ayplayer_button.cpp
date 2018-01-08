@@ -99,6 +99,6 @@ void ayplayer_button_inc_and_dec_detect ( void* param ) {
 
 void ayplayer_button_init ( void ) {
     q_ay_button_init();
-    ayplayer_button.init();
-    USER_OS_STATIC_TASK_CREATE( ayplayer_button_inc_and_dec_detect, "b_incdec", TB_B_INC_DEC_SIZE,  NULL, 3, tb_inc_dec_detect, &ts_inc_dec_detect );
+    //ayplayer_button.init();
+    USER_OS_STATIC_TASK_CREATE( ayplayer_button_inc_and_dec_detect, "b_incdec", TB_B_INC_DEC_SIZE,  NULL, 2, tb_inc_dec_detect, &ts_inc_dec_detect );
 }

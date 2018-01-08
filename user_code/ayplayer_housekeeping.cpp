@@ -7,7 +7,7 @@ void housekeeping_thread ( void* arg ) {
     vTaskDelay(300);					// Минимальное время, чтобы напряжениен а схеме установилось и можно было считать, что устрйство включили.
     pwr_on_pin_obj.set();
     while( true ) {
-
+    	vTaskDelay(300);
     }
 }
 

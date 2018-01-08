@@ -46,30 +46,6 @@ void select_window_play_list ( void ) {
     USER_OS_GIVE_MUTEX( m_mhost );
 }
 
-/*
-static bool delay_max ( const fsm_step* previous_step ) {
-    ( void )previous_step;
-    while( true ) {
-        USER_OS_DELAY_MS( 1000 );
-    }
-    return false;
-}*/
-
-
-// Настраиваем потенциометры.
-/*
-static bool dp_init ( const fsm_step* previous_step ) {
-    ( void )previous_step;
-    sound_dp.connect_off();
-    ayplayer_control.dp_update_value();
-    sound_dp.connect_on();
-    return true;
-}*/
-
-// @startuml
-// state NotShooting {
-// }
-// @enduml
 #include "run_time_logger.h"
 
 extern const fsm_step step_gui_init;
@@ -88,17 +64,6 @@ void ayplayer_core_task ( __attribute__((unused)) void* param ) {
 
 	while(1) vTaskDelay(1000);
 
-	// Сюда пришли точно с рабочей картой.
-    // Составить список PSG файлов, если нет такого на карте.
-    FIL file_list;
-    DSTATUS fr = f_open( &file_list, "playlist.sys", FA_READ );
-    if ( fr == FR_NO_FILE ) {                                                                   // Если файл просто не был найден - составляем список.
-        ayplayer_sd_card_scan( path_dir, &m_cont );
-    } else if ( fr != FR_OK ) {                                                                 // Если просто какой-то баг при открытии.
-        const char er[] = "E:SD2:1";
-        ayplayer_error_string_draw( &m_cont, er );
-        //delay_max();
-    }
 
     // Формируем главное окно.
     select_window_main();

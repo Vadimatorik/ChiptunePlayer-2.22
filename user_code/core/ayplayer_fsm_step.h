@@ -2,8 +2,9 @@
 
 #include "core_fsm.h"
 
-bool init_gui						( const fsm_step* previous_step );
-bool dp_init						( const fsm_step* previous_step );
-bool fat_init						( const fsm_step* previous_step );
-bool waiting_for_food_stabilization ( const fsm_step* previous_step );
-bool sd2_chack 						( const fsm_step* previous_step );
+int init_gui						( const fsm_step* previous_step );
+int dp_init							( const fsm_step* previous_step );
+int fat_init						( const fsm_step* previous_step );
+int waiting_for_food_stabilization	( const fsm_step* previous_step );
+int sd2_chack 						( const fsm_step* previous_step );
+int sd2_track_file_open				( const fsm_step* previous_step );

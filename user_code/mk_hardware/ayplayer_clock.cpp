@@ -22,7 +22,7 @@ const rcc_cfg ay_player_clock_cfg[] = {
         .clk_cfg = {
             .ClockType      = RCC_CLOCKTYPE_HCLK,
             .SYSCLKSource   = RCC_SYSCLKSOURCE_HSE,
-            .AHBCLKDivider  = RCC_SYSCLK_DIV4,
+            .AHBCLKDivider  = RCC_SYSCLK_DIV1,
             .APB1CLKDivider = RCC_HCLK_DIV1,
             .APB2CLKDivider = RCC_HCLK_DIV1,
         },

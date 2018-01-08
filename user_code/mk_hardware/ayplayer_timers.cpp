@@ -3,11 +3,11 @@
 const tim_comp_one_channel_cfg		ay_clk_cfg = {
 	.tim			= TIM1,
 	.tim_channel	= HAL_TIM_ACTIVE_CHANNEL_1,
-	.period			= 1,
+	.period			= 8,
 	.prescaler		= 0,
 	.out_channel	= TIM_CHANNEL_2,
 	.polarity		= TIM_OCPOLARITY_LOW,
-	.pulse			= 1,
+	.pulse			= 0,
 };
 
 tim_comp_one_channel ay_clk_obj( &ay_clk_cfg );					// Генератор частоты AY.
@@ -25,7 +25,7 @@ const tim_pwm_one_channel_cfg	lcd_pwm_cfg = {
 	.tim			= TIM3,
 	.tim_channel	= HAL_TIM_ACTIVE_CHANNEL_1,
 	.period			= 290,
-	.prescaler		= 100,
+	.prescaler		= 400,
 	.out_channel	= TIM_CHANNEL_1,
 	.polarity		= TIM_OCPOLARITY_LOW
 };
@@ -40,5 +40,5 @@ void ayplayer_timers_init ( void ) {
 	lcd_pwm_obj.duty_set(0.4);
 	interrupt_ay_obj.reinit();
 	interrupt_ay_obj.on();
-	NVIC_EnableIRQ( TIM6_DAC_IRQn );
+	//NVIC_EnableIRQ( TIM6_DAC_IRQn );
 }
