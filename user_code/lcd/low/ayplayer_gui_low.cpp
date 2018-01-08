@@ -112,8 +112,8 @@ MakiseGUI m_gui = {
 
 MHost           host;
 
-extern USER_OS_STATIC_MUTEX        mhost_mutex;
-extern USER_OS_STATIC_BIN_SEMAPHORE        s_gui_update;
+extern USER_OS_STATIC_MUTEX        			mhost_mutex;
+extern USER_OS_STATIC_BIN_SEMAPHORE        	s_gui_update;
 // Перерисовывает GUI и обновляет экран.
 void gui_update ( void ) {
     USER_OS_TAKE_MUTEX( m_mhost, portMAX_DELAY );

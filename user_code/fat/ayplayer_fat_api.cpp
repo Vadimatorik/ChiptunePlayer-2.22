@@ -17,6 +17,5 @@ int system_card_chack ( void ) {
         }
     }
 
-
     return ECONNREFUSED;
 }

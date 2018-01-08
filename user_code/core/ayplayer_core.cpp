@@ -77,36 +77,18 @@ fsm core_fsm( &step_gui_init );
 
 extern run_time_logger ay_log_obj;
 
-//
-
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
 void ayplayer_core_task ( __attribute__((unused)) void* param ) {
 	ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "FreeRTOS started." );
+	ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "FSM started." );
 	core_fsm.start();
 
 
 	while(1) vTaskDelay(1000);
 
- //   init_gui(nullptr);
-
-    USER_OS_DELAY_MS(50);                                                                       // Ждем стабилизации питания.
-
-    if ( system_card_chack() ) {                                                               // Проверяем системную карту.
-        const char er[] = "E:SD2:0";                                                            // Если карты нет, то каждые 200 мс пытаемся ее найти.
-        ayplayer_error_string_draw( &m_cont, er );
-        DSTATUS r;
-        while( true ) {
-            r = disk_initialize(0);
-            if ( r == RES_OK ) break;
-            USER_OS_DELAY_MS(200);
-        }
-    }
-
-  //  fat_init(nullptr);
-
-    // Сюда пришли точно с рабочей картой.
+	// Сюда пришли точно с рабочей картой.
     // Составить список PSG файлов, если нет такого на карте.
     FIL file_list;
     DSTATUS fr = f_open( &file_list, "playlist.sys", FA_READ );
@@ -196,6 +178,6 @@ void ayplayer_core_task ( __attribute__((unused)) void* param ) {
 void ayplayer_core_init ( void ) {
     USER_OS_STATIC_TASK_CREATE( ayplayer_core_task, "gui_main", TB_GUI_SIZE, NULL, CORE_TASK_PRIO, tb_gui, &ts_gui );
     //USER_OS_STATIC_TASK_CREATE( ayplayer_gui_update_task, "gui_up", TB_STATUS_BAR_UPDATE_SIZE, NULL, GUI_UPDATE_TASK_PRIO, tb_gui_status_bar_update, &ts_gui_status_bar_update );
-    //m_mhost_init();
-    //s_gui_update_init();
+    m_mhost_init();
+    s_gui_update_init();
 }

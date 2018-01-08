@@ -37,6 +37,7 @@ void ayplayer_timers_init ( void ) {
 	ay_clk_obj.on();
 	lcd_pwm_obj.reinit();
 	lcd_pwm_obj.on();
+	lcd_pwm_obj.duty_set(0.4);
 	interrupt_ay_obj.reinit();
 	interrupt_ay_obj.on();
 	NVIC_EnableIRQ( TIM6_DAC_IRQn );
