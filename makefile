@@ -16,9 +16,9 @@ FAT_FS_OPTIMIZATION							:= -g3 -O0
 MAKISE_GUI_OPTIMIZATION						:= -g3 -O0
 BUT_OPTIMIZATION							:= -g3 -O0
 FSM_OPTIMIZATION							:= -g3 -O0
+MODULE_RUN_TIME_LOGGER_OPTIMIZATION			:= -g3 -O0
+
 DEFINE_PROJ	:= -DSTM32F205xx
-
-
 
 LD_FILES = -T module_stm32f2_low_level_by_st/LD/STM32F205xG.ld
 
@@ -93,6 +93,7 @@ PROJECT_PATH		+= $(USER_CFG_PATH)
 # Так же ее использует module_system_dummy затем.
 PATH_USER_MC_LOW_LAVEL	:=
 
+include module_run_time_logger/makefile
 include module_fsm/makefile
 include module_button/makefile
 include module_chiptune/makefile

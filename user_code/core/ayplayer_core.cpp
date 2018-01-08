@@ -70,15 +70,20 @@ static bool dp_init ( const fsm_step* previous_step ) {
 // state NotShooting {
 // }
 // @enduml
-
+#include "run_time_logger.h"
 
 extern const fsm_step step_gui_init;
 fsm core_fsm( &step_gui_init );
+
+extern run_time_logger ay_log_obj;
+
+//
 
 //**********************************************************************
 // Через данную задачу будут происходить все монипуляции с GUI.
 //**********************************************************************
 void ayplayer_core_task ( __attribute__((unused)) void* param ) {
+	ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "FreeRTOS started." );
 	core_fsm.start();
 
 

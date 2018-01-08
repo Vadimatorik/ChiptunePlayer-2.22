@@ -8,7 +8,7 @@ int main ( void ) {
 	ayplayer_button_init();
 	ayplayer_shift_register();
 	ayplayer_ay_init();
-//	ayplayer_core_init();
+	ayplayer_core_init();
 
     vTaskStartScheduler();
     while ( true );
