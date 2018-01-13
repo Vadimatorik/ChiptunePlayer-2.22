@@ -9,7 +9,7 @@ const mono_lcd_lib_st7565_cfg_t st7565_cfg {
     .res    = &lcd_res_pin_obj,
     .cs     = &lcd_cs_pin_obj,
     .p_spi  = &spi1_obj,
-    .mode   = ST7565_MODE::IVERT_X_AMD_Y
+    .mode   = ST7565_MODE::STANDARD
 };
 
 extern "C" {

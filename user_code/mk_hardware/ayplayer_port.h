@@ -23,7 +23,7 @@ const pin_cfg midi_uart_rx_pin_cfg          = { GPIOA, { GPIO_PIN_3, GPIO_MODE_A
 const pin_cfg lcd_clk_pin_cfg               = { GPIOA, { GPIO_PIN_5, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF5_SPI1 } };
 const pin_cfg lcd_pwm_pin_cfg               = { GPIOA, { GPIO_PIN_6, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF2_TIM3 } };
 const pin_cfg lcd_mosi_pin_cfg              = { GPIOA, { GPIO_PIN_7, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF5_SPI1} };
-const pin_cfg lcd_res_pin_cfg               = { GPIOC, { GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };
+const pin_cfg lcd_res_pin_cfg               = { GPIOC, { GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0 } };
 const pin_cfg lcd_dc_pin_cfg                = { GPIOC, { GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0 } };
 const pin_cfg lcd_cs_pin_cfg                = { GPIOB, { GPIO_PIN_2, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0 } };
 
