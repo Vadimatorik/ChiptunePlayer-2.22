@@ -22,6 +22,7 @@
 
 #include "run_time_logger.h"
 #include <errno.h>
+#include "ayplayer_fat_love_level.h"
 
 extern MakiseGUI						m_gui;
 extern MHost							host;
@@ -79,16 +80,17 @@ int waiting_for_food_stabilization ( __attribute__((unused)) const fsm_step* pre
 // 0 - все четко.
 // 1 - карты нет.
 int sd2_chack ( __attribute__((unused)) const fsm_step* previous_step ) {
-	EC_MICRO_SD_TYPE r;
-	r = sd2.initialize();
-	if ( r != EC_MICRO_SD_TYPE::ERROR ) {
-		ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "SD2 is detected!" );
-		ayplayer_error_string_draw( &m_cont, "SD2 is detected!" );
-		return 0;
-	} else {
+	DSTATUS r;
+	r = disk_status( 0 );
+	if ( r == STA_NODISK ) {
 		ay_log_obj.send_message( RTL_TYPE_M::INIT_ISSUE, "SD2 missing!" );
 		ayplayer_error_string_draw( &m_cont, "SD2 missing!" );
 		return FSM_RET_REPEAT;
+
+	} else {
+		ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "SD2 is detected!" );
+		ayplayer_error_string_draw( &m_cont, "SD2 is detected!" );
+		return 0;
 	}
 }
 
@@ -97,7 +99,7 @@ int sd2_chack ( __attribute__((unused)) const fsm_step* previous_step ) {
 // 1 - файл отсуствует.
 // 2 - невозможно прочитать.
 int sd2_track_file_open ( __attribute__((unused)) const fsm_step* previous_step ) {
-    DSTATUS fr = f_open( &file_list, "playlist.sys", FA_READ );
+	FRESULT fr = f_open( &file_list, "playlist.sys", FA_READ );
     if ( fr == FR_OK ) {
     	ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "File <<playlist.sys>> open." );
     	ayplayer_error_string_draw( &m_cont, "File <<playlist.sys>>\n open." );

@@ -10,7 +10,7 @@ const rcc_cfg ay_player_clock_cfg[] = {
 		.HSICalibrationValue    = RCC_HSICALIBRATION_DEFAULT,
 		.LSIState               = RCC_LSI_OFF,
 		.PLL                    = {                                         // Не используется. Значения на угад в реальном диапазоне.
-			.PLLState               = RCC_PLL_ON,
+			.PLLState               = RCC_PLL_OFF,
 			.PLLSource              = RCC_PLLSOURCE_HSE,
 			.PLLM                   = 16,
 			.PLLN                   = 240,
@@ -18,12 +18,12 @@ const rcc_cfg ay_player_clock_cfg[] = {
 			.PLLQ                   = 5
     	},
 
-		.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK,
+		.SYSCLKSource   = RCC_SYSCLKSOURCE_HSE,
 		.AHBCLKDivider  = RCC_SYSCLK_DIV1,
 		.APB1CLKDivider = RCC_HCLK_DIV1,
 		.APB2CLKDivider = RCC_HCLK_DIV1,
 
-        .f_latency = FLASH_LATENCY_3
+        .f_latency = FLASH_LATENCY_1
     }
 };
 

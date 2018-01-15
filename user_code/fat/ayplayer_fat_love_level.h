@@ -6,4 +6,4 @@
 #include "ffconf.h"
 #include "ayplayer_microsd_card.h"
 
-
+DSTATUS disk_status ( BYTE pdrv );
