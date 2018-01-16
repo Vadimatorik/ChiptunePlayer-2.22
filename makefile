@@ -3,20 +3,20 @@
 #**********************************************************************
 # Параметры сборки проекта.
 #**********************************************************************
-FREE_RTOS_OPTIMIZATION						:= -g3 -O0
-STM32_F2_API_OPTIMIZATION					:= -g3 -O0
-USER_CODE_OPTIMIZATION						:= -g3 -O0
-LCD_LIB_OPTIMIZATION						:= -g3 -O0
-SIMPLE_MONO_DRAWING_LIB_OPTIMIZATION		:= -g3 -O0
-MICRO_SD_DRIVER_OPTIMIZATION				:= -g3 -O0
-SH_OPTIMIZATION								:= -g3 -O0
-MOD_CHIP_OPTIMIZATION						:= -g3 -O0
-FAT_FS_OPTIMIZATION							:= -g3 -O0
-FAT_FS_OPTIMIZATION							:= -g3 -O0
-MAKISE_GUI_OPTIMIZATION						:= -g3 -O0
-BUT_OPTIMIZATION							:= -g3 -O0
-FSM_OPTIMIZATION							:= -g3 -O0
-MODULE_RUN_TIME_LOGGER_OPTIMIZATION			:= -g3 -O0
+MODULE_FREE_RTOS_OPTIMIZATION						:= -g0 -Os
+MODULE_FAT_FS_OPTIMIZATION							:= -g0 -Os
+MODULE_STM32_F2_API_OPTIMIZATION					:= -g0 -Os
+MODULE_BUT_OPTIMIZATION								:= -g0 -Os
+MODULE_MOD_CHIP_OPTIMIZATION						:= -g0 -Os
+MODULE_FSM_OPTIMIZATION								:= -g0 -Os
+MODULE_MAKISE_GUI_OPTIMIZATION						:= -g0 -Os
+MODULE_MATH_OPTIMIZATION							:= -g0 -Os
+MODULE_MICRO_SD_DRIVER_OPTIMIZATION					:= -g0 -Os
+MODULE_LCD_LIB_OPTIMIZATION							:= -g0 -Os
+MODULE_RUN_TIME_LOGGER_OPTIMIZATION					:= -g0 -Os
+MODULE_SH_OPTIMIZATION								:= -g0 -Os
+MODULE_SYSTEM_DUMMY_OPTIMIZATION					:= -g0 -Os
+MODULE_USER_CODE_OPTIMIZATION						:= -g3 -Os
 
 DEFINE_PROJ	:= -DSTM32F205xx
 
@@ -38,8 +38,6 @@ C_FLAGS										+= -fshort-enums
 # Развертывание циклов.
 C_FLAGS										+= -funroll-loops
 
-C_FAT_FS_FLAGS								:= $(MK_FLAGS) -std=gnu89
-
 CPP_FLAGS									:= $(MK_FLAGS)     
 CPP_FLAGS									+= -Werror -Wall -Wextra
 CPP_FLAGS									+= -std=c++1z
@@ -53,11 +51,7 @@ LDFLAGS			+= -ffunction-sections -fdata-sections
 LDFLAGS			+= -Wl,--gc-sections 
 
 # Формируем map файл.
-#LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
-
-FREE_RTOS_C_FLAGS		:=	$(C_FLAGS)
-
-
+LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
 
 #**********************************************************************
 # Параметры toolchain-а.
