@@ -3,19 +3,19 @@
 #**********************************************************************
 # Параметры сборки проекта.
 #**********************************************************************
-MODULE_FREE_RTOS_OPTIMIZATION						:= -g0 -Os
-MODULE_FAT_FS_OPTIMIZATION							:= -g0 -Os
-MODULE_STM32_F2_API_OPTIMIZATION					:= -g0 -Os
-MODULE_BUT_OPTIMIZATION								:= -g0 -Os
-MODULE_MOD_CHIP_OPTIMIZATION						:= -g0 -Os
-MODULE_FSM_OPTIMIZATION								:= -g0 -Os
-MODULE_MAKISE_GUI_OPTIMIZATION						:= -g0 -Os
-MODULE_MATH_OPTIMIZATION							:= -g0 -Os
-MODULE_MICRO_SD_DRIVER_OPTIMIZATION					:= -g0 -Os
-MODULE_LCD_LIB_OPTIMIZATION							:= -g0 -Os
-MODULE_RUN_TIME_LOGGER_OPTIMIZATION					:= -g0 -Os
-MODULE_SH_OPTIMIZATION								:= -g0 -Os
-MODULE_SYSTEM_DUMMY_OPTIMIZATION					:= -g0 -Os
+MODULE_FREE_RTOS_OPTIMIZATION						:= -g0 -Os 
+MODULE_FAT_FS_OPTIMIZATION							:= -g0 -Os -flto
+MODULE_STM32_F2_API_OPTIMIZATION					:= -g0 -Os -flto
+MODULE_BUT_OPTIMIZATION								:= -g0 -Os -flto
+MODULE_MOD_CHIP_OPTIMIZATION						:= -g0 -Os -flto
+MODULE_FSM_OPTIMIZATION								:= -g0 -Os -flto
+MODULE_MAKISE_GUI_OPTIMIZATION						:= -g0 -Os -flto
+MODULE_MATH_OPTIMIZATION							:= -g0 -Os -flto
+MODULE_MICRO_SD_DRIVER_OPTIMIZATION					:= -g0 -Os -flto
+MODULE_LCD_LIB_OPTIMIZATION							:= -g0 -Os -flto
+MODULE_RUN_TIME_LOGGER_OPTIMIZATION					:= -g0 -Os -flto
+MODULE_SH_OPTIMIZATION								:= -g0 -Os -flto
+MODULE_SYSTEM_DUMMY_OPTIMIZATION					:= -g0 -Os -flto
 MODULE_USER_CODE_OPTIMIZATION						:= -g3 -Os
 
 DEFINE_PROJ	:= -DSTM32F205xx
@@ -35,23 +35,19 @@ C_FLAGS										+= -std=c99
 # Если переменная объявлена как enum, то она должна иметь возможность
 # хранить в себе всевозможные состояния этого enum-а (а не только текущее).
 C_FLAGS										+= -fshort-enums
-# Развертывание циклов.
-C_FLAGS										+= -funroll-loops
 
 CPP_FLAGS									:= $(MK_FLAGS)     
 CPP_FLAGS									+= -Werror -Wall -Wextra
 CPP_FLAGS									+= -std=c++1z
-CPP_FLAGS									+= -funroll-loops
+CPP_FLAGS									+= -fno-exceptions
 
-LDFLAGS			:= $(MK_FLAGS)
-LDFLAGS			+= $(LD_FILES)
+LDFLAGS			:= $(MK_FLAGS) $(LD_FILES) -fno-exceptions
+
 # Размещает каждую функцию в отдельной секции.
-LDFLAGS			+= -ffunction-sections -fdata-sections
-# Убираем неиспользуемые функции из .elf.
-LDFLAGS			+= -Wl,--gc-sections 
+LDFLAGS			+= -ffunction-sections -Wl,--gc-sections
 
 # Формируем map файл.
-LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
+#LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
 
 #**********************************************************************
 # Параметры toolchain-а.
@@ -126,7 +122,7 @@ build/obj/%.o:	%.c
 	@$(CC) $(C_FLAGS) 					\
 	$(DEFINE_PROJ)						\
 	$(PROJECT_PATH)						\
-	$(USER_CODE_OPTIMIZATION)			\
+	$(MODULE_USER_CODE_OPTIMIZATION)	\
 	-c $< -o $@
 	
 build/obj/%.o:	%.cpp	
@@ -134,7 +130,7 @@ build/obj/%.o:	%.cpp
 	@mkdir -p $(dir $@)
 	@$(CPP) $(CPP_FLAGS) 				\
 	$(DEFINE_PROJ)						\
-	$(USER_CODE_OPTIMIZATION)			\
+	$(MODULE_USER_CODE_OPTIMIZATION)	\
 	$(PROJECT_PATH)						\
 	-c $< -o $@
 
