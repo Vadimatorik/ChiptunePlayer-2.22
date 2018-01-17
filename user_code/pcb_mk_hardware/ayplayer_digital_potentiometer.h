@@ -7,3 +7,4 @@
 
 extern ad5204< 2 > sound_dp;
 
+EC_AD5204_ANSWER dp_update_value ( void );

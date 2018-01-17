@@ -1,25 +1,24 @@
 #include "ayplayer_core.h"
 #include <stdio.h>
 
-char                   path_dir[512] = "0:/";
+//char                   path_dir[512] = "0:/";
 
 // Элементы GUI.
 
-
+/*
 MPlayList              gui_pl;
 MPlayList_Item         gui_pl_item_array[4];
 MPlayBar               gui_e_pb;
 
-MPlayerStatusBar       gui_e_psb;
+MPlayerStatusBar       gui_e_psb;*/
   //USER_OS_TAKE_MUTEX( m_mhost, portMAX_DELAY );
 //ayplayer_control.active_window_get()
 // USER_OS_GIVE_MUTEX( m_mhost );
-extern MakiseGUI       m_gui;  
-extern MHost           host;
 //**********************************************************************
 // Обновляет экран раз в секунду,
 // если никто другой не обновил за это время.
 //**********************************************************************
+/*
 void ayplayer_gui_update_task ( __attribute__((unused)) void* param ) {
     while ( true ) {
         if ( USER_OS_TAKE_BIN_SEMAPHORE( s_gui_update, 1000 ) == pdFALSE ) {
@@ -27,7 +26,7 @@ void ayplayer_gui_update_task ( __attribute__((unused)) void* param ) {
             gui_update();
         }
     }
-}
+}*/
 
 /*
 void select_window_main ( void ) {

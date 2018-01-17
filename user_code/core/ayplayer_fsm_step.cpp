@@ -25,9 +25,6 @@
 #include "ayplayer_fat_love_level.h"
 
 ayplayer_global_data_struct g;
-
-FATFS									fat;
-FIL										file_list;
 extern run_time_logger					ay_log_obj;
 
 extern "C" {
@@ -46,7 +43,7 @@ int init_gui ( __attribute__((unused)) const fsm_step* previous_step ) {
 int dp_init ( __attribute__((unused)) const fsm_step* previous_step ) {
 	EC_AD5204_ANSWER res;
     sound_dp.connect_off();
-    res = ayplayer_control.dp_update_value();
+    res = dp_update_value();
     sound_dp.connect_on();
 
     if ( res == EC_AD5204_ANSWER::OK ) {
@@ -61,7 +58,7 @@ int dp_init ( __attribute__((unused)) const fsm_step* previous_step ) {
 // Инициализация FAT.
 int fat_init ( __attribute__((unused)) const fsm_step* previous_step ) {
     FRESULT fr;
-    fr = f_mount( &fat, "0:", 0 );
+    fr = f_mount( &g.fat, "0:", 0 );
 
     if ( fr == FR_OK ) {
     	ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "FatFS initialized successfully." );
@@ -101,7 +98,7 @@ int sd2_chack ( __attribute__((unused)) const fsm_step* previous_step ) {
 // 1 - файл отсуствует.
 // 2 - невозможно прочитать.
 int sd2_track_file_open ( __attribute__((unused)) const fsm_step* previous_step ) {
-	FRESULT fr = f_open( &file_list, "playlist.sys", FA_READ );
+	FRESULT fr = f_open( &g.file_list, "playlist.sys", FA_READ );
     if ( fr == FR_OK ) {
     	ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "File <<playlist.sys>> open." );
     	ayplayer_error_string_draw( &g.m_cont, "File <<playlist.sys>>\n open." );
