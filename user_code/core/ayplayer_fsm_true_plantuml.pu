@@ -16,5 +16,34 @@ dp_init : 1. Выходы потенциометров переводятся в
 dp_init : 2. Устанавливается значение по умолчанию.
 dp_init : 3. Потенциометры включаются в цепь.
 }
- 
+
+dp_init --> fat_init : Значения установлены.
+dp_init --> [*] : Ошибка SPI.
+
+state "Инициализация FatFS" as fat_init {
+fat_init : Инициализируется поле fat в структуре g.
+}
+
+fat_init --> waiting_for_food_stabilization : Успешно инициализирована.
+fat_init --> [*] : FatFS не была инициализирована.
+
+state "Ожидаем стабилизации питания платы" as waiting_for_food_stabilization {
+waiting_for_food_stabilization : Просто задержка.
+}
+
+waiting_for_food_stabilization --> sd2_chack
+
+state "Проверка SD2" as sd2_chack {
+sd2_chack : Проверка наличия 
+sd2_chack : системной карты памяти.
+}
+
+sd2_chack --> sd2_chack : Карта отсутствует
+sd2_chack --> step_sd2_track_file_open : Карта присутствует в слоте
+
+state "Проверка системного файла" as step_sd2_track_file_open {
+step_sd2_track_file_open : Проверяем наличие системного 
+step_sd2_track_file_open : файла в корневом каталоге.
+}
+
 @enduml
