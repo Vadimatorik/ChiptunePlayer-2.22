@@ -24,18 +24,20 @@
 #include <errno.h>
 #include "ayplayer_fat_love_level.h"
 
-extern MakiseGUI						m_gui;
-extern MHost							host;
-extern MContainer						m_cont;
+ayplayer_global_data_struct g;
 
 FATFS									fat;
 FIL										file_list;
 extern run_time_logger					ay_log_obj;
 
-// Готовим низкий уровень GUI и все необходимые структуры.
+extern "C" {
+	extern const MakiseGUI m_gui;
+}
+
 int init_gui ( __attribute__((unused)) const fsm_step* previous_step ) {
-    host.host                       = &m_cont;
-    makise_start( &m_gui );
+	g.m_host.host->gui					= ( MakiseGUI* )&m_gui;
+	g.m_cont.gui						= ( MakiseGUI* )&m_gui;
+    makise_start( g.m_host.host->gui );
     ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "MakiseGui started." );
     return 0;
 }
@@ -84,12 +86,12 @@ int sd2_chack ( __attribute__((unused)) const fsm_step* previous_step ) {
 	r = disk_status( 0 );
 	if ( r == STA_NODISK ) {
 		ay_log_obj.send_message( RTL_TYPE_M::INIT_ISSUE, "SD2 missing!" );
-		ayplayer_error_string_draw( &m_cont, "SD2 missing!" );
+		ayplayer_error_string_draw( &g.m_cont, "SD2 missing!" );
 		return FSM_RET_REPEAT;
 
 	} else {
 		ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "SD2 is detected!" );
-		ayplayer_error_string_draw( &m_cont, "SD2 is detected!" );
+		ayplayer_error_string_draw( &g.m_cont, "SD2 is detected!" );
 		return 0;
 	}
 }
@@ -102,18 +104,18 @@ int sd2_track_file_open ( __attribute__((unused)) const fsm_step* previous_step 
 	FRESULT fr = f_open( &file_list, "playlist.sys", FA_READ );
     if ( fr == FR_OK ) {
     	ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "File <<playlist.sys>> open." );
-    	ayplayer_error_string_draw( &m_cont, "File <<playlist.sys>>\n open." );
+    	ayplayer_error_string_draw( &g.m_cont, "File <<playlist.sys>>\n open." );
     	return 0;
     }
 
     if ( fr == FR_NO_FILE ) {
     	ay_log_obj.send_message( RTL_TYPE_M::INIT_ERROR, "File <<playlist.sys>> does not exist." );
-    	ayplayer_error_string_draw( &m_cont, "File <<playlist.sys>>\ndoes not exist." );
+    	ayplayer_error_string_draw( &g.m_cont, "File <<playlist.sys>>\ndoes not exist." );
     	return 1;
     }
 
     ay_log_obj.send_message( RTL_TYPE_M::INIT_ERROR, "File <<playlist.sys>> create/open error!" );
-    ayplayer_error_string_draw( &m_cont, "File <<playlist.sys>>\ncreate/open error!" );
+    ayplayer_error_string_draw( &g.m_cont, "File <<playlist.sys>>\ncreate/open error!" );
     return 2;
 }
 

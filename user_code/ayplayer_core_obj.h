@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "arithmetic_mean.h"
 #include "ayplayer_digital_potentiometer.h"
+#include "makise_gui.h"
 
 enum class EC_AY_PLAY_STATE {
     STOP        = 0,
@@ -31,6 +32,13 @@ struct dp_low_value_t {
     uint8_t     left;
     uint8_t     right;
 };
+
+// Структура агрегатор всех изменяемых пользовательских полей.
+struct ayplayer_global_data_struct {
+	MHost					m_host;
+	MContainer				m_cont;
+};
+
 
 
 class ayplayer_state {

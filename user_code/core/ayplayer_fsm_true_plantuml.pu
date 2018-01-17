@@ -1,0 +1,20 @@
+@startuml
+
+[*] --> gui_init
+
+state "Инициализация GUI" as gui_init {
+gui_init : Инициализируется:
+gui_init : 1. Структуры MakiseGUI.
+gui_init : 2. Низкоуровневый драйвер экрана.
+gui_init : 3. LCD по SPI.
+}
+
+gui_init --> dp_init
+
+state "Инициализация потенциометров" as dp_init {
+dp_init : 1. Потенциометры отключаются от усилителя.
+dp_init : 2. Устанавливается значение по умолчании.
+dp_init : 3. Потенциометры включаются в цепь.
+}
+ 
+@enduml

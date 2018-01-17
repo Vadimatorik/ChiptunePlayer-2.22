@@ -8,7 +8,6 @@ extern const fsm_step step_waiting_for_food_stabilization;
 extern const fsm_step step_sd2_chack;
 extern const fsm_step step_sd2_track_file_open;
 
-// Если нет повторений, то по nullptr происходит аварийный выход.
 const fsm_step* gui_init_next_step_array[1] = { &step_dp_init };
 const fsm_step step_gui_init = {
 	.func_step				= &init_gui,

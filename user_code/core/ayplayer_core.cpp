@@ -4,7 +4,7 @@
 char                   path_dir[512] = "0:/";
 
 // Элементы GUI.
-MContainer             m_cont   = { &m_gui, nullptr, nullptr, nullptr, nullptr, nullptr };
+
 
 MPlayList              gui_pl;
 MPlayList_Item         gui_pl_item_array[4];
@@ -29,6 +29,7 @@ void ayplayer_gui_update_task ( __attribute__((unused)) void* param ) {
     }
 }
 
+/*
 void select_window_main ( void ) {
     USER_OS_TAKE_MUTEX( m_mhost, portMAX_DELAY );
     ayplayer_gui_player_status_bar_creature( &m_cont, &gui_e_psb );
@@ -45,7 +46,7 @@ void select_window_play_list ( void ) {
     ayplayer_control.active_window_set( EC_AY_ACTIVE_WINDOW::PLAY_LIST );
     USER_OS_GIVE_MUTEX( m_mhost );
 }
-
+*/
 #include "run_time_logger.h"
 
 extern const fsm_step step_gui_init;
@@ -64,7 +65,7 @@ void ayplayer_core_task ( __attribute__((unused)) void* param ) {
 
 	while(1) vTaskDelay(1000);
 
-
+/*
     // Формируем главное окно.
     select_window_main();
 
@@ -134,7 +135,7 @@ void ayplayer_core_task ( __attribute__((unused)) void* param ) {
             gui_update();
             break;
         }
-    }
+    }*/
 }
 
 //**********************************************************************
