@@ -32,8 +32,10 @@ extern "C" {
 }
 
 int init_gui ( __attribute__((unused)) const fsm_step* previous_step ) {
-	g.m_host.host->gui					= ( MakiseGUI* )&m_gui;
 	g.m_cont.gui						= ( MakiseGUI* )&m_gui;
+	g.m_host.host						= &g.m_cont;
+	g.m_host.host->gui					= ( MakiseGUI* )&m_gui;
+
     makise_start( g.m_host.host->gui );
     ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "MakiseGui started." );
     return 0;
