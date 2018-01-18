@@ -1,50 +1,47 @@
 #include "ayplayer_port.h"
 
-global_port ayplayer_global_port_obj( ayplayer_global_port_pin_cfg, M_SIZE_ARRAY( ayplayer_global_port_pin_cfg ) );
-
-//
-// Объекты pin (ручное управление выводами).
-//
+global_port ayplayer_global_port_obj( ayplayer_global_port_cfg, M_SIZE_ARRAY( ayplayer_global_port_cfg ) );
 
 // LCD.
-pin lcd_res_pin_obj				( &lcd_res_pin_cfg );
-pin lcd_dc_pin_obj				( &lcd_dc_pin_cfg );
-pin lcd_cs_pin_obj				( &lcd_cs_pin_cfg );
+pin ayplayer_lcd_res_pin_obj			( &ayplayer_lcd_res_pin_cfg );
+pin ayplayer_lcd_dc_pin_obj				( &ayplayer_lcd_dc_pin_cfg );
+pin ayplayer_lcd_cs_pin_obj				( &ayplayer_lcd_cs_pin_cfg );
 
 // MICROSD 2.
-pin sd2_cs_pin_obj				( &sd2_cs_pin_cfg );
-pin sd2_push_pin_obj			( &sd2_push_pin_cfg );
+pin ayplayer_sd2_cs_pin_obj				( &ayplayer_sd2_cs_pin_cfg );
+// Не используется в текущей версии платы.
+// pin ayplayer_sd2_push_pin_obj			( &ayplayer_sd2_push_pin_cfg );
 
 // Защелка сдвигового регистра.
-pin spi_audio_st_reg_pin_obj	( &spi_audio_st_reg_pin_cfg );
+pin ayplayer_spi_audio_st_reg_pin_obj	( &ayplayer_spi_audio_st_reg_pin_cfg );
 
 // AY_YM.
-pin bdir_pin_obj				( &bdir_pin_cfg );
-pin bc1_pin_obj					( &bc1_pin_cfg );
-pin chip_1_pwr_on_pin_obj		( &chip_1_pwr_on_pin_cfg );
-pin chip_2_pwr_on_pin_obj		( &chip_2_pwr_on_pin_cfg );
+pin ayplayer_bdir_pin_obj				( &ayplayer_bdir_pin_cfg );
+pin ayplayer_bc1_pin_obj				( &ayplayer_bc1_pin_cfg );
+pin ayplayer_chip_1_pwr_on_pin_obj		( &ayplayer_chip_1_pwr_on_pin_cfg );
+pin ayplayer_chip_2_pwr_on_pin_obj		( &ayplayer_chip_2_pwr_on_pin_cfg );
 
 // PWR.
-pin pwr_5_v_on_pin_obj			( &pwr_5_v_on_pin_cfg );
-pin pwr_on_pin_obj				( &pwr_on_pin_cfg );
+pin ayplayer_pwr_5_v_on_pin_obj			( &ayplayer_pwr_5_v_on_pin_cfg );
+pin ayplayer_pwr_on_pin_obj				( &ayplayer_pwr_on_pin_cfg );
 
 // Потенциометры.
-pin dp_cs_res_pin_obj			( &dp_cs_res_pin_cfg );
-pin shdn_pin_obj				( &shdn_pin_cfg );
+pin ayplayer_dp_cs_res_pin_obj			( &ayplayer_dp_cs_res_pin_cfg );
+pin ayplayer_shdn_pin_obj				( &ayplayer_shdn_pin_cfg );
 
 // Общий вход кнопок.
-pin button_in_pin_obj			( &button_in_pin_cfg );
+pin ayplayer_button_in_pin_obj			( &ayplayer_button_in_pin_cfg );
 
 // + - громкость.
-pin button_inc_pin_obj			( &button_inc_pin_cfg );
-pin button_dec_pin_obj			( &button_dec_pin_cfg );
+pin ayplayer_button_inc_pin_obj			( &ayplayer_button_inc_pin_cfg );
+pin ayplayer_button_dec_pin_obj			( &ayplayer_button_dec_pin_cfg );
 
 void ayplayer_port_init ( void ) {
     ayplayer_global_port_obj.reinit_all_ports();			// Инициализируем все порты.
     // Выставляем состояние на тех, на которых это критично в момент запуска
     // (критичено значение сразу после включения).
-    lcd_res_pin_obj.set(1);
-    lcd_dc_pin_obj.set(1);
-    pwr_5_v_on_pin_obj.set(1);
-    pwr_on_pin_obj.set(1);
+    ayplayer_lcd_res_pin_obj.set(1);
+    ayplayer_lcd_dc_pin_obj.set(1);
+    ayplayer_pwr_5_v_on_pin_obj.set(1);
+    ayplayer_pwr_on_pin_obj.set(1);
 }

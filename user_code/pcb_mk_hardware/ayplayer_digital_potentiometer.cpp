@@ -4,8 +4,8 @@
 ad5204_struct_cfg_t sound_dp_cfg = {
     .spi        = &spi3_obj,
     .mutex      = &m_spi3,
-    .cs         = &dp_cs_res_pin_obj,
-    .shdn       = &shdn_pin_obj
+    .cs         = &ayplayer_dp_cs_res_pin_obj,
+    .shdn       = &ayplayer_shdn_pin_obj
 };
 
 ad5204< 2 > sound_dp( &sound_dp_cfg );

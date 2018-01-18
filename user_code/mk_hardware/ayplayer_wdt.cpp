@@ -7,8 +7,8 @@ const wdt_cfg ayplayer_wdt_cfg = {
 	.service_time_ms	= 5000
 };
 
-wdt ayplayer_wdt ( &ayplayer_wdt_cfg );
+wdt ayplayer_wdt_obj ( &ayplayer_wdt_cfg );
 
 void ayplayer_wdt_init ( void ) {
-	ayplayer_wdt.init();
+	ayplayer_wdt_obj.init();
 }

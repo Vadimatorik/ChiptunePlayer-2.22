@@ -10,7 +10,7 @@ uint8_t sr_out_buf_button[1]     = { 0 };           // Для кнопок.
 // решают, как им пользоваться SPI и сдвиговыми регистрами.
 //**********************************************************************
 const module_shift_register_cfg_t sr_ay_cfg_cfg = {
-    .st                     = &spi_audio_st_reg_pin_obj,
+    .st                     = &ayplayer_spi_audio_st_reg_pin_obj,
     .number_output_byte     = 2,
     .strob_active           = true,
     .p_spi                  = &spi3_obj,
@@ -20,7 +20,7 @@ const module_shift_register_cfg_t sr_ay_cfg_cfg = {
 module_shift_register   sr_ay( &sr_ay_cfg_cfg );
 
 const module_shift_register_cfg_t sr_button_cfg_cfg = {
-    .st                     = &spi_audio_st_reg_pin_obj,
+    .st                     = &ayplayer_spi_audio_st_reg_pin_obj,
     .number_output_byte     = 1,
     .strob_active           = true,
     .p_spi                  = &spi3_obj,

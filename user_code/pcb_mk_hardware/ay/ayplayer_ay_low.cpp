@@ -21,8 +21,8 @@ const ay_ym_low_lavel_cfg_t ay_low_cfg {
     .mutex              = &m_spi3,
     .p_sr_data          = &sr_out_buf_ay[0],
     .semaphore_sec_out  = &s_play_tic,
-    .bdir               = &bdir_pin_obj,
-    .bc1                = &bc1_pin_obj,
+    .bdir               = &ayplayer_bdir_pin_obj,
+    .bc1                = &ayplayer_bc1_pin_obj,
     .queue_array        = q_ay_low,
     .ay_number          = 2,
     .con_cfg            = array_connect_cfg,
@@ -42,7 +42,7 @@ extern uint8_t v_table[16];
 extern int32_t current_volume;
 
 void ayplayer_pwr_5_v_set ( bool state ) {
-	pwr_5_v_on_pin_obj.set( state );
+	ayplayer_pwr_5_v_on_pin_obj.set( state );
 }
 
 extern "C" {
