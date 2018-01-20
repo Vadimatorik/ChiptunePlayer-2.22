@@ -82,7 +82,7 @@ const pin_cfg ayplayer_boot_rx_pin_cfg               = { GPIOB, { GPIO_PIN_11, G
 //**********************************************************************
 // Глобальный порт.
 //**********************************************************************
-const pin_cfg ayplayer_global_port_cfg[] = {
+const pin_cfg ayplayer_gp_cfg[] = {
 	// BUTTON.
     ayplayer_button_inc_pin_cfg, ayplayer_button_dec_pin_cfg,
 
@@ -129,7 +129,7 @@ const pin_cfg ayplayer_global_port_cfg[] = {
 	ayplayer_swd_io_pin_cfg, ayplayer_swd_clk_pin_cfg,
 };
 
-extern global_port ayplayer_global_port_obj;
+extern global_port ayplayer_gp_obj;
 
 // LCD.
 extern pin ayplayer_lcd_res_pin_obj;
