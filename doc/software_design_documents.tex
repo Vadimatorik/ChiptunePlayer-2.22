@@ -1,0 +1,123 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[left=25mm, top=20mm, right=10mm, bottom=20mm, nohead, nofoot]{geometry}
+
+\usepackage [warn]{mathtext}				% Чтобы можно было использовать русские буквы в формулах, 
+											% но в случае использования предупреждать об этом
+\usepackage{placeins}
+\usepackage [T2A]{fontenc}		            % Выбор внутренней TEX−кодировки.
+\usepackage [utf8]{inputenc}		        % Выбор кодовой страницы документа.
+\usepackage [english, russian]{babel}		% Выбор языка документа.
+\usepackage{amsmath}						% Математика.
+\usepackage{svg}
+\usepackage{graphicx}						% Картинки.
+\usepackage{xcolor}
+\usepackage{indentfirst}					% Красная строка в начале абзаца.
+\usepackage{svg}
+
+											%Настраиваем гиппер-ссылки.
+\usepackage[pdfpagelayout=OneColumn, 		% pdf отображается как сплошная полоса из A4.
+			colorlinks=true,				% Не нужно рисовать рамку вокруг ссылок, но при этом идет выделение цветом.
+			linkcolor=black					% Используем черный цвет для обозначения гиппер ссылок в оглавлении.					
+]{hyperref} 
+
+\begin{document}
+
+\title {ОПИСАНИЕ ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ CHIPTUNE PLAYER 2.22}
+\author {Автор: Дерябкин Вадим}
+\date {2018}
+\maketitle
+\clearpage
+
+\tableofcontents							% Оглавление.
+\clearpage									% Первая глава должна идти начиная со следущей страницы.
+
+\section{Принятые соглашения об именах в проекте}
+\subsection{Именование файлов}
+В проекте каждому файлу .cpp соответствует файл .h.
+
+Файлы именуются по по шаблону:
+\begin{verbatim}
+ayplayer_name.cpp
+ayplayer_name.h
+\end{verbatim}
+
+\textbf{name} - имя файла.\\
+
+\textbf{Пример}: \textit{core} из описания эквивалентно \textit{ayplayer\_core.cpp} и \textit{ayplayer\_core.h} в древе проекта.
+
+\subsection{Правила формирования имен глобальных объектов}
+В коде программы именование глобальных структур-констант, передаваемых конструктору глобального объекта производится по шаблону:
+\begin{verbatim}ayplayer_name_cfg\end{verbatim}
+\textbf{name} - имя объекта, который будет инициализирован при помощи данной структуры.\\\\
+\textbf{Пример}: \textit{lcd\_res\_pin} из описания эквивалентно \textit{ayplayer\_lcd\_res\_pin\_cfg} в коде.\\
+
+В коде программы именование глобальных объектов производится по шаблону:
+\begin{verbatim}ayplayer_name_obj\end{verbatim}
+\textbf{name} - имя объекта.\\\\
+\textbf{Пример}: \textit{lcd\_res\_pin} из описания эквивалентно \textit{ayplayer\_lcd\_res\_pin\_obj} в коде.
+
+
+\section{Глобальные объекты}
+
+\subsection{Объект глобального порта}
+\noindentИмя объекта: \textbf{gp}\\
+\noindentЭкземпляр класса: \textbf{global\_port}\\
+\noindentРасположение: user\_code -> mk\_hardware -> port\\
+
+Данный объект агрегирует внутри себя все используемые выводы микроконтроллера, предоставляя возможность инициализации всех перечисленных в структуре инициализации выводов одной командой.
+
+Включает в себя следующие выводы:
+\begin{itemize}
+	\item adc\_bat
+	\item adc\_right
+	\item adc\_left
+	\item button\_inc - соединенный с клавишей увеличения громкости.
+	\item button\_dec - соединенный с клавишей уменьшения громкости.
+	\item midi\_uart\_rx
+	\item lcd\_clk
+	\item lcd\_pwm
+	\item lcd\_mosi
+	\item lcd\_res - подключен к выводу сброса LCD. Инвертированный.
+	\item lcd\_dc - подключен к выводу выбора интерпретации пакетов <<Команда/Данные>>, принимаемых LCD по SPI.
+	\item lcd\_cs - подключен к выводу выбора LCD в качестве приемника на шине SPI1.
+	\item sd1\_push
+	\item sd1\_smd
+	\item sd1\_d0
+	\item sd1\_d1
+	\item sd1\_d2
+	\item sd1\_d3
+	\item sd1\_clk
+	\item otg\_fs\_vbus
+	\item usb\_dm
+	\item usb\_dp
+	\item bdir - подключен к выводам выбора направления работы параллельной шины обоих музыкальных сопроцессоров.
+	\item ay\_1
+	\item ay\_2
+	\item bc1 - подключен к выводам-защелкам приема данных из параллельной шины.
+	\item ay\_clk
+	\item spi\_audio\_clk
+	\item spi\_audio\_tx
+	\item shdn - подключен к выводу перевода каналов цифрового потенциометра в Z состояние.
+	\item spi\_audio\_st\_reg - подключен к выводам-защелкам внутренних сдвиговых регистров цифровых потенциометров.
+	\item dp\_cs\_res - подключен к выводу выбора цифровых потенциометров в качестве приемника на шине SPI3.
+	\item button\_in - соединенный с общим контактом векторной клавиатуры.
+	\item swd\_io
+	\item swd\_clk
+	\item pwr\_5\_v\_on - подключен к транзистору, открывающему подачу 5 вольт на плату.
+	\item pwr\_on - подключен к транзистору, разрешающему подачу входного напряжения на плату.
+	\item tp\_st
+	\item tp\_ch
+	\item chip\_1\_pwr\_on - подключен к транзистору, открывающему подачу питания на первый чип.
+	\item chip\_2\_pwr\_on - подключен к транзистору, открывающему подачу питания на второй чип.
+	\item sd2\_rx
+	\item sd2\_tx
+	\item sd2\_clk
+	\item sd2\_cs - подключен к выводу выбора системной карты памяти в качестве приемника на шине SPI2.
+	\item sd2\_push
+	\item boot\_tx
+	\item boot\_rx
+\end{itemize}
+
+\subsection{Порты ввода-вывода}
+
+\end{document}}
