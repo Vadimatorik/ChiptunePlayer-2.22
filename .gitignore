@@ -11,3 +11,9 @@
 .o
 nbproject/
 *.png
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.pdf
