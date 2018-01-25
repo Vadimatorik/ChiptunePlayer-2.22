@@ -191,6 +191,25 @@ ayplayer_name.h
 	\item Карта micro-sd системы (sd2): \textbf{sd2\_cs}, \textbf{sd2\_push}.
 \end{itemize}
 
+\section{Используемые в проекте субмодули}
+\begin{itemize}
+	\item \textbf{module\_button} - содержит классы для работы с клавиатурами разных типов.
+	\item \textbf{module\_chiptune} - содержит классы для работы с различным музыкальными сопроцессорами.
+	\item \textbf{module\_digital\_potentiometer} - содержит классы для работы с различными цифровыми потенциометрами.
+	\item \textbf{module\_fatfs\_by\_chan} - FatFs от ChaN-а.
+	\item \textbf{module\_freertos\_for\_stm32f2} - FreeRTOS собранная для stm32f2 серии. Со статическим распределением оперативной памяти.
+	\item \textbf{module\_fsm} - ядро конечного автомата.
+	\item \textbf{module\_makise\_gui} - библиотека графического интерфейса.
+	\item \textbf{module\_math} - различные математические алгоритмы.
+	\item \textbf{module\_mc\_hardware\_interfaces} - абстрактные интерфейсы для работы с периферией микроконтроллера (является зависимостью большинства имеющихся в проекте субмодулей).
+	\item \textbf{module\_microsd\_low\_level\_driver} - низкоуровневый драйвер работы с microsd картами по SPI и SDIO. 
+	\item \textbf{module\_mono\_lcd\_lib} - низкоуровневые драйвера дисплеев.
+	\item \textbf{module\_run\_time\_logger} - системный самописец. Является зависимостью многих модулей.
+	\item \textbf{module\_shift\_register} - содержит классы для работы со сдвиговыми регистрами.
+	\item \textbf{module\_stm32f2\_low\_level\_by\_st} - низкоуровневая библиотека для работы с переферией микроконтроллера (реализует интерфейсы module\_mc\_hardware\_interfaces).
+	\item \textbf{module\_system\_dummy} - системные функции для компиляции C и CPP кода (стандартные callback-и).
+\end{itemize}
+
 \section{Начальная инициализация до запуска планировщика операционной системы}
 \subsection{До запуска main}
 
