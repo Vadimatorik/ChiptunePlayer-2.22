@@ -26,7 +26,7 @@ pin ayplayer_pwr_5_v_on_pin_obj			( &ayplayer_pwr_5_v_on_pin_cfg );
 pin ayplayer_pwr_on_pin_obj				( &ayplayer_pwr_on_pin_cfg );
 
 // Потенциометры.
-pin ayplayer_dp_cs_res_pin_obj			( &ayplayer_dp_cs_res_pin_cfg );
+pin ayplayer_dp_cs_pin_obj				( &ayplayer_dp_cs_pin_cfg );
 pin ayplayer_shdn_pin_obj				( &ayplayer_shdn_pin_cfg );
 
 // Общий вход кнопок.
