@@ -64,6 +64,7 @@ ayplayer_name.h
 \section{Глобальные объекты}
 
 \subsection{Объект глобального порта}
+\label{gb}
 \noindentИмя объекта: \textbf{gp}\\
 \noindentЭкземпляр класса: \textbf{global\_port}\\
 \noindentРасположение: user\_code -> mk\_hardware -> port\\
@@ -177,6 +178,17 @@ ayplayer_name.h
 	\end{itemize}
 \end{itemize}
 
-\subsection{Порты ввода-вывода}
+\subsection{Программно управляемые порты ввода-вывода}
+Все порты ввода-вывода являются экземплярами класса \textbf{pin}. Расположенны в user\_code -> mk\_hardware -> port. Описание назначения портов ввода-вывода можно найти в секции~\ref{gb}.
+\begin{itemize}
+	\item Качелька громкости: \textbf{button\_inc}, \textbf{button\_dec}.
+	\item Управление LCD: \textbf{lcd\_res}, \textbf{lcd\_dc}, \textbf{lcd\_cs}.
+	\item Карта micro-sd пользователя (sd1): \textbf{sd1\_push}.
+	\item Звуковые сопроцессоры: \textbf{bdir}, \textbf{ay\_1\_res}, \textbf{ay\_2\_res}, \textbf{bc1}.
+	\item Цифровые потенциометры: \textbf{shdn}, \textbf{spi\_audio\_st\_reg}, \textbf{dp\_cs}
+	\item Векторная клавиатура: \textbf{button\_in}.
+	\item Питание: \textbf{pwr\_5\_v\_on}, \textbf{pwr\_on}, \textbf{tp\_st}, \textbf{tp\_ch}, \textbf{chip\_1\_pwr\_on}, \textbf{chip\_2\_pwr\_on}.
+	\item Карта micro-sd системы (sd2): \textbf{sd2\_cs}, \textbf{sd2\_push}.
+\end{itemize}
 
 \end{document}}
