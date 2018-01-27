@@ -10,21 +10,21 @@
 * texlive-full
 
 ## УСТАНОВКА НЕОБХОДИМЫХ ЗАВИСИМОСТЕЙ
-...
+```
 $ sudo apt update
 $ sudo apt install make
 $ sudo apt install inkscape
 $ sudo apt install plantuml
 $ sudo apt install texlive-full
-...
+```
 
 ## СБОРКА ДОКУМЕНТА
-...
+```
 $ make all
-...
+```
 
 ## ОЧИСТКА ПРОЕКТА
 
-...
+```
 $ make clean
-...
+```
