@@ -1,5 +1,7 @@
 #include "ayplayer_wdt.h"
 
+#include "wdt.h"
+
 const wdt_cfg ayplayer_wdt_cfg = {
 	.task_prio			= 1,
 	.run_time_ms		= 200,
