@@ -37,11 +37,5 @@ pin ayplayer_button_inc_pin_obj			( &ayplayer_button_inc_pin_cfg );
 pin ayplayer_button_dec_pin_obj			( &ayplayer_button_dec_pin_cfg );
 
 void ayplayer_port_init ( void ) {
-    ayplayer_gp_obj.reinit_all_ports();			// Инициализируем все порты.
-    // Выставляем состояние на тех, на которых это критично в момент запуска
-    // (критичено значение сразу после включения).
-    ayplayer_lcd_res_pin_obj.set(1);
-    ayplayer_lcd_dc_pin_obj.set(1);
-    ayplayer_pwr_5_v_on_pin_obj.set(1);
-    ayplayer_pwr_on_pin_obj.set(1);
+    ayplayer_gp_obj.reinit_all_ports();	// Инициализируем все используемые выводы..
 }
