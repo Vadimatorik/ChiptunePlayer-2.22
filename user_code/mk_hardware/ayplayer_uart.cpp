@@ -12,11 +12,19 @@ const uart_cfg usart1_cfg = {
 
 uart usart3_obj( &usart1_cfg );
 
+/*!
+ * Метод-прослойка вызывает метод инициализации (init)
+ * глобального объекта отладочного UART-а usart3_obj
+ */
 void ayplayer_uart_init ( void ) {
 	usart3_obj.reinit();
 	NVIC_EnableIRQ( USART3_IRQn );
 }
 
+/*!
+ * Обработчик прерывания принятого байта
+ * (или ошибки при принятии).
+ */
 extern "C" void USART3_IRQHandler ( void ) {
 	usart3_obj.irq_handler();
 }

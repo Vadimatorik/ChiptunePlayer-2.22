@@ -10,7 +10,7 @@ const tim_comp_one_channel_cfg		ay_clk_cfg = {
 	.pulse			= 0,
 };
 
-tim_comp_one_channel ay_clk_obj( &ay_clk_cfg );					// Генератор частоты AY.
+tim_comp_one_channel ay_clk_obj( &ay_clk_cfg );                 ///< Генератор частоты AY.
 
 const tim_interrupt_cfg		interrupt_ay_cfg = {
 	.tim			= TIM6,
@@ -19,7 +19,7 @@ const tim_interrupt_cfg		interrupt_ay_cfg = {
 	.prescaler		= 400
 };
 
-tim_interrupt interrupt_ay_obj( &interrupt_ay_cfg );			// Генератор прерываний.
+tim_interrupt interrupt_ay_obj( &interrupt_ay_cfg );			///< Генератор прерываний.
 
 const tim_pwm_one_channel_cfg	lcd_pwm_cfg = {
 	.tim			= TIM3,
@@ -30,15 +30,15 @@ const tim_pwm_one_channel_cfg	lcd_pwm_cfg = {
 	.polarity		= TIM_OCPOLARITY_LOW
 };
 
-tim_pwm_one_channel lcd_pwm_obj( &lcd_pwm_cfg );				// Подцветка дисплея.
+tim_pwm_one_channel lcd_pwm_obj( &lcd_pwm_cfg );				///< Подцветка дисплея.
 
+/*!
+ * Метод-прослойка вызывает методы инициализации
+ * используемых в проекте таймеров.
+ */
 void ayplayer_timers_init ( void ) {
-	ay_clk_obj.reinit();
-	ay_clk_obj.on();
-	lcd_pwm_obj.reinit();
-	lcd_pwm_obj.on();
-	lcd_pwm_obj.duty_set(0.4);
-	interrupt_ay_obj.reinit();
-	interrupt_ay_obj.on();
-	//NVIC_EnableIRQ( TIM6_DAC_IRQn );
+    ay_clk_obj.reinit();
+    lcd_pwm_obj.reinit();
+    interrupt_ay_obj.reinit();
+    NVIC_EnableIRQ( TIM6_DAC_IRQn );                            ///< Разрешение прерываний от таймера генирующего прерывания.
 }
