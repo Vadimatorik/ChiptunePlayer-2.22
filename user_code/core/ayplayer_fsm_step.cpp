@@ -54,7 +54,7 @@ int dp_init ( __attribute__((unused)) const fsm_step* previous_step ) {
     	return 0;
     } else {
     	ay_log_obj.send_message( RTL_TYPE_M::INIT_ERROR, "Digital potentiometer not configured! SPI error!" );
-    	return FSM_RET_ERROR;	// Такого быть не должно точно. Выходим с ошибкой.
+        return FSM_RET_ERROR;
     }
 }
 

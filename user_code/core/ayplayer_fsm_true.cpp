@@ -40,7 +40,7 @@ const fsm_step* step_sd2_chack_next_step_array[1] = { &step_sd2_track_file_open 
 const fsm_step step_sd2_chack = {
 	.func_step				= &sd2_chack,
 	.next_step_array		= step_sd2_chack_next_step_array,
-	.number_array			= 1
+    .number_array			= 1
 };
 
 const fsm_step* sd2_track_file_open_next_step_array[3] = { nullptr, nullptr, &step_sd2_chack };

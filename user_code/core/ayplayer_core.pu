@@ -1,0 +1,17 @@
+@startuml
+[*] --> gui_init
+
+gui_init --> dp_init : 0
+
+dp_init --> fat_init : 0
+dp_init --> [*] : FSM_RET_ERROR
+
+fat_init --> waiting_for_food_stabilization : 0
+fat_init --> [*] : FSM_RET_ERROR
+
+waiting_for_food_stabilization --> sd2_chack : 0
+
+sd2_chack --> sd2_track_file_open : 0
+sd2_chack --> sd2_chack : FSM_RET_REPEAT
+
+@enduml
