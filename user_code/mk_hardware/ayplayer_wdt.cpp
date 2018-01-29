@@ -11,6 +11,10 @@ const wdt_cfg ayplayer_wdt_cfg = {
 
 wdt ayplayer_wdt_obj ( &ayplayer_wdt_cfg );
 
+/*!
+ * Метод-прослойка вызывает метод инициализации (init)
+ * глобального объекта сторожевого таймера ayplayer_wdt_obj.
+ */
 void ayplayer_wdt_init ( void ) {
 	ayplayer_wdt_obj.init();
 }
