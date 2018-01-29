@@ -13,6 +13,7 @@ extern "C" {
 	void __attribute__( ( weak ) ) DebugMon_Handler					( void ) { while( true ); }
 	void __attribute__( ( weak ) ) PendSV_Handler					( void ) { while( true ); }
 	void __attribute__( ( weak ) ) SysTick_Handler					( void ) { while( true ); }
+    void __attribute__( ( weak ) ) NMI_Handler                      ( void ) { while( true ); }
 
 	void __attribute__( ( weak ) ) WWDG_IRQHandler					( void ) { while( true ); }
 	void __attribute__( ( weak ) ) PVD_IRQHandler					( void ) { while( true ); }

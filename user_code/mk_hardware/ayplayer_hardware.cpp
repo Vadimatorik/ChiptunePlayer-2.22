@@ -6,7 +6,7 @@
 #include "ayplayer_adc.h"
 #include "ayplayer_spi.h"
 #include "ayplayer_timers.h"
-#include "ayplayer_usart.h"
+#include "ayplayer_uart.h"
 
 /*!
  * Метод вызывает функции-прослойки, которые вызывают методы 

@@ -1,5 +1,7 @@
 #include "uart.h"
 
+#include "core_cm3.h"
+
 const uart_cfg usart1_cfg = {
 	.UARTx				= USART3,
 	.baudrate			= 115200,
@@ -10,7 +12,7 @@ const uart_cfg usart1_cfg = {
 
 uart usart3_obj( &usart1_cfg );
 
-void ayplayer_usart_init ( void ) {
+void ayplayer_uart_init ( void ) {
 	usart3_obj.reinit();
 	NVIC_EnableIRQ( USART3_IRQn );
 }
