@@ -31,6 +31,7 @@ extern "C" {
 	extern const MakiseGUI m_gui;
 }
 
+
 int init_gui ( __attribute__((unused)) const fsm_step* previous_step ) {
 	g.m_cont.gui						= ( MakiseGUI* )&m_gui;
 	g.m_host.host						= &g.m_cont;
@@ -41,7 +42,7 @@ int init_gui ( __attribute__((unused)) const fsm_step* previous_step ) {
     return 0;
 }
 
-// Настраиваем потенциометры.
+
 int dp_init ( __attribute__((unused)) const fsm_step* previous_step ) {
 	EC_AD5204_ANSWER res;
     sound_dp.connect_off();
@@ -57,7 +58,7 @@ int dp_init ( __attribute__((unused)) const fsm_step* previous_step ) {
     }
 }
 
-// Инициализация FAT.
+
 int fat_init ( __attribute__((unused)) const fsm_step* previous_step ) {
     FRESULT fr;
     fr = f_mount( &g.fat, "0:", 0 );
@@ -71,15 +72,14 @@ int fat_init ( __attribute__((unused)) const fsm_step* previous_step ) {
     }
 }
 
-// Ждем стабилизации питания.
+
 int waiting_for_food_stabilization ( __attribute__((unused)) const fsm_step* previous_step ) {
 	USER_OS_DELAY_MS(50);
 	return 0;
 }
 
-// Проверяем наличие в слоте microsd.
-// 0 - все четко.
-// 1 - карты нет.
+
+
 int sd2_chack ( __attribute__((unused)) const fsm_step* previous_step ) {
 	DSTATUS r;
 	r = disk_status( 0 );
@@ -95,10 +95,6 @@ int sd2_chack ( __attribute__((unused)) const fsm_step* previous_step ) {
 	}
 }
 
-// Проверяем наличие системного файла со списком треков.
-// 0 - файл уже существует.
-// 1 - файл отсуствует.
-// 2 - невозможно прочитать.
 int sd2_track_file_open ( __attribute__((unused)) const fsm_step* previous_step ) {
 	FRESULT fr = f_open( &g.file_list, "playlist.sys", FA_READ );
     if ( fr == FR_OK ) {
