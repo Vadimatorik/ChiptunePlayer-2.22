@@ -31,7 +31,7 @@ extern "C" {
 	extern const MakiseGUI m_gui;
 }
 
-
+/*
 int init_gui ( __attribute__((unused)) const fsm_step* previous_step ) {
 	g.m_cont.gui						= ( MakiseGUI* )&m_gui;
 	g.m_host.host						= &g.m_cont;
@@ -112,7 +112,7 @@ int sd2_track_file_open ( __attribute__((unused)) const fsm_step* previous_step 
     ay_log_obj.send_message( RTL_TYPE_M::INIT_ERROR, "File <<playlist.sys>> create/open error!" );
     ayplayer_error_string_draw( &g.m_cont, "File <<playlist.sys>>\ncreate/open error!" );
     return 2;
-}
+}*/
 
 //         ayplayer_sd_card_scan( path_dir, &m_cont );
 

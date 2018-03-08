@@ -48,8 +48,8 @@ void select_window_play_list ( void ) {
 */
 #include "run_time_logger.h"
 
-extern const fsm_step step_gui_init;
-fsm core_fsm( &step_gui_init );
+//extern const fsm_step step_gui_init;
+//fsm core_fsm( &step_gui_init );
 
 extern run_time_logger ay_log_obj;
 
@@ -59,7 +59,7 @@ extern run_time_logger ay_log_obj;
 void ayplayer_core_task ( __attribute__((unused)) void* param ) {
 	ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "FreeRTOS started." );
 	ay_log_obj.send_message( RTL_TYPE_M::INIT_OK, "FSM started." );
-	core_fsm.start();
+	//core_fsm.start();
 
 
 	while(1) vTaskDelay(1000);

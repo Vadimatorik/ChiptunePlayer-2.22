@@ -1,6 +1,7 @@
 #include "ayplayer_fsm_step.h"
 #include "core_fsm.h"
 
+/*
 extern const fsm_step step_gui_init;
 extern const fsm_step step_dp_init;
 extern const fsm_step step_fat_init;
@@ -52,3 +53,4 @@ const fsm_step step_sd2_track_file_open = {
 };
 
 
+*/
