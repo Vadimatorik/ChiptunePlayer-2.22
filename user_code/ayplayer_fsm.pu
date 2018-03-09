@@ -1,0 +1,9 @@
+@startuml
+
+[*] --> start
+
+state "wdt_init" as start {
+start: Инициализация сторожевого таймера.
+}
+
+@enduml

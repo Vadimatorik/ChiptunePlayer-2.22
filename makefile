@@ -3,19 +3,18 @@
 #**********************************************************************
 # Параметры сборки проекта.
 #**********************************************************************
-MODULE_FREE_RTOS_OPTIMIZATION						:= -g0 -Os 
-MODULE_FAT_FS_OPTIMIZATION							:= -g0 -Os -flto
-MODULE_STM32_F2_API_OPTIMIZATION					:= -g0 -Os -flto
-MODULE_BUT_OPTIMIZATION								:= -g0 -Os -flto
-MODULE_MOD_CHIP_OPTIMIZATION						:= -g0 -Os -flto
-MODULE_FSM_OPTIMIZATION								:= -g0 -Os -flto
-MODULE_MAKISE_GUI_OPTIMIZATION						:= -g0 -Os -flto
-MODULE_MATH_OPTIMIZATION							:= -g0 -Os -flto
-MODULE_MICRO_SD_DRIVER_OPTIMIZATION					:= -g0 -Os -flto
-MODULE_LCD_LIB_OPTIMIZATION							:= -g0 -Os -flto
-MODULE_RUN_TIME_LOGGER_OPTIMIZATION					:= -g0 -Os -flto
-MODULE_SH_OPTIMIZATION								:= -g0 -Os -flto
-MODULE_SYSTEM_DUMMY_OPTIMIZATION					:= -g0 -Os -flto
+MODULE_FREE_RTOS_OPTIMIZATION						:= -g3 -Os 
+MODULE_FAT_FS_OPTIMIZATION							:= -g0 -Os 
+MODULE_STM32_F2_API_OPTIMIZATION					:= -g3 -Os 
+MODULE_BUT_OPTIMIZATION								:= -g3 -Os 
+MODULE_MOD_CHIP_OPTIMIZATION						:= -g3 -Os 
+MODULE_MAKISE_GUI_OPTIMIZATION						:= -g3 -Os 
+MODULE_MATH_OPTIMIZATION							:= -g3 -Os 
+MODULE_MICRO_SD_DRIVER_OPTIMIZATION					:= -g3 -Os 
+MODULE_LCD_LIB_OPTIMIZATION							:= -g3 -Os 
+MODULE_RUN_TIME_LOGGER_OPTIMIZATION					:= -g3 -Os 
+MODULE_SH_OPTIMIZATION								:= -g3 -Os 
+MODULE_SYSTEM_DUMMY_OPTIMIZATION					:= -g3 -Os
 MODULE_USER_CODE_OPTIMIZATION						:= -g3 -Os
 
 DEFINE_PROJ	:= -DSTM32F205xx
@@ -38,7 +37,7 @@ C_FLAGS										+= -fshort-enums
 
 CPP_FLAGS									:= $(MK_FLAGS)     
 CPP_FLAGS									+= -Werror -Wall -Wextra
-CPP_FLAGS									+= -std=c++1z
+CPP_FLAGS									+= -std=c++14
 CPP_FLAGS									+= -fno-exceptions
 
 LDFLAGS			:= $(MK_FLAGS) $(LD_FILES) -fno-exceptions
@@ -47,7 +46,7 @@ LDFLAGS			:= $(MK_FLAGS) $(LD_FILES) -fno-exceptions
 LDFLAGS			+= -ffunction-sections -Wl,--gc-sections
 
 # Формируем map файл.
-#LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
+LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
 
 #**********************************************************************
 # Параметры toolchain-а.
@@ -64,6 +63,8 @@ OBJCOPY			= $(TOOLCHAIN_PATH)-objcopy
 OBJDUMP			= $(TOOLCHAIN_PATH)-objdump
 GDB				= $(TOOLCHAIN_PATH)-gdb
 SIZE			= $(TOOLCHAIN_PATH)-size
+
+PL				= plantuml_to_fsm_tree_generator/build/plantuml_to_fsm_tree_generator
 
 # Все субмодули пишут в эти переменные.
 PROJECT_OBJ_FILE 	:=
@@ -116,6 +117,18 @@ USER_OBJ_FILE			:= $(patsubst %.c, %.o, $(USER_OBJ_FILE))
 PROJECT_PATH			+= $(USER_PATH)
 PROJECT_OBJ_FILE		+= $(USER_OBJ_FILE)
 
+FSM_PU_FILE				= $(shell find user_code/ -maxdepth 5 -type f -name "*.pu" )
+FSM_CPP_FILE			+= $(patsubst %.pu, fsm_build/%.cpp, $(FSM_PU_FILE))
+FSM_OBJ_FILE			+= $(patsubst %.pu, build/obj/fsm_build/%.o, $(FSM_PU_FILE))
+
+PROJECT_PATH			+= -Ifsm_build/
+PROJECT_OBJ_FILE		+= $(FSM_OBJ_FILE)
+
+fsm_build/%.cpp:	%.pu
+	@echo [PL] $<
+	@mkdir -p $(dir $@)
+	@$(PL) $< $@ ay_player_class ayplayer.h
+
 build/obj/%.o:	%.c	
 	@echo [CC] $<
 	@mkdir -p $(dir $@)
@@ -149,7 +162,20 @@ all:	$(PROJECT_NAME).siz
 #@$(OBJDUMP) -D build/$(PROJECT_NAME).elf > build/$(PROJECT_NAME).asm
 #@$(OBJCOPY) build/$(PROJECT_NAME).elf build/$(PROJECT_NAME).bin -O binary
 	
+pfsm_build:	
+	mkdir -p plantuml_to_fsm_tree_generator/build
+	cd plantuml_to_fsm_tree_generator/build && qmake -qt=qt5 .. && make
+
+pfsm_clean:
+	cd plantuml_to_fsm_tree_generator/ && rm -R build
+
+pfsm_rebuild:
+	cd plantuml_to_fsm_tree_generator/ && rm -R build
+	mkdir plantuml_to_fsm_tree_generator/build
+	cd plantuml_to_fsm_tree_generator/build && qmake -qt=qt5 .. && make
+
 clean:	
 	@rm -R ./build
+	@rm -R ./fsm_build
 	@echo 'Project cline!'
 	@echo ' '

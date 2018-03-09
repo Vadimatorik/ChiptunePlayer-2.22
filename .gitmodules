@@ -49,3 +49,6 @@
 [submodule "module_run_time_logger"]
 	path = module_run_time_logger
 	url = git@github.com:Vadimatorik/module_run_time_logger.git
+[submodule "plantuml_to_fsm_tree_generator"]
+	path = plantuml_to_fsm_tree_generator
+	url = git@github.com:Vadimatorik/plantuml_to_fsm_tree_generator.git
