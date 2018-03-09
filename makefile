@@ -124,7 +124,7 @@ FSM_OBJ_FILE			+= $(patsubst %.pu, build/obj/%.o, $(FSM_PU_FILE))
 PROJECT_PATH			+= -Ifsm_build/
 PROJECT_OBJ_FILE		+= $(FSM_OBJ_FILE)
 
-fsm_build/%.cpp:	%.pu
+%.cpp:	%.pu
 	@echo [PL] $<
 	@$(PL) $< $@ ay_player_class ayplayer.h
 
