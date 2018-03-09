@@ -118,15 +118,14 @@ PROJECT_PATH			+= $(USER_PATH)
 PROJECT_OBJ_FILE		+= $(USER_OBJ_FILE)
 
 FSM_PU_FILE				= $(shell find user_code/ -maxdepth 5 -type f -name "*.pu" )
-FSM_CPP_FILE			+= $(patsubst %.pu, fsm_build/%.cpp, $(FSM_PU_FILE))
-FSM_OBJ_FILE			+= $(patsubst %.pu, build/obj/fsm_build/%.o, $(FSM_PU_FILE))
+FSM_CPP_FILE			+= $(patsubst %.pu, %.cpp, $(FSM_PU_FILE))
+FSM_OBJ_FILE			+= $(patsubst %.pu, build/obj/%.o, $(FSM_PU_FILE))
 
 PROJECT_PATH			+= -Ifsm_build/
 PROJECT_OBJ_FILE		+= $(FSM_OBJ_FILE)
 
 fsm_build/%.cpp:	%.pu
 	@echo [PL] $<
-	@mkdir -p $(dir $@)
 	@$(PL) $< $@ ay_player_class ayplayer.h
 
 build/obj/%.o:	%.c	
@@ -176,6 +175,5 @@ pfsm_rebuild:
 
 clean:	
 	@rm -R ./build
-	@rm -R ./fsm_build
 	@echo 'Project cline!'
 	@echo ' '
