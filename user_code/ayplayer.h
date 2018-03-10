@@ -10,6 +10,7 @@
 
 #include "ayplayer_port.h"
 #include "run_time_logger.h"
+#include "module_shift_register.h"
 
 #define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj )
 
@@ -28,15 +29,23 @@ struct ay_player_mc_strcut {
 	tim_interrupt_base*				interrupt_ay;
 };
 
+struct ay_player_pcb_strcut {
+	module_shift_register*			sr_ay;
+	module_shift_register*			sr_button;
+};
+
 struct ay_player_class_config_strcut {
 	ay_player_mc_strcut*	mcu;
 	run_time_logger*		l;
+	ay_player_pcb_strcut*	pcb;
 };
 
 class ay_player_class {
 public:
 	ay_player_class( ay_player_class_config_strcut* cfg ) :
-		mcu			( cfg->mcu )
+		mcu			( cfg->mcu ),
+		l			( cfg->l ),
+		pcb			( cfg->pcb )
 	{}
 
 	void init ( void );
@@ -56,11 +65,15 @@ public:
 	HANDLER_FSM_STEP( fsm_step_func_adc_falling );
 	HANDLER_FSM_STEP( fsm_step_func_timer_falling );
 
+	HANDLER_FSM_STEP( fsm_step_func_shift_register_init );
+
 private:
 	/// Текущий режим работы RCC.
 	uint32_t						rcc_index = 0;
 
-	fsm_class< ay_player_class >	fsm_init_mcu;
+	fsm_class< ay_player_class >	fsm;
 
 	ay_player_mc_strcut*			mcu;
+	run_time_logger*				l;
+	ay_player_pcb_strcut*			pcb;
 };

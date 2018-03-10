@@ -15,6 +15,9 @@ extern tim_pwm_one_channel				lcd_pwm_obj;
 extern tim_interrupt					interrupt_ay_obj;
 extern run_time_logger					ay_log_obj;
 
+extern module_shift_register			sr_ay;
+extern module_shift_register			sr_button;
+
 ay_player_mc_strcut ay_mcu = {
 	.wdt						= &ayplayer_wdt_obj,
 	.gpio						= &ayplayer_gpio_struct_obj,
@@ -30,9 +33,15 @@ ay_player_mc_strcut ay_mcu = {
 	.interrupt_ay				= &interrupt_ay_obj
 };
 
+ay_player_pcb_strcut ay_pcb = {
+	.sr_ay						= &sr_ay,
+	.sr_button					= &sr_button
+};
+
 ay_player_class_config_strcut ay_cfg = {
 	.mcu						= &ay_mcu,
-	.l							= &ay_log_obj
+	.l							= &ay_log_obj,
+	.pcb						= &ay_pcb
 };
 
 ay_player_class		ay( &ay_cfg );

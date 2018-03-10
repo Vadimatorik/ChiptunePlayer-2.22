@@ -1,0 +1,11 @@
+@startuml
+
+[*] --> start
+
+state "shift_register_init" as start {
+start: Инициализируются сдвиговые 
+start: регистры (расширители портов), 
+start: подключенные к AY, YM, клавиатуре.
+}
+
+@enduml
