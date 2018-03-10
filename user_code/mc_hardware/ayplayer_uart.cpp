@@ -8,7 +8,8 @@ const uart_cfg usart3_cfg = {
 
 	/// Нет доступных каналов для этого UART-а.
 	.dma_tx				= nullptr,
-	.dma_tx_ch			= 0
+	.dma_tx_ch			= 0,
+	.handler_prio		= 0					/// Приоритет только для DMA.
 };
 
 uart usart3_obj( &usart3_cfg );
