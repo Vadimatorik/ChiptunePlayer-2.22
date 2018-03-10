@@ -4,8 +4,8 @@
 extern const fsm_step< ay_player_class > ay_player_class_wdt_init_fsm_step;
 
 void ay_player_class::init ( void ) {
-	this->fsm_init.relinking( &ay_player_class_wdt_init_fsm_step, this );
-	this->fsm_init.start();
+	this->fsm_init_mcu.relinking( &ay_player_class_wdt_init_fsm_step, this );
+	this->fsm_init_mcu.start();
 }
 
 int ay_player_class::fsm_step_func_wdt_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {

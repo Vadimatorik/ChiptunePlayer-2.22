@@ -13,6 +13,7 @@ extern adc_one_channel					adc_bat_obj;
 extern tim_comp_one_channel				ay_clk_obj;
 extern tim_pwm_one_channel				lcd_pwm_obj;
 extern tim_interrupt					interrupt_ay_obj;
+extern run_time_logger					ay_log_obj;
 
 ay_player_mc_strcut ay_mcu = {
 	.wdt						= &ayplayer_wdt_obj,
@@ -30,7 +31,8 @@ ay_player_mc_strcut ay_mcu = {
 };
 
 ay_player_class_config_strcut ay_cfg = {
-	.mcu						= &ay_mcu
+	.mcu						= &ay_mcu,
+	.l							= &ay_log_obj
 };
 
 ay_player_class		ay( &ay_cfg );

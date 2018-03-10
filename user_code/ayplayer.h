@@ -9,6 +9,7 @@
 #include "timer.h"
 
 #include "ayplayer_port.h"
+#include "run_time_logger.h"
 
 #define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj )
 
@@ -29,6 +30,7 @@ struct ay_player_mc_strcut {
 
 struct ay_player_class_config_strcut {
 	ay_player_mc_strcut*	mcu;
+	run_time_logger*		l;
 };
 
 class ay_player_class {
@@ -58,7 +60,7 @@ private:
 	/// Текущий режим работы RCC.
 	uint32_t						rcc_index = 0;
 
-	fsm_class< ay_player_class >	fsm_init;
+	fsm_class< ay_player_class >	fsm_init_mcu;
 
 	ay_player_mc_strcut*			mcu;
 };
