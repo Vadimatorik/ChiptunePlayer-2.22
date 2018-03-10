@@ -9,6 +9,10 @@ extern rcc								ayplayer_rcc;
 extern spi_master_8bit					spi1_obj;
 extern spi_master_8bit					spi2_obj;
 extern spi_master_8bit					spi3_obj;
+extern adc_one_channel					adc_bat_obj;
+extern tim_comp_one_channel				ay_clk_obj;
+extern tim_pwm_one_channel				lcd_pwm_obj;
+extern tim_interrupt					interrupt_ay_obj;
 
 ay_player_mc_strcut ay_mcu = {
 	.wdt						= &ayplayer_wdt_obj,
@@ -19,6 +23,10 @@ ay_player_mc_strcut ay_mcu = {
 	.spi1						= &spi1_obj,
 	.spi2						= &spi2_obj,
 	.spi3						= &spi3_obj,
+	.adc1						= &adc_bat_obj,
+	.ay_clk						= &ay_clk_obj,
+	.lcd_pwm					= &lcd_pwm_obj,
+	.interrupt_ay				= &interrupt_ay_obj
 };
 
 ay_player_class_config_strcut ay_cfg = {
@@ -30,6 +38,7 @@ ay_player_class		ay( &ay_cfg );
 extern "C" {
 
 int main ( void ) {
+	ay.init();
 
 	/*
 	ayplayer_mc_hardware();
