@@ -2,10 +2,26 @@
 
 [*] --> start
 
-state "shift_register_init" as start {
-start: Инициализируются сдвиговые 
-start: регистры (расширители портов), 
-start: подключенные к AY, YM, клавиатуре.
+state "freertos_obj_init" as start {
+start: Инициализируются поля глобальной 
+start: структуры данных os_data.
 }
+
+start --> s1 : 0
+
+state "shift_register_init" as s1 {
+s1: Инициализируются сдвиговые 
+s1: регистры (расширители портов), 
+s1: подключенные к AY, YM, клавиатуре.
+}
+
+s1 --> s2 : 0
+
+state "button_init" as s2 {
+s2: Инициализируется модуль 
+s2: опроса клавиатуры.
+} 
+
+
 
 @enduml

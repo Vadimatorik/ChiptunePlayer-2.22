@@ -3,7 +3,7 @@
 #include "pin.h"
 #include "user_os.h"
 
-extern spi_master_8bit	spi3_obj;
+extern spi_master_8bit	ayplayer_spi3_obj;
 extern pin				ayplayer_spi_audio_st_reg_pin_obj;
 
 // sr_out_buf[0] - 40-ми ногая.
@@ -16,7 +16,7 @@ const module_shift_register_cfg_t sr_ay_cfg_cfg = {
 	.data_array				= sr_out_buf_ay,
 	.array_size				= M_SIZE_ARRAY( sr_out_buf_ay ),
 	.strob_active			= true,
-	.p_spi					= &spi3_obj,
+	.p_spi					= &ayplayer_spi3_obj,
 	.mutex					= nullptr
 };
 
@@ -27,7 +27,7 @@ const module_shift_register_cfg_t sr_button_cfg_cfg = {
 	.data_array				= sr_out_buf_button,
 	.array_size				= M_SIZE_ARRAY( sr_out_buf_button ),
 	.strob_active			= true,
-	.p_spi					= &spi3_obj,
+	.p_spi					= &ayplayer_spi3_obj,
 	.mutex					= nullptr
 };
 

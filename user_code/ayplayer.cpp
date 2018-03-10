@@ -1,14 +1,21 @@
 #include "ayplayer.h"
 #include "core_cm3.h"
+#include "ayplayer_os_object.h"
+
+extern ay_player_freertos_obj_strcut	os_data;
 
 extern const fsm_step< ay_player_class > ay_player_class_wdt_init_fsm_step;
-extern const fsm_step< ay_player_class > ay_player_class_shift_register_init_fsm_step;
+extern const fsm_step< ay_player_class > ay_player_class_freertos_obj_init_fsm_step;
 
 void ay_player_class::init ( void ) {
 	this->fsm.relinking( &ay_player_class_wdt_init_fsm_step, this );
 	this->fsm.start();
-	this->fsm.relinking( &ay_player_class_shift_register_init_fsm_step, this );
+	this->fsm.relinking( &ay_player_class_freertos_obj_init_fsm_step, this );
 	this->fsm.start();
+}
+
+void ay_player_class::start ( void ) {
+	vTaskStartScheduler();
 }
 
 int ay_player_class::fsm_step_func_wdt_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
@@ -146,12 +153,37 @@ int ay_player_class::fsm_step_func_adc_falling ( const fsm_step< ay_player_class
 	return 0;					/// Возвращено не будет.
 }
 
+int ay_player_class::fsm_step_func_freertos_obj_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
+	UNUSED( previous_step );	UNUSED( obj );
+	//os_data.q_play = USER_OS_STATIC_QUEUE_CREATE( 1, sizeof( char* ), os_data.qb_play, &os_data.qs_play );
 
+	/*
+	os_data.q_ay_low[0] = USER_OS_STATIC_QUEUE_CREATE( QB_AY_LOW_SIZE, sizeof( ay_low_out_data_struct ), &os_data.qb_ay_low[0][0], &qs_ay_low[0] );
+	os_data.q_ay_low[1] = USER_OS_STATIC_QUEUE_CREATE( QB_AY_LOW_SIZE, sizeof( ay_low_out_data_struct ), &os_data.qb_ay_low[1][0], &qs_ay_low[1] );
+*/
+	os_data.q_ay_button = USER_OS_STATIC_QUEUE_CREATE( QB_BUTTON_SIZE, sizeof( uint8_t ), os_data.qb_ay_button, &os_data.qs_ay_button );
+
+	/// Semaphore init.
+	//os_data.s_play_tic = USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &sb_play_tic );
+	//os_data.s_gui_update = USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &sb_gui_update );
+
+	/// Mutex init.
+	//os_data.m_mhost = USER_OS_STATIC_MUTEX_CREATE( &mb_mhost );
+	os_data.m_spi3 = USER_OS_STATIC_MUTEX_CREATE( &os_data.mb_spi3 );
+	return 0;
+}
 
 int ay_player_class::fsm_step_func_shift_register_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
 	UNUSED( previous_step );
 	obj->pcb->sr_ay->init();
 	obj->pcb->sr_button->init();
+	return 0;
+}
+
+
+int ay_player_class::fsm_step_func_button_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
+	UNUSED( previous_step );
+	obj->pcb->button->init();
 	return 0;
 }
 

@@ -11,6 +11,9 @@
 #include "ayplayer_port.h"
 #include "run_time_logger.h"
 #include "module_shift_register.h"
+#include "buttons_through_shift_register_one_in.h"
+#include "module_digital_potentiometer_ad5204.h"
+#include "microsd_card.h"
 
 #define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj )
 
@@ -30,8 +33,11 @@ struct ay_player_mc_strcut {
 };
 
 struct ay_player_pcb_strcut {
-	module_shift_register*			sr_ay;
-	module_shift_register*			sr_button;
+	module_shift_register*						sr_ay;
+	module_shift_register*						sr_button;
+	buttons_through_shift_register_one_in*		button;
+	ad5204< 2 >*								dp;
+	microsd_base*								sd2;
 };
 
 struct ay_player_class_config_strcut {
@@ -48,7 +54,8 @@ public:
 		pcb			( cfg->pcb )
 	{}
 
-	void init ( void );
+	void init			( void );
+	void start			( void );
 
 	HANDLER_FSM_STEP( fsm_step_func_wdt_init );
 	HANDLER_FSM_STEP( fsm_step_func_gpio_init );
@@ -65,7 +72,9 @@ public:
 	HANDLER_FSM_STEP( fsm_step_func_adc_falling );
 	HANDLER_FSM_STEP( fsm_step_func_timer_falling );
 
+	HANDLER_FSM_STEP( fsm_step_func_freertos_obj_init );
 	HANDLER_FSM_STEP( fsm_step_func_shift_register_init );
+	HANDLER_FSM_STEP( fsm_step_func_button_init );
 
 private:
 	/// Текущий режим работы RCC.

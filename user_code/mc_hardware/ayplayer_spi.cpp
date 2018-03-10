@@ -43,18 +43,18 @@ spi_master_8bit_cfg spi3_cfg = {
 	.handler_prio			= 6
 };
 
-spi_master_8bit spi1_obj( &spi1_cfg );
-spi_master_8bit spi2_obj( &spi2_cfg );
-spi_master_8bit spi3_obj( &spi3_cfg );
+spi_master_8bit ayplayer_spi1_obj( &spi1_cfg );
+spi_master_8bit ayplayer_spi2_obj( &spi2_cfg );
+spi_master_8bit ayplayer_spi3_obj( &spi3_cfg );
 
 /*!
  * Обработчики прерываний.
  */
 extern "C" {
 
-void DMA2_Stream5_IRQHandler ( void ) { spi1_obj.handler(); }
-void DMA1_Stream3_IRQHandler ( void ) { spi2_obj.handler(); }
-void DMA1_Stream4_IRQHandler ( void ) { spi2_obj.handler(); }
-void DMA1_Stream7_IRQHandler ( void ) { spi3_obj.handler(); }
+void DMA2_Stream5_IRQHandler ( void ) { ayplayer_spi1_obj.handler(); }
+void DMA1_Stream3_IRQHandler ( void ) { ayplayer_spi2_obj.handler(); }
+void DMA1_Stream4_IRQHandler ( void ) { ayplayer_spi2_obj.handler(); }
+void DMA1_Stream7_IRQHandler ( void ) { ayplayer_spi3_obj.handler(); }
 
 }

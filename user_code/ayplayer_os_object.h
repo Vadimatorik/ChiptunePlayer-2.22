@@ -2,7 +2,6 @@
 
 #include "user_os.h"
 
-/*
 // Размеры steck-ов задач.
 #define TB_PLAY_SIZE                    5000
 #define TB_PLAY_TIC_SIZE                1000
@@ -31,8 +30,8 @@ struct ay_player_freertos_obj_strcut {
 	USER_OS_STATIC_QUEUE                    q_ay_button;
 
 	/// Queue buffer.
-	uint8_t                                 qb_play[ sizeof( char* ) * 1 ];
-	uint8_t                                 qb_ay_low[2][ sizeof( ay_low_out_data_struct ) * QB_AY_LOW_SIZE ];
+	//uint8_t                                 qb_play[ sizeof( char* ) * 1 ];
+	//uint8_t                                 qb_ay_low[2][ sizeof( ay_low_out_data_struct ) * QB_AY_LOW_SIZE ];
 	uint8_t                                 qb_ay_button[ QB_BUTTON_SIZE ];
 
 	/// Queue struct.
@@ -41,10 +40,11 @@ struct ay_player_freertos_obj_strcut {
 	USER_OS_STATIC_QUEUE_STRUCT             qs_ay_button;
 
 	/// Mutex.
-	/// Mutex служит для предотвращения одновременной отрисовки окна Makise и
-	/// смены окна container_set_to_mhost.
 	USER_OS_STATIC_MUTEX                    m_mhost;
 	USER_OS_STATIC_MUTEX                    m_spi3;
+
+	/// Mutex buffer.
+	USER_OS_STATIC_MUTEX_BUFFER				mb_spi3;
 
 	/// Semaphore.
 	USER_OS_STATIC_BIN_SEMAPHORE            s_play_tic;
@@ -71,4 +71,4 @@ struct ay_player_freertos_obj_strcut {
 	USER_OS_STATIC_TASK_STRUCT_TYPE         ts_inc_dec_detect;
 	USER_OS_STATIC_TASK_STRUCT_TYPE         ts_battery_check;
 	USER_OS_STATIC_TASK_STRUCT_TYPE         ts_housekeeping;
-}*/
+};
