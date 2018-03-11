@@ -1,0 +1,44 @@
+@startuml
+
+[*] --> start
+
+state "init_gui" as start {
+start: Инициализируется 
+start: драйвер дисплея.
+}
+
+start --> fgui: 1 
+start --> fl: 2
+state "gui_fall" as fgui {
+fgui: Ошибка в библиотеке 
+fgui: MakiseGUI. Может быть 
+fgui: вызвана проблемами с 
+fgui: драйвером LCD (и SPI).
+fgui: Микроконтроллер будет 
+fgui: перезагружен.
+}
+
+state "logger_fall" as fl {
+fl: Ошибка в работе логгера.
+fl: Может быть вызвана 
+fl: неисправностью UART-модуля.
+fl: Микроконтроллер будет 
+fl: перезагружен.
+}
+
+start --> s1: 0
+
+state "fat_init" as s1 {
+s1: Инициализируется FAT.
+}
+
+s1 --> ffat: 1
+s1 --> fl: 2
+
+state "fat_fall" as ffat {
+ffat: Инициализация FatFS не удалась. 
+ffat: Микроконтроллер будет 
+ffat: перезагружен.
+}
+
+@enduml

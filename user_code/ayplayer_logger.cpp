@@ -4,7 +4,7 @@
 #include <string.h>
 
 extern uart usart3_obj;
-void uart_send_message ( char* string );
+BASE_RESULT uart_send_message ( char* string );
 
 const run_time_logger_cfg log_cfg = {
 	.color = {
@@ -20,6 +20,6 @@ const run_time_logger_cfg log_cfg = {
 
 run_time_logger ay_log_obj( &log_cfg );
 
-void uart_send_message ( char* string ) {
-	usart3_obj.tx( (uint8_t*)string, strlen(string), 100 );
+BASE_RESULT uart_send_message ( char* string ) {
+	return usart3_obj.tx( (uint8_t*)string, strlen(string), 100 );
 }

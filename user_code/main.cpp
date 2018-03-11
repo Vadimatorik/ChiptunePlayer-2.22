@@ -20,6 +20,7 @@ extern module_shift_register						sr_button;
 extern buttons_through_shift_register_one_in		ayplayer_button;
 extern ad5204< 2 >									sound_dp;
 extern microsd_spi									ayplayer_sd2_obj;
+extern ay_ym_file_mode								ayplayer_ay_file_mode_obj;
 
 ay_player_mc_strcut ay_mcu = {
 	.wdt						= &ayplayer_wdt_obj,
@@ -47,7 +48,8 @@ ay_player_pcb_strcut ay_pcb = {
 ay_player_class_config_strcut ay_cfg = {
 	.mcu						= &ay_mcu,
 	.l							= &ay_log_obj,
-	.pcb						= &ay_pcb
+	.pcb						= &ay_pcb,
+	.ay_f						= &ayplayer_ay_file_mode_obj
 };
 
 ay_player_class		ay( &ay_cfg );
@@ -166,4 +168,19 @@ void ayplayer_button_init ( void ) {
 	&os_data.q_ay_button_init();
 	//ayplayer_button.init();
 	USER_OS_STATIC_TASK_CREATE( ayplayer_button_inc_and_dec_detect, "b_incdec", TB_B_INC_DEC_SIZE,  NULL, 2, tb_inc_dec_detect, &ts_inc_dec_detect );
+
+
+
+/// Перерисовывает GUI и обновляет экран.
+void gui_update ( void ) {
+	USER_OS_TAKE_MUTEX( os_data.m_host, portMAX_DELAY );
+	ayplayer_lcd_obj.buf_clear();
+	makise_g_host_call( &os_data.m_host, M_G_CALL_PREDRAW );
+	makise_g_host_call( &os_data.m_host, M_G_CALL_DRAW );
+	m_gui_update( os_data.m_host.host->gui );
+	USER_OS_GIVE_BIN_SEMAPHORE( os_data.s_gui_update );
+	USER_OS_GIVE_MUTEX( os_data.m_host );
+}
+
+
 }*/
