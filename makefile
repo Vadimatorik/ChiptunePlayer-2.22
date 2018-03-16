@@ -17,7 +17,7 @@ MODULE_SH_OPTIMIZATION								:= -g3 -O0
 MODULE_SYSTEM_DUMMY_OPTIMIZATION					:= -g3 -O0
 MODULE_USER_CODE_OPTIMIZATION						:= -g3 -O0
 
-DEFINE_PROJ	:= -DSTM32F205xx
+DEFINE_PROJ	:= -DSTM32F205xx -DSTM32F2 -DSTM32
 
 LD_FILES = -T module_stm32f2_low_level_by_st/LD/STM32F205xG.ld
 
@@ -93,10 +93,10 @@ include module_fatfs_by_chan/makefile
 include module_makise_gui/makefile
 include module_math/makefile
 include module_mc_hardware_interfaces/makefile
-include	module_microsd_low_level_driver/makefile
 include	module_shift_register/makefile
 include	module_stm32f2_low_level_by_st/makefile
 include module_freertos_for_stm32f2/makefile
+include	module_microsd_low_level_driver/makefile
 include module_mono_lcd_lib/makefile
 include module_system_dummy/makefile 
 

@@ -13,7 +13,7 @@
 #include "module_shift_register.h"
 #include "buttons_through_shift_register_one_in.h"
 #include "module_digital_potentiometer_ad5204.h"
-#include "microsd_card.h"
+#include "microsd_card_spi.h"
 #include "ay_ym_file_mode.h"
 
 #include "makise_gui.h"
@@ -43,7 +43,6 @@ struct ay_player_pcb_strcut {
 	module_shift_register*						sr_button;
 	buttons_through_shift_register_one_in*		button;
 	ad5204< 2 >*								dp;
-	microsd_base*								sd2;
 };
 
 struct ay_player_class_config_strcut {
@@ -94,7 +93,10 @@ public:
 
 	HANDLER_FSM_STEP( fsm_step_func_init_gui );
 	HANDLER_FSM_STEP( fsm_step_func_fat_init );
-	//HANDLER_FSM_STEP( );
+	HANDLER_FSM_STEP( fsm_step_func_sd1_check );
+
+
+	//
 	//HANDLER_FSM_STEP( );
 	//HANDLER_FSM_STEP( );
 	//HANDLER_FSM_STEP( );

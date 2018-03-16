@@ -41,8 +41,7 @@ ay_player_pcb_strcut ay_pcb = {
 	.sr_ay						= &sr_ay,
 	.sr_button					= &sr_button,
 	.button						= &ayplayer_button,
-	.dp							= &sound_dp,
-	.sd2						= &ayplayer_sd2_obj
+	.dp							= &sound_dp
 };
 
 ay_player_class_config_strcut ay_cfg = {
@@ -62,7 +61,16 @@ int main ( void ) {
     while ( true );
 }
 
+#include "stm32f2xx_hal.h"
+extern void xPortSysTickHandler( void );
+void SysTick_Handler ( void ) {
+	xPortSysTickHandler();
+	HAL_IncTick();
 }
+
+}
+
+
 
 /*
 

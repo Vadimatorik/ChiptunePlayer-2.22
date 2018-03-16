@@ -3,6 +3,8 @@
 #include "ayplayer_os_object.h"
 #include "makise.h"
 #include "makise_gui.h"
+#include "ff.h"
+#include "diskio.h"
 
 /*!
  * Основное дерево проекта.
@@ -48,6 +50,19 @@ int ay_player_class::fsm_step_func_fat_init ( const fsm_step< ay_player_class >*
 	} else {
 		if ( obj->l->send_message( RTL_TYPE_M::INIT_OK, "FatFS was not initialized!" ) != BASE_RESULT::OK ) return 2;
 		return 1;
+	}
+}
+
+int ay_player_class::fsm_step_func_sd1_check ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
+	UNUSED( previous_step );
+	DSTATUS r;
+	r = disk_status( 0 );
+	if ( r == STA_NODISK ) {
+		if ( obj->l->send_message( RTL_TYPE_M::INIT_ISSUE, "SD2 missing!" ) != BASE_RESULT::OK ) return 2;
+		return 1;
+	} else {
+		if ( obj->l->send_message( RTL_TYPE_M::INIT_OK, "SD2 is detected!" ) != BASE_RESULT::OK ) return 2;
+		return 0;
 	}
 }
 

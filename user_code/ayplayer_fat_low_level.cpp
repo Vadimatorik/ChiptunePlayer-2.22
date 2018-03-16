@@ -2,9 +2,16 @@
 #include "diskio.h"
 #include "user_os.h"
 #include "ffconf.h"
-#include "microsd_card.h"
+#include "microsd_card_spi.h"
+#include "microsd_card_sdio.h"
 
-extern microsd_spi ayplayer_sd2_obj;
+extern microsd_sdio			ayplayer_sd1_obj;
+extern microsd_spi			ayplayer_sd2_obj;
+
+microsd_base* ayplayer_sd_obj_array[ 2 ] = {
+	&ayplayer_sd1_obj,
+	&ayplayer_sd2_obj
+};
 
 extern "C" {
 
@@ -12,50 +19,20 @@ DWORD get_fattime ( void ) {
 	return 0;
 }
 
-DSTATUS disk_initialize ( BYTE drv ) {
-	if ( drv == 0 ) {
-		return ( ayplayer_sd2_obj.initialize() != EC_MICRO_SD_TYPE::ERROR ) ? 0 : STA_NOINIT;
-	} else {
-		/// Карта по SDIO.
-		return RES_ERROR;
-	}
+DSTATUS disk_initialize ( BYTE pdrv ) {
+	return ( ayplayer_sd_obj_array[ pdrv ]->initialize() != EC_MICRO_SD_TYPE::ERROR ) ? 0 : STA_NOINIT;
 }
 
 DSTATUS disk_status ( BYTE pdrv ) {
-	if ( pdrv == 0 ) {
-		return ( DSTATUS )ayplayer_sd2_obj.send_status();
-	} else {
-		/// Карта по SDIO.
-		return RES_ERROR;
-	}
+	return ( DSTATUS )ayplayer_sd_obj_array[ pdrv ]->send_status();
 }
 
 DRESULT disk_read ( BYTE pdrv, BYTE* buff, DWORD sector, UINT count ) {
-	if ( pdrv == 0 ) {
-		for (UINT i = 0; i < count; i++) {	// Считываем нужное количество блоков.
-			if ( ayplayer_sd2_obj.read_sector( sector, buff ) != EC_SD_RESULT::OK ) return RES_ERROR;
-			sector++;
-			buff += 512;
-		}
-		return RES_OK;
-	} else {
-		/// Карта по SDIO.
-		return RES_ERROR;
-	}
+	return ( DRESULT )ayplayer_sd_obj_array[ pdrv ]->read_sector( sector, buff, count, 1000 );
 }
 
 DRESULT disk_write ( BYTE pdrv, const BYTE* buff, DWORD sector, UINT count ) {
-	if ( pdrv == 0 ) {
-		for (UINT i = 0; i < count; i++) {
-			if ( ayplayer_sd2_obj.write_sector( buff, sector ) != EC_SD_RESULT::OK ) return RES_ERROR;
-			sector++;
-			buff += 512;
-		}
-		return RES_OK;
-	} else {
-		/// Карта по SDIO.
-		return RES_ERROR;
-	}
+	return ( DRESULT )ayplayer_sd_obj_array[ pdrv ]->write_sector( buff, sector, count, 1000 );
 }
 
 DRESULT disk_ioctl ( BYTE pdrv, BYTE cmd, void* buff ) {
