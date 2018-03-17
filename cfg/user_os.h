@@ -39,6 +39,8 @@
 #define USER_OS_STATIC_MUTEX                                SemaphoreHandle_t
 // Метод должен создать в заранее выделенной переменной-буфере mutex.
 #define USER_OS_STATIC_MUTEX_CREATE(P_BUF)                  xSemaphoreCreateMutexStatic( P_BUF )
+// E\Удалить мутекс.
+#define USER_OS_STATIC_MUTEX_DELETE( MUTEX )                vSemaphoreDelete( MUTEX )
 // Метод должен принять mutex в потоке.
 // Вне зависимости от успеха операции возвращается код окончания операции.
 // Параметр EXPECTATION (ожидание mutex-а) выставляется в системных тиках операционной системы.

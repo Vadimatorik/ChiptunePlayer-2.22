@@ -19,7 +19,6 @@ extern module_shift_register						sr_ay;
 extern module_shift_register						sr_button;
 extern buttons_through_shift_register_one_in		ayplayer_button;
 extern ad5204< 2 >									sound_dp;
-extern microsd_spi									ayplayer_sd2_obj;
 extern ay_ym_file_mode								ayplayer_ay_file_mode_obj;
 
 ay_player_mc_strcut ay_mcu = {

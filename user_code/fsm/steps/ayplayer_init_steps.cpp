@@ -20,7 +20,8 @@ void ay_player_class::start ( void ) {
 
 int ay_player_class::fsm_step_func_wdt_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
 	UNUSED( previous_step );
-	obj->mcu->wdt->init();
+	UNUSED( obj );
+	//obj->mcu->wdt->init();
 	return 0;
 }
 

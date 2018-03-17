@@ -23,7 +23,7 @@ const rcc_cfg ay_player_clock_cfg[] = {
 			.PLLM                   = 16,
 			.PLLN                   = 240,
 			.PLLP                   = RCC_PLLP_DIV2,
-			.PLLQ                   = 5
+			.PLLQ                   = 15
     	},
 
 		.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK,
@@ -86,7 +86,7 @@ const rcc_cfg ay_player_clock_cfg[] = {
 			.PLLM                   = 16,
 			.PLLN                   = 240,
 			.PLLP                   = RCC_PLLP_DIV2,
-			.PLLQ                   = 5
+			.PLLQ                   = 1
 		},
 
 		.SYSCLKSource   = RCC_SYSCLKSOURCE_HSI,
@@ -118,7 +118,7 @@ const rcc_cfg ay_player_clock_cfg[] = {
 			.PLLM                   = 16,
 			.PLLN                   = 240,
 			.PLLP                   = RCC_PLLP_DIV2,
-			.PLLQ                   = 5
+			.PLLQ                   = 1
 		},
 
 		.SYSCLKSource   = RCC_SYSCLKSOURCE_HSI,

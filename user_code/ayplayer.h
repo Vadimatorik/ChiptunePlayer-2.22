@@ -19,8 +19,11 @@
 #include "makise_gui.h"
 #include "makise.h"
 
+#include <string>
+
 #define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj )
-#define TB_MAIN_TASK_SIZE				500
+#define HANDLER_FSM_INPUT_DATA					const fsm_step< ay_player_class >* previous_step, ay_player_class* obj
+#define TB_MAIN_TASK_SIZE				10000
 #define MAIN_TASK_PRIO					2
 
 struct ay_player_mc_strcut {
@@ -94,12 +97,13 @@ public:
 	HANDLER_FSM_STEP( fsm_step_func_init_gui );
 	HANDLER_FSM_STEP( fsm_step_func_fat_init );
 	HANDLER_FSM_STEP( fsm_step_func_sd1_check );
-
+	HANDLER_FSM_STEP( fsm_step_func_check_playlist_sys );
+	HANDLER_FSM_STEP( fsm_step_func_create_playlist_sys );
 
 	//
-	//HANDLER_FSM_STEP( );
-	//HANDLER_FSM_STEP( );
-	//HANDLER_FSM_STEP( );
+	//
+	//
+	//
 	//HANDLER_FSM_STEP( );
 	//HANDLER_FSM_STEP( );
 	//HANDLER_FSM_STEP( );
@@ -111,6 +115,7 @@ public:
 	HANDLER_FSM_STEP( fsm_step_func_gui_fall );
 	HANDLER_FSM_STEP( fsm_step_func_logger_fall );
 	HANDLER_FSM_STEP( fsm_step_func_fat_fall );
+	HANDLER_FSM_STEP( fsm_step_func_sd1_fall );
 	///
 
 
@@ -131,4 +136,6 @@ private:
 	USER_OS_STATIC_TASK_STRUCT_TYPE			ts_main_task;
 
 	FATFS							f;
+	FILINFO							sd1_fi;
+	DIR								sd1_fdir;
 };

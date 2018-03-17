@@ -17,7 +17,7 @@ microsd_spi ayplayer_sd2_obj( &ayplayer_microsd_card_sd2_cfg );
 
 const microsd_sdio_cfg_t ayplayer_microsd_card_sd1_cfg = {
 	.wide						= SDIO_BUS_WIDE_1B,
-	.div						= IS_SDIO_CLKDIV( 0 ),
+	.div						= IS_SDIO_CLKDIV( 0xFF ),
 	.dma_tx						= DMA2_Stream3,
 	.dma_rx						= DMA2_Stream6,
 	.dma_tx_ch					= DMA_CHANNEL_4,
