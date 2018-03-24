@@ -16,18 +16,23 @@ microsd_spi_cfg_t ayplayer_microsd_card_sd2_cfg = {
 microsd_spi ayplayer_sd2_obj( &ayplayer_microsd_card_sd2_cfg );
 
 const microsd_sdio_cfg_t ayplayer_microsd_card_sd1_cfg = {
-	.wide						= SDIO_BUS_WIDE_1B,
-	.div						= IS_SDIO_CLKDIV( 0xFF ),
-	.dma_tx						= DMA2_Stream3,
+	.wide						= SDIO_BUS_WIDE_4B,
+	.div						= 0xFF,
 	.dma_rx						= DMA2_Stream6,
-	.dma_tx_ch					= DMA_CHANNEL_4,
-	.dma_rx_ch					= DMA_CHANNEL_4
+	.dma_rx_ch					= DMA_CHANNEL_4,
+	.dma_rx_irq_prio			= 6,
+	.sdio_irq_prio				= 0								// Не используется.
 };
 
 microsd_sdio ayplayer_sd1_obj( &ayplayer_microsd_card_sd1_cfg );
 
 extern "C" {
-	void DMA2_Stream6_IRQHandler		( void ) { ayplayer_sd1_obj.dma_rx_handler(); };
-	void DMA2_Stream3_IRQHandler		( void ) { ayplayer_sd1_obj.dma_tx_handler(); };
-	void SDIO_IRQHandler				( void ) { ayplayer_sd1_obj.sdio_handler(); };
+	void dma2_stream6_handler		( void ) { ayplayer_sd1_obj.dma_rx_handler(); };
 };
+
+// number = 1/0.
+// return 1 - карта есть.
+uint32_t check_sd ( uint32_t number ) {
+	( void )number;
+	return 1;
+}

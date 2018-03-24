@@ -52,9 +52,9 @@ spi_master_8bit ayplayer_spi3_obj( &spi3_cfg );
  */
 extern "C" {
 
-void DMA2_Stream5_IRQHandler ( void ) { ayplayer_spi1_obj.handler(); }
-void DMA1_Stream3_IRQHandler ( void ) { ayplayer_spi2_obj.handler(); }
-void DMA1_Stream4_IRQHandler ( void ) { ayplayer_spi2_obj.handler(); }
-void DMA1_Stream7_IRQHandler ( void ) { ayplayer_spi3_obj.handler(); }
+void dma2_stream5_handler ( void ) { ayplayer_spi1_obj.handler(); }
+void dma1_stream3_handler ( void ) { ayplayer_spi2_obj.handler(); }
+void dma1_stream4_handler ( void ) { ayplayer_spi2_obj.handler(); }
+void dma1_stream7_handler ( void ) { ayplayer_spi3_obj.handler(); }
 
 }

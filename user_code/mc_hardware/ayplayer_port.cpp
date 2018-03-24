@@ -23,12 +23,12 @@ const pin_cfg ayplayer_lcd_cs_pin_cfg				= { GPIOB, { GPIO_PIN_2, GPIO_MODE_OUTP
 
 // micro-sd ( SDIO + GPIO ).
 const pin_cfg ayplayer_sd1_push_pin_cfg				= { GPIOC, { GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_PULLUP, GPIO_SPEED_FREQ_LOW, 0 } };
-const pin_cfg ayplayer_sd1_smd_pin_cfg				= { GPIOD, { GPIO_PIN_2, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
-const pin_cfg ayplayer_sd1_d0_pin_cfg				= { GPIOC, { GPIO_PIN_8, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
-const pin_cfg ayplayer_sd1_d1_pin_cfg				= { GPIOC, { GPIO_PIN_9, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
-const pin_cfg ayplayer_sd1_d2_pin_cfg				= { GPIOC, { GPIO_PIN_10, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
-const pin_cfg ayplayer_sd1_d3_pin_cfg				= { GPIOC, { GPIO_PIN_11, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
-const pin_cfg ayplayer_sd1_clk_pin_cfg				= { GPIOC, { GPIO_PIN_12, GPIO_MODE_AF_PP, GPIO_PULLUP, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg ayplayer_sd1_smd_pin_cfg				= { GPIOD, { GPIO_PIN_2, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg ayplayer_sd1_d0_pin_cfg				= { GPIOC, { GPIO_PIN_8, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg ayplayer_sd1_d1_pin_cfg				= { GPIOC, { GPIO_PIN_9, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg ayplayer_sd1_d2_pin_cfg				= { GPIOC, { GPIO_PIN_10, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg ayplayer_sd1_d3_pin_cfg				= { GPIOC, { GPIO_PIN_11, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
+const pin_cfg ayplayer_sd1_clk_pin_cfg				= { GPIOC, { GPIO_PIN_12, GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, GPIO_AF12_SDIO } };
 
 // USB ( USB_FS + GPIO ).
 const pin_cfg ayplayer_otg_fs_vbus_pin_cfg			= { GPIOA, { GPIO_PIN_9, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0 } };

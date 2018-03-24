@@ -18,6 +18,6 @@ uart usart3_obj( &usart3_cfg );
  * Обработчик прерывания принятого байта
  * (или ошибки при принятии).
  */
-extern "C" void USART3_IRQHandler ( void ) {
+extern "C" void usart3_handler ( void ) {
 	usart3_obj.irq_handler();
 }

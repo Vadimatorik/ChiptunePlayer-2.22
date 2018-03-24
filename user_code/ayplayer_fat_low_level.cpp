@@ -24,7 +24,7 @@ DSTATUS disk_initialize ( BYTE pdrv ) {
 }
 
 DSTATUS disk_status ( BYTE pdrv ) {
-	return ( DSTATUS )ayplayer_sd_obj_array[ pdrv ]->send_status();
+	return ( DSTATUS )ayplayer_sd_obj_array[ pdrv ]->get_status();
 }
 
 DRESULT disk_read ( BYTE pdrv, BYTE* buff, DWORD sector, UINT count ) {

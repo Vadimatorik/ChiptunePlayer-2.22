@@ -23,7 +23,7 @@ const rcc_cfg ay_player_clock_cfg[] = {
 			.PLLM                   = 16,
 			.PLLN                   = 240,
 			.PLLP                   = RCC_PLLP_DIV2,
-			.PLLQ                   = 15
+			.PLLQ                   = 5
     	},
 
 		.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK,

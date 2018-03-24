@@ -60,8 +60,8 @@ NVIC value of 255. */
 /*
  * FreeRTOS забирает себе эти 2 handler-а.
  */
-#define		vPortSVCHandler		SVC_Handler
-#define		xPortPendSVHandler	PendSV_Handler
+#define		vPortSVCHandler		sv_call_handler
+#define		xPortPendSVHandler	pend_sv_handler
 
 #ifdef __cplusplus
 }

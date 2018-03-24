@@ -21,7 +21,7 @@ void ay_player_class::start ( void ) {
 int ay_player_class::fsm_step_func_wdt_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
 	UNUSED( previous_step );
 	UNUSED( obj );
-	//obj->mcu->wdt->init();
+	obj->mcu->wdt->init();
 	return 0;
 }
 
@@ -34,52 +34,53 @@ int ay_player_class::fsm_step_func_gpio_init ( const fsm_step< ay_player_class >
 int ay_player_class::fsm_step_func_rcc_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
 	UNUSED( previous_step );
 	RCC_RESULT r;
-		/// Пытаемся завестись в 120 МГц от внешнего кварца.
-		r = obj->mcu->rcc->set_cfg( 0 );
 
+	/// Пытаемся завестись в 120 МГц от внешнего кварца.
+	r = obj->mcu->rcc->set_cfg( 0 );
+
+	if ( r == RCC_RESULT::OK ) {
+		obj->rcc_index = 0;
+		return 0;
+	}
+
+	/// Если упал именно внешний кварц.
+	if ( r == RCC_RESULT::ERROR_OSC_INIT ) {
+		/// Пробуем от внутреннего в 120 МГц.
+		r = obj->mcu->rcc->set_cfg( 1 );
 		if ( r == RCC_RESULT::OK ) {
-			obj->rcc_index = 0;
+			obj->rcc_index = 1;
 			return 0;
 		}
 
-		/// Если упал именно внешний кварц.
-		if ( r == RCC_RESULT::ERROR_OSC_INIT ) {
-			/// Пробуем от внутреннего в 120 МГц.
-			r = obj->mcu->rcc->set_cfg( 1 );
-			if ( r == RCC_RESULT::OK ) {
-				obj->rcc_index = 1;
-				return 0;
-			}
 
-
-			/// С PLL мертв, пытаемся стартануть от
-			/// внутреннего на стандартной
-			/// конфигурации без PLL.
-			r = obj->mcu->rcc->set_cfg( 2 );
-			if ( r == RCC_RESULT::OK ) {
-				obj->rcc_index = 2;
-				return 0;
-			}
-
-			return 1;		/// Что-то очень не так.
-		} else {
-			/// Упал PLL. Пробуем просто на внешний.
-			r = obj->mcu->rcc->set_cfg( 3 );
-			if ( r == RCC_RESULT::OK ) {
-				obj->rcc_index = 3;
-				return 0;
-			}
-
-
-			/// Внешний кварц тоже мертв...
-			r = obj->mcu->rcc->set_cfg( 2 );
-			if ( r == RCC_RESULT::OK ) {
-				obj->rcc_index = 2;
-				return 0;
-			}
-
-			return 1;		/// Что-то очень не так.
+		/// С PLL мертв, пытаемся стартануть от
+		/// внутреннего на стандартной
+		/// конфигурации без PLL.
+		r = obj->mcu->rcc->set_cfg( 2 );
+		if ( r == RCC_RESULT::OK ) {
+			obj->rcc_index = 2;
+			return 0;
 		}
+
+		return 1;		/// Что-то очень не так.
+	} else {
+		/// Упал PLL. Пробуем просто на внешний.
+		r = obj->mcu->rcc->set_cfg( 3 );
+		if ( r == RCC_RESULT::OK ) {
+			obj->rcc_index = 3;
+			return 0;
+		}
+
+		/// Внешний кварц тоже мертв...
+		r = obj->mcu->rcc->set_cfg( 2 );
+		if ( r == RCC_RESULT::OK ) {
+			obj->rcc_index = 2;
+			return 0;
+		}
+
+		return 1;		/// Что-то очень не так.
+	}
+
 	return 0;
 }
 
