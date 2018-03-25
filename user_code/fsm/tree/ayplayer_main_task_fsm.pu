@@ -2,83 +2,280 @@
 
 [*] --> start
 
-state "init_gui" as start {
-start: Инициализируется 
-start: драйвер дисплея.
+'Цветовая схема
+skinparam backgroundColor LightBlue 
+skinparam state {
+BackgroundColor WhiteSmoke
 }
 
-start --> fgui: 1 
-start --> fl: 2
-state "gui_fall" as fgui {
-fgui: Ошибка в библиотеке 
-fgui: MakiseGUI. Может быть 
-fgui: вызвана проблемами с 
-fgui: драйвером LCD (и SPI).
-fgui: Микроконтроллер будет 
-fgui: перезагружен.
+' Перезагрузка.
+
+state "mcReboot" as reset {
+reset: Программная перезагрузка 
+reset: микроконтроллера.
 }
 
-state "logger_fall" as fl {
-fl: Ошибка в работе логгера.
-fl: Может быть вызвана 
-fl: неисправностью UART-модуля.
-fl: Микроконтроллер будет 
-fl: перезагружен.
+' Все обработчики исключительных ситуаций.
+
+note right of fgui
+Может быть 
+вызвана проблемами с 
+драйвером LCD или SPI.
+end note
+
+state "FallGUI" as fgui {
+fgui: Запись в log 
+fgui: деталей ситуации.
+fgui: 
+fgui: Возвращаемое значение:
+fgui: <color:green><b>0</b>\t: информация записана.</color>
+fgui: <color:red><b>1</b>\t: ошибка logger-а.</color>
 }
 
-start --> s1: 0
+fgui --> reset: 0
+fgui --> fl: 1
 
-state "fat_init" as s1 {
-s1: Инициализируется FAT.
+note right of fl
+Может быть вызвана 
+неисправностью 
+UART-модуля.
+
+Пока никак не 
+обрабатываем.
+end note
+
+state "fallLogger" as fl {
+fl: Никаких действий 
+fl: не предпринимается.
 }
 
-s1 --> ffat: 1
-s1 --> fl: 2
-
-state "fat_fall" as ffat {
-ffat: Инициализация FatFS не удалась. 
-ffat: Микроконтроллер будет 
-ffat: перезагружен.
+state "fallFAT" as ffat {
+ffat: Запись в log 
+ffat: деталей ситуации.
+ffat:
+ffat: <color:green><b>0</b>\t: информация записана.</color>
+ffat: <color:red><b>1</b>\t: ошибка logger-а.</color>
 }
 
-s1 --> s2: 0
+ffat --> reset: 0
+ffat --> fl: 1
 
-state "sd1_check" as s2 {
-s2: Проверяем наличие карты 
-s2: пользователя. 
-s2: (SD1 подключена по SDIO).
-s2: Карта обнаружена:\t\t0.
-s2: Карта не была обнаружена:\t1.
-s2: Ошибка логгера:\t\t\t2.
+fl --> reset: 0
+
+state "fallSD1Init" as fsd1 {
+fsd1: Производится попытка инициализировать карту повторно.
+fsd1:
+fsd1: Возвращаемое значение:
+fsd1: <color:green><b>0</b>\t: успешная инициализация.</color>
+fsd1: <color:red><b>1</b>\t: ошибка при инициализации</color>.
+fsd1: <b>2</b>\t: карта извлечена.
+fsd1: <color:red><b>4</b>\t: ошибка logger-а.</color>.
+
+	state fsdioStart {
+	fsdioStart: Инициализируется счетчик 
+	fsdioStart: попыток переинициализации SD1.
+	}
+
+	fsdioStart --> fsdioCheckLoop: 0
+
+	state fsdioCheckLoop {
+	fsdioCheckLoop: Проверка оставшихся итераций карты.
+	fsdioCheckLoop:
+	fsdioCheckLoop: Возвращаемое значение:
+	fsdioCheckLoop: <color:green><b>0</b>\t: количество попыток инициализации SD1 не исчерпано</color>.
+	fsdioCheckLoop: <color:red><b>1</b>\t: попытки инициализации SD1 были исчерпаны</color>.
+	fsdioCheckLoop: <b>2</b>\t: карты была извлечена.
+	}
+
+	fsdioCheckLoop --> initSD1:			0
+	fsdioCheckLoop --> sendAnswer:		1
+	fsdioCheckLoop --> sendAnswer:		2
+
+	state initSD1 {
+	initSD1: Инициализация карты.
+	initSD1:
+	initSD1: Возвращаемое значение:
+	initSD1: <color:green><b>0</b>\t: карта инициализирована</color>.
+	initSD1: <color:red><b>1</b>\t: карта не была инициализирована</color>.
+	}
+
+	initSD1 --> sendAnswer:		0
+	initSD1 --> decLoop:		1
+
+	state decLoop {
+	decLoop: Декрементируется счетчик.
+	}
+
+	decLoop --> fsdioCheckLoop: 0
+
+	state sendAnswer {
+	sendAnswer: Отправляется ответ 
+	sendAnswer: наружу вершины.
+	}
 }
 
-s2 --> s3: 0
-s2 --> fsdio: 1
-s2 --> fl: 2
+fsd1 --> reset: 1
+fsd1 --> fl:	4
+
+' Основная логика
+
+state "GUIInit" as start {
+start: Инициализация драйвера дисплея.
+start:
+start: Возвращаемое значение:
+start: <color:green><b>0</b>\t: успешная инициализация.</color>
+start: <color:red><b>1</b>\t: ошибка при инициализации</color>.
+}
+
+start --> s1:			0
+start --> fgui:			1 
+start --> fl:			2
+
+state "FATInit" as s1 {
+s1: Инициализация FATFS.
+s1:
+s1: Возвращаемое значение:
+s1: <color:green><b>0</b>\t: успешная инициализация.</color>
+s1: <color:red><b>1</b>\t: ошибка при инициализации</color>.
+}
+
+s1 --> s2:				0
+s1 --> ffat:			1
+
+note right of s2
+SD1 подключена по 4-х 
+битному SDIO.
+end note
+
+state "checkAndInitSD1" as s2 {
+s2: Проверка наличия карты 
+s2: пользователя и ее начальная
+s2: инициализация.
+s2:
+s2: Возвращаемое значение:
+s2: <color:green><b>0</b>\t: карта обнаружена и инициализирована.</color>
+s2: <b>1</b>\t: карта отсутствует.
+s2: <color:red><b>2</b>\t: ошибка при инициализации</color>.
+s2: <color:red><b>3</b>\t: ошибка logger-а.</color>
+}
+
+s2 --> s3:			0
+s2 --> s2_0:		1
+s2 --> fsd1:		2
+s2 --> fl:			3
+
+fsd1 --> s3:		0
+fsd1 --> s2_0:		2
+
+state "waitSetSD1" as s2_0 {
+s2_0: Если сообщение еще не было выведено,
+s2_0: вывести сообщение на экран сообщения 
+s2_0: с требованием установить 
+s2_0: SD1 карту с последующим ее 
+s2_0: ожиданием.
+s2_0:
+s2_0: Возвращаемое значение:
+s2_0: <color:green><b>0</b>\t: карта подключена.</color>
+s2_0: <color:red><b>1</b>\t: ошибка logger-а.</color>
+s2_0: <color:red><b>2</b>\t: ошибка MakiseGUI.</color>
+}
+
+s2_0 --> s2:			0
+s2_0 --> fl:			1
+s2_0 --> fgui:			2
+
 
 state "check_playlist_sys" as s3 {
 s3: Проверяем наличие файла-списка
 s3: с треками в главной директории.
 s3: Возвращаемое значение:
+s3: Файл найден:\t\t0.
 s3: Ошибка SD карты:\t1.
 s3: Ошибка логгера:\t2.
 s3: Файла нет:\t\t3.
 }
 
-state "sd1_fall" as fsdio {
-fsdio: Упала SDIO.
-fsdio: Перезагружаем МК.
-}
 
+
+
+
+
+
+
+
+s3 --> s6: 0
 s3 --> fsdio: 1
 s3 --> fl: 2
 s3 --> s4: 3
 
 state "create_playlist_sys" as s4 {
+s4: Сканируются все файлы с 
+s4: поддерживаемыми расширениями: 
+s4: psg
+s4:
 s4: Возвращаемое значение:
+s4: Файл создан:\t\t\t\t\t0.
 s4: Ошибка SD карты (аппартная):\t1.
 s4: Ошибка логгера:\t\t\t\t2.
 s4: Не удается создать файл:\t\t3.
 }
 
+s4 --> s5: 0
+s4 --> fsdio: 1
+s4 --> fl: 2
+s4 --> ffat: 3
+
+state "sort_playlist_sys" as s5 {
+s5: Создаются файлы с различными 
+s5: типами сортировки данных:
+s5: По имени: playlist_name_sort.sys
+s5: По длине: playlist_length_sort.sys
+s5:
+s5: Файлы созданы:\t\t\t\t0.
+s5: Ошибка SD карты (аппартная):\t1.
+s5: Ошибка логгера:\t\t\t\t2.
+s5: Не удается создать файл:\t\t3.
+}
+
+s5 --> s6: 0
+s5 --> fsdio: 1
+s5 --> fl: 2
+s5 --> ffat: 3
+
+state "sd2_check" as s6 {
+s6: Проверяем наличие системной карты.
+s6: (SD2 подключена по SPI).
+s6: Карта обнаружена:\t\t0.
+s6: Карта не была обнаружена:\t1.
+s6: Ошибка логгера:\t\t\t2.
+}
+
+s6 --> s6_0: 0
+
+state "check_cfg_file_in_sd2" as s6_0 {
+s6_0: Проверяем наличие файла
+s6_0: <<ayplayer.cfg>>.
+s6_0: Файл обнаружен:\t\t0.
+s6_0: Ошибка SD карты (аппартная):\t1.
+s6_0: Ошибка логгера:\t\t\t\t2.
+s6_0: Файл отсутствует:\t\t3.
+}
+
+s6_0 --> s6_1: 0
+
+state "copy_cfg_file_from_sd2" as s6_1 {
+s6_1: Копируем
+s6_1: 
+}
+
+state "ayplayer_ram_cfg_set" as s7 {
+
+}
+
+
 @enduml
+
+;state "main_window_show" as s6 {
+s6: Происходит вывод главного
+s6: окна приложения.
+}
