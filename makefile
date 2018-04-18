@@ -171,7 +171,7 @@ pfsm_clean:
 pfsm_rebuild:
 	cd plantuml_to_fsm_tree_generator/ && rm -R build
 	mkdir plantuml_to_fsm_tree_generator/build
-	cd plantuml_to_fsm_tree_generator/build && qmake -qt=qt5 .. && make
+	cd plantuml_to_fsm_tree_generator/build && qmake .. && make
 
 clean:	
 	@rm -R ./build
