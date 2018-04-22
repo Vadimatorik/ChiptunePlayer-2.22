@@ -126,7 +126,7 @@ PROJECT_OBJ_FILE		+= $(FSM_OBJ_FILE)
 
 %.cpp:	%.pu
 	@echo [PL] $<
-	@$(PL) $< $@ ay_player_class ayplayer.h
+	@$(PL) $< $@ AyPlayer ayplayer.h
 
 build/obj/%.o:	%.c	
 	@echo [CC] $<

@@ -1,7 +1,8 @@
 #include "rcc.h"
 #include "user_os.h"
+#include "ayplayer.h"
 
-const rcc_cfg ay_player_clock_cfg[] = {
+const rccCfg ay_player_clock_cfg[ AYPLAYER_RCC_CFG_COUNT ] = {
 	/*!
 	 * Индекс: 0
 	 * Источник: внешний резонатор на 16 МГц.
@@ -10,28 +11,31 @@ const rcc_cfg ay_player_clock_cfg[] = {
 	 * APB2:			60 МГц.
 	 * APB1:			30 МГц.
 	 */
-    {
-    	.OscillatorType = RCC_OSCILLATORTYPE_HSE,
-		.HSEState       = RCC_HSE_ON,
-		.LSEState       = RCC_LSE_OFF,
-		.HSIState       = RCC_HSI_OFF,
-		.HSICalibrationValue    = RCC_HSICALIBRATION_DEFAULT,
-		.LSIState               = RCC_LSI_OFF,
-		.PLL                    = {
-			.PLLState               = RCC_PLL_ON,
-			.PLLSource              = RCC_PLLSOURCE_HSE,
-			.PLLM                   = 16,
-			.PLLN                   = 240,
-			.PLLP                   = RCC_PLLP_DIV2,
-			.PLLQ                   = 5
-    	},
-
-		.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK,
-		.AHBCLKDivider  = RCC_SYSCLK_DIV1,
-		.APB1CLKDivider = RCC_HCLK_DIV4,
-		.APB2CLKDivider = RCC_HCLK_DIV2,
-
-		.f_latency = FLASH_LATENCY_3
+	{
+		.osc = {
+			.OscillatorType				=	RCC_OSCILLATORTYPE_HSE,
+			.HSEState					=	RCC_HSE_ON,
+			.LSEState					=	RCC_LSE_OFF,
+			.HSIState					=	RCC_HSI_OFF,
+			.HSICalibrationValue		=	RCC_HSICALIBRATION_DEFAULT,
+			.LSIState					=	RCC_LSI_OFF,
+			.PLL = {
+				.PLLState				=	RCC_PLL_ON,
+				.PLLSource				=	RCC_PLLSOURCE_HSE,
+				.PLLM					=	16,
+				.PLLN					=	240,
+				.PLLP					=	RCC_PLLP_DIV2,
+				.PLLQ					=	5
+			}
+		},
+		.clk = {
+			.ClockType					=	RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2,
+			.SYSCLKSource				=	RCC_SYSCLKSOURCE_PLLCLK,
+			.AHBCLKDivider				=	RCC_SYSCLK_DIV1,
+			.APB1CLKDivider				=	RCC_HCLK_DIV4,
+			.APB2CLKDivider				=	RCC_HCLK_DIV2,
+		},
+		.fLatency						=	FLASH_LATENCY_3
 	},
 	/*!
 	 * Индекс: 1
@@ -42,27 +46,30 @@ const rcc_cfg ay_player_clock_cfg[] = {
 	 * APB1:			30 МГц.
 	 */
 	{
-		.OscillatorType = RCC_OSCILLATORTYPE_HSI,
-		.HSEState       = RCC_HSE_OFF,
-		.LSEState       = RCC_LSE_OFF,
-		.HSIState       = RCC_HSI_ON,
-		.HSICalibrationValue    = RCC_HSICALIBRATION_DEFAULT,
-		.LSIState               = RCC_LSI_OFF,
-		.PLL                    = {                                         // Не используется. Значения на угад в реальном диапазоне.
-			.PLLState               = RCC_PLL_ON,
-			.PLLSource              = RCC_PLLSOURCE_HSI,
-			.PLLM                   = 16,
-			.PLLN                   = 240,
-			.PLLP                   = RCC_PLLP_DIV2,
-			.PLLQ                   = 5
+		.osc = {
+			.OscillatorType				=	RCC_OSCILLATORTYPE_HSI,
+			.HSEState					=	RCC_HSE_OFF,
+			.LSEState					=	RCC_LSE_OFF,
+			.HSIState					=	RCC_HSI_ON,
+			.HSICalibrationValue		=	RCC_HSICALIBRATION_DEFAULT,
+			.LSIState					=	RCC_LSI_OFF,
+			.PLL = {										 // Не используется. Значения на угад в реальном диапазоне.
+				.PLLState				=	RCC_PLL_ON,
+				.PLLSource				=	RCC_PLLSOURCE_HSI,
+				.PLLM					=	16,
+				.PLLN					=	240,
+				.PLLP					=	RCC_PLLP_DIV2,
+				.PLLQ					=	5
+			}
 		},
-
-		.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK,
-		.AHBCLKDivider  = RCC_SYSCLK_DIV1,
-		.APB1CLKDivider = RCC_HCLK_DIV4,
-		.APB2CLKDivider = RCC_HCLK_DIV2,
-
-		.f_latency = FLASH_LATENCY_3
+		.clk = {
+			.ClockType					=	RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2,
+			.SYSCLKSource				=	RCC_SYSCLKSOURCE_PLLCLK,
+			.AHBCLKDivider				=	RCC_SYSCLK_DIV1,
+			.APB1CLKDivider				=	RCC_HCLK_DIV4,
+			.APB2CLKDivider				=	RCC_HCLK_DIV2
+		},
+		.fLatency						=	FLASH_LATENCY_3
 	},
 	/*!
 	 * Индекс: 2
@@ -73,28 +80,30 @@ const rcc_cfg ay_player_clock_cfg[] = {
 	 * APB1:			16 МГц.
 	 */
 	{
-		.OscillatorType = RCC_OSCILLATORTYPE_HSI,
-		.HSEState       = RCC_HSE_OFF,
-		.LSEState       = RCC_LSE_OFF,
-		.HSIState       = RCC_HSI_ON,
-		.HSICalibrationValue    = RCC_HSICALIBRATION_DEFAULT,
-		.LSIState               = RCC_LSI_OFF,
-		.PLL                    = {                                         // Не используется. Значения на угад в реальном диапазоне.
-			.PLLState               = RCC_PLL_OFF,
-			/// Значения не важны.
-			.PLLSource              = RCC_PLLSOURCE_HSI,
-			.PLLM                   = 16,
-			.PLLN                   = 240,
-			.PLLP                   = RCC_PLLP_DIV2,
-			.PLLQ                   = 1
+		.osc = {
+			.OscillatorType				=	RCC_OSCILLATORTYPE_HSI,
+			.HSEState					=	RCC_HSE_OFF,
+			.LSEState					=	RCC_LSE_OFF,
+			.HSIState					=	RCC_HSI_ON,
+			.HSICalibrationValue		=	RCC_HSICALIBRATION_DEFAULT,
+			.LSIState					=	RCC_LSI_OFF,
+			.PLL = {
+				.PLLState				=	RCC_PLL_OFF,
+				.PLLSource				=	RCC_PLLSOURCE_HSI,
+				.PLLM					=	16,
+				.PLLN					=	240,
+				.PLLP					=	RCC_PLLP_DIV2,
+				.PLLQ					=	1
+			}
 		},
-
-		.SYSCLKSource   = RCC_SYSCLKSOURCE_HSI,
-		.AHBCLKDivider  = RCC_SYSCLK_DIV1,
-		.APB1CLKDivider = RCC_HCLK_DIV1,
-		.APB2CLKDivider = RCC_HCLK_DIV1,
-
-		.f_latency = FLASH_LATENCY_0
+		.clk = {
+			.ClockType					=	RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2,
+			.SYSCLKSource				=	RCC_SYSCLKSOURCE_HSI,
+			.AHBCLKDivider				=	RCC_SYSCLK_DIV1,
+			.APB1CLKDivider				=	RCC_HCLK_DIV1,
+			.APB2CLKDivider				=	RCC_HCLK_DIV1,
+		},
+		.fLatency						=	FLASH_LATENCY_0
 	},
 	/*!
 	 * Индекс: 3
@@ -105,29 +114,32 @@ const rcc_cfg ay_player_clock_cfg[] = {
 	 * APB1:			16 МГц.
 	 */
 	{
-		.OscillatorType = RCC_OSCILLATORTYPE_HSE,
-		.HSEState       = RCC_HSE_ON,
-		.LSEState       = RCC_LSE_OFF,
-		.HSIState       = RCC_HSI_OFF,
-		.HSICalibrationValue    = RCC_HSICALIBRATION_DEFAULT,
-		.LSIState               = RCC_LSI_OFF,
-		.PLL                    = {                                         // Не используется. Значения на угад в реальном диапазоне.
-			.PLLState               = RCC_PLL_OFF,
-			/// Значения не важны.
-			.PLLSource              = RCC_PLLSOURCE_HSI,
-			.PLLM                   = 16,
-			.PLLN                   = 240,
-			.PLLP                   = RCC_PLLP_DIV2,
-			.PLLQ                   = 1
+		.osc = {
+			.OscillatorType				=	RCC_OSCILLATORTYPE_HSE,
+			.HSEState					=	RCC_HSE_ON,
+			.LSEState					=	RCC_LSE_OFF,
+			.HSIState					=	RCC_HSI_OFF,
+			.HSICalibrationValue		=	RCC_HSICALIBRATION_DEFAULT,
+			.LSIState					=	RCC_LSI_OFF,
+			.PLL = {										 // Не используется. Значения на угад в реальном диапазоне.
+				.PLLState				=	RCC_PLL_OFF,
+				/// Значения не важны.
+				.PLLSource				=	RCC_PLLSOURCE_HSI,
+				.PLLM					=	16,
+				.PLLN					=	240,
+				.PLLP					=	RCC_PLLP_DIV2,
+				.PLLQ					=	1
+			},
 		},
-
-		.SYSCLKSource   = RCC_SYSCLKSOURCE_HSI,
-		.AHBCLKDivider  = RCC_SYSCLK_DIV1,
-		.APB1CLKDivider = RCC_HCLK_DIV1,
-		.APB2CLKDivider = RCC_HCLK_DIV1,
-
-		.f_latency = FLASH_LATENCY_0
+		.clk = {
+			.ClockType					=	RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2,
+			.SYSCLKSource				=	RCC_SYSCLKSOURCE_HSI,
+			.AHBCLKDivider				=	RCC_SYSCLK_DIV1,
+			.APB1CLKDivider				=	RCC_HCLK_DIV1,
+			.APB2CLKDivider				=	RCC_HCLK_DIV1,
+		},
+		.fLatency						=	FLASH_LATENCY_0
 	}
 };
 
-rcc ayplayer_rcc( ay_player_clock_cfg, M_SIZE_ARRAY( ay_player_clock_cfg ) );
+Rcc ayplayer_rcc( ay_player_clock_cfg, AYPLAYER_RCC_CFG_COUNT );

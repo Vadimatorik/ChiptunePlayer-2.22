@@ -3,11 +3,11 @@
 #include "spi.h"
 #include "ayplayer_os_object.h"
 
-extern pin ayplayer_dp_cs_pin_obj;
-extern pin ayplayer_shdn_pin_obj;
+extern Pin ayplayer_dp_cs_pin_obj;
+extern Pin ayplayer_shdn_pin_obj;
 
 extern ay_player_freertos_obj_strcut	os_data;
-extern spi_master_8bit					ayplayer_spi3_obj;
+extern SpiMaster8Bit					ayplayer_spi3_obj;
 
 ad5204_struct_cfg_t sound_dp_cfg = {
     .spi        = &ayplayer_spi3_obj,

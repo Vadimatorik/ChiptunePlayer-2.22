@@ -3,17 +3,17 @@
 #include "pin.h"
 #include "spi.h"
 
-extern pin							ayplayer_sd2_cs_pin_obj;
-extern spi_master_8bit				ayplayer_spi2_obj;
+extern Pin							ayplayer_sd2_cs_pin_obj;
+extern SpiMaster8Bit				ayplayer_spi2_obj;
 
-microsd_spi_cfg_t ayplayer_microsd_card_sd2_cfg = {
-    .cs         = &ayplayer_sd2_cs_pin_obj,
-	.p_spi      = &ayplayer_spi2_obj,
-    .slow       = SPI_BAUDRATEPRESCALER_256,
-    .fast       = SPI_BAUDRATEPRESCALER_256
+microsdSpiCfg ayplayer_microsd_card_sd2_cfg = {
+	.cs			= &ayplayer_sd2_cs_pin_obj,
+	.s			= &ayplayer_spi2_obj,
+	.slow		= SPI_BAUDRATEPRESCALER_256,
+	.fast		= SPI_BAUDRATEPRESCALER_256
 };
 
-microsd_spi ayplayer_sd2_obj( &ayplayer_microsd_card_sd2_cfg );
+MicrosdSpi ayplayer_sd2_obj( &ayplayer_microsd_card_sd2_cfg );
 
 const microsd_sdio_cfg_t ayplayer_microsd_card_sd1_cfg = {
 	.wide						= SDIO_BUS_WIDE_4B,
@@ -24,10 +24,10 @@ const microsd_sdio_cfg_t ayplayer_microsd_card_sd1_cfg = {
 	.sdio_irq_prio				= 0								// Не используется.
 };
 
-microsd_sdio ayplayer_sd1_obj( &ayplayer_microsd_card_sd1_cfg );
+MicrosdSdio ayplayer_sd1_obj( &ayplayer_microsd_card_sd1_cfg );
 
 extern "C" {
-	void dma2_stream6_handler		( void ) { ayplayer_sd1_obj.dma_rx_handler(); };
+	void dma2_stream6_handler		( void ) { ayplayer_sd1_obj.dmaRxHandler(); };
 };
 
 // number = 1/0.

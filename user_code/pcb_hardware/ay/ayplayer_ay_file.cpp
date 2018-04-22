@@ -1,11 +1,11 @@
-#include "ay_ym_low_lavel.h"
-#include "ay_ym_file_mode.h"
+#include "../../../module_chiptune/ay_ym_file_mode/ay_ym_file_mode.h"
+#include "../../../module_chiptune/ay_ym_low_lavel/ay_ym_low_lavel.h"
 #include "user_os.h"
 #include "pin.h"
 
-extern ay_ym_low_lavel						ayplayer_ay_low_obj;
-extern pin									ayplayer_chip_1_pwr_on_pin_obj;
-extern pin									ayplayer_chip_2_pwr_on_pin_obj;
+extern AyYmLowLavel						ayplayer_ay_low_obj;
+extern Pin									ayplayer_chip_1_pwr_on_pin_obj;
+extern Pin									ayplayer_chip_2_pwr_on_pin_obj;
 
 /*!
  * Метод позволяет отключать неиспользуемый в данный момент AY/YM чип
@@ -25,5 +25,5 @@ ay_ym_file_mode_struct_cfg_t ay_f_mode_cfg = {
     .pwr_chip_on                = pwr_chip_on
 };
 
-ay_ym_file_mode ayplayer_ay_file_mode_obj(&ay_f_mode_cfg);
+AyYmFileMode ayplayer_ay_file_mode_obj(&ay_f_mode_cfg);
 

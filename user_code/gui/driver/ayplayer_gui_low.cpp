@@ -3,7 +3,7 @@
 #include "makise.h"
 #include "makise_gui.h"
 
-extern mono_lcd_lib_st7565					ayplayer_lcd_obj;
+extern ST7565					ayplayer_lcd_obj;
 extern ay_player_freertos_obj_strcut		os_data;
 
 /*
@@ -21,7 +21,7 @@ uint8_t m_driver_init ( MakiseGUI* gui ) {
 uint8_t m_driver_start ( MakiseGUI* gui ) {
 	( void )gui;
 	if ( ayplayer_lcd_obj.reset()			!= BASE_RESULT::OK ) return M_ERROR;
-	if ( ayplayer_lcd_obj.set_contrast( 8 )	!= BASE_RESULT::OK ) return M_ERROR;
+	if ( ayplayer_lcd_obj.setContrast( 8 )	!= BASE_RESULT::OK ) return M_ERROR;
 	if ( ayplayer_lcd_obj.clear()			!= BASE_RESULT::OK ) return M_ERROR;
 	if ( ayplayer_lcd_obj.on()				!= BASE_RESULT::OK ) return M_ERROR;
 	return M_OK;

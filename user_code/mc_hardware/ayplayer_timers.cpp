@@ -1,7 +1,8 @@
 #include "timer.h"
 #include "user_os.h"
+#include "ayplayer.h"
 
-const clk_tim_param ay_clk_cfg_clk_tim_param[] = {
+const clkTimBaseCfg ay_clk_cfg_clk_tim_param[ AYPLAYER_RCC_CFG_COUNT ] = {
 	/// Индекс RCC: 0.
 	{
 		.period				= 15,
@@ -28,18 +29,17 @@ const clk_tim_param ay_clk_cfg_clk_tim_param[] = {
 	}
 };
 
-const tim_comp_one_channel_cfg ay_clk_cfg = {
+const timCompOneChannelCfg ay_clk_cfg = {
 	.tim			= TIM1,
-	.tim_channel	= HAL_TIM_ACTIVE_CHANNEL_1,
-	.p_cfg			= ay_clk_cfg_clk_tim_param,
-	.size_cfg		= M_SIZE_ARRAY( ay_clk_cfg_clk_tim_param ),
-	.out_channel	= TIM_CHANNEL_2,
+	.cfg			= ay_clk_cfg_clk_tim_param,
+	.countCfg		= AYPLAYER_RCC_CFG_COUNT,
+	.outChannel		= TIM_CHANNEL_2,
 	.polarity		= TIM_OCPOLARITY_LOW,
 };
 
-tim_comp_one_channel ay_clk_obj( &ay_clk_cfg );				/// Генератор частоты AY.
+TimCompOneChannel ay_clk_obj( &ay_clk_cfg );				/// Генератор частоты AY.
 
-const clk_tim_param interrupt_ay_cfg_clk_tim_param[] = {
+const clkTimBaseCfg interrupt_ay_cfg_clk_tim_param[] = {
 	/// Индекс RCC: 0.
 	{
 		.period				= 400,
@@ -66,16 +66,15 @@ const clk_tim_param interrupt_ay_cfg_clk_tim_param[] = {
 	},
 };
 
-const tim_interrupt_cfg interrupt_ay_cfg = {
+const timInterruptCfg interrupt_ay_cfg = {
 	.tim			= TIM6,
-	.tim_channel	= HAL_TIM_ACTIVE_CHANNEL_1,
-	.p_cfg			= interrupt_ay_cfg_clk_tim_param,
-	.size_cfg		= M_SIZE_ARRAY( interrupt_ay_cfg_clk_tim_param ),
+	.cfg			= interrupt_ay_cfg_clk_tim_param,
+	.countCfg		= AYPLAYER_RCC_CFG_COUNT,
 };
 
-tim_interrupt interrupt_ay_obj( &interrupt_ay_cfg );		/// Генератор прерываний.
+TimInterrupt interrupt_ay_obj( &interrupt_ay_cfg );		/// Генератор прерываний.
 
-const clk_tim_param lcd_pwm_cfg_clk_tim_param[] = {
+const clkTimBaseCfg lcd_pwm_cfg_clk_tim_param[] = {
 	/// Индекс RCC: 0.
 	{
 		.period				= 125,
@@ -102,13 +101,12 @@ const clk_tim_param lcd_pwm_cfg_clk_tim_param[] = {
 	},
 };
 
-const tim_pwm_one_channel_cfg lcd_pwm_cfg = {
+const timPwmOneChannelCfg lcd_pwm_cfg = {
 	.tim			= TIM3,
-	.tim_channel	= HAL_TIM_ACTIVE_CHANNEL_1,
-	.p_cfg			= interrupt_ay_cfg_clk_tim_param,
-	.size_cfg		= M_SIZE_ARRAY( lcd_pwm_cfg_clk_tim_param ),
-	.out_channel	= TIM_CHANNEL_1,
+	.cfg			= interrupt_ay_cfg_clk_tim_param,
+	.countCfg		= AYPLAYER_RCC_CFG_COUNT,
+	.outChannel		= TIM_CHANNEL_1,
 	.polarity		= TIM_OCPOLARITY_LOW
 };
 
-tim_pwm_one_channel lcd_pwm_obj( &lcd_pwm_cfg );			///< Подцветка дисплея.
+TimPwmOneChannel lcd_pwm_obj( &lcd_pwm_cfg );			///< Подцветка дисплея.
