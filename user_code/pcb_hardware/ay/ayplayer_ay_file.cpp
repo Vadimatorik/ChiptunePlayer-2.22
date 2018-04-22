@@ -18,7 +18,6 @@ void pwrChipOn ( uint32_t chip, bool state ) {
 	}
 }
 
-
 ayYmFileModeCfg ay_f_mode_cfg = {
 	.ay							= &ayplayer_ay_low_obj,
 	.microsdMutex				= nullptr,

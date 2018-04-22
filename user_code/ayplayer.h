@@ -27,8 +27,8 @@
 #define	AYPLAYER_RCC_CFG_COUNT					4
 
 
-#define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsm_step< AyPlayer >* previous_step, AyPlayer* obj )
-#define HANDLER_FSM_INPUT_DATA					const fsm_step< AyPlayer >* previous_step, AyPlayer* obj
+#define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsmStep< AyPlayer >* previousStep, AyPlayer* obj )
+#define HANDLER_FSM_INPUT_DATA					const fsmStep< AyPlayer >* previousStep, AyPlayer* obj
 #define TB_MAIN_TASK_SIZE				10000
 #define MAIN_TASK_PRIO					2
 
@@ -79,8 +79,10 @@ public:
 	void init			( void );
 	void start			( void );
 
+	HANDLER_FSM_STEP( fsmStepFuncbaseObjectInit );
+
+
 	/*
-	HANDLER_FSM_STEP( fsm_step_func_wdt_init );
 	HANDLER_FSM_STEP( fsm_step_func_gpio_init );
 	HANDLER_FSM_STEP( fsm_step_func_rcc_init );
 	HANDLER_FSM_STEP( fsm_step_func_debug_uart_init );
@@ -131,7 +133,7 @@ private:
 	/// Текущий режим работы RCC.
 	uint32_t						rccIndex = 0;
 
-	fsm_class< AyPlayer >	fsm;
+	fsmClass< AyPlayer >	fsm;
 
 	ayplayerMcStrcut*					mcu;
 	run_time_logger*					l;

@@ -1,3 +1,4 @@
+
 /Debug/
 /build/
 *.cproject
@@ -19,6 +20,6 @@ nbproject/
 *.pdf
 doc/software_design_documents/html/
 /fsm_build/
-/build-plantuml_to_fsm_tree_generator-lesson-unknown/
+build-plantuml_to_fsm_tree_generator-Desktop-Debug/
 plantuml_to_fsm_tree_generator
 *.autosave

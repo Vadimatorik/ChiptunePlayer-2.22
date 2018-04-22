@@ -1,4 +1,10 @@
 /*
+
+
+timRunTimeStatsInterruptObj.reinit( 0 );
+	timRunTimeStatsInterruptObj.on();
+
+
 void SystemClock_Config(void)
 {
 

@@ -1,4 +1,4 @@
-﻿PROJECT_NAME	:= ay_player
+﻿PROJECT_NAME	:= AyPlayer
 
 #**********************************************************************
 # Параметры сборки проекта.
@@ -127,7 +127,7 @@ PROJECT_OBJ_FILE		+= $(FSM_OBJ_FILE)
 
 %.cpp:	%.pu
 	@echo [PL] $<
-	@$(PL) $< $@ AyPlayer ayplayer.h
+	@$(PL) $< $@
 
 build/obj/%.o:	%.c	
 	@echo [CC] $<
@@ -164,7 +164,7 @@ all:	$(PROJECT_NAME).siz
 	
 pfsm_build:	
 	mkdir -p plantuml_to_fsm_tree_generator/build
-	cd plantuml_to_fsm_tree_generator/build && qmake -qt=qt5 .. && make
+	cd plantuml_to_fsm_tree_generator/build && qmake .. && make
 
 pfsm_clean:
 	cd plantuml_to_fsm_tree_generator/ && rm -R build

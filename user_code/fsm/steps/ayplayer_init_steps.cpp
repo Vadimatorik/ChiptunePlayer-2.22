@@ -4,7 +4,7 @@
 
 extern ayplayerFreertosObjStrcut	osData;
 
-//extern const fsm_step< ay_player_class > ay_player_class_wdt_init_fsm_step;
+extern const fsmStep< AyPlayer > AyPlayerBaseObjectInitFsmStep;
 //extern const fsm_step< ay_player_class > ay_player_class_freertos_obj_init_fsm_step;
 
 void AyPlayer::init ( void ) {
