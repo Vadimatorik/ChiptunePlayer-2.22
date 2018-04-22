@@ -4,20 +4,21 @@
 
 extern ay_player_freertos_obj_strcut	os_data;
 
-extern const fsm_step< ay_player_class > ay_player_class_wdt_init_fsm_step;
-extern const fsm_step< ay_player_class > ay_player_class_freertos_obj_init_fsm_step;
+//extern const fsm_step< ay_player_class > ay_player_class_wdt_init_fsm_step;
+//extern const fsm_step< ay_player_class > ay_player_class_freertos_obj_init_fsm_step;
 
-void ay_player_class::init ( void ) {
-	this->fsm.relinking( &ay_player_class_wdt_init_fsm_step, this );
+void AyPlayer::init ( void ) {
+	/*this->fsm.relinking( &ay_player_class_wdt_init_fsm_step, this );
 	this->fsm.start();
 	this->fsm.relinking( &ay_player_class_freertos_obj_init_fsm_step, this );
-	this->fsm.start();
+	this->fsm.start();*/
 }
 
-void ay_player_class::start ( void ) {
+void AyPlayer::start ( void ) {
 	vTaskStartScheduler();
 }
 
+/*
 int ay_player_class::fsm_step_func_wdt_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
 	UNUSED( previous_step );
 	UNUSED( obj );
@@ -187,5 +188,5 @@ int ay_player_class::fsm_step_func_button_init ( const fsm_step< ay_player_class
 	obj->pcb->button->init();
 	return 0;
 }
-
+*/
 

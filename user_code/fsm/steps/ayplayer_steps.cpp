@@ -11,6 +11,7 @@
 /*!
  * Основное дерево проекта.
  */
+/*
 extern const fsm_step< ay_player_class > ay_player_class_init_gui_fsm_step;
 
 extern "C" {
@@ -200,6 +201,5 @@ int ay_player_class::fsm_step_func_sd1_fall ( HANDLER_FSM_INPUT_DATA ) {
 	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
 	return 0;					/// Возвращено не будет.
 }
-
-
+*/
 
