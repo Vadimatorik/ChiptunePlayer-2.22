@@ -35,19 +35,19 @@ void pwr5VSet ( bool state ) {
 }
 
 const ayYmLowLavelCfg ay_low_cfg {
-	.sr					= &srAy,
-	.mutex				= &osData.m_spi3,
-	.srData				= sr_out_buf_ay,
-	.semaphoreSecOut	= &osData.s_play_tic,
-	.bdir				= &bdir,
-	.bc1				= &bc1,
-	.queueArray		= osData.q_ay_low,
-	.ayNumber			= 2,
-	.connectCfg			= array_connect_cfg,
-	.taskPrio			= 3,
-	.timFrequencyAy	= &ayClk,
-	.timInterruptTask	= nullptr,// &interrupt_ay_obj,
-	.pwrSet			= pwr5VSet
+	.sr					=	&srAy,
+	.mutex				=	&osData.m_spi3,
+	.srData				=	sr_out_buf_ay,
+	.semaphoreSecOut	=	&osData.s_play_tic,
+	.bdir				=	&bdir,
+	.bc1				=	&bc1,
+	.queueArray			=	osData.q_ay_low,
+	.ayNumber			=	2,
+	.connectCfg			=	array_connect_cfg,
+	.taskPrio			=	3,
+	.timFrequencyAy		=	&ayClk,
+	.timInterruptTask	=	nullptr,// &interrupt_ay_obj,
+	.pwrSet				=	pwr5VSet
 };
 
 AyYmLowLavel ayplayer_ay_low_obj( &ay_low_cfg );

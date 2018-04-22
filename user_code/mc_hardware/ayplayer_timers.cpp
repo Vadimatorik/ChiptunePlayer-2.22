@@ -39,7 +39,7 @@ const timCompOneChannelCfg ay_clk_cfg = {
 
 TimCompOneChannel ayClk( &ay_clk_cfg );				/// Генератор частоты AY.
 
-const clkTimBaseCfg interrupt_ay_cfg_clk_tim_param[] = {
+const clkTimBaseCfg interrupt_ay_cfg_clk_tim_param[ AYPLAYER_RCC_CFG_COUNT ] = {
 	/// Индекс RCC: 0.
 	{
 		.period				= 400,
@@ -74,7 +74,7 @@ const timInterruptCfg interrupt_ay_cfg = {
 
 TimInterrupt interruptAy( &interrupt_ay_cfg );		/// Генератор прерываний.
 
-const clkTimBaseCfg lcd_pwm_cfg_clk_tim_param[] = {
+const clkTimBaseCfg lcd_pwm_cfg_clk_tim_param[ AYPLAYER_RCC_CFG_COUNT ] = {
 	/// Индекс RCC: 0.
 	{
 		.period				= 125,
@@ -109,4 +109,45 @@ const timPwmOneChannelCfg lcd_pwm_cfg = {
 	.polarity		= TIM_OCPOLARITY_LOW
 };
 
-TimPwmOneChannel lcdPwm( &lcd_pwm_cfg );			///< Подцветка дисплея.
+TimPwmOneChannel lcdPwm( &lcd_pwm_cfg );			/// Подцветка дисплея.
+
+
+#ifdef configGENERATE_RUN_TIME_STATS
+
+/// Прерывания с частотый 20 кГц.
+const clkTimBaseCfg tim6BaseCfg[ AYPLAYER_RCC_CFG_COUNT ] = {
+	/// Индекс RCC: 0.
+	{
+		.period				=	0xFFFFFFFF,
+		.prescaler			=	1500 - 1,
+		.pulse				=	0
+	},
+	/// Индекс RCC: 1.
+	{
+		.period				=	0xFFFFFFFF,
+		.prescaler			=	1500 - 1,
+		.pulse				=	0
+	},
+	/// Индекс RCC: 2.
+	{
+		.period				=	0xFFFFFFFF,
+		.prescaler			=	800 - 1,
+		.pulse				=	0
+	},
+	/// Индекс RCC: 2.
+	{
+		.period				=	0xFFFFFFFF,
+		.prescaler			=	800 - 1,
+		.pulse				=	0
+	},
+};
+
+timCounterCfg		timRunTimeStatsInterruptCfg = {
+	.tim					= TIM6,
+	.cfg					= tim6BaseCfg,
+	.countCfg				= AYPLAYER_RCC_CFG_COUNT
+};
+
+TimCounter		timRunTimeStatsInterruptObj( &timRunTimeStatsInterruptCfg );
+
+#endif

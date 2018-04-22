@@ -19,7 +19,8 @@ MODULE_USER_CODE_OPTIMIZATION						:= -g3 -O0
 
 DEFINE_PROJ	:= -DSTM32F205xx -DSTM32F2 -DSTM32 -D__CHECK_DEVICE_DEFINES
 
-LD_FILES = -T module_stm32f2_low_level_by_st/LD/STM32F205xG.ld
+LD_FILES			= -T module_stm32f2_low_level_by_st/ld/STM32F205xG.ld
+STARTUPE_S_NAME		= module_stm32f2_low_level_by_st/startupe/startup_stm32f205xx.s
 
 MK_FLAGS									:= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft --specs=nano.specs
 
