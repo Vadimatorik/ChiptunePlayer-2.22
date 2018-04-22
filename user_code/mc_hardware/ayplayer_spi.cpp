@@ -10,7 +10,7 @@ uint32_t baudratePrescalerSpi1[ AYPLAYER_RCC_CFG_COUNT ] = {
 };
 
 /// Конфигурация SPI для работы с LCD
-SpiMaster8BitCfg spi1_cfg = {
+SpiMaster8BitCfg spi1Cfg = {
 	.SPIx						=	SPI1,
 
 	.pinCs						=	nullptr,
@@ -37,7 +37,7 @@ uint32_t baudratePrescalerSpi2[ AYPLAYER_RCC_CFG_COUNT ] = {
 };
 
 /// Конфигурация SPI2 для работы с micro-sd
-SpiMaster8BitCfg spi2_cfg = {
+SpiMaster8BitCfg spi2Cfg = {
 	.SPIx						=	SPI2,
 
 	.pinCs						=	nullptr,
@@ -64,7 +64,7 @@ uint32_t baudratePrescalerSpi3[ AYPLAYER_RCC_CFG_COUNT ] = {
 };
 
 /// Для сдвигового регистра и потенциометров.
-SpiMaster8BitCfg spi3_cfg = {
+SpiMaster8BitCfg spi3Cfg = {
 	.SPIx						=	SPI3,
 
 	.pinCs						=	nullptr,
@@ -83,18 +83,18 @@ SpiMaster8BitCfg spi3_cfg = {
 	.handlerReseivePrio			=	6
 };
 
-SpiMaster8Bit ayplayer_spi1_obj( &spi1_cfg, 1 );
-SpiMaster8Bit ayplayer_spi2_obj( &spi2_cfg, 1 );
-SpiMaster8Bit ayplayer_spi3_obj( &spi3_cfg, 1 );
+SpiMaster8Bit spi1( &spi1Cfg, 1 );
+SpiMaster8Bit spi2( &spi2Cfg, 1 );
+SpiMaster8Bit spi3( &spi3Cfg, 1 );
 
 /*!
  * Обработчики прерываний.
  */
 extern "C" {
 
-void dma2_stream5_handler ( void ) { ayplayer_spi1_obj.reseiveByteHandler(); }
-void dma1_stream3_handler ( void ) { ayplayer_spi2_obj.reseiveByteHandler(); }
-void dma1_stream4_handler ( void ) { ayplayer_spi2_obj.reseiveByteHandler(); }
-void dma1_stream7_handler ( void ) { ayplayer_spi3_obj.reseiveByteHandler(); }
+void dma2_stream5_handler ( void ) { spi1.reseiveByteHandler(); }
+void dma1_stream3_handler ( void ) { spi2.reseiveByteHandler(); }
+void dma1_stream4_handler ( void ) { spi2.reseiveByteHandler(); }
+void dma1_stream7_handler ( void ) { spi3.reseiveByteHandler(); }
 
 }

@@ -3,55 +3,55 @@
 #include "stm32f2xx_hal.h"
 
 extern Wdt											wdtObj;
-extern ayplayerGpio									ayplayer_gpio_struct_obj;
-extern GlobalPort									ayplayer_gp_obj;
+extern ayplayerGpio									gpioStruct;
+extern GlobalPort									gp;
 extern Uart											usart3_obj;
 extern Rcc											ayplayer_rcc;
-extern SpiMaster8Bit								ayplayer_spi1_obj;
-extern SpiMaster8Bit								ayplayer_spi2_obj;
-extern SpiMaster8Bit								ayplayer_spi3_obj;
-extern AdcOneChannel								adcBatObj;
-extern TimCompOneChannel							ay_clk_obj;
-extern TimPwmOneChannel								lcd_pwm_obj;
-extern TimInterrupt									interrupt_ay_obj;
-extern run_time_logger								ay_log_obj;
+extern SpiMaster8Bit								spi1;
+extern SpiMaster8Bit								spi2;
+extern SpiMaster8Bit								spi3;
+extern AdcOneChannel								adcBat;
+extern TimCompOneChannel							ayClk;
+extern TimPwmOneChannel								lcdPwm;
+extern TimInterrupt									interruptAy;
+extern run_time_logger								ayLog;
 
-extern ShiftRegister						sr_ay;
-extern ShiftRegister						sr_button;
-extern ButtonsThroughShiftRegisterOneInputPin		ayplayer_button;
-extern ad5204< 2 >									sound_dp;
-extern AyYmFileMode								ayplayer_ay_file_mode_obj;
+extern ShiftRegister								srAy;
+extern ShiftRegister								srButton;
+extern ButtonsThroughShiftRegisterOneInputPin		button;
+extern ad5204< 2 >									soundDp;
+extern AyYmFileMode									ayFileMode;
 
 ayplayerMcStrcut ayMcuCfg = {
 	.wdt						= &wdtObj,
-	.gpio						= &ayplayer_gpio_struct_obj,
-	.gp							= &ayplayer_gp_obj,
+	.gpio						= &gpioStruct,
+	.gp							= &gp,
 	.debugUart					= &usart3_obj,
 	.rcc						= &ayplayer_rcc,
-	.spi1						= &ayplayer_spi1_obj,
-	.spi2						= &ayplayer_spi2_obj,
-	.spi3						= &ayplayer_spi3_obj,
-	.adc1						= &adcBatObj,
-	.ayClkTim					= &ay_clk_obj,
-	.lcdPwmTim					= &lcd_pwm_obj,
-	.interruptAyTim				= &interrupt_ay_obj
+	.spi1						= &spi1,
+	.spi2						= &spi2,
+	.spi3						= &spi3,
+	.adc1						= &adcBat,
+	.ayClkTim					= &ayClk,
+	.lcdPwmTim					= &lcdPwm,
+	.interruptAyTim				= &interruptAy
 };
 
 ayplayerPcbStrcut ayPcbCfg = {
-	.ay							= &sr_ay,
-	.srButton					= &sr_button,
-	.button						= &ayplayer_button,
-	.dp							= &sound_dp
+	.ay							= &srAy,
+	.srButton					= &srButton,
+	.button						= &button,
+	.dp							= &soundDp
 };
 
 AyPlayerCfg ayCfg = {
 	.mcu						= &ayMcuCfg,
-	.l							= &ay_log_obj,
+	.l							= &ayLog,
 	.pcb						= &ayPcbCfg,
-	.ayF						= &ayplayer_ay_file_mode_obj
+	.ayF						= &ayFileMode
 };
 
-AyPlayer		ay( &ayCfg );
+AyPlayer											ay( &ayCfg );
 
 extern "C" {
 

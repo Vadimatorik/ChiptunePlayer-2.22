@@ -5,12 +5,12 @@
 #include "microsd_card_spi.h"
 #include "microsd_card_sdio.h"
 
-extern MicrosdSdio			ayplayer_sd1_obj;
-extern MicrosdSpi			ayplayer_sd2_obj;
+extern MicrosdSdio			sd1;
+extern MicrosdSpi			sd2;
 
 MicrosdBase* ayplayer_sd_obj_array[ 2 ] = {
-	&ayplayer_sd1_obj,
-	&ayplayer_sd2_obj
+	&sd1,
+	&sd2
 };
 
 extern "C" {

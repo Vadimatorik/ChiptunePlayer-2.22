@@ -121,9 +121,8 @@ const rccCfg ay_player_clock_cfg[ AYPLAYER_RCC_CFG_COUNT ] = {
 			.HSIState					=	RCC_HSI_OFF,
 			.HSICalibrationValue		=	RCC_HSICALIBRATION_DEFAULT,
 			.LSIState					=	RCC_LSI_OFF,
-			.PLL = {										 // Не используется. Значения на угад в реальном диапазоне.
+			.PLL = {
 				.PLLState				=	RCC_PLL_OFF,
-				/// Значения не важны.
 				.PLLSource				=	RCC_PLLSOURCE_HSI,
 				.PLLM					=	16,
 				.PLLN					=	240,

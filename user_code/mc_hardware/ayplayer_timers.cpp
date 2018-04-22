@@ -37,7 +37,7 @@ const timCompOneChannelCfg ay_clk_cfg = {
 	.polarity		= TIM_OCPOLARITY_LOW,
 };
 
-TimCompOneChannel ay_clk_obj( &ay_clk_cfg );				/// Генератор частоты AY.
+TimCompOneChannel ayClk( &ay_clk_cfg );				/// Генератор частоты AY.
 
 const clkTimBaseCfg interrupt_ay_cfg_clk_tim_param[] = {
 	/// Индекс RCC: 0.
@@ -72,7 +72,7 @@ const timInterruptCfg interrupt_ay_cfg = {
 	.countCfg		= AYPLAYER_RCC_CFG_COUNT,
 };
 
-TimInterrupt interrupt_ay_obj( &interrupt_ay_cfg );		/// Генератор прерываний.
+TimInterrupt interruptAy( &interrupt_ay_cfg );		/// Генератор прерываний.
 
 const clkTimBaseCfg lcd_pwm_cfg_clk_tim_param[] = {
 	/// Индекс RCC: 0.
@@ -109,4 +109,4 @@ const timPwmOneChannelCfg lcd_pwm_cfg = {
 	.polarity		= TIM_OCPOLARITY_LOW
 };
 
-TimPwmOneChannel lcd_pwm_obj( &lcd_pwm_cfg );			///< Подцветка дисплея.
+TimPwmOneChannel lcdPwm( &lcd_pwm_cfg );			///< Подцветка дисплея.

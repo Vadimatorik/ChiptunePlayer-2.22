@@ -702,7 +702,7 @@ Pin buttonDec			( &buttonDecCfg );
 /*!
  * Передаем основному объекту все используемые выводы.
  */
-ayplayerGpio gpio_struct = {
+ayplayerGpio gpioStruct = {
 	.lcd = {
 		.res				= &lcdRes,
 		.dc					= &lcdDc,
@@ -739,16 +739,16 @@ ayplayerGpio gpio_struct = {
  * Структура конфигурации объекта глобального порта.
  */
 const pinCfg gpCfg[] = {
-	// BUTTON.
+	/// BUTTON.
 	buttonIncCfg, buttonDecCfg,
 
-	// ADC.
+	/// ADC.
 	adcBatCfg, adcRightCfg, adcLeftPinCfg,
 
-	// MIDI (USART2).
+	/// MIDI (USART2).
 	midiUartRxCfg,
 
-	// LCD (SPI1 + TIMx).
+	/// LCD (SPI1 + TIMx).
 	lcdClkCfg, lcdPwmCfg, lcdMosiCfg,
 	lcdResCfg, lcdDcCfg, lcdCsCfg,
 
@@ -757,31 +757,31 @@ const pinCfg gpCfg[] = {
 	sd1D1Cfg, sd1D2Cfg, sd1D3Cfg,
 	sd1ClkCfg,
 
-	// USB (USB_FS + GPIO).
+	/// USB (USB_FS + GPIO).
 	otgFsVbusCfg, usbDmCfg, usbDpCfg,
 
-	// AY (GPIO + TIM1 + SPI3).
+	/// AY (GPIO + TIM1 + SPI3).
 	bdirCfg, ay1ResCfg, ay2ResCfg,
 	bc1Cfg, ayClkCfg, spiAudioClkCfg,
 	spiAudioTxCfg, shdnCfg,
 	spiAudioStRegCfg, dpCsCfg,
 
-	// SPI клавиатура (SPI общий AY, тут только вход).
+	/// SPI клавиатура (SPI общий AY, тут только вход).
 	buttonInCfg,
 
-	// PWR.
+	/// PWR.
 	pwr5vOnCfg, pwrOnCfg, tpStCfg,
 	tpChCfg, chip1PwrOnCfg,
 	chip2PwrOnCfg,
 
-	// MICRO-SD SPI2 (SPI2 + GPIO).
+	/// MICRO-SD SPI2 (SPI2 + GPIO).
 	sd2RxCfg, sd2TxCfg, sd2ClkCfg,
 	sd2CsCfg, sd2PushCfg,
 
-	// BOOT-USART (USART3).
+	/// BOOT-USART (USART3).
 	bootTxCfg, bootRxCfg,
 
-	// SWD.
+	/// SWD.
 	swdIoCfg, swdClkCfg,
 };
 

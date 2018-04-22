@@ -4,7 +4,7 @@
 #include "makise_gui.h"
 
 extern ST7565					ayplayer_lcd_obj;
-extern ay_player_freertos_obj_strcut		os_data;
+extern ayplayerFreertosObjStrcut		osData;
 
 /*
  * Методы-перестыки для связки драйвера экрана c MakiseGUI.

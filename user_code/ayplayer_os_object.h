@@ -7,7 +7,7 @@
 // Они (данные) будут выдаваться в прерывании с заданной частотой.
 #define QB_AY_LOW_SIZE					32
 
-struct ay_player_freertos_obj_strcut {
+struct ayplayerFreertosObjStrcut {
 	/// Queue.
 	USER_OS_STATIC_QUEUE					q_ay_low[2];
 	USER_OS_STATIC_QUEUE					q_ay_button;

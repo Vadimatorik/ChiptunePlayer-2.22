@@ -2,7 +2,7 @@
 #include "core_cm3.h"
 #include "ayplayer_os_object.h"
 
-extern ay_player_freertos_obj_strcut	os_data;
+extern ayplayerFreertosObjStrcut	osData;
 
 //extern const fsm_step< ay_player_class > ay_player_class_wdt_init_fsm_step;
 //extern const fsm_step< ay_player_class > ay_player_class_freertos_obj_init_fsm_step;

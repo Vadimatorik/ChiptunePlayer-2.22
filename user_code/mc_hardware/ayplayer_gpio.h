@@ -7,39 +7,39 @@
  * Комплектация выводов плеера по назначению.
  */
 struct gpioLcd {							/// LCD.
-	PinBase*	res;
-	PinBase*	dc;
-	PinBase*	cs;
+	PinBase*	const res;
+	PinBase*	const dc;
+	PinBase*	const cs;
 };
 
 struct gpioSpiSd {							/// SPI MicroSD.
-	PinBase*	cs;
+	PinBase*	const cs;
 };
 
 struct gpioShiftRegister {					/// Расширитель портов.
-	PinBase*	st;
+	PinBase*	const st;
 };
 
 struct gpioAyChip {							/// AY/YM.
-	PinBase*	bdir;
-	PinBase*	bc1;
+	PinBase*	const bdir;
+	PinBase*	const bc1;
 };
 
 struct gpioPwr {							/// Питание на плате.
-	PinBase*	chip_1_pwr;
-	PinBase*	chip_2_pwr;
-	PinBase*	pwr_5v;
-	PinBase*	all_pwr;
+	PinBase*	const chip_1_pwr;
+	PinBase*	const chip_2_pwr;
+	PinBase*	const pwr_5v;
+	PinBase*	const all_pwr;
 };
 
 struct gpioDigitalPotentiometer {			/// Цифровые потенциометры.
-	PinBase*	cs;
-	PinBase*	shdn;
+	PinBase*	const cs;
+	PinBase*	const shdn;
 };
 
 struct gpioVolumeRocker {					/// Качелька громкости.
-	PinBase*	inc;
-	PinBase*	dec;
+	PinBase*	const inc;
+	PinBase*	const dec;
 };
 
 /*!
