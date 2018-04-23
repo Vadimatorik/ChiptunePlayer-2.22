@@ -3,34 +3,27 @@
 #include "ayplayer_os_object.h"
 
 extern ayplayerFreertosObjStrcut	osData;
-
-extern const fsmStep< AyPlayer > AyPlayerBaseObjectInitFsmStep;
-//extern const fsm_step< ay_player_class > ay_player_class_freertos_obj_init_fsm_step;
+extern const fsmStep< AyPlayer > ayPlayerBaseHardwareInitFsmStep;
 
 void AyPlayer::init ( void ) {
-	/*this->fsm.relinking( &ay_player_class_wdt_init_fsm_step, this );
+	this->fsm.relinking( &ayPlayerBaseHardwareInitFsmStep, this );
 	this->fsm.start();
-	this->fsm.relinking( &ay_player_class_freertos_obj_init_fsm_step, this );
-	this->fsm.start();*/
+	//this->fsm.relinking( &ay_player_class_freertos_obj_init_fsm_step, this );
+	//this->fsm.start();
 }
 
 void AyPlayer::start ( void ) {
 	vTaskStartScheduler();
 }
 
-/*
-int ay_player_class::fsm_step_func_wdt_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-	UNUSED( obj );
-	obj->mcu->wdt->init();
+int AyPlayer::fsmStepFuncBaseHardwareInit ( HANDLER_FSM_INPUT_DATA ) {
+	obj->mcu->wdt->reinit();
+	obj->mcu->gp->reinitAllPorts();
 	return 0;
 }
 
-int ay_player_class::fsm_step_func_gpio_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-	obj->mcu->gp->reinit_all_ports();
-	return 0;
-}
+
+/*
 
 int ay_player_class::fsm_step_func_rcc_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
 	UNUSED( previous_step );

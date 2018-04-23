@@ -28,7 +28,7 @@
 
 
 #define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsmStep< AyPlayer >* previousStep, AyPlayer* obj )
-#define HANDLER_FSM_INPUT_DATA					const fsmStep< AyPlayer >* previousStep, AyPlayer* obj
+#define HANDLER_FSM_INPUT_DATA					__attribute__((unused)) const fsmStep< AyPlayer >* previousStep, AyPlayer* obj
 #define TB_MAIN_TASK_SIZE				10000
 #define MAIN_TASK_PRIO					2
 
@@ -79,7 +79,7 @@ public:
 	void init			( void );
 	void start			( void );
 
-	HANDLER_FSM_STEP( fsmStepFuncbaseObjectInit );
+	HANDLER_FSM_STEP( fsmStepFuncBaseHardwareInit );
 
 
 	/*
