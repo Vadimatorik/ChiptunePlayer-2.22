@@ -8,7 +8,7 @@
 extern AyPlayer							ay;
 
 #ifdef configGENERATE_RUN_TIME_STATS
-extern TimCounter		timRunTimeStatsInterruptObj;
+extern TimCounter						timRunTimeStats;
 #endif
 
 extern "C" {
@@ -20,7 +20,7 @@ void vConfigureTimerForRunTimeStats ( void ) {
 }
 
 uint32_t vGetRunTimeCounterValue ( void ) {
-	return timRunTimeStatsInterruptObj.getCounter();
+	return timRunTimeStats.getCounter();
 }
 
 #endif

@@ -115,7 +115,7 @@ TimPwmOneChannel lcdPwm( &lcd_pwm_cfg );			/// Подцветка дисплея
 #ifdef configGENERATE_RUN_TIME_STATS
 
 /// Прерывания с частотый 20 кГц.
-const clkTimBaseCfg tim6BaseCfg[ AYPLAYER_RCC_CFG_COUNT ] = {
+const clkTimBaseCfg tim5BaseCfg[ AYPLAYER_RCC_CFG_COUNT ] = {
 	/// Индекс RCC: 0.
 	{
 		.period				=	0xFFFFFFFF,
@@ -142,12 +142,12 @@ const clkTimBaseCfg tim6BaseCfg[ AYPLAYER_RCC_CFG_COUNT ] = {
 	},
 };
 
-timCounterCfg		timRunTimeStatsInterruptCfg = {
-	.tim					= TIM6,
-	.cfg					= tim6BaseCfg,
+timCounterCfg		timRunTimeStatsCfg = {
+	.tim					= TIM5,
+	.cfg					= tim5BaseCfg,
 	.countCfg				= AYPLAYER_RCC_CFG_COUNT
 };
 
-TimCounter		timRunTimeStatsInterruptObj( &timRunTimeStatsInterruptCfg );
+TimCounter		timRunTimeStats( &timRunTimeStatsCfg );
 
 #endif

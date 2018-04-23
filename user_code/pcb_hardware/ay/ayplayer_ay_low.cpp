@@ -5,7 +5,7 @@
 
 extern uint8_t								sr_out_buf_ay[2];
 extern ShiftRegister						srAy;
-extern ayplayerFreertosObjStrcut			osData;
+extern freeRtosObj							osData;
 
 extern Pin									bdir;
 extern Pin									bc1;
@@ -36,12 +36,12 @@ void pwr5VSet ( bool state ) {
 
 const ayYmLowLavelCfg ay_low_cfg {
 	.sr					=	&srAy,
-	.mutex				=	&osData.m_spi3,
+	.mutex				=	&osData.mSpi3,
 	.srData				=	sr_out_buf_ay,
-	.semaphoreSecOut	=	&osData.s_play_tic,
+	.semaphoreSecOut	=	&osData.sPlayTic,
 	.bdir				=	&bdir,
 	.bc1				=	&bc1,
-	.queueArray			=	osData.q_ay_low,
+	.queueArray			=	osData.qAyLow,
 	.ayNumber			=	2,
 	.connectCfg			=	array_connect_cfg,
 	.taskPrio			=	3,

@@ -22,6 +22,11 @@ extern ShiftRegister								srButton;
 extern ButtonsThroughShiftRegisterOneInputPin		button;
 extern ad5204< 2 >									soundDp;
 extern AyYmFileMode									ayFileMode;
+extern freeRtosObj									osData;
+
+#ifdef configGENERATE_RUN_TIME_STATS
+extern TimCounter									timRunTimeStats;
+#endif
 
 #ifdef __cplusplus
 extern "C" {

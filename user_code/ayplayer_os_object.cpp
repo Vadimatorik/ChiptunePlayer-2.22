@@ -2,4 +2,4 @@
 
 #include "ay_ym_low_lavel.h"
 
-ayplayerFreertosObjStrcut	osData;
+freeRtosObj	osData;

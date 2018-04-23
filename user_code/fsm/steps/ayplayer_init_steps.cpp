@@ -2,47 +2,46 @@
 #include "core_cm3.h"
 #include "ayplayer_os_object.h"
 
-extern ayplayerFreertosObjStrcut	osData;
-extern const fsmStep< AyPlayer > ayPlayerBaseHardwareInitFsmStep;
-
-void AyPlayer::init ( void ) {
-	this->fsm.relinking( &ayPlayerBaseHardwareInitFsmStep, this );
-	this->fsm.start();
-	//this->fsm.relinking( &ay_player_class_freertos_obj_init_fsm_step, this );
-	//this->fsm.start();
-}
-
 void AyPlayer::start ( void ) {
+	USER_OS_STATIC_TASK_CREATE( AyPlayer::mainTask, "main", TB_MAIN_TASK_SIZE, ( void* )this, MAIN_TASK_PRIO, this->tbMainask, &this->tsMainTask );
 	vTaskStartScheduler();
 }
 
-int AyPlayer::fsmStepFuncBaseHardwareInit ( HANDLER_FSM_INPUT_DATA ) {
-	obj->mcu->wdt->reinit();
-	obj->mcu->gp->reinitAllPorts();
-	return 0;
-}
+int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
+	BASE_RESULT r;
 
+	/*!
+	 * WDT init.
+	 */
+	r = obj->mcu->wdt->reinit( 0 );
+	assertParam( r == BASE_RESULT::OK );
 
-/*
+	/*!
+	 * GPIO init.
+	 */
+	///
+	r = obj->mcu->gp->reinitAllPorts();
+	assertParam( r == BASE_RESULT::OK );
 
-int ay_player_class::fsm_step_func_rcc_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-	RCC_RESULT r;
+	/*!
+	 * RCC и все объекты, зависящие от него.
+	 */
+	RCC_RESULT	rccRes;
 
 	/// Пытаемся завестись в 120 МГц от внешнего кварца.
-	r = obj->mcu->rcc->set_cfg( 0 );
+	rccRes = obj->setRccCfg( 0 );
 
-	if ( r == RCC_RESULT::OK ) {
-		obj->rcc_index = 0;
+	if ( rccRes == RCC_RESULT::OK ) {
+		obj->rccIndex = 0;
 		return 0;
 	}
 
 	/// Если упал именно внешний кварц.
-	if ( r == RCC_RESULT::ERROR_OSC_INIT ) {
+	if ( rccRes == RCC_RESULT::ERROR_OSC_INIT ) {
 		/// Пробуем от внутреннего в 120 МГц.
-		r = obj->mcu->rcc->set_cfg( 1 );
-		if ( r == RCC_RESULT::OK ) {
-			obj->rcc_index = 1;
+		rccRes = obj->setRccCfg( 1 );
+		if ( rccRes == RCC_RESULT::OK ) {
+			obj->rccIndex = 1;
 			return 0;
 		}
 
@@ -50,41 +49,50 @@ int ay_player_class::fsm_step_func_rcc_init ( const fsm_step< ay_player_class >*
 		/// С PLL мертв, пытаемся стартануть от
 		/// внутреннего на стандартной
 		/// конфигурации без PLL.
-		r = obj->mcu->rcc->set_cfg( 2 );
-		if ( r == RCC_RESULT::OK ) {
-			obj->rcc_index = 2;
+		rccRes = obj->setRccCfg( 2 );
+		if ( rccRes == RCC_RESULT::OK ) {
+			obj->rccIndex = 2;
 			return 0;
 		}
 
 		return 1;		/// Что-то очень не так.
 	} else {
 		/// Упал PLL. Пробуем просто на внешний.
-		r = obj->mcu->rcc->set_cfg( 3 );
-		if ( r == RCC_RESULT::OK ) {
-			obj->rcc_index = 3;
+		rccRes = obj->setRccCfg( 3 );
+		if ( rccRes == RCC_RESULT::OK ) {
+			obj->rccIndex = 3;
 			return 0;
 		}
 
 		/// Внешний кварц тоже мертв...
-		r = obj->mcu->rcc->set_cfg( 2 );
-		if ( r == RCC_RESULT::OK ) {
-			obj->rcc_index = 2;
+		rccRes = obj->setRccCfg( 2 );
+		if ( rccRes == RCC_RESULT::OK ) {
+			obj->rccIndex = 2;
 			return 0;
 		}
 
-		return 1;		/// Что-то очень не так.
+		assertParam( false );
 	}
 
 	return 0;
 }
 
-int ay_player_class::fsm_step_func_debug_uart_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-	bool r;
-	r = obj->mcu->debug_uart->reinit();
-	return ( r == true ) ? 0 : 1;
+int AyPlayer::fsmStepFuncFreeRtosObjInit ( HANDLER_FSM_INPUT_DATA ) {
+	obj->os->qAyLow[0]		= USER_OS_STATIC_QUEUE_CREATE( QB_AY_LOW_SIZE, sizeof( ayLowOutDataStruct ), &obj->os->qbAyLow[0][0], &obj->os->qsAyLow[0] );
+	obj->os->qAyLow[1]		= USER_OS_STATIC_QUEUE_CREATE( QB_AY_LOW_SIZE, sizeof( ayLowOutDataStruct ), &obj->os->qbAyLow[1][0], &obj->os->qsAyLow[1] );
+	obj->os->qAyButton		= USER_OS_STATIC_QUEUE_CREATE( 1, sizeof( uint8_t ), obj->os->qbAyButton, &obj->os->qsAyButton );
+
+	obj->os->sPlayTic		= USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &obj->os->sbPlayTic );
+	obj->os->sGuiUpdate		= USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &obj->os->sbGuiUpdate );
+
+	obj->os->mSpi3			= USER_OS_STATIC_MUTEX_CREATE( &obj->os->mbSpi3 );
+	obj->os->mHost			= USER_OS_STATIC_MUTEX_CREATE( &obj->os->mbHost );
+
+	return 0;
 }
 
+
+/*
 int ay_player_class::fsm_step_func_nvic_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
 	UNUSED( previous_step );
 	UNUSED( obj );
@@ -115,57 +123,9 @@ int ay_player_class::fsm_step_func_adc_init ( const fsm_step< ay_player_class >*
 
 int ay_player_class::fsm_step_func_timer_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
 	UNUSED( previous_step );
-	if ( obj->mcu->interrupt_ay->reinit( obj->rcc_index )		!= true ) return 1;
-	if ( obj->mcu->ay_clk->reinit( obj->rcc_index )				!= true ) return 1;
-	if ( obj->mcu->lcd_pwm->reinit( obj->rcc_index )			!= true ) return 1;
-	return 0;
-}
-
-int ay_player_class::fsm_step_func_timer_falling ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );	UNUSED( obj );
-	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
-	return 0;					/// Возвращено не будет.
-}
-
-int ay_player_class::fsm_step_func_spi_falling ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );	UNUSED( obj );
-	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
-	return 0;					/// Возвращено не будет.
-}
-
-int ay_player_class::fsm_step_func_debug_uart_falling ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );	UNUSED( obj );
-	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
-	return 0;					/// Возвращено не будет.
-}
-
-int ay_player_class::fsm_step_func_rcc_falling ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );	UNUSED( obj );
-	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
-	return 0;					/// Возвращено не будет.
-}
-
-int ay_player_class::fsm_step_func_adc_falling ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );	UNUSED( obj );
-	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
-	return 0;					/// Возвращено не будет.
-}
-
-int ay_player_class::fsm_step_func_freertos_obj_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );	UNUSED( obj );
-
-	os_data.q_ay_low[0]		= USER_OS_STATIC_QUEUE_CREATE( QB_AY_LOW_SIZE, sizeof( ay_low_out_data_struct ), &os_data.qb_ay_low[0][0], &os_data.qs_ay_low[0] );
-	os_data.q_ay_low[1]		= USER_OS_STATIC_QUEUE_CREATE( QB_AY_LOW_SIZE, sizeof( ay_low_out_data_struct ), &os_data.qb_ay_low[1][0], &os_data.qs_ay_low[1] );
-	os_data.q_ay_button		= USER_OS_STATIC_QUEUE_CREATE( 1, sizeof( uint8_t ), os_data.qb_ay_button, &os_data.qs_ay_button );
-
-	os_data.s_play_tic		= USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &os_data.sb_play_tic );
-	os_data.s_gui_update	= USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &os_data.sb_gui_update );
-
-	os_data.m_spi3			= USER_OS_STATIC_MUTEX_CREATE( &os_data.mb_spi3 );
-	os_data.m_host			= USER_OS_STATIC_MUTEX_CREATE( &os_data.mb_host );
-
-	USER_OS_STATIC_TASK_CREATE( ay_player_class::main_task, "main_task", TB_MAIN_TASK_SIZE, ( void* )obj, MAIN_TASK_PRIO, obj->tb_main_task, &obj->ts_main_task );
-
+	if ( obj->mcu->interrupt_ay->reinit( obj->rccIndex )		!= true ) return 1;
+	if ( obj->mcu->ay_clk->reinit( obj->rccIndex )				!= true ) return 1;
+	if ( obj->mcu->lcd_pwm->reinit( obj->rccIndex )			!= true ) return 1;
 	return 0;
 }
 

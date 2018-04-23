@@ -7,32 +7,32 @@
 // Они (данные) будут выдаваться в прерывании с заданной частотой.
 #define QB_AY_LOW_SIZE					32
 
-struct ayplayerFreertosObjStrcut {
+struct freeRtosObj {
 	/// Queue.
-	USER_OS_STATIC_QUEUE					q_ay_low[2];
-	USER_OS_STATIC_QUEUE					q_ay_button;
+	USER_OS_STATIC_QUEUE					qAyLow[2];
+	USER_OS_STATIC_QUEUE					qAyButton;
 
 	/// Queue buffer.
-	uint8_t									qb_ay_low[2][ sizeof( ayLowOutDataStruct ) * QB_AY_LOW_SIZE ];
-	uint8_t									qb_ay_button[ 1 ];
+	uint8_t									qbAyLow[2][ sizeof( ayLowOutDataStruct ) * QB_AY_LOW_SIZE ];
+	uint8_t									qbAyButton[ 1 ];
 
 	/// Queue struct.
-	USER_OS_STATIC_QUEUE_STRUCT				qs_ay_low[2];
-	USER_OS_STATIC_QUEUE_STRUCT				qs_ay_button;
+	USER_OS_STATIC_QUEUE_STRUCT				qsAyLow[2];
+	USER_OS_STATIC_QUEUE_STRUCT				qsAyButton;
 
 	/// Mutex.
-	USER_OS_STATIC_MUTEX					m_spi3;
-	USER_OS_STATIC_MUTEX					m_host;
+	USER_OS_STATIC_MUTEX					mSpi3;
+	USER_OS_STATIC_MUTEX					mHost;
 
 	/// Mutex buffer.
-	USER_OS_STATIC_MUTEX_BUFFER				mb_spi3;
-	USER_OS_STATIC_MUTEX_BUFFER				mb_host;
+	USER_OS_STATIC_MUTEX_BUFFER				mbSpi3;
+	USER_OS_STATIC_MUTEX_BUFFER				mbHost;
 
 	/// Semaphore.
-	USER_OS_STATIC_BIN_SEMAPHORE			s_play_tic;
-	USER_OS_STATIC_BIN_SEMAPHORE			s_gui_update;
+	USER_OS_STATIC_BIN_SEMAPHORE			sPlayTic;
+	USER_OS_STATIC_BIN_SEMAPHORE			sGuiUpdate;
 
 	/// Semaphore buffer.
-	USER_OS_STATIC_BIN_SEMAPHORE_BUFFER		sb_play_tic;
-	USER_OS_STATIC_BIN_SEMAPHORE_BUFFER		sb_gui_update;
+	USER_OS_STATIC_BIN_SEMAPHORE_BUFFER		sbPlayTic;
+	USER_OS_STATIC_BIN_SEMAPHORE_BUFFER		sbGuiUpdate;
 };

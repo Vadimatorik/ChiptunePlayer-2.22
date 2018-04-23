@@ -18,8 +18,9 @@
 
 #include "ay_ym_file_mode.h"
 #include "buttons_through_shift_register_one_input_pin.h"
-#include "mc_hardware/ayplayer_gpio.h"
+#include "ayplayer_gpio.h"
 #include "shift_register.h"
+#include "ayplayer_os_object.h"
 
 /*!
  * Количество режимов тактирования контроллера.
@@ -27,10 +28,11 @@
 #define	AYPLAYER_RCC_CFG_COUNT					4
 
 
+
 #define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsmStep< AyPlayer >* previousStep, AyPlayer* obj )
 #define HANDLER_FSM_INPUT_DATA					__attribute__((unused)) const fsmStep< AyPlayer >* previousStep, AyPlayer* obj
-#define TB_MAIN_TASK_SIZE				10000
-#define MAIN_TASK_PRIO					2
+#define TB_MAIN_TASK_SIZE						3000
+#define MAIN_TASK_PRIO							2
 
 struct ayplayerMcStrcut {
 	WdtBase*						wdt;
@@ -45,6 +47,10 @@ struct ayplayerMcStrcut {
 	TimCompOneChannelBase*			ayClkTim;
 	TimPwmOneChannelBase*			lcdPwmTim;
 	TimInterruptBase*				interruptAyTim;
+
+#ifdef configGENERATE_RUN_TIME_STATS
+	TimCounter*						timRunTimeStats;
+#endif
 };
 
 struct ayplayerPcbStrcut {
@@ -59,6 +65,7 @@ struct AyPlayerCfg {
 	run_time_logger*		l;
 	ayplayerPcbStrcut*		pcb;
 	AyYmFileMode*			ayF;
+	freeRtosObj*			os;
 };
 
 struct ayPlayerGuiCfg {
@@ -73,14 +80,14 @@ public:
 		mcu			( cfg->mcu ),
 		l			( cfg->l ),
 		pcb			( cfg->pcb ),
-		ayFile		( cfg->ayF )
+		ayFile		( cfg->ayF ),
+		os			( cfg->os )
 	{}
 
-	void init			( void );
 	void start			( void );
 
-	HANDLER_FSM_STEP( fsmStepFuncBaseHardwareInit );
-
+	HANDLER_FSM_STEP( fsmStepFuncHardwareMcInit );
+	HANDLER_FSM_STEP( fsmStepFuncFreeRtosObjInit );
 
 	/*
 	HANDLER_FSM_STEP( fsm_step_func_gpio_init );
@@ -101,7 +108,7 @@ public:
 	HANDLER_FSM_STEP( fsm_step_func_shift_register_init );
 	HANDLER_FSM_STEP( fsm_step_func_button_init );*/
 
-	static void main_task ( void* p_obj );
+	static void mainTask ( void* obj );
 
 	/*
 	HANDLER_FSM_STEP( fsm_step_func_init_gui );
@@ -130,20 +137,43 @@ public:
 
 
 private:
+	/*!
+	 * Останавливает все аппаратные модули, зависящие от тактового сигнала,
+	 * пытается установить заданную тактовую частоту на шинах, после чего
+	 * конфигурирует заново все объекты, зависящие от частоты тактового сигнала
+	 * ( вызывается метод reinitObjDependingRcc ).
+	 *
+	 * Замечание: в случае, если не удалось настроить заданную конфигурацию - микроконтроллер переходит
+	 * в режим работы по умолчанию.
+	 */
+	RCC_RESULT		setRccCfg							( uint32_t numberCfg );
+
+	/*!
+	 * Отключает все объекты, зависящие
+	 * от частоты тактового сигнала.
+	 */
+	void			offObjDependingRcc					( void );
+
+	/*!
+	 * Метод переконфигурирует все объекты, зависящие
+	 * от частоты тактового сигнала.
+	 */
+	void			reinitObjDependingRcc				( void );
+
 	/// Текущий режим работы RCC.
-	uint32_t						rccIndex = 0;
+	uint32_t											rccIndex = 0;
 
-	fsmClass< AyPlayer >	fsm;
+	fsmClass< AyPlayer >								fsm;
 
-	ayplayerMcStrcut*					mcu;
-	run_time_logger*					l;
-	ayplayerPcbStrcut*					pcb;
-	AyYmFileMode*					ayFile;
+	ayplayerMcStrcut*									const mcu;
+	run_time_logger*									const l;
+	ayplayerPcbStrcut*									const pcb;
+	AyYmFileMode*										const ayFile;
+	freeRtosObj*										const os;
+	ayPlayerGuiCfg										g;
 
-	ayPlayerGuiCfg	g;
-
-	USER_OS_STATIC_STACK_TYPE				tb_main_task[ TB_MAIN_TASK_SIZE ];
-	USER_OS_STATIC_TASK_STRUCT_TYPE			ts_main_task;
+	USER_OS_STATIC_STACK_TYPE				tbMainask[ TB_MAIN_TASK_SIZE ];
+	USER_OS_STATIC_TASK_STRUCT_TYPE			tsMainTask;
 
 	FATFS							f;
 	FILINFO							sd1_fi;
