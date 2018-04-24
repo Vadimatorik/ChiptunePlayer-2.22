@@ -74,6 +74,17 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 		assertParam( false );
 	}
 
+	/*!
+	 * NVIC.
+	 */
+	NVIC_EnableIRQ( USART3_IRQn );
+	NVIC_EnableIRQ( TIM6_DAC_IRQn );
+
+	/*!
+	 * После инициализации запускаем все модули,
+	 * которые должны всегда находиться в работе.
+	 */
+	obj->startBaseInterfaces();
 	return 0;
 }
 
@@ -91,55 +102,13 @@ int AyPlayer::fsmStepFuncFreeRtosObjInit ( HANDLER_FSM_INPUT_DATA ) {
 	return 0;
 }
 
-
-/*
-int ay_player_class::fsm_step_func_nvic_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-	UNUSED( obj );
-	NVIC_EnableIRQ( USART3_IRQn );
-	NVIC_EnableIRQ( TIM6_DAC_IRQn );
-	return 0;
-}
-
-int ay_player_class::fsm_step_func_spi_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-
-	if ( obj->mcu->spi1->reinit() != BASE_RESULT::OK ) return 1;
-	if ( obj->mcu->spi2->reinit() != BASE_RESULT::OK ) return 1;
-	if ( obj->mcu->spi3->reinit() != BASE_RESULT::OK ) return 1;
-	obj->mcu->spi1->on();
-	obj->mcu->spi2->on();
-	obj->mcu->spi3->on();
+int AyPlayer::fsmStepFuncHardwarePcbInit ( HANDLER_FSM_INPUT_DATA ) {
+	/// У ay, srButton и button одинаковая инициализация.
+	/// Поэтому только 1 вызываем.
+	obj->pcb->srAy->init();
+	obj->pcb->ay->init();
 
 	return 0;
 }
 
-int ay_player_class::fsm_step_func_adc_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-	if ( obj->mcu->adc1->reinit() != true ) return 1;
-	if ( obj->mcu->adc1->start_continuous_conversion() != true ) return 1;
-	return 0;
-}
-
-int ay_player_class::fsm_step_func_timer_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-	if ( obj->mcu->interrupt_ay->reinit( obj->rccIndex )		!= true ) return 1;
-	if ( obj->mcu->ay_clk->reinit( obj->rccIndex )				!= true ) return 1;
-	if ( obj->mcu->lcd_pwm->reinit( obj->rccIndex )			!= true ) return 1;
-	return 0;
-}
-
-int ay_player_class::fsm_step_func_shift_register_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-	obj->pcb->sr_ay->init();
-	obj->pcb->sr_button->init();
-	return 0;
-}
-
-int ay_player_class::fsm_step_func_button_init ( const fsm_step< ay_player_class >* previous_step, ay_player_class* obj ) {
-	UNUSED( previous_step );
-	obj->pcb->button->init();
-	return 0;
-}
-*/
 

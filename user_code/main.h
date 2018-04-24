@@ -6,7 +6,7 @@
 extern Wdt											wdtObj;
 extern ayplayerGpio									gpioStruct;
 extern GlobalPort									gp;
-extern Uart											usart3_obj;
+extern Uart											usart3;
 extern Rcc											ayplayer_rcc;
 extern SpiMaster8Bit								spi1;
 extern SpiMaster8Bit								spi2;
@@ -23,6 +23,7 @@ extern ButtonsThroughShiftRegisterOneInputPin		button;
 extern ad5204< 2 >									soundDp;
 extern AyYmFileMode									ayFileMode;
 extern freeRtosObj									osData;
+extern AyYmLowLavel									ayLow;
 
 #ifdef configGENERATE_RUN_TIME_STATS
 extern TimCounter									timRunTimeStats;

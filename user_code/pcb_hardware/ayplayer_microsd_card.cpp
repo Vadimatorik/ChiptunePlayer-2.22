@@ -27,7 +27,6 @@ const microsd_sdio_cfg_t sd1Cfg = {
 MicrosdSdio sd1( &sd1Cfg );
 
 extern "C" {
-	void dma2_stream6_handler		( void ) { sd1.dmaRxHandler(); };
 };
 
 // number = 1/0.

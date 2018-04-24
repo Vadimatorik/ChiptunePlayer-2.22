@@ -14,13 +14,19 @@ start:4. Таймеры\t\t\t\t\t\t\t(TIMER)
 start:5. Аналого-цифровые преобразователи\t(ADC)
 start:6. SPI
 start:7. UART
+start:8. NVIC
 }
 
 start --> s1
 
 state "freeRtosObjInit" as s1 {
-s1:Инициализируются базовые элементы ОС 
-s1:(mutex, semaphore, timer).
+s1:Инициализируются базовые элементы ОС (mutex, semaphore, timer).
+}
+
+s1 --> s2
+
+state "hardwarePcbInit" as s2 {
+s2: 
 }
 
 @enduml

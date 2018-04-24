@@ -3,7 +3,7 @@
 #include "user_os.h"
 #include "pin.h"
 
-extern AyYmLowLavel						ayplayer_ay_low_obj;
+extern AyYmLowLavel						ayLow;
 extern Pin								chip1PwrOn;
 extern Pin								chip2PwrOn;
 
@@ -19,7 +19,7 @@ void pwrChipOn ( uint32_t chip, bool state ) {
 }
 
 ayYmFileModeCfg ay_f_mode_cfg = {
-	.ay							= &ayplayer_ay_low_obj,
+	.ay							= &ayLow,
 	.microsdMutex				= nullptr,
 	.pwrChipOn					= pwrChipOn
 };

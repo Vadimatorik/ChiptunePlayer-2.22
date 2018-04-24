@@ -65,6 +65,20 @@ void AyPlayer::reinitObjDependingRcc ( void ) {
 	this->mcu->debugUart->reinit( this->rccIndex );
 }
 
+void AyPlayer::startBaseInterfaces ( void ) {
+	BASE_RESULT	r;
+	r = this->mcu->adc1->startContinuousConversion();
+	assertParam( r == BASE_RESULT::OK );
+	r = this->mcu->debugUart->on();
+	assertParam( r == BASE_RESULT::OK );
+	r = this->mcu->spi1->on();
+	assertParam( r == BASE_RESULT::OK );
+	r = this->mcu->spi2->on();
+	assertParam( r == BASE_RESULT::OK );
+	r = this->mcu->spi3->on();
+	assertParam( r == BASE_RESULT::OK );
+}
+
 extern const fsmStep< AyPlayer > ayPlayerHardwareMcInitFsmStep;
 
 void AyPlayer::mainTask ( void* obj ) {

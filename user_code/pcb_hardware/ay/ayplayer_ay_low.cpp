@@ -34,7 +34,7 @@ void pwr5VSet ( bool state ) {
 	pwr5vOn.set( state );
 }
 
-const ayYmLowLavelCfg ay_low_cfg {
+const ayYmLowLavelCfg ayLowCfg {
 	.sr					=	&srAy,
 	.mutex				=	&osData.mSpi3,
 	.srData				=	sr_out_buf_ay,
@@ -50,11 +50,4 @@ const ayYmLowLavelCfg ay_low_cfg {
 	.pwrSet				=	pwr5VSet
 };
 
-AyYmLowLavel ayplayer_ay_low_obj( &ay_low_cfg );
-
-extern "C" {
-	void tim6_and_dac_handler ( void ) {
-		ayplayer_ay_low_obj.timerInterruptHandler();
-	}
-}
-
+AyYmLowLavel ayLow( &ayLowCfg );

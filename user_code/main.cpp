@@ -4,7 +4,7 @@ ayplayerMcStrcut ayMcuCfg = {
 	.wdt						=	&wdtObj,
 	.gpio						=	&gpioStruct,
 	.gp							=	&gp,
-	.debugUart					=	&usart3_obj,
+	.debugUart					=	&usart3,
 	.rcc						=	&ayplayer_rcc,
 	.spi1						=	&spi1,
 	.spi2						=	&spi2,
@@ -20,10 +20,11 @@ ayplayerMcStrcut ayMcuCfg = {
 };
 
 ayplayerPcbStrcut ayPcbCfg = {
-	.ay							=	&srAy,
+	.srAy						=	&srAy,
 	.srButton					=	&srButton,
 	.button						=	&button,
-	.dp							=	&soundDp
+	.dp							=	&soundDp,
+	.ay							=	&ayLow
 };
 
 AyPlayerCfg ayCfg = {

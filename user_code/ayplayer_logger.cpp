@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-extern Uart usart3_obj;
+extern Uart usart3;
 BASE_RESULT uart_send_message ( char* string );
 
 const run_time_logger_cfg log_cfg = {
@@ -21,5 +21,5 @@ const run_time_logger_cfg log_cfg = {
 run_time_logger ayLog( &log_cfg );
 
 BASE_RESULT uart_send_message ( char* string ) {
-	return usart3_obj.tx( (uint8_t*)string, strlen(string), 100 );
+	return usart3.tx( (uint8_t*)string, strlen(string), 100 );
 }

@@ -86,15 +86,3 @@ SpiMaster8BitCfg spi3Cfg = {
 SpiMaster8Bit spi1( &spi1Cfg, 1 );
 SpiMaster8Bit spi2( &spi2Cfg, 1 );
 SpiMaster8Bit spi3( &spi3Cfg, 1 );
-
-/*!
- * Обработчики прерываний.
- */
-extern "C" {
-
-void dma2_stream5_handler ( void ) { spi1.reseiveByteHandler(); }
-void dma1_stream3_handler ( void ) { spi2.reseiveByteHandler(); }
-void dma1_stream4_handler ( void ) { spi2.reseiveByteHandler(); }
-void dma1_stream7_handler ( void ) { spi3.reseiveByteHandler(); }
-
-}

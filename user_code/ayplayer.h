@@ -54,10 +54,11 @@ struct ayplayerMcStrcut {
 };
 
 struct ayplayerPcbStrcut {
-	ShiftRegister*										ay;
+	ShiftRegister*										srAy;
 	ShiftRegister*										srButton;
 	ButtonsThroughShiftRegisterOneInputPin*				button;
 	ad5204< 2 >*										dp;
+	AyYmLowLavel*										ay;
 };
 
 struct AyPlayerCfg {
@@ -88,6 +89,7 @@ public:
 
 	HANDLER_FSM_STEP( fsmStepFuncHardwareMcInit );
 	HANDLER_FSM_STEP( fsmStepFuncFreeRtosObjInit );
+	HANDLER_FSM_STEP( fsmStepFuncHardwarePcbInit );
 
 	/*
 	HANDLER_FSM_STEP( fsm_step_func_gpio_init );
@@ -159,6 +161,12 @@ private:
 	 * от частоты тактового сигнала.
 	 */
 	void			reinitObjDependingRcc				( void );
+
+	/*!
+	 * Запускает базовые интерфейсы:
+	 * SPI, UART, ADC (канал аккумулятора).
+	 */
+	void			startBaseInterfaces					( void );
 
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;

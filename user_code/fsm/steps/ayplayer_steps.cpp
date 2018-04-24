@@ -18,14 +18,6 @@ extern "C" {
 extern const MakiseGUI m_gui;
 }
 
-void ay_player_class::main_task ( void* p_obj ) {
-	ay_player_class* o = ( ay_player_class* )p_obj;
-	o->fsm.relinking( &ay_player_class_init_gui_fsm_step, o );
-	o->fsm.start();
-}
-
-
-
 int ay_player_class::fsm_step_func_init_gui ( HANDLER_FSM_INPUT_DATA ) {
 	UNUSED( previous_step );
 
@@ -171,35 +163,6 @@ int ay_player_class::fsm_step_func_create_playlist_sys ( HANDLER_FSM_INPUT_DATA 
 	}
 
 	return 0;
-}
-
-int ay_player_class::fsm_step_func_gui_fall ( HANDLER_FSM_INPUT_DATA ) {
-	UNUSED( previous_step );
-	UNUSED( obj );
-	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
-	return 0;					/// Возвращено не будет.
-}
-
-int ay_player_class::fsm_step_func_logger_fall ( HANDLER_FSM_INPUT_DATA ) {
-	UNUSED( previous_step );
-	UNUSED( obj );
-	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
-	return 0;					/// Возвращено не будет.
-}
-
-int ay_player_class::fsm_step_func_fat_fall ( HANDLER_FSM_INPUT_DATA ) {
-	UNUSED( previous_step );
-	UNUSED( obj );
-	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
-	return 0;					/// Возвращено не будет.
-}
-
-int ay_player_class::fsm_step_func_sd1_fall ( HANDLER_FSM_INPUT_DATA ) {
-	UNUSED( previous_step );
-	UNUSED( obj );
-	if ( obj->l->send_message( RTL_TYPE_M::INIT_ISSUE, "Fall SDIO!" ) != BASE_RESULT::OK ) return 2;
-	NVIC_SystemReset();			/// Контроллер перезагрузится тут.
-	return 0;					/// Возвращено не будет.
 }
 */
 
