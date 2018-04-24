@@ -8,7 +8,6 @@
 #include "adc.h"
 #include "timer.h"
 
-#include "run_time_logger.h"
 #include "module_digital_potentiometer_ad5204.h"
 #include "microsd_card_spi.h"
 #include "makise_gui.h"
@@ -16,6 +15,7 @@
 
 #include <string>
 
+#include "../module_run_time_logger/run_time_logger.h"
 #include "ay_ym_file_mode.h"
 #include "buttons_through_shift_register_one_input_pin.h"
 #include "ayplayer_gpio.h"
@@ -63,7 +63,7 @@ struct ayplayerPcbStrcut {
 
 struct AyPlayerCfg {
 	ayplayerMcStrcut*		mcu;
-	run_time_logger*		l;
+	RunTimeLogger*		l;
 	ayplayerPcbStrcut*		pcb;
 	AyYmFileMode*			ayF;
 	freeRtosObj*			os;
@@ -90,9 +90,12 @@ public:
 	HANDLER_FSM_STEP( fsmStepFuncHardwareMcInit );
 	HANDLER_FSM_STEP( fsmStepFuncFreeRtosObjInit );
 	HANDLER_FSM_STEP( fsmStepFuncHardwarePcbInit );
+	HANDLER_FSM_STEP( fsmStepFuncGuiInit );
+
+
 
 	/*
-	HANDLER_FSM_STEP( fsm_step_func_gpio_init );
+
 	HANDLER_FSM_STEP( fsm_step_func_rcc_init );
 	HANDLER_FSM_STEP( fsm_step_func_debug_uart_init );
 	HANDLER_FSM_STEP( fsm_step_func_nvic_init );	
@@ -168,13 +171,18 @@ private:
 	 */
 	void			startBaseInterfaces					( void );
 
+	/*!
+	 * Инициализирует RCC с максимально возможной скоростью.
+	 */
+	void			rccMaxFrequancyInit					( void );
+
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;
 
 	fsmClass< AyPlayer >								fsm;
 
 	ayplayerMcStrcut*									const mcu;
-	run_time_logger*									const l;
+	RunTimeLogger*									const l;
 	ayplayerPcbStrcut*									const pcb;
 	AyYmFileMode*										const ayFile;
 	freeRtosObj*										const os;

@@ -1,7 +1,8 @@
-#include "run_time_logger.h"
 #include "uart.h"
 #include <stdio.h>
 #include <string.h>
+
+#include "../module_run_time_logger/run_time_logger.h"
 
 extern Uart usart3;
 BASE_RESULT uart_send_message ( char* string );
@@ -18,7 +19,7 @@ const run_time_logger_cfg log_cfg = {
 	.out_buffer = uart_send_message
 };
 
-run_time_logger ayLog( &log_cfg );
+RunTimeLogger ayLog( &log_cfg );
 
 BASE_RESULT uart_send_message ( char* string ) {
 	return usart3.tx( (uint8_t*)string, strlen(string), 100 );

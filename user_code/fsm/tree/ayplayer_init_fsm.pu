@@ -21,18 +21,24 @@ start:2. USART3
 start:3. ADC на канал с аккумулятора
 }
 
-start --> s1
+start --> s1							: 0
 
 state "freeRtosObjInit" as s1 {
 s1:Инициализируются базовые элементы ОС (mutex, semaphore, timer).
 }
 
-s1 --> s2
+s1 --> s2								: 0
 
 state "hardwarePcbInit" as s2 {
-s2: Инициализируются:
-s2: Сдвиговые регистры
-s2: Низкоуровневый AY
+s2:Инициализируются:
+s2:Сдвиговые регистры
+s2:Низкоуровневый AY
+}
+
+s2 --> s3								: 0
+
+state "guiInit" as s3 {
+s3:Инициализация MakiseGUI и драйвера дисплея
 }
 
 @enduml

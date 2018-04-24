@@ -15,7 +15,7 @@ extern AdcOneChannel								adcBat;
 extern TimCompOneChannel							ayClk;
 extern TimPwmOneChannel								lcdPwm;
 extern TimInterrupt									interruptAy;
-extern run_time_logger								ayLog;
+extern RunTimeLogger								ayLog;
 
 extern ShiftRegister								srAy;
 extern ShiftRegister								srButton;

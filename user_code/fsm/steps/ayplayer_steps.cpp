@@ -8,33 +8,7 @@
 
 #include "ayplayer_microsd_card.h"
 
-/*!
- * Основное дерево проекта.
- */
 /*
-extern const fsm_step< ay_player_class > ay_player_class_init_gui_fsm_step;
-
-extern "C" {
-extern const MakiseGUI m_gui;
-}
-
-int ay_player_class::fsm_step_func_init_gui ( HANDLER_FSM_INPUT_DATA ) {
-	UNUSED( previous_step );
-
-	obj->g.c.gui						= ( MakiseGUI* )&m_gui;
-	obj->g.h.host						= &obj->g.c;
-	obj->g.h.host->gui					= ( MakiseGUI* )&m_gui;
-
-	int r;
-	r = makise_start( obj->g.h.host->gui );
-	if ( r != M_OK ) {
-		return 1;
-	}
-
-	if ( obj->l->send_message( RTL_TYPE_M::INIT_OK, "MakiseGui started." ) != BASE_RESULT::OK ) return 2;
-
-	return 0;
-}
 
 int ay_player_class::fsm_step_func_fat_init ( HANDLER_FSM_INPUT_DATA ) {
 	UNUSED( previous_step );

@@ -79,6 +79,61 @@ void AyPlayer::startBaseInterfaces ( void ) {
 	assertParam( r == BASE_RESULT::OK );
 }
 
+void AyPlayer::start ( void ) {
+	USER_OS_STATIC_TASK_CREATE( AyPlayer::mainTask, "main", TB_MAIN_TASK_SIZE, ( void* )this, MAIN_TASK_PRIO, this->tbMainask, &this->tsMainTask );
+	vTaskStartScheduler();
+}
+
+void AyPlayer::rccMaxFrequancyInit ( void ) {
+	RCC_RESULT	rccRes;
+
+	/// Пытаемся завестись в 120 МГц от внешнего кварца.
+	rccRes = this->setRccCfg( 0 );
+
+	if ( rccRes == RCC_RESULT::OK ) {
+		this->rccIndex = 0;
+		return;
+	}
+
+	/// Если упал именно внешний кварц.
+	if ( rccRes == RCC_RESULT::ERROR_OSC_INIT ) {
+		/// Пробуем от внутреннего в 120 МГц.
+		rccRes = this->setRccCfg( 1 );
+		if ( rccRes == RCC_RESULT::OK ) {
+			this->rccIndex = 1;
+			return;
+		}
+
+
+		/// С PLL мертв, пытаемся стартануть от
+		/// внутреннего на стандартной
+		/// конфигурации без PLL.
+		rccRes = this->setRccCfg( 2 );
+		if ( rccRes == RCC_RESULT::OK ) {
+			this->rccIndex = 2;
+			return;
+		}
+
+		return;		/// Что-то очень не так.
+	} else {
+		/// Упал PLL. Пробуем просто на внешний.
+		rccRes = this->setRccCfg( 3 );
+		if ( rccRes == RCC_RESULT::OK ) {
+			this->rccIndex = 3;
+			return;
+		}
+
+		/// Внешний кварц тоже мертв...
+		rccRes = this->setRccCfg( 2 );
+		if ( rccRes == RCC_RESULT::OK ) {
+			this->rccIndex = 2;
+			return;
+		}
+
+		assertParam( false );
+	}
+}
+
 extern const fsmStep< AyPlayer > ayPlayerHardwareMcInitFsmStep;
 
 void AyPlayer::mainTask ( void* obj ) {

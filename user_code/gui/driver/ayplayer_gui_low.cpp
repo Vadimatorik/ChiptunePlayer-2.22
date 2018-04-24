@@ -11,7 +11,7 @@ extern freeRtosObj				osData;
  */
 extern "C" {
 
-extern const MakiseGUI m_gui;
+extern const MakiseGUI mGui;
 
 uint8_t m_driver_init ( MakiseGUI* gui ) {
 	( void )gui;
@@ -66,7 +66,7 @@ void m_gui_update ( MakiseGUI* gui ) {
 extern uint8_t		lcd_buffer[1024];
 
 const MakiseDriver m_driver = {
-	.gui				= ( MakiseGUI* )&m_gui,			// Структура используемого GUI объекта.
+	.gui				= ( MakiseGUI* )&mGui,			// Структура используемого GUI объекта.
 	.lcd_height			= 64,							// Реальная высота экрана.
 	.lcd_width			= 128,							// Реальная ширина экрана.
 	.buffer_height		= MAKISE_BUF_H,					// Ширина/высота буфера.
@@ -86,7 +86,7 @@ const MakiseDriver m_driver = {
 };
 
 const MakiseBuffer m_buf_st = {
-	.gui			= ( MakiseGUI* )&m_gui,				// Структура используемого GUI объекта.
+	.gui			= ( MakiseGUI* )&mGui,				// Структура используемого GUI объекта.
 	.height			= 64,								// Реальная высота экрана.
 	.width			= 128,								// Реальная ширина экрана.
 	.pixeldepth		= MAKISEGUI_BUFFER_DEPTH,			// Глубина цвета в виртуальном буфере.
@@ -103,7 +103,7 @@ const MakiseBuffer m_buf_st = {
 	}
 };
 
-const MakiseGUI m_gui = {
+const MakiseGUI mGui = {
 	.buffer		= ( MakiseBuffer* )&m_buf_st,
 	.driver		= ( MakiseDriver* )&m_driver,
 	.draw		= m_gui_draw,
