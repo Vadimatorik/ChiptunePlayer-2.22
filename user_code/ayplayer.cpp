@@ -83,8 +83,7 @@ extern const fsmStep< AyPlayer > ayPlayerHardwareMcInitFsmStep;
 
 void AyPlayer::mainTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;
-	o->fsm.relinking( &ayPlayerHardwareMcInitFsmStep, o );
-	o->fsm.start();
+	o->fsm.start( &ayPlayerHardwareMcInitFsmStep, o );
 	while( true ) {
 		vTaskDelay( 1000 );
 	}
