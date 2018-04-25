@@ -21,8 +21,7 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 	/*!
 	 * RCC и все объекты, зависящие от него.
 	 */
-	//obj->rccMaxFrequancyInit();
-	obj->setRccCfg( 2 );
+	obj->rccMaxFrequancyInit();
 
 	/*!
 	 * NVIC.

@@ -32,8 +32,8 @@ const rccCfg ay_player_clock_cfg[ AYPLAYER_RCC_CFG_COUNT ] = {
 			.ClockType					=	RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2,
 			.SYSCLKSource				=	RCC_SYSCLKSOURCE_PLLCLK,
 			.AHBCLKDivider				=	RCC_SYSCLK_DIV1,
-			.APB1CLKDivider				=	RCC_HCLK_DIV16,
-			.APB2CLKDivider				=	RCC_HCLK_DIV16,
+			.APB1CLKDivider				=	RCC_HCLK_DIV4,
+			.APB2CLKDivider				=	RCC_HCLK_DIV2,
 		},
 		.fLatency						=	FLASH_LATENCY_3
 	},
