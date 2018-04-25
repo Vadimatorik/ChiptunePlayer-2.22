@@ -21,7 +21,7 @@ uint8_t m_driver_init ( MakiseGUI* gui ) {
 uint8_t m_driver_start ( MakiseGUI* gui ) {
 	( void )gui;
 	if ( lcd.reset()			!= BASE_RESULT::OK ) return M_ERROR;
-	if ( lcd.setContrast( 3 )	!= BASE_RESULT::OK ) return M_ERROR;
+	if ( lcd.setContrast( 8 )	!= BASE_RESULT::OK ) return M_ERROR;
 	if ( lcd.clear()			!= BASE_RESULT::OK ) return M_ERROR;
 	if ( lcd.on()				!= BASE_RESULT::OK ) return M_ERROR;
 	return M_OK;
