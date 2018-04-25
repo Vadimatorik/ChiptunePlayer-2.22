@@ -35,8 +35,12 @@
 
 #define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsmStep< AyPlayer >* previousStep, AyPlayer* obj )
 #define HANDLER_FSM_INPUT_DATA					__attribute__((unused)) const fsmStep< AyPlayer >* previousStep, AyPlayer* obj
-#define TB_MAIN_TASK_SIZE						3000
-#define MAIN_TASK_PRIO							2
+
+#define	TB_MAIN_TASK_SIZE						3000
+#define	TB_ILLUMINATION_CONTROL_TASK_SIZE		64
+
+#define MAIN_TASK_PRIO							3
+#define ILLUMINATION_CONTROL_TASK_PRIO			1
 
 struct ayplayerMcStrcut {
 	WdtBase*						wdt;
@@ -107,9 +111,10 @@ public:
 	HANDLER_FSM_STEP( fsmStepFuncGuiInit );
 	HANDLER_FSM_STEP( fsmStepFuncMicroSdInit );
 
-	static void mainTask ( void* obj );
-
 private:
+	static	void	mainTask					( void* obj );
+	static	void	illuminationControl			( void* obj );
+
 	/*!
 	 * Останавливает все аппаратные модули, зависящие от тактового сигнала,
 	 * пытается установить заданную тактовую частоту на шинах, после чего
@@ -173,9 +178,13 @@ private:
 	const ayplayerGuiCfg*								const gui;
 	ayPlayerGui											g;
 
-	USER_OS_STATIC_STACK_TYPE							tbMainask[ TB_MAIN_TASK_SIZE ];
+	USER_OS_STATIC_STACK_TYPE							tbMainTask[ TB_MAIN_TASK_SIZE ];
 	USER_OS_STATIC_TASK_STRUCT_TYPE						tsMainTask;
+	USER_OS_STATIC_STACK_TYPE							tbIlluminationControlTask[ TB_ILLUMINATION_CONTROL_TASK_SIZE ];
+	USER_OS_STATIC_TASK_STRUCT_TYPE						tsIlluminationControlTask;
 
+	/// Яркость подсветки.
+	float												illuminationDuty = 1;
 
 	FATFS												fSd1;
 	FATFS												fSd2;
