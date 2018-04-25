@@ -24,15 +24,30 @@ ayplayerPcbStrcut ayPcbCfg = {
 	.srButton					=	&srButton,
 	.button						=	&button,
 	.dp							=	&soundDp,
-	.ay							=	&ayLow
+	.ay							=	&ayLow,
+	.lcd						=	&lcd
 };
 
-AyPlayerCfg ayCfg = {
+extern const MakiseFont F_minecraft_rus_regular_8;
+
+ayplayerGuiCfg ayGuiCfg = {
+	.smw = {
+	    .font               = &F_minecraft_rus_regular_8,
+	    .font_line_spacing  = 2,
+
+	    .bg_color           = MC_White,
+	    .font_col           = MC_Black,
+	    .border_color       = MC_Black,
+	}
+};
+
+ayPlayerCfg ayCfg = {
 	.mcu						=	&ayMcuCfg,
 	.l							=	&ayLog,
 	.pcb						=	&ayPcbCfg,
 	.ayF						=	&ayFileMode,
-	.os							=	&osData
+	.os							=	&osData,
+	.gui						=	&ayGuiCfg
 };
 
 AyPlayer											ay( &ayCfg );

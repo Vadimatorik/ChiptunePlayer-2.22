@@ -25,13 +25,3 @@ const microsd_sdio_cfg_t sd1Cfg = {
 };
 
 MicrosdSdio sd1( &sd1Cfg );
-
-extern "C" {
-};
-
-// number = 1/0.
-// return 1 - карта есть.
-uint32_t check_sd ( uint32_t number ) {
-	( void )number;
-	return 1;
-}

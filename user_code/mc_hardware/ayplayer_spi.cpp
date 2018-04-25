@@ -24,9 +24,7 @@ SpiMaster8BitCfg spi1Cfg = {
 	.dmaTx						=	DMA2_Stream5,
 	.dmaRx						=	nullptr,
 	.dmaTxCh					=	DMA_CHANNEL_3,
-	.dmaRxCh					=	0,
-
-	.handlerReseivePrio			=	6
+	.dmaRxCh					=	0
 };
 
 uint32_t baudratePrescalerSpi2[ AYPLAYER_RCC_CFG_COUNT ] = {
@@ -51,9 +49,7 @@ SpiMaster8BitCfg spi2Cfg = {
 	.dmaTx						=	DMA1_Stream4,
 	.dmaRx						=	DMA1_Stream3,
 	.dmaTxCh					=	DMA_CHANNEL_0,
-	.dmaRxCh					=	DMA_CHANNEL_0,
-
-	.handlerReseivePrio			=	6
+	.dmaRxCh					=	DMA_CHANNEL_0
 };
 
 uint32_t baudratePrescalerSpi3[ AYPLAYER_RCC_CFG_COUNT ] = {
@@ -78,9 +74,7 @@ SpiMaster8BitCfg spi3Cfg = {
 	.dmaTx						=	DMA1_Stream7,
 	.dmaRx						=	nullptr,
 	.dmaTxCh					=	DMA_CHANNEL_0,
-	.dmaRxCh					=	0,
-
-	.handlerReseivePrio			=	6
+	.dmaRxCh					=	0
 };
 
 SpiMaster8Bit spi1( &spi1Cfg, 1 );

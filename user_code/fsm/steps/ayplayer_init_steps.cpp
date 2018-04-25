@@ -8,8 +8,8 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 	/*!
 	 * WDT init.
 	 */
-	r = obj->mcu->wdt->reinit( 0 );
-	assertParam( r == BASE_RESULT::OK );
+	//r = obj->mcu->wdt->reinit( 0 );
+	//assertParam( r == BASE_RESULT::OK );
 
 	/*!
 	 * GPIO init.
@@ -21,13 +21,27 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 	/*!
 	 * RCC и все объекты, зависящие от него.
 	 */
-	obj->rccMaxFrequancyInit();
+	//obj->rccMaxFrequancyInit();
+	obj->setRccCfg( 2 );
 
 	/*!
 	 * NVIC.
 	 */
+	NVIC_SetPriority( DMA1_Stream3_IRQn, 14 );
+	NVIC_SetPriority( DMA1_Stream4_IRQn, 14 );
+	NVIC_SetPriority( DMA1_Stream7_IRQn, 14 );
+	NVIC_SetPriority( DMA2_Stream5_IRQn, 14 );
+	NVIC_SetPriority( DMA2_Stream6_IRQn, 14 );
+
+	NVIC_SetPriority( USART3_IRQn, 15 );
+
+	NVIC_EnableIRQ( DMA1_Stream3_IRQn );
+	NVIC_EnableIRQ( DMA1_Stream4_IRQn );
+	NVIC_EnableIRQ( DMA1_Stream7_IRQn );
+	NVIC_EnableIRQ( DMA2_Stream5_IRQn );
+	NVIC_EnableIRQ( DMA2_Stream6_IRQn );
+
 	NVIC_EnableIRQ( USART3_IRQn );
-	NVIC_EnableIRQ( TIM6_DAC_IRQn );
 
 	/*!
 	 * После инициализации запускаем все модули,
@@ -71,13 +85,38 @@ int AyPlayer::fsmStepFuncGuiInit ( HANDLER_FSM_INPUT_DATA ) {
 
 	int r;
 	r = makise_start( obj->g.h.host->gui );
-	assertParam( r != M_OK );
+	assertParam( r == M_OK );
 
 	obj->l->sendMessage( RTL_TYPE_M::INIT_OK, "MakiseGui started." );
 
 	return 0;
 }
 
+int AyPlayer::fsmStepFuncMicroSdInit ( HANDLER_FSM_INPUT_DATA ) {
+	/*!
+	 * Проверяем наличие обеих флешек в слотах.
+	 */
+	obj->waitSdCardInsert();
+
+	return 0;
+
+	/*
+	 * 	FRESULT fr;
+
+	 * Пытаемся сразу же примонтировать флешки.
+
+	fr = f_mount( &obj->fSd1, "0:", 1 );
+
+	fr = f_mount( &obj->fSd2, "1:", 1 );
+		if ( fr == FR_OK ) {
+			if ( obj->l->send_message( RTL_TYPE_M::INIT_OK, "FatFS initialized successfully." ) != BASE_RESULT::OK ) return 2;
+			return 0;
+		} else {
+			if ( obj->l->send_message( RTL_TYPE_M::INIT_ERROR, "FatFS was not initialized!" ) != BASE_RESULT::OK ) return 2;
+			return 1;
+		}
+		*/
+}
 
 
 

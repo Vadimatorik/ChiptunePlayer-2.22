@@ -15,12 +15,16 @@
 
 #include <string>
 
-#include "../module_run_time_logger/run_time_logger.h"
+#include "run_time_logger.h"
 #include "ay_ym_file_mode.h"
 #include "buttons_through_shift_register_one_input_pin.h"
 #include "ayplayer_gpio.h"
 #include "shift_register.h"
 #include "ayplayer_os_object.h"
+#include "ayplayer_microsd_card.h"
+#include "mono_lcd_lib_st7565.h"
+
+#include "makise_e_message_window.h"
 
 /*!
  * Количество режимов тактирования контроллера.
@@ -59,87 +63,51 @@ struct ayplayerPcbStrcut {
 	ButtonsThroughShiftRegisterOneInputPin*				button;
 	ad5204< 2 >*										dp;
 	AyYmLowLavel*										ay;
+	ST7565*												lcd;
 };
 
-struct AyPlayerCfg {
-	ayplayerMcStrcut*		mcu;
-	RunTimeLogger*		l;
-	ayplayerPcbStrcut*		pcb;
-	AyYmFileMode*			ayF;
-	freeRtosObj*			os;
+struct ayplayerGuiCfg {
+	MakiseStyle_SMessageWindow							smw;
 };
 
-struct ayPlayerGuiCfg {
-	MHost					h;
-	MContainer				c;
+struct ayPlayerCfg {
+	ayplayerMcStrcut*									mcu;
+	RunTimeLogger*										l;
+	ayplayerPcbStrcut*									pcb;
+	AyYmFileMode*										ayF;
+	freeRtosObj*										os;
+	const ayplayerGuiCfg*								const gui;
 };
+
+
+struct ayPlayerGui {
+	MHost												h;
+	MContainer											c;
+	MMessageWindow										mw;
+};
+
 
 
 class AyPlayer {
 public:
-	AyPlayer( AyPlayerCfg* cfg ) :
+	AyPlayer( ayPlayerCfg* cfg ) :
 		mcu			( cfg->mcu ),
 		l			( cfg->l ),
 		pcb			( cfg->pcb ),
 		ayFile		( cfg->ayF ),
-		os			( cfg->os )
+		os			( cfg->os ),
+		gui			( cfg->gui )
 	{}
 
 	void start			( void );
 
-	HANDLER_FSM_STEP( fsmStepFuncHardwareMcInit );
 	HANDLER_FSM_STEP( fsmStepFuncFreeRtosObjInit );
+	HANDLER_FSM_STEP( fsmStepFuncHardwareMcInit );
 	HANDLER_FSM_STEP( fsmStepFuncHardwarePcbInit );
 	HANDLER_FSM_STEP( fsmStepFuncGuiInit );
-
-
-
-	/*
-
-	HANDLER_FSM_STEP( fsm_step_func_rcc_init );
-	HANDLER_FSM_STEP( fsm_step_func_debug_uart_init );
-	HANDLER_FSM_STEP( fsm_step_func_nvic_init );	
-	HANDLER_FSM_STEP( fsm_step_func_spi_init );	
-	HANDLER_FSM_STEP( fsm_step_func_adc_init );
-	HANDLER_FSM_STEP( fsm_step_func_timer_init );
-
-	HANDLER_FSM_STEP( fsm_step_func_rcc_falling );
-	HANDLER_FSM_STEP( fsm_step_func_spi_falling );
-	HANDLER_FSM_STEP( fsm_step_func_debug_uart_falling );
-	HANDLER_FSM_STEP( fsm_step_func_adc_falling );
-	HANDLER_FSM_STEP( fsm_step_func_timer_falling );
-
-	HANDLER_FSM_STEP( fsm_step_func_freertos_obj_init );
-	HANDLER_FSM_STEP( fsm_step_func_shift_register_init );
-	HANDLER_FSM_STEP( fsm_step_func_button_init );*/
+	HANDLER_FSM_STEP( fsmStepFuncMicroSdInit );
 
 	static void mainTask ( void* obj );
-
-	/*
-	HANDLER_FSM_STEP( fsm_step_func_init_gui );
-	HANDLER_FSM_STEP( fsm_step_func_fat_init );
-	HANDLER_FSM_STEP( fsm_step_func_sd1_check );
-	HANDLER_FSM_STEP( fsm_step_func_check_playlist_sys );
-	HANDLER_FSM_STEP( fsm_step_func_create_playlist_sys );*/
-
-	//
-	//
-	//
-	//
-	//HANDLER_FSM_STEP( );
-	//HANDLER_FSM_STEP( );
-	//HANDLER_FSM_STEP( );
-	//HANDLER_FSM_STEP( );
-	//HANDLER_FSM_STEP( );
-	//
-
-
-	//HANDLER_FSM_STEP( fsm_step_func_gui_fall );
-	//HANDLER_FSM_STEP( fsm_step_func_logger_fall );
-//	HANDLER_FSM_STEP( fsm_step_func_fat_fall );
-	//HANDLER_FSM_STEP( fsm_step_func_sd1_fall );
-	///
-
 
 private:
 	/*!
@@ -176,22 +144,41 @@ private:
 	 */
 	void			rccMaxFrequancyInit					( void );
 
-	/// Текущий режим работы RCC.
+	/*!
+	 * Возвращает флаг наличия запрошенной microsd в слоте.
+	 */
+	uint32_t		checkSd								( AY_MICROSD sd );
+
+	/*!
+	 * Ожидает, пока будут вставлены обе microsd карты.
+	 * Выводит на экран и в лог соответвующие выводы.
+	 */
+	void			waitSdCardInsert					( void );
+
+	/*!
+	 * Перерисовывает экран и обновляет буфер в экране..
+	 */
+	void			guiUpdate							( void );
+
+		/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;
 
 	fsmClass< AyPlayer >								fsm;
 
 	ayplayerMcStrcut*									const mcu;
-	RunTimeLogger*									const l;
+	RunTimeLogger*										const l;
 	ayplayerPcbStrcut*									const pcb;
 	AyYmFileMode*										const ayFile;
 	freeRtosObj*										const os;
-	ayPlayerGuiCfg										g;
+	const ayplayerGuiCfg*								const gui;
+	ayPlayerGui											g;
 
-	USER_OS_STATIC_STACK_TYPE				tbMainask[ TB_MAIN_TASK_SIZE ];
-	USER_OS_STATIC_TASK_STRUCT_TYPE			tsMainTask;
+	USER_OS_STATIC_STACK_TYPE							tbMainask[ TB_MAIN_TASK_SIZE ];
+	USER_OS_STATIC_TASK_STRUCT_TYPE						tsMainTask;
 
-	FATFS							f;
-	FILINFO							sd1_fi;
-	DIR								sd1_fdir;
+
+	FATFS												fSd1;
+	FATFS												fSd2;
+	FILINFO												sd1_fi;
+	DIR													sd1_fdir;
 };

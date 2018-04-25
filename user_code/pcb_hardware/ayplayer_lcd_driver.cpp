@@ -21,4 +21,4 @@ extern "C" {
 uint8_t lcd_buffer[1024] = { 0 };
 }
 
-ST7565 ayplayer_lcd_obj( &st7565_cfg, lcd_buffer );
+ST7565 lcd( &st7565_cfg, lcd_buffer );

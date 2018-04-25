@@ -9,33 +9,6 @@
 #include "ayplayer_microsd_card.h"
 
 /*
-
-int ay_player_class::fsm_step_func_fat_init ( HANDLER_FSM_INPUT_DATA ) {
-	UNUSED( previous_step );
-	FRESULT fr;
-	fr = f_mount( &obj->f, "0:", 0 );
-
-	if ( fr == FR_OK ) {
-		if ( obj->l->send_message( RTL_TYPE_M::INIT_OK, "FatFS initialized successfully." ) != BASE_RESULT::OK ) return 2;
-		return 0;
-	} else {
-		if ( obj->l->send_message( RTL_TYPE_M::INIT_ERROR, "FatFS was not initialized!" ) != BASE_RESULT::OK ) return 2;
-		return 1;
-	}
-}
-
-int ay_player_class::fsm_step_func_sd1_check ( HANDLER_FSM_INPUT_DATA ) {
-	UNUSED( previous_step );
-	if ( check_sd( AYPLAYER_SD1 ) ) {
-		if ( obj->l->send_message( RTL_TYPE_M::RUN_MESSAGE_OK, "SD2 is detected!" ) != BASE_RESULT::OK ) return 2;
-		return 0;
-
-	} else {
-		if ( obj->l->send_message( RTL_TYPE_M::INIT_ISSUE, "SD2 missing!" ) != BASE_RESULT::OK ) return 2;
-		return 1;
-	}
-}
-
 int ay_player_class::fsm_step_func_check_playlist_sys ( HANDLER_FSM_INPUT_DATA ) {
 	UNUSED( previous_step );
 	DSTATUS r;

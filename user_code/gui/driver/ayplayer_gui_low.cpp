@@ -3,7 +3,7 @@
 #include "makise.h"
 #include "makise_gui.h"
 
-extern ST7565					ayplayer_lcd_obj;
+extern ST7565					lcd;
 extern freeRtosObj				osData;
 
 /*
@@ -20,10 +20,10 @@ uint8_t m_driver_init ( MakiseGUI* gui ) {
 
 uint8_t m_driver_start ( MakiseGUI* gui ) {
 	( void )gui;
-	if ( ayplayer_lcd_obj.reset()			!= BASE_RESULT::OK ) return M_ERROR;
-	if ( ayplayer_lcd_obj.setContrast( 8 )	!= BASE_RESULT::OK ) return M_ERROR;
-	if ( ayplayer_lcd_obj.clear()			!= BASE_RESULT::OK ) return M_ERROR;
-	if ( ayplayer_lcd_obj.on()				!= BASE_RESULT::OK ) return M_ERROR;
+	if ( lcd.reset()			!= BASE_RESULT::OK ) return M_ERROR;
+	if ( lcd.setContrast( 8 )	!= BASE_RESULT::OK ) return M_ERROR;
+	if ( lcd.clear()			!= BASE_RESULT::OK ) return M_ERROR;
+	if ( lcd.on()				!= BASE_RESULT::OK ) return M_ERROR;
 	return M_OK;
 }
 
@@ -47,7 +47,7 @@ uint8_t m_driver_set_backlight ( MakiseGUI* gui, uint8_t ) {
 
 void m_gui_draw ( MakiseGUI* gui ) {
 	( void )gui;
-	ayplayer_lcd_obj.update();	
+	lcd.update();	
 }
 
 void m_gui_predraw ( MakiseGUI* gui ) {
@@ -56,7 +56,7 @@ void m_gui_predraw ( MakiseGUI* gui ) {
 }
 
 void m_gui_update ( MakiseGUI* gui ) {
-	ayplayer_lcd_obj.update();
+	lcd.update();
 	( void )gui;
 }
 
@@ -65,7 +65,7 @@ void m_gui_update ( MakiseGUI* gui ) {
 //**********************************************************************
 extern uint8_t		lcd_buffer[1024];
 
-const MakiseDriver m_driver = {
+MakiseDriver m_driver = {
 	.gui				= ( MakiseGUI* )&mGui,			// Структура используемого GUI объекта.
 	.lcd_height			= 64,							// Реальная высота экрана.
 	.lcd_width			= 128,							// Реальная ширина экрана.
@@ -85,7 +85,7 @@ const MakiseDriver m_driver = {
 	.set_backlight		= m_driver_set_backlight		// Управление подсветкой.
 };
 
-const MakiseBuffer m_buf_st = {
+ MakiseBuffer m_buf_st = {
 	.gui			= ( MakiseGUI* )&mGui,				// Структура используемого GUI объекта.
 	.height			= 64,								// Реальная высота экрана.
 	.width			= 128,								// Реальная ширина экрана.
@@ -104,8 +104,8 @@ const MakiseBuffer m_buf_st = {
 };
 
 const MakiseGUI mGui = {
-	.buffer		= ( MakiseBuffer* )&m_buf_st,
-	.driver		= ( MakiseDriver* )&m_driver,
+	.buffer		= &m_buf_st,
+	.driver		= &m_driver,
 	.draw		= m_gui_draw,
 	.predraw	= m_gui_predraw,
 	.update		= m_gui_update

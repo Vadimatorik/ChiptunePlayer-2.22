@@ -25,19 +25,19 @@ void TIM6_DAC_IRQHandler			( void ) {
 }
 
 void DMA1_Stream3_IRQHandler		( void ) {
-	spi2.reseiveByteHandler();
+	spi2.irqHandler();
 }
 
 void DMA1_Stream4_IRQHandler		( void ) {
-	spi2.reseiveByteHandler();
+	spi2.irqHandler();
 }
 
 void DMA1_Stream7_IRQHandler		( void ) {
-	spi3.reseiveByteHandler();
+	spi3.irqHandler();
 }
 
 void DMA2_Stream5_IRQHandler		( void ) {
-	spi1.reseiveByteHandler();
+	spi1.irqHandler();
 }
 
 void DMA2_Stream6_IRQHandler		( void ) {
