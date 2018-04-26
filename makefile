@@ -43,6 +43,9 @@ CPP_FLAGS									+= -fno-exceptions
 
 LDFLAGS			:= $(MK_FLAGS) $(LD_FILES) -fno-exceptions
 
+# FreeRTOS.
+LDFLAGS			+= -Wl,--undefined=uxTopUsedPriority
+
 # Размещает каждую функцию в отдельной секции.
 LDFLAGS			+= -ffunction-sections -Wl,--gc-sections
 

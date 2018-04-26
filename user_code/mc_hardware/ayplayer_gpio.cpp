@@ -625,7 +625,7 @@ const pinCfg sd2PushCfg = {
 	.init = {
 		.Pin		=	GPIO_PIN_9,
 		.Mode		=	GPIO_MODE_INPUT,
-		.Pull		=	GPIO_PULLUP,
+		.Pull		=	GPIO_NOPULL,
 		.Speed		=	GPIO_SPEED_FREQ_LOW,
 		.Alternate	=	0
 	}

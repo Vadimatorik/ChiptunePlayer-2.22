@@ -9,8 +9,8 @@ extern SpiMaster8Bit				spi2;
 microsdSpiCfg sd2Cfg = {
 	.cs			= &sd2Cs,
 	.s			= &spi2,
-	.slow		= SPI_BAUDRATEPRESCALER_256,
-	.fast		= SPI_BAUDRATEPRESCALER_256
+	.slow		= 0,
+	.fast		= 0
 };
 
 MicrosdSpi sd2( &sd2Cfg );

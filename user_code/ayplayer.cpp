@@ -148,7 +148,7 @@ bool AyPlayer::checkSd ( AY_MICROSD sd ) {
 
 void AyPlayer::waitSdCardInsert ( void ) {
 	bool flagMicroSd1Present = true;
-	bool flagMicroSd2Present = true;
+	bool flagMicroSd2Present = false;
 
 	do {
 		if ( this->checkSd( AY_MICROSD::SD1 ) ) {
