@@ -68,6 +68,7 @@ struct ayplayerPcbStrcut {
 	ad5204< 2 >*										dp;
 	AyYmLowLavel*										ay;
 	ST7565*												lcd;
+	MicrosdBase** 										sd;
 };
 
 struct ayplayerGuiCfg {
@@ -151,8 +152,11 @@ private:
 
 	/*!
 	 * Возвращает флаг наличия запрошенной microsd в слоте.
+	 * \param[in]	sd	-	проверяемая карта.
+	 * \return		{	true	-	карта обнаружена..
+	 * 					false	-	в противном случае.}
 	 */
-	uint32_t		checkSd								( AY_MICROSD sd );
+	bool			checkSd								( AY_MICROSD sd );
 
 	/*!
 	 * Ожидает, пока будут вставлены обе microsd карты.

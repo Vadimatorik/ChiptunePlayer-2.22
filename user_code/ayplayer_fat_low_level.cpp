@@ -8,7 +8,7 @@
 extern MicrosdSdio			sd1;
 extern MicrosdSpi			sd2;
 
-MicrosdBase* ayplayer_sd_obj_array[ 2 ] = {
+MicrosdBase* sdArray[ 2 ] = {
 	&sd1,
 	&sd2
 };
@@ -20,19 +20,19 @@ DWORD get_fattime ( void ) {
 }
 
 DSTATUS disk_initialize ( BYTE pdrv ) {
-	return ( ayplayer_sd_obj_array[ pdrv ]->initialize() != EC_MICRO_SD_TYPE::ERROR ) ? 0 : STA_NOINIT;
+	return ( sdArray[ pdrv ]->initialize() != EC_MICRO_SD_TYPE::ERROR ) ? 0 : STA_NOINIT;
 }
 
 DSTATUS disk_status ( BYTE pdrv ) {
-	return ( DSTATUS )ayplayer_sd_obj_array[ pdrv ]->getStatus();
+	return ( DSTATUS )sdArray[ pdrv ]->getStatus();
 }
 
 DRESULT disk_read ( BYTE pdrv, BYTE* buff, DWORD sector, UINT count ) {
-	return ( DRESULT )ayplayer_sd_obj_array[ pdrv ]->readSector( sector, buff, count, 1000 );
+	return ( DRESULT )sdArray[ pdrv ]->readSector( sector, buff, count, 1000 );
 }
 
 DRESULT disk_write ( BYTE pdrv, const BYTE* buff, DWORD sector, UINT count ) {
-	return ( DRESULT )ayplayer_sd_obj_array[ pdrv ]->writeSector( buff, sector, count, 1000 );
+	return ( DRESULT )sdArray[ pdrv ]->writeSector( buff, sector, count, 1000 );
 }
 
 DRESULT disk_ioctl ( BYTE pdrv, BYTE cmd, void* buff ) {

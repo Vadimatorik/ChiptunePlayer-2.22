@@ -134,10 +134,16 @@ void AyPlayer::rccMaxFrequancyInit ( void ) {
 	}
 }
 
-uint32_t AyPlayer::checkSd ( AY_MICROSD sd ) {
-	( void )sd;
-	/// Карта есть...
-	return 0;
+bool AyPlayer::checkSd ( AY_MICROSD sd ) {
+	/// Если тип карты определен, значит она есть в слоте.
+	if ( this->pcb->sd[ (uint32_t)sd ]->getStatus() != EC_SD_STATUS::NOINIT )
+		return true;
+
+	if ( this->pcb->sd[ (uint32_t)sd ]->initialize() != EC_MICRO_SD_TYPE::ERROR ) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void AyPlayer::waitSdCardInsert ( void ) {
@@ -155,6 +161,7 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 			/// Если ранее предполагалось, что карта на месте.
 			if ( flagMicroSd1Present == true ) {
+				makise_g_cont_clear( &this->g.c );
 				m_create_message_window(	&this->g.mw,
 											&this->g.c,
 											mp_rel( 9, 10, 108, 44 ),
@@ -170,11 +177,14 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 		if ( this->checkSd( AY_MICROSD::SD2 ) ) {
 			this->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "SD2 is detected!" );
+			flagMicroSd2Present = true;
+		} else {
+			this->l->sendMessage( RTL_TYPE_M::INIT_ISSUE, "SD2 missing!" );
 
 			const char SD2_NOT_PRESENT[]	=	"SD2 not present!";
-
 			/// Если ранее предполагалось, что карта на месте.
 			if ( flagMicroSd2Present == true ) {
+				makise_g_cont_clear( &this->g.c );
 				m_create_message_window(	&this->g.mw,
 											&this->g.c,
 											mp_rel( 9, 10, 108, 44 ),
@@ -183,15 +193,12 @@ void AyPlayer::waitSdCardInsert ( void ) {
 				this->guiUpdate();
 			}
 
-			flagMicroSd2Present = true;
-		} else {
-			this->l->sendMessage( RTL_TYPE_M::INIT_ISSUE, "SD2 missing!" );
-
 			flagMicroSd2Present = false;
 			vTaskDelay( 100 );
 			continue;
 		}
-	} while( flagMicroSd1Present && flagMicroSd2Present );
+
+	} while( !( flagMicroSd1Present && flagMicroSd2Present ) );
 }
 
 // Перерисовывает GUI и обновляет экран.

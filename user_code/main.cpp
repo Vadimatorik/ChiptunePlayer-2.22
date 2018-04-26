@@ -25,7 +25,8 @@ ayplayerPcbStrcut ayPcbCfg = {
 	.button						=	&button,
 	.dp							=	&soundDp,
 	.ay							=	&ayLow,
-	.lcd						=	&lcd
+	.lcd						=	&lcd,
+	.sd							=	sdArray
 };
 
 extern const MakiseFont F_minecraft_rus_regular_8;
