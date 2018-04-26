@@ -104,7 +104,12 @@ public:
 		gui			( cfg->gui )
 	{}
 
-	void start			( void );
+	void			start						( void );
+
+	/*!
+	 * Возвращает текущий режим работы RCC.
+	 */
+	uint32_t		getRccMode					( void );
 
 	HANDLER_FSM_STEP( fsmStepFuncFreeRtosObjInit );
 	HANDLER_FSM_STEP( fsmStepFuncHardwareMcInit );

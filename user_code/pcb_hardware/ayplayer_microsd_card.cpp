@@ -2,15 +2,24 @@
 #include "microsd_card_spi.h"
 #include "pin.h"
 #include "spi.h"
+#include "ayplayer.h"
 
 extern Pin							sd2Cs;
 extern SpiMaster8Bit				spi2;
+extern AyPlayer						ay;
+
+void setSpiSpeed ( SpiMaster8BitBase* spi, bool speed ) {
+	/*!
+	 * Первые AYPLAYER_RCC_CFG_COUNT cfg - медленные.
+	 * Следующие AYPLAYER_RCC_CFG_COUNT cfg - быстрые.
+	 */
+	spi->setPrescaler( ay.getRccMode() * ( ( uint32_t )speed + 1 ) );
+}
 
 microsdSpiCfg sd2Cfg = {
-	.cs			= &sd2Cs,
-	.s			= &spi2,
-	.slow		= 0,
-	.fast		= 0
+	.cs				=	&sd2Cs,
+	.s				=	&spi2,
+	.setSpiSpeed	=	setSpiSpeed
 };
 
 MicrosdSpi sd2( &sd2Cfg );

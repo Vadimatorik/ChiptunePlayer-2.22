@@ -234,6 +234,10 @@ void AyPlayer::start ( void ) {
 	vTaskStartScheduler();
 }
 
+uint32_t AyPlayer::getRccMode ( void ) {
+	return this->rccIndex;
+}
+
 void AyPlayer::mainTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;
 	o->fsm.start( &ayPlayerFreeRtosObjInitFsmStep, o );

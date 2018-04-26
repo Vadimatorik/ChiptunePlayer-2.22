@@ -27,7 +27,11 @@ SpiMaster8BitCfg spi1Cfg = {
 	.dmaRxCh					=	0
 };
 
-uint32_t baudratePrescalerSpi2[ AYPLAYER_RCC_CFG_COUNT ] = {
+uint32_t baudratePrescalerSpi2[ AYPLAYER_RCC_CFG_COUNT * 2 ] = {
+	SPI_BAUDRATEPRESCALER_256,
+	SPI_BAUDRATEPRESCALER_256,
+	SPI_BAUDRATEPRESCALER_256,
+	SPI_BAUDRATEPRESCALER_256,
 	SPI_BAUDRATEPRESCALER_256,
 	SPI_BAUDRATEPRESCALER_256,
 	SPI_BAUDRATEPRESCALER_256,
@@ -44,7 +48,7 @@ SpiMaster8BitCfg spi2Cfg = {
 	.clkPhase					=	SPI_PHASE_1EDGE,
 
 	.baudratePrescalerArray		=	baudratePrescalerSpi2,
-	.numberBaudratePrescalerCfg	=	AYPLAYER_RCC_CFG_COUNT,
+	.numberBaudratePrescalerCfg	=	AYPLAYER_RCC_CFG_COUNT * 2,
 
 	.dmaTx						=	DMA1_Stream4,
 	.dmaRx						=	DMA1_Stream3,
