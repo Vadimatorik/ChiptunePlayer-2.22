@@ -147,53 +147,69 @@ bool AyPlayer::checkSd ( AY_MICROSD sd ) {
 }
 
 void AyPlayer::waitSdCardInsert ( void ) {
-	bool flagMicroSd1Present = true;
-	bool flagMicroSd2Present = false;
+	/*!
+	 * -1	-	первое сканирование.
+	 * 0	-	отсуствует.
+	 * 1	-	обнаружена.
+	 */
+	int flagMicroSd1Present = -1;
+	int flagMicroSd2Present = -1;
 
 	do {
 		if ( this->checkSd( AY_MICROSD::SD1 ) ) {
-			this->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "SD1 is detected!" );
-			flagMicroSd1Present = true;
+			if ( flagMicroSd1Present != 1 ) {
+				flagMicroSd1Present = 1;
+				this->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "SD1 is detected!" );
+			}
 		} else {
-			this->l->sendMessage( RTL_TYPE_M::INIT_ISSUE, "SD1 missing!" );
+			if ( flagMicroSd1Present != 0 ) {
+				flagMicroSd1Present = 0;
 
-			const char SD1_NOT_PRESENT[]	=	"SD1 not present!";
+				this->l->sendMessage( RTL_TYPE_M::INIT_ISSUE, "SD1 missing!" );
 
-			/// Если ранее предполагалось, что карта на месте.
-			if ( flagMicroSd1Present == true ) {
-				makise_g_cont_clear( &this->g.c );
-				m_create_message_window(	&this->g.mw,
-											&this->g.c,
-											mp_rel( 9, 10, 108, 44 ),
-											( char* )SD1_NOT_PRESENT,
-											( MakiseStyle_SMessageWindow* )&this->gui->smw );
-				this->guiUpdate();
+				const char SD1_NOT_PRESENT[]	=	"SD1 not present!";
+
+				/// Если ранее предполагалось, что карта на месте.
+				if ( flagMicroSd1Present == true ) {
+					makise_g_cont_clear( &this->g.c );
+					m_create_message_window(	&this->g.mw,
+												&this->g.c,
+												mp_rel( 9, 10, 108, 44 ),
+												( char* )SD1_NOT_PRESENT,
+												( MakiseStyle_SMessageWindow* )&this->gui->smw );
+					this->guiUpdate();
+				}
 			}
 
-			flagMicroSd1Present = false;
 			vTaskDelay( 100 );
 			continue;
 		}
 
 		if ( this->checkSd( AY_MICROSD::SD2 ) ) {
-			this->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "SD2 is detected!" );
-			flagMicroSd2Present = true;
+			if ( flagMicroSd2Present != 1 ) {
+				flagMicroSd2Present = 1;
+				this->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "SD2 is detected!" );
+			}
 		} else {
-			this->l->sendMessage( RTL_TYPE_M::INIT_ISSUE, "SD2 missing!" );
+			if ( flagMicroSd2Present != 0 ) {
+				flagMicroSd2Present = 0;
 
-			const char SD2_NOT_PRESENT[]	=	"SD2 not present!";
-			/// Если ранее предполагалось, что карта на месте.
-			if ( flagMicroSd2Present == true ) {
-				makise_g_cont_clear( &this->g.c );
-				m_create_message_window(	&this->g.mw,
-											&this->g.c,
-											mp_rel( 9, 10, 108, 44 ),
-											( char* )SD2_NOT_PRESENT,
-											( MakiseStyle_SMessageWindow* )&this->gui->smw );
-				this->guiUpdate();
+				this->l->sendMessage( RTL_TYPE_M::INIT_ISSUE, "SD2 missing!" );
+
+				const char SD2_NOT_PRESENT[]	=	"SD2 not present!";
+
+				/// Если ранее предполагалось, что карта на месте.
+				if ( flagMicroSd2Present == true ) {
+					makise_g_cont_clear( &this->g.c );
+					m_create_message_window(	&this->g.mw,
+												&this->g.c,
+												mp_rel( 9, 10, 108, 44 ),
+												( char* )SD2_NOT_PRESENT,
+												( MakiseStyle_SMessageWindow* )&this->gui->smw );
+					this->guiUpdate();
+				}
 			}
 
-			flagMicroSd2Present = false;
 			vTaskDelay( 100 );
 			continue;
 		}
