@@ -13,6 +13,7 @@ ayplayerMcStrcut ayMcuCfg = {
 	.ayClkTim					=	&ayClk,
 	.lcdPwmTim					=	&lcdPwm,
 	.interruptAyTim				=	&interruptAy,
+	.pwr						=	&pwr,
 
 #ifdef configGENERATE_RUN_TIME_STATS
 	.timRunTimeStats			=	&timRunTimeStats

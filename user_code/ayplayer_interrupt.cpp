@@ -3,6 +3,7 @@
 #include "microsd_card_sdio.h"
 #include "uart.h"
 #include "spi.h"
+#include "pwr.h"
 
 extern AyYmLowLavel				ayLow;
 extern MicrosdSdio				sd1;
@@ -10,6 +11,7 @@ extern Uart						usart3;
 extern SpiMaster8Bit			spi1;
 extern SpiMaster8Bit			spi2;
 extern SpiMaster8Bit			spi3;
+extern Pwr						pwr;
 
 extern "C" {
 
@@ -27,6 +29,11 @@ void HardFault_Handler ( void ) {
 		" bx r2														\n"
 		" handler2_address_const: .word prvGetRegistersFromStack	\n"
 	);
+}
+
+void PVD_IRQHandler					( void ) {
+	pwr.irqHandler();
+	while(1);
 }
 
 void SysTick_Handler				( void ) {

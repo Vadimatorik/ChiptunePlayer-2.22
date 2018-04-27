@@ -11,6 +11,8 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 	//r = obj->mcu->wdt->reinit( 0 );
 	//assertParam( r == BASE_RESULT::OK );
 
+	obj->mcu->pwr->reinit( 0 );
+
 	/*!
 	 * GPIO init.
 	 */
@@ -26,13 +28,15 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 	/*!
 	 * NVIC.
 	 */
-	NVIC_SetPriority( DMA1_Stream3_IRQn, 14 );
-	NVIC_SetPriority( DMA1_Stream4_IRQn, 14 );
-	NVIC_SetPriority( DMA1_Stream7_IRQn, 14 );
-	NVIC_SetPriority( DMA2_Stream5_IRQn, 14 );
-	NVIC_SetPriority( DMA2_Stream6_IRQn, 14 );
+	NVIC_SetPriority( DMA1_Stream3_IRQn, 10 );
+	NVIC_SetPriority( DMA1_Stream4_IRQn, 10 );
+	NVIC_SetPriority( DMA1_Stream7_IRQn, 10 );
+	NVIC_SetPriority( DMA2_Stream5_IRQn, 10 );
+	NVIC_SetPriority( DMA2_Stream6_IRQn, 10 );
 
-	NVIC_SetPriority( USART3_IRQn, 15 );
+	NVIC_SetPriority( USART3_IRQn, 10 );
+
+	NVIC_SetPriority( PVD_IRQn, 10 );
 
 	NVIC_EnableIRQ( DMA1_Stream3_IRQn );
 	NVIC_EnableIRQ( DMA1_Stream4_IRQn );
@@ -41,6 +45,8 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 	NVIC_EnableIRQ( DMA2_Stream6_IRQn );
 
 	NVIC_EnableIRQ( USART3_IRQn );
+
+	NVIC_EnableIRQ( PVD_IRQn );
 
 	/*!
 	 * После инициализации запускаем все модули,
@@ -96,7 +102,6 @@ int AyPlayer::fsmStepFuncMicroSdInit ( HANDLER_FSM_INPUT_DATA ) {
 	 * Проверяем наличие обеих флешек в слотах.
 	 */
 	obj->waitSdCardInsert();
-
 	return 0;
 
 	/*

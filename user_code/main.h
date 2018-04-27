@@ -16,6 +16,7 @@ extern TimCompOneChannel							ayClk;
 extern TimPwmOneChannel								lcdPwm;
 extern TimInterrupt									interruptAy;
 extern RunTimeLogger								ayLog;
+extern Pwr											pwr;
 
 extern ShiftRegister								srAy;
 extern ShiftRegister								srButton;

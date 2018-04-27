@@ -6,6 +6,7 @@
 #include "rcc.h"
 #include "spi.h"
 #include "adc.h"
+#include "pwr.h"
 #include "timer.h"
 
 #include "module_digital_potentiometer_ad5204.h"
@@ -55,6 +56,7 @@ struct ayplayerMcStrcut {
 	TimCompOneChannelBase*			ayClkTim;
 	TimPwmOneChannelBase*			lcdPwmTim;
 	TimInterruptBase*				interruptAyTim;
+	Pwr*							pwr;
 
 #ifdef configGENERATE_RUN_TIME_STATS
 	TimCounter*						timRunTimeStats;
