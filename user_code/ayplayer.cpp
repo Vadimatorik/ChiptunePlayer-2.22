@@ -169,16 +169,13 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 				const char SD1_NOT_PRESENT[]	=	"SD1 not present!";
 
-				/// Если ранее предполагалось, что карта на месте.
-				if ( flagMicroSd1Present == true ) {
-					makise_g_cont_clear( &this->g.c );
-					m_create_message_window(	&this->g.mw,
-												&this->g.c,
-												mp_rel( 9, 10, 108, 44 ),
-												( char* )SD1_NOT_PRESENT,
-												( MakiseStyle_SMessageWindow* )&this->gui->smw );
-					this->guiUpdate();
-				}
+				makise_g_cont_clear( &this->g.c );
+				m_create_message_window(	&this->g.mw,
+											&this->g.c,
+											mp_rel( 9, 10, 108, 44 ),
+											( char* )SD1_NOT_PRESENT,
+											( MakiseStyle_SMessageWindow* )&this->gui->smw );
+				this->guiUpdate();
 			}
 
 			vTaskDelay( 100 );
@@ -198,16 +195,13 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 				const char SD2_NOT_PRESENT[]	=	"SD2 not present!";
 
-				/// Если ранее предполагалось, что карта на месте.
-				if ( flagMicroSd2Present == true ) {
-					makise_g_cont_clear( &this->g.c );
-					m_create_message_window(	&this->g.mw,
-												&this->g.c,
-												mp_rel( 9, 10, 108, 44 ),
-												( char* )SD2_NOT_PRESENT,
-												( MakiseStyle_SMessageWindow* )&this->gui->smw );
-					this->guiUpdate();
-				}
+				makise_g_cont_clear( &this->g.c );
+				m_create_message_window(	&this->g.mw,
+											&this->g.c,
+											mp_rel( 9, 10, 108, 44 ),
+											( char* )SD2_NOT_PRESENT,
+											( MakiseStyle_SMessageWindow* )&this->gui->smw );
+				this->guiUpdate();
 			}
 
 			vTaskDelay( 100 );
