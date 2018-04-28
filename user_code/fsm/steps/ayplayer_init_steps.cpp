@@ -98,28 +98,23 @@ int AyPlayer::fsmStepFuncGuiInit ( HANDLER_FSM_INPUT_DATA ) {
 }
 
 int AyPlayer::fsmStepFuncMicroSdInit ( HANDLER_FSM_INPUT_DATA ) {
-	/*!
-	 * Проверяем наличие обеих флешек в слотах.
-	 */
-	obj->waitSdCardInsert();
-	return 0;
+	do {
+		obj->waitSdCardInsert();
 
-	/*
-	 * 	FRESULT fr;
-
-	 * Пытаемся сразу же примонтировать флешки.
-
-	fr = f_mount( &obj->fSd1, "0:", 1 );
-
-	fr = f_mount( &obj->fSd2, "1:", 1 );
-		if ( fr == FR_OK ) {
-			if ( obj->l->send_message( RTL_TYPE_M::INIT_OK, "FatFS initialized successfully." ) != BASE_RESULT::OK ) return 2;
-			return 0;
-		} else {
-			if ( obj->l->send_message( RTL_TYPE_M::INIT_ERROR, "FatFS was not initialized!" ) != BASE_RESULT::OK ) return 2;
-			return 1;
+		if ( obj->fatFsReinit( AY_MICROSD::SD1 ) != FRESULT::FR_OK ) {
+			obj->waitSdCardDisconnect( AY_MICROSD::SD1 );
+			continue;
 		}
-		*/
+
+		if ( obj->fatFsReinit( AY_MICROSD::SD2 ) != FRESULT::FR_OK ) {
+			obj->waitSdCardDisconnect( AY_MICROSD::SD2 );
+			continue;
+		}
+
+		break;
+	} while( true );
+
+	return 0;
 }
 
 

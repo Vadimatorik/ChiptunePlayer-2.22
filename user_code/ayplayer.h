@@ -25,6 +25,8 @@
 #include "ayplayer_microsd_card.h"
 #include "mono_lcd_lib_st7565.h"
 
+#include "ayplayer_fat_error_string.h"
+
 #include "makise_e_message_window.h"
 
 /*!
@@ -44,22 +46,22 @@
 #define ILLUMINATION_CONTROL_TASK_PRIO			1
 
 struct ayplayerMcStrcut {
-	WdtBase*						wdt;
-	ayplayerGpio*					gpio;
-	GlobalPortBase*					gp;
-	UartBase*						debugUart;
-	RccBase*						rcc;
-	SpiMaster8BitBase*				spi1;
-	SpiMaster8BitBase*				spi2;
-	SpiMaster8BitBase*				spi3;
-	AdcOneChannelBase*				adc1;
-	TimCompOneChannelBase*			ayClkTim;
-	TimPwmOneChannelBase*			lcdPwmTim;
-	TimInterruptBase*				interruptAyTim;
-	Pwr*							pwr;
+	WdtBase*											wdt;
+	ayplayerGpio*										gpio;
+	GlobalPortBase*										gp;
+	UartBase*											debugUart;
+	RccBase*											rcc;
+	SpiMaster8BitBase*									spi1;
+	SpiMaster8BitBase*									spi2;
+	SpiMaster8BitBase*									spi3;
+	AdcOneChannelBase*									adc1;
+	TimCompOneChannelBase*								ayClkTim;
+	TimPwmOneChannelBase*								lcdPwmTim;
+	TimInterruptBase*									interruptAyTim;
+	Pwr*												pwr;
 
 #ifdef configGENERATE_RUN_TIME_STATS
-	TimCounter*						timRunTimeStats;
+	TimCounter*											timRunTimeStats;
 #endif
 };
 
@@ -93,7 +95,11 @@ struct ayPlayerGui {
 	MMessageWindow										mw;
 };
 
+#define AYPLAYER_MICROSD_COUNT							2
 
+struct ayPlayerFatFs {
+	FATFS						f[ AYPLAYER_MICROSD_COUNT ];
+};
 
 class AyPlayer {
 public:
@@ -176,7 +182,22 @@ private:
 	 */
 	void			guiUpdate							( void );
 
-		/// Текущий режим работы RCC.
+	/*!
+	 * Попытка инициализировать FatFS для выбранной карты.
+	 */
+	FRESULT			fatFsReinit							( AY_MICROSD sd );
+
+	/*!
+	 * Рисует сообщение об ошибке microsd.
+	 */
+	void			errorMicroSdDraw					( const AY_MICROSD sd, const FRESULT r );
+
+	/*!
+	 * Ждем, пока отсоединят флешку.
+	 */
+	void			waitSdCardDisconnect				( const AY_MICROSD sd );
+
+	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;
 
 	fsmClass< AyPlayer >								fsm;
@@ -197,8 +218,5 @@ private:
 	/// Яркость подсветки.
 	float												illuminationDuty = 1;
 
-	FATFS												fSd1;
-	FATFS												fSd2;
-	FILINFO												sd1_fi;
-	DIR													sd1_fdir;
+	ayPlayerFatFs										fat;
 };

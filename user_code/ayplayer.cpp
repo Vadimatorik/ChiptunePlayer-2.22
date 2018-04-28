@@ -169,13 +169,13 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 				const char SD1_NOT_PRESENT[]	=	"SD1 not present!";
 
-				makise_g_cont_clear( &this->g.c );
 				m_create_message_window(	&this->g.mw,
 											&this->g.c,
 											mp_rel( 9, 10, 108, 44 ),
 											( char* )SD1_NOT_PRESENT,
 											( MakiseStyle_SMessageWindow* )&this->gui->smw );
 				this->guiUpdate();
+				makise_g_cont_rem( &this->g.mw.el );
 			}
 
 			vTaskDelay( 100 );
@@ -195,13 +195,13 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 				const char SD2_NOT_PRESENT[]	=	"SD2 not present!";
 
-				makise_g_cont_clear( &this->g.c );
 				m_create_message_window(	&this->g.mw,
 											&this->g.c,
 											mp_rel( 9, 10, 108, 44 ),
 											( char* )SD2_NOT_PRESENT,
 											( MakiseStyle_SMessageWindow* )&this->gui->smw );
 				this->guiUpdate();
+				makise_g_cont_rem( &this->g.mw.el );
 			}
 
 			vTaskDelay( 100 );
@@ -211,15 +211,116 @@ void AyPlayer::waitSdCardInsert ( void ) {
 	} while( !( flagMicroSd1Present && flagMicroSd2Present ) );
 }
 
+void AyPlayer::waitSdCardDisconnect ( const AY_MICROSD sd ) {
+	while( true ) {
+		if ( this->pcb->sd[ (uint32_t)sd ]->getStatus() != EC_SD_STATUS::OK )
+			break;
+	}
+
+	char	massage[] = "SDX was been disconnect.";
+
+	if ( sd == AY_MICROSD::SD1 ) {
+		massage[ 2 ]	=	'1';
+	} else {
+		massage[ 2 ]	=	'2';
+	}
+
+	this->l->sendMessage( RTL_TYPE_M::INIT_OK, massage );
+
+}
+
+void AyPlayer::errorMicroSdDraw ( const AY_MICROSD sd, const FRESULT r ) {
+	char	massage[ 100 ];
+
+	massage[ 0 ] = 'S';
+	massage[ 1 ] = 'D';
+
+	if ( sd == AY_MICROSD::SD1 ) {
+		massage[ 2 ]	=	'1';
+	} else {
+		massage[ 2 ]	=	'2';
+	}
+
+	massage[ 3 ] = ':';
+
+	const char*	s;
+
+	switch ( r ) {
+		case FR_DISK_ERR:				s	=	sErrDiskErr;				break;
+		case FR_INT_ERR:				s	=	sErrIntErr;					break;
+		case FR_NOT_READY:				s	=	sErrNotReady;				break;
+		case FR_NO_FILE:				s	=	sErrNoFile;					break;
+		case FR_NO_PATH:				s	=	sErrnoPath;					break;
+		case FR_INVALID_NAME:			s	=	sErrInvalidName;			break;
+		case FR_DENIED:					s	=	sErrDenied;					break;
+		case FR_EXIST:					s	=	sErrExist;					break;
+		case FR_INVALID_OBJECT:			s	=	sErrInvalidObject;			break;
+		case FR_WRITE_PROTECTED:		s	=	sErrWriteProtected;			break;
+		case FR_INVALID_DRIVE:			s	=	sErrInvalidDrive;			break;
+		case FR_NOT_ENABLED:			s	=	sErrNotEnabled;				break;
+		case FR_NO_FILESYSTEM:			s	=	sErrnoFilesystem;			break;
+		case FR_MKFS_ABORTED:			s	=	sErrMkfsAborted;			break;
+		case FR_TIMEOUT:				s	=	sErrTimeout;				break;
+		case FR_LOCKED:					s	=	sErrLocked;					break;
+		case FR_NOT_ENOUGH_CORE:		s	=	sErrNotEnoughCore;			break;
+		case FR_TOO_MANY_OPEN_FILES:	s	=	sErrTooManyOpenFiles;		break;
+		case FR_INVALID_PARAMETER:		s	=	sErrInvalidParameter;		break;
+
+		default:
+			while( 1 );	/// Невозможный исход.
+		}
+
+
+
+		strcpy( &massage[ 5 ], s );
+		massage[ 4 ]	=	'\t';							/// В консоле удобнее через tab.
+		this->l->sendMessage( RTL_TYPE_M::INIT_ISSUE, massage );
+
+		massage[ 4 ]	=	' ';							/// На экране однозначно на разных строках.
+
+		m_create_message_window( &this->g.mw, &this->g.c, mp_rel( 9, 10, 108, 44 ), massage, ( MakiseStyle_SMessageWindow* )&this->gui->smw );
+		this->guiUpdate();
+		makise_g_cont_clear( &this->g.c );
+}
+
+FRESULT AyPlayer::fatFsReinit( AY_MICROSD sd ) {
+	FRESULT	r;
+
+	switch( ( uint32_t )sd ) {
+	case ( uint32_t )AY_MICROSD::SD1:
+		r = f_mount( &this->fat.f[ 0 ], "0:", 1 );
+		break;
+
+	case ( uint32_t )AY_MICROSD::SD2:
+		r = f_mount( &this->fat.f[ 1 ], "1:", 1 );
+		break;
+
+	default:
+		return FRESULT::FR_INVALID_PARAMETER;
+	};
+
+	if ( r != FRESULT::FR_OK ) {
+		errorMicroSdDraw( sd, r );
+	} else {
+		char massage[] = "FatFs connected witch SDX!";
+		/// Пишем вместо X номер карты.
+		massage[ sizeof( massage ) - 3 ] = '1' + ( uint32_t )sd;
+
+		this->l->sendMessage( RTL_TYPE_M::INIT_OK, massage );
+	}
+
+	return r;
+}
+
 // Перерисовывает GUI и обновляет экран.
 void AyPlayer::guiUpdate ( void ) {
-    USER_OS_TAKE_MUTEX( this->os->mHost, portMAX_DELAY );
-    this->pcb->lcd->bufClear();
-    makise_g_host_call( &this->g.h, M_G_CALL_PREDRAW );
-    makise_g_host_call( &this->g.h, M_G_CALL_DRAW );
-    this->pcb->lcd->update();
-    USER_OS_GIVE_BIN_SEMAPHORE( this->os->sGuiUpdate );
-    USER_OS_GIVE_MUTEX( this->os->mHost );
+	USER_OS_TAKE_MUTEX( this->os->mHost, portMAX_DELAY );
+	this->pcb->lcd->bufClear();
+	makise_g_host_call( &this->g.h, M_G_CALL_PREDRAW );
+	makise_g_host_call( &this->g.h, M_G_CALL_DRAW );
+	this->pcb->lcd->update();
+	USER_OS_GIVE_BIN_SEMAPHORE( this->os->sGuiUpdate );
+	USER_OS_GIVE_MUTEX( this->os->mHost );
 }
 
 extern const fsmStep< AyPlayer > ayPlayerFreeRtosObjInitFsmStep;
