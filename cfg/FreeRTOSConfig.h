@@ -5,11 +5,14 @@
 extern "C" {
 #endif
 
+#define configUSE_HEAP_SCHEME                 	    2
+
 #define configUSE_PREEMPTION						1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION		1
 #define configUSE_IDLE_HOOK							0
 #define configUSE_TICK_HOOK							0
 #define configCPU_CLOCK_HZ							16000000
+#define configTOTAL_HEAP_SIZE						( ( size_t ) ( 90 * 1024 ) )
 #define configTICK_RATE_HZ							( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES						( 5 )
 #define configMINIMAL_STACK_SIZE					( ( unsigned short ) 130 )
@@ -27,7 +30,7 @@ extern "C" {
 #define configUSE_STATS_FORMATTING_FUNCTIONS		1
 
 #define configSUPPORT_STATIC_ALLOCATION				1
-#define configSUPPORT_DYNAMIC_ALLOCATION			0
+#define configSUPPORT_DYNAMIC_ALLOCATION			1
 
 #define configUSE_MUTEXES							1
 #define configUSE_RECURSIVE_MUTEXES					1
@@ -96,6 +99,8 @@ extern uint32_t			vGetRunTimeCounterValue				( void );
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()			vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE()					vGetRunTimeCounterValue();
 #endif
+
+
 
 #define assertParam(expr) ((expr) ? (void)0U : assertFailed((uint8_t *)__FILE__, __LINE__))
 void assertFailed ( uint8_t* file, uint32_t line );
