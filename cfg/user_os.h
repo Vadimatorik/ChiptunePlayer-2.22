@@ -49,7 +49,8 @@
 // Метод должен отдать mutex в потоке.
 // Метод ничего не возвращает.
 #define USER_OS_GIVE_MUTEX(MUTEX)							xSemaphoreGive( MUTEX )
-
+/// Возвращает 1, если mutex свободен. 0 - если занят.
+#define USER_OS_CHECK_MUTEX_AVAILABLE(MUTEX)				uxSemaphoreGetCount( MUTEX )
 /*
  * Симафоры.
  */
@@ -124,52 +125,3 @@
 
 // Служит для записи таблицы векторов прерываний.
 #define M_ISR_TO_CONST_P_VOID(POINT)	((void*)(POINT))
-
-//**********************************************************************
-//					Для связи с используемой OS.
-//**********************************************************************
-
-// Тип переменной-буфера, в которую будет создан mutex.
-#define USER_OS_STATIC_MUTEX_BUFFER						 StaticSemaphore_t
-// Данные, которыми будет заполнена переменная-буффер при старте.
-#define USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE					\
-{																\
-	.pvDummy1 = {nullptr, nullptr, nullptr},					\
-	.u = {														\
-		.pvDummy2 = NULL,										\
-	},															\
-	.xDummy3 = { { 0,nullptr, { 0,{ nullptr, nullptr } } },	 \
-				 { 0,nullptr, { 0,{ nullptr, nullptr } } } },	\
-	.uxDummy4 = { 0, 0, 0 },									\
-	.ucDummy5 = { 0, 0},										\
-	.ucDummy6 = 0												\
-}
-
-// Тип переменной mutex-а, который будет создан статически и в него будут помещены данные.
-#define USER_OS_STATIC_MUTEX								SemaphoreHandle_t
-// Метод должен создать в заранее выделенной переменной-буфере mutex.
-#define USER_OS_STATIC_MUTEX_CREATE(P_BUF)					xSemaphoreCreateMutexStatic( P_BUF )
-// Метод должен принять mutex в потоке.
-// Вне зависимости от успеха операции возвращается код окончания операции.
-// Параметр EXPECTATION (ожидание mutex-а) выставляется в системных тиках операционной системы.
-// Должно вернуть true если успех и false - есл провал.
-#define USER_OS_TAKE_MUTEX(MUTEX,EXPECTATION)				xSemaphoreTake( MUTEX, ( TickType_t )EXPECTATION )
-// Метод должен отдать mutex в потоке.
-// Метод ничего не возвращает.
-#define USER_OS_GIVE_MUTEX(MUTEX)							xSemaphoreGive( MUTEX )
-
-
-// Тип переменной-буфера, в которую будет создан бинарный semaphore.
-#define USER_OS_STATIC_BIN_SEMAPHORE_BUFFER				 StaticSemaphore_t
-// Данные, которыми будет заполнена переменная-буффер при старте.
-#define USER_OS_STATIC_BIN_SEMAPHORE_BUFFER_INIT_VALUE		USER_OS_STATIC_MUTEX_BUFFER_INIT_VALUE
-// Тип переменной бинарного semaphore-а, который будет создан статически и в него будут помещены данные.
-#define USER_OS_STATIC_BIN_SEMAPHORE						SemaphoreHandle_t
-// Метод должен создать в заранее выделенной переменной-буфере бинарный semaphore.
-#define USER_OS_STATIC_BIN_SEMAPHORE_CREATE(P_BUF)			xSemaphoreCreateBinaryStatic( P_BUF )
-// Тип переменной, которая содержит в себе указания для метода выдачи семафора и прерывания о том,
-// стоит ли удерживать данную задачу от вытеснения разблокированной с большим приоритетом (
-// если вдруг симафор таковую разблокирует) или нет.
-#define USER_OS_PRIO_TASK_WOKEN							 BaseType_t
-// Метод должен выдать семафор из прерывания.
-#define USER_OS_GIVE_BIN_SEMAPHORE_FROM_ISR(P_BUF,P_PRIO)	xSemaphoreGiveFromISR( P_BUF, P_PRIO )
