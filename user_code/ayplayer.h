@@ -77,6 +77,8 @@ struct ayplayerGuiCfg {
 	MakiseStyle_SMessageWindow							smw;
 	MakiseStyle_SList									ssl;
 	MakiseStyle_SListItem								sslItem;
+	MakiseStyle_SMPlayerStatusBar						statusBarCfg;
+	MPlayerStatusBar_CallbackFunc						statusBarCallbackCfg;
 };
 
 struct ayPlayerCfg {
@@ -94,6 +96,8 @@ struct ayPlayerGui {
 	MContainer											c;
 	MMessageWindow										mw;
 	MSList												sl;
+	MSList_Item											slItem[ 4 ];
+	MPlayerStatusBar									sb;
 };
 
 #define AYPLAYER_MICROSD_COUNT							2
@@ -119,6 +123,10 @@ public:
 	 * Возвращает текущий режим работы RCC.
 	 */
 	uint32_t		getRccMode					( void );
+
+	uint32_t		getStatePlay				( void );
+	uint32_t		getPercentBattery			( void );
+
 
 	HANDLER_FSM_STEP( fsmStepFuncFreeRtosObjInit );
 	HANDLER_FSM_STEP( fsmStepFuncHardwareMcInit );
@@ -206,7 +214,10 @@ private:
 
 	void			printMessageAndArg					( const char* const message, char* arg );
 
-	void			initWindowIndexingSupportedFiles	( char* stateIndexing );
+	void			initWindowIndexingSupportedFiles	( char* stateIndexing = nullptr );
+
+	void			initGuiStatusBar					( void );
+	void			sbItemShift							( uint32_t cout, char* newSt );
 
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;

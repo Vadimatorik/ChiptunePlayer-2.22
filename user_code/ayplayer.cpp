@@ -330,20 +330,61 @@ void AyPlayer::printMessageAndArg ( const char* const message, char* arg ) {
 void AyPlayer::initWindowIndexingSupportedFiles( char* stateIndexing ) {
 	m_create_slist(	&this->g.sl,
 					&this->g.c,
-					mp_rel( 0,   0,
-							128, 64 ),
+					mp_rel( 0,	11,
+							128, 64 - 11 ),
 					stateIndexing,
 					nullptr,
 					nullptr,
 					MSList_List,
 					&this->gui->ssl,
 					&this->gui->sslItem );
+
+	for ( int i = 0; i < 4; i++ ) {
+		this->g.slItem[ i ].text	=	nullptr;
+		m_slist_add( &this->g.sl, &this->g.slItem[ i ] );
+	}
 }
 
-static const char AYPLAYER_MESSAGE_OPEN_DIR[]			=	"Open dir:";
-static const char AYPLAYER_MESSAGE_CLOSE_DIR[]			=	"Close dir:";
-static const char AYPLAYER_ERR_OPEN_DIR[]				=	"Error open dir:";
-static const char AYPLAYER_MESSAGE_FINDED_FILE[]		=	"File found:";
+uint32_t AyPlayer::getStatePlay ( void ) {
+	return 0;
+}
+
+uint32_t AyPlayer::getPercentBattery ( void ) {
+	return 0;
+}
+
+void AyPlayer::initGuiStatusBar( void ) {
+	m_create_player_status_bar(	&this->g.sb,
+								&this->g.c,
+								mp_rel(	0,	0,
+										128, 12	),
+								&this->gui->statusBarCfg,
+								&this->gui->statusBarCallbackCfg	);
+}
+
+// Метод сдвигает вниз все строки (1 удаляется) и добавляет вверх новую.
+void AyPlayer::sbItemShift ( uint32_t cout, char* newSt ) {
+	/// Если раньше там была не пустая строка.
+	if ( this->g.slItem[ cout - 1 ].text != nullptr ) {
+		vPortFree( this->g.slItem[ cout - 1 ].text );
+	}
+
+    for ( uint32_t l = cout - 1; l > 0 ; l-- ) {
+        this->g.slItem[ l ].text = this->g.slItem[ l - 1 ].text;
+    }
+
+    uint32_t lenString = strlen( newSt ) + 1;
+    this->g.slItem[ 0 ].text = ( char* )pvPortMalloc( lenString );
+    strcpy( this->g.slItem[ 0 ].text, newSt );
+}
+
+static const char AYPLAYER_MESSAGE_OPEN_DIR[]									=	"Open dir:";
+static const char AYPLAYER_MESSAGE_CLOSE_DIR[]									=	"Close dir:";
+static const char AYPLAYER_ERR_OPEN_DIR[]										=	"Error open dir:";
+static const char AYPLAYER_MESSAGE_FINDED_FILE[]								=	"File found:";
+
+static const char AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_FINDING_FILE[]	=	"Finding supported file...";
+static const char AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_ANALIS_FILE[]	=	"Analisis supported file...";
 
 void AyPlayer::indexingSupportedFiles( char* path ) {
 	FRESULT				r;
@@ -351,7 +392,14 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 	assertParam( d );
 	static FILINFO		f;
 
+	/// Флаг выставляется, когда мы обнаружили в
+	/// директории хоть один файл и просканировали ее на все по шаблону.
+	/// Чтобы не нраваться на многократное повторное сканирование.
+	bool				scanDir	=	false;
+
 	this->printMessageAndArg( AYPLAYER_MESSAGE_OPEN_DIR, path );
+	m_slist_set_text_string( &this->g.sl, AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_FINDING_FILE );
+	this->guiUpdate();
 
 	r = f_opendir( d, path );
 	if ( r != FRESULT::FR_OK ) {
@@ -365,7 +413,7 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 
 		/// Закончились элементы в текущей директории.
 		if ( r != FR_OK || f.fname[ 0 ] == 0 ) {
-			vPortFree( d );
+
 			break;
 		}
 
@@ -376,6 +424,12 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 			this->indexingSupportedFiles( path );
 			path[ i ] = 0;
 		} else {
+			if ( scanDir == true ) continue;
+
+			/// После того, как просканируем все файлы по шаблону в директории - нас будут
+			/// интересовать только вложенные директории.
+			scanDir = true;
+
 			static FILINFO	fMusic;
 			static DIR		dirMusicFile;
 			/// В папке есть хотя бы 1 файл.
@@ -384,6 +438,11 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 
 			while ( r == FR_OK && fMusic.fname[0] ) {
 				this->printMessageAndArg( AYPLAYER_MESSAGE_FINDED_FILE, fMusic.fname );
+
+				m_slist_set_text_string( &this->g.sl, AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_ANALIS_FILE );
+				this->sbItemShift( 4, fMusic.fname );
+				this->guiUpdate();
+
 				r = f_findnext( &dirMusicFile, &fMusic );
 			}
 		}
@@ -391,6 +450,7 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 
 	this->printMessageAndArg( AYPLAYER_MESSAGE_CLOSE_DIR, path );
 	f_closedir( d );
+	vPortFree( d );
 
 	return;
 }

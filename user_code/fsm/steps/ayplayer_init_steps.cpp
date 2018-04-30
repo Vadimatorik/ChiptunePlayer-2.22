@@ -90,6 +90,10 @@ int AyPlayer::fsmStepFuncGuiInit ( HANDLER_FSM_INPUT_DATA ) {
 
 	int r;
 	r = makise_start( obj->g.h.host->gui );
+
+	/// Статус бар всегда показывается.
+	obj->initGuiStatusBar();
+
 	assertParam( r == M_OK );
 
 	obj->l->sendMessage( RTL_TYPE_M::INIT_OK, "MakiseGui started." );
@@ -143,20 +147,14 @@ int AyPlayer::fsmStepFuncIndexingSupportedFiles ( HANDLER_FSM_INPUT_DATA ) {
 	}
 }*/
 
-#define AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_FINDING_FILE	"Finding supported file..."
 
 int AyPlayer::fsmStepFuncIndexingSupportedFiles ( HANDLER_FSM_INPUT_DATA ) {
 	char*			path		=	( char* )pvPortMalloc( 4096 );
-	char*			statusGui	=	( char* )pvPortMalloc( 100 );
-
-	strcpy( path, "0:");
-	strcpy( statusGui, AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_FINDING_FILE );
-
 	assertParam( path );
+	strcpy( path, "0:");
 
 	obj->l->sendMessage( RTL_TYPE_M::INIT_OK, "Indexing files start." );
-	obj->initWindowIndexingSupportedFiles( statusGui );
-	obj->guiUpdate();
+	obj->initWindowIndexingSupportedFiles();
 	obj->indexingSupportedFiles( path );
 	vPortFree( path );
 
