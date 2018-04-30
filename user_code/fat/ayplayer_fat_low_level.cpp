@@ -15,6 +15,16 @@ MicrosdBase* sdArray[ 2 ] = {
 
 extern "C" {
 
+/// Allocate memory block
+void* ff_memalloc ( UINT msize ) {
+	return pvPortMalloc( msize );
+}
+
+/// Free memory block
+void ff_memfree ( void* mblock ) {
+	vPortFree( mblock );
+}
+
 DWORD get_fattime ( void ) {
 	return 0;
 }
@@ -36,10 +46,39 @@ DRESULT disk_write ( BYTE pdrv, const BYTE* buff, DWORD sector, UINT count ) {
 }
 
 DRESULT disk_ioctl ( BYTE pdrv, BYTE cmd, void* buff ) {
-	( void )pdrv;
-	( void )cmd;
-	( void )buff;
-	return RES_OK;
+	DRESULT res;
+	//BYTE n,
+	//DWORD *dp, st, ed, csize;
+
+
+	if ( disk_status( pdrv ) & STA_NOINIT )
+		return DRESULT::RES_NOTRDY;				/// Check if drive is ready.
+
+	res = DRESULT::RES_ERROR;
+
+	switch ( cmd ) {
+
+	/// Буффер не используется (пишем/читаем напрямую).
+	case CTRL_SYNC:
+		res = DRESULT::RES_OK;
+		break;
+
+	/// Возвращает количество секторов на карте памяти.
+	case GET_SECTOR_COUNT :
+		if ( sdArray[ pdrv ]->getSectorCount( *( ( uint32_t* )buff ) ) == EC_SD_RESULT::OK )
+			res = DRESULT::RES_OK;
+		break;
+
+	case GET_SECTOR_SIZE :
+		if ( sdArray[ pdrv ]->getBlockSize( *( ( uint32_t* )buff ) ) == EC_SD_RESULT::OK )
+			res = DRESULT::RES_OK;
+		break;
+
+	default:
+		res = DRESULT::RES_PARERR;
+	}
+
+	return res;
 }
 
 #if FF_FS_REENTRANT
