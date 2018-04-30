@@ -34,12 +34,66 @@ extern const MakiseFont F_minecraft_rus_regular_8;
 
 ayplayerGuiCfg ayGuiCfg = {
 	.smw = {
-	    .font               = &F_minecraft_rus_regular_8,
-	    .font_line_spacing  = 2,
+		.font							=	&F_minecraft_rus_regular_8,
+		.font_line_spacing				=	2,
 
-	    .bg_color           = MC_White,
-	    .font_col           = MC_Black,
-	    .border_color       = MC_Black,
+		.bg_color						=	MC_White,
+		.font_col						=	MC_Black,
+		.border_color					=	MC_Black,
+	},
+	.ssl = {
+		.font							=	&F_minecraft_rus_regular_8,
+
+		.font_line_spacing				=	0,
+		.left_margin					=	0,
+		.item_margin					=	0,
+
+		.scroll_width					=	0,
+		.scroll_bg_color				=	0,
+		.scroll_color					=	0,
+
+		.normal = {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_Black,
+			.double_border				=	0
+		},
+
+		.focused = {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_Black,
+			.double_border				=	0
+		},
+		.active	= {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_Black,
+			.double_border				=	0
+		}
+	},
+	.sslItem = {
+		.font							=	&F_minecraft_rus_regular_8,
+		.font_line_spacing				=	0,
+
+		.normal = {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_Black,
+			.double_border				=	0
+		},
+		.focused = {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_Black,
+			.double_border				=	0
+		},
+		.active = {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_Black,
+			.double_border				=	0
+		}
 	}
 };
 
@@ -58,7 +112,7 @@ extern "C" {
 
 int main ( void ) {
 	ay.start();
-    while ( true );
+	while ( true );
 }
 
 }

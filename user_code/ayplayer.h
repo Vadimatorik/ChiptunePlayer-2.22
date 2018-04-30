@@ -34,8 +34,6 @@
  */
 #define	AYPLAYER_RCC_CFG_COUNT					4
 
-
-
 #define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsmStep< AyPlayer >* previousStep, AyPlayer* obj )
 #define HANDLER_FSM_INPUT_DATA					__attribute__((unused)) const fsmStep< AyPlayer >* previousStep, AyPlayer* obj
 
@@ -77,6 +75,8 @@ struct ayplayerPcbStrcut {
 
 struct ayplayerGuiCfg {
 	MakiseStyle_SMessageWindow							smw;
+	MakiseStyle_SList									ssl;
+	MakiseStyle_SListItem								sslItem;
 };
 
 struct ayPlayerCfg {
@@ -93,6 +93,7 @@ struct ayPlayerGui {
 	MHost												h;
 	MContainer											c;
 	MMessageWindow										mw;
+	MSList												sl;
 };
 
 #define AYPLAYER_MICROSD_COUNT							2
@@ -203,9 +204,9 @@ private:
 	 */
 	void			indexingSupportedFiles				( char* path );
 
-	void printOpenDir ( char* path );
-	void printCloseDir ( char* path );
-	void printOpenDirError ( char* path );
+	void			printMessageAndArg					( const char* const message, char* arg );
+
+	void			initWindowIndexingSupportedFiles	( char* stateIndexing );
 
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;

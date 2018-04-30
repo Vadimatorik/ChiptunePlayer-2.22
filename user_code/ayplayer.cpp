@@ -270,8 +270,6 @@ void AyPlayer::errorMicroSdDraw ( const AY_MICROSD sd, const FRESULT r ) {
 			while( 1 );	/// Невозможный исход.
 		}
 
-
-
 		strcpy( &massage[ 5 ], s );
 		massage[ 4 ]	=	'\t';							/// В консоле удобнее через tab.
 		this->l->sendMessage( RTL_TYPE_M::INIT_ISSUE, massage );
@@ -312,34 +310,40 @@ FRESULT AyPlayer::fatFsReinit( AY_MICROSD sd ) {
 	return r;
 }
 
-void AyPlayer::printOpenDir ( char* path ) {
+void AyPlayer::printMessageAndArg ( const char* const message, char* arg ) {
+	const uint32_t lenPath				=	strlen( arg ) + 1;
+	const uint32_t infoStringLen		=	strlen( message ) + 1;
+	const uint32_t mallocByteGetValue	=	lenPath + infoStringLen;
+
 	/// Открываем корень.
-	char* message	=	( char* )pvPortMalloc( 4500 );
-	assertParam( message );
-	snprintf( message, 4500, "Open dir: %s", path );
-	this->l->sendMessage( RTL_TYPE_M::INIT_OK, message );
-	vPortFree( message );
+	char*		outputMessage;
+	outputMessage = ( char* )pvPortMalloc( mallocByteGetValue );
+	assertParam( outputMessage );
+
+	sprintf( outputMessage, "%s\t%s", message, arg );
+
+	this->l->sendMessage( RTL_TYPE_M::INIT_OK, outputMessage );
+
+	vPortFree( outputMessage );
 }
 
-void AyPlayer::printCloseDir ( char* path ) {
-	/// Открываем корень.
-	char* message	=	( char* )pvPortMalloc( 4500 );
-	assertParam( message );
-	snprintf( message, 4500, "Close dir: %s", path );
-	this->l->sendMessage( RTL_TYPE_M::INIT_OK, message );
-	vPortFree( message );
+void AyPlayer::initWindowIndexingSupportedFiles( char* stateIndexing ) {
+	m_create_slist(	&this->g.sl,
+					&this->g.c,
+					mp_rel( 0,   0,
+							128, 64 ),
+					stateIndexing,
+					nullptr,
+					nullptr,
+					MSList_List,
+					&this->gui->ssl,
+					&this->gui->sslItem );
 }
 
-#define AYPLAYER_ERR_OPEN_DIR			"Error open dir: "
-
-void AyPlayer::printOpenDirError ( char* path ) {
-	char* message	=	( char* )pvPortMalloc( 4500 );
-	assertParam( message );
-	strcpy( message, AYPLAYER_ERR_OPEN_DIR );
-	strcpy( &message[ sizeof( AYPLAYER_ERR_OPEN_DIR ) - 1], path );
-	this->l->sendMessage( RTL_TYPE_M::INIT_ERROR, message );
-	vPortFree( message );
-}
+static const char AYPLAYER_MESSAGE_OPEN_DIR[]			=	"Open dir:";
+static const char AYPLAYER_MESSAGE_CLOSE_DIR[]			=	"Close dir:";
+static const char AYPLAYER_ERR_OPEN_DIR[]				=	"Error open dir:";
+static const char AYPLAYER_MESSAGE_FINDED_FILE[]		=	"File found:";
 
 void AyPlayer::indexingSupportedFiles( char* path ) {
 	FRESULT				r;
@@ -347,12 +351,12 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 	assertParam( d );
 	static FILINFO		f;
 
-	this->printOpenDir( path );
+	this->printMessageAndArg( AYPLAYER_MESSAGE_OPEN_DIR, path );
 
 	r = f_opendir( d, path );
 	if ( r != FRESULT::FR_OK ) {
 		this->errorMicroSdDraw( AY_MICROSD::SD1, r );
-		this->printOpenDirError( path );
+		this->printMessageAndArg( AYPLAYER_ERR_OPEN_DIR, path );
 	}
 
 	/// Рекурсивно обходим все папки.
@@ -376,16 +380,16 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 			static DIR		dirMusicFile;
 			/// В папке есть хотя бы 1 файл.
 			/// Так что ищем в этой директории отдельно файлы, которые поддерживаем.
-		    r = f_findfirst( &dirMusicFile, &fMusic, path, "*.psg");
+			r = f_findfirst( &dirMusicFile, &fMusic, path, "*.psg");
 
-		    while ( r == FR_OK && fMusic.fname[0] ) {
-		    	this->l->sendMessage( RTL_TYPE_M::INIT_OK, fMusic.fname );
-		        r = f_findnext( &dirMusicFile, &fMusic );
-		    }
+			while ( r == FR_OK && fMusic.fname[0] ) {
+				this->printMessageAndArg( AYPLAYER_MESSAGE_FINDED_FILE, fMusic.fname );
+				r = f_findnext( &dirMusicFile, &fMusic );
+			}
 		}
 	}
 
-	this->printCloseDir( path );
+	this->printMessageAndArg( AYPLAYER_MESSAGE_CLOSE_DIR, path );
 	f_closedir( d );
 
 	return;
