@@ -44,7 +44,15 @@ s3:Инициализация MakiseGUI и драйвера дисплея
 s3 --> s4								: 0
 
 state "microSdInit" as s4 {
-s4:Инициализируются FATFs, SD1, SD2.
+s4:Инициализируются FATFs: SD1, SD2.
 }
+
+s4 --> s5								: 0
+
+state "indexingSupportedFiles" as s5 {
+s5:Индексация поддерживаемых файлов во всех каталогах (рекурсивно).
+s5:В каждой директории создается файл playlist.sys со списком файлов.
+}
+
 
 @enduml
