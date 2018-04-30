@@ -386,11 +386,16 @@ static const char AYPLAYER_MESSAGE_FINDED_FILE[]								=	"File found:";
 static const char AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_FINDING_FILE[]	=	"Finding supported file...";
 static const char AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_ANALIS_FILE[]	=	"Analisis supported file...";
 
+
+static const char ANALYSIS_WAS_CARRIED_OUT_SUCCESSFULLY[]						=	"Analysis_was_carried_out_successfully:";
+static const char FILE_LEN_TICK[]												=	"File len tick:";
+
 void AyPlayer::indexingSupportedFiles( char* path ) {
 	FRESULT				r;
 	DIR*				d	=	( DIR* )pvPortMalloc( sizeof( DIR ) );
 	assertParam( d );
 	static FILINFO		f;
+	const uint32_t		pathLen = strlen( path ) + 1;
 
 	/// Флаг выставляется, когда мы обнаружили в
 	/// директории хоть один файл и просканировали ее на все по шаблону.
@@ -413,7 +418,6 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 
 		/// Закончились элементы в текущей директории.
 		if ( r != FR_OK || f.fname[ 0 ] == 0 ) {
-
 			break;
 		}
 
@@ -437,12 +441,38 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 			r = f_findfirst( &dirMusicFile, &fMusic, path, "*.psg");
 
 			while ( r == FR_OK && fMusic.fname[0] ) {
-				this->printMessageAndArg( AYPLAYER_MESSAGE_FINDED_FILE, fMusic.fname );
+				char*	allPathToFile;
+				const uint32_t nameLen	=	strlen( fMusic.fname ) + 1;
+				const uint32_t allPathToFileLen = pathLen + nameLen + 1;
+				allPathToFile	=	( char* )pvPortMalloc( allPathToFileLen );
+				snprintf( allPathToFile, 4096, "%s/%s", path, fMusic.fname );
+
+				this->printMessageAndArg( AYPLAYER_MESSAGE_FINDED_FILE, allPathToFile );
 
 				m_slist_set_text_string( &this->g.sl, AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_ANALIS_FILE );
-				this->sbItemShift( 4, fMusic.fname );
 				this->guiUpdate();
 
+				uint32_t fileLen;
+				EC_AY_FILE_MODE_ANSWER	rPsgGet;
+				rPsgGet = this->ayFile->psgFileGetLong( allPathToFile, fileLen );    // Проверяем валидность файла.
+
+
+
+				if ( rPsgGet == EC_AY_FILE_MODE_ANSWER::OK ) {
+					this->printMessageAndArg( ANALYSIS_WAS_CARRIED_OUT_SUCCESSFULLY, allPathToFile );
+					char lenString[50];
+
+					snprintf( lenString, 100, "%lu", fileLen );
+					this->printMessageAndArg( FILE_LEN_TICK, lenString );
+
+					m_slist_set_text_string( &this->g.sl, AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_ANALIS_FILE );
+					this->sbItemShift( 4, fMusic.fname );
+					this->guiUpdate();
+				}
+
+
+
+				vPortFree( allPathToFile );
 				r = f_findnext( &dirMusicFile, &fMusic );
 			}
 		}
