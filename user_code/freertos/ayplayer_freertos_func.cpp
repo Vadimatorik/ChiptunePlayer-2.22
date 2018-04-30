@@ -5,6 +5,8 @@
 #include "FreeRTOSConfig.h"
 #include "ayplayer.h"
 
+static const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
+
 extern AyPlayer							ay;
 
 #ifdef configGENERATE_RUN_TIME_STATS
@@ -14,6 +16,10 @@ extern TimCounter						timRunTimeStats;
 extern "C" {
 
 #ifdef configGENERATE_RUN_TIME_STATS
+
+void vApplicationMallocFailedHook( void ) {
+	while(1);
+}
 
 void vConfigureTimerForRunTimeStats ( void ) {
 	/// Таймер настроится при конфигурации RCC внутри AyPlayer.
