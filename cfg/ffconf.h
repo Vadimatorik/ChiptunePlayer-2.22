@@ -101,7 +101,7 @@
 */
 
 
-#define FF_USE_LFN		2
+#define FF_USE_LFN		3
 #define FF_MAX_LFN		255
 /* The FF_USE_LFN switches the support for LFN (long file name).
 /
@@ -281,7 +281,4 @@
 /  included somewhere in the scope of ff.h. */
 
 /* #include <windows.h>	// O/S definitions  */
-
-
-
 /*--- End of configuration options ---*/
