@@ -345,8 +345,7 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 	FRESULT				r;
 	DIR*				d	=	( DIR* )pvPortMalloc( sizeof( DIR ) );
 	assertParam( d );
-	FILINFO*			f	=	( FILINFO* )pvPortMalloc( sizeof( FILINFO ) );
-	assertParam( f );
+	static FILINFO		f;
 
 	this->printOpenDir( path );
 
@@ -358,23 +357,31 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 
 	/// Рекурсивно обходим все папки.
 	while( 1 ) {
-		r = f_readdir( d, f );
+		r = f_readdir( d, &f );
 
 		/// Закончились элементы в текущей директории.
-		if ( r != FR_OK || f->fname[ 0 ] == 0 ) {
+		if ( r != FR_OK || f.fname[ 0 ] == 0 ) {
 			vPortFree( d );
-			vPortFree( f );
 			break;
 		}
 
 		/// Найдена новая директория.
-		if ( f->fattrib & AM_DIR ) {
+		if ( f.fattrib & AM_DIR ) {
 			uint32_t i = strlen(path);
-			sprintf( &path[ i ], "/%s", f->fname );
+			sprintf( &path[ i ], "/%s", f.fname );
 			this->indexingSupportedFiles( path );
 			path[ i ] = 0;
 		} else {
-			this->l->sendMessage( RTL_TYPE_M::INIT_OK, f->fname );
+			static FILINFO	fMusic;
+			static DIR		dirMusicFile;
+			/// В папке есть хотя бы 1 файл.
+			/// Так что ищем в этой директории отдельно файлы, которые поддерживаем.
+		    r = f_findfirst( &dirMusicFile, &fMusic, path, "*.psg");
+
+		    while ( r == FR_OK && fMusic.fname[0] ) {
+		    	this->l->sendMessage( RTL_TYPE_M::INIT_OK, fMusic.fname );
+		        r = f_findnext( &dirMusicFile, &fMusic );
+		    }
 		}
 	}
 

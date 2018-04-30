@@ -5,7 +5,9 @@
 #include "FreeRTOSConfig.h"
 #include "ayplayer.h"
 
+extern "C" {
 static const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
+}
 
 extern AyPlayer							ay;
 
