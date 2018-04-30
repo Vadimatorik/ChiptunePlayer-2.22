@@ -124,6 +124,7 @@ public:
 	HANDLER_FSM_STEP( fsmStepFuncHardwarePcbInit );
 	HANDLER_FSM_STEP( fsmStepFuncGuiInit );
 	HANDLER_FSM_STEP( fsmStepFuncMicroSdInit );
+	HANDLER_FSM_STEP( fsmStepFuncIndexingSupportedFiles );
 
 private:
 	static	void	mainTask					( void* obj );
@@ -196,6 +197,15 @@ private:
 	 * Ждем, пока отсоединят флешку.
 	 */
 	void			waitSdCardDisconnect				( const AY_MICROSD sd );
+
+	/*!
+	 * Проходится по всем каталогам и составляет список поддерживаемых файлов.
+	 */
+	void			indexingSupportedFiles				( char* path );
+
+	void printOpenDir ( char* path );
+	void printCloseDir ( char* path );
+	void printOpenDirError ( char* path );
 
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;

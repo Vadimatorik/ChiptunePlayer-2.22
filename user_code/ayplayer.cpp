@@ -159,7 +159,7 @@ void AyPlayer::waitSdCardInsert ( void ) {
 		if ( this->checkSd( AY_MICROSD::SD1 ) ) {
 			if ( flagMicroSd1Present != 1 ) {
 				flagMicroSd1Present = 1;
-				this->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "SD1 is detected!" );
+				this->l->sendMessage( RTL_TYPE_M::INIT_OK, "SD1 is detected!" );
 			}
 		} else {
 			if ( flagMicroSd1Present != 0 ) {
@@ -185,7 +185,7 @@ void AyPlayer::waitSdCardInsert ( void ) {
 		if ( this->checkSd( AY_MICROSD::SD2 ) ) {
 			if ( flagMicroSd2Present != 1 ) {
 				flagMicroSd2Present = 1;
-				this->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "SD2 is detected!" );
+				this->l->sendMessage( RTL_TYPE_M::INIT_OK, "SD2 is detected!" );
 			}
 		} else {
 			if ( flagMicroSd2Present != 0 ) {
@@ -310,6 +310,78 @@ FRESULT AyPlayer::fatFsReinit( AY_MICROSD sd ) {
 	}
 
 	return r;
+}
+
+void AyPlayer::printOpenDir ( char* path ) {
+	/// Открываем корень.
+	char* message	=	( char* )pvPortMalloc( 4500 );
+	assertParam( message );
+	snprintf( message, 4500, "Open dir: %s", path );
+	this->l->sendMessage( RTL_TYPE_M::INIT_OK, message );
+	vPortFree( message );
+}
+
+void AyPlayer::printCloseDir ( char* path ) {
+	/// Открываем корень.
+	char* message	=	( char* )pvPortMalloc( 4500 );
+	assertParam( message );
+	snprintf( message, 4500, "Close dir: %s", path );
+	this->l->sendMessage( RTL_TYPE_M::INIT_OK, message );
+	vPortFree( message );
+}
+
+#define AYPLAYER_ERR_OPEN_DIR			"Error open dir: "
+
+void AyPlayer::printOpenDirError ( char* path ) {
+	char* message	=	( char* )pvPortMalloc( 4500 );
+	assertParam( message );
+	strcpy( message, AYPLAYER_ERR_OPEN_DIR );
+	strcpy( &message[ sizeof( AYPLAYER_ERR_OPEN_DIR ) - 1], path );
+	this->l->sendMessage( RTL_TYPE_M::INIT_ERROR, message );
+	vPortFree( message );
+}
+
+void AyPlayer::indexingSupportedFiles( char* path ) {
+	FRESULT				r;
+	DIR*				d	=	( DIR* )pvPortMalloc( sizeof( DIR ) );
+	assertParam( d );
+	FILINFO*			f	=	( FILINFO* )pvPortMalloc( sizeof( FILINFO ) );
+	assertParam( f );
+
+	this->printOpenDir( path );
+
+	r = f_opendir( d, path );
+	if ( r != FRESULT::FR_OK ) {
+		this->errorMicroSdDraw( AY_MICROSD::SD1, r );
+		this->printOpenDirError( path );
+	}
+
+	/// Рекурсивно обходим все папки.
+	while( 1 ) {
+		r = f_readdir( d, f );
+
+		/// Закончились элементы в текущей директории.
+		if ( r != FR_OK || f->fname[ 0 ] == 0 ) {
+			vPortFree( d );
+			vPortFree( f );
+			break;
+		}
+
+		/// Найдена новая директория.
+		if ( f->fattrib & AM_DIR ) {
+			uint32_t i = strlen(path);
+			sprintf( &path[ i ], "/%s", f->fname );
+			this->indexingSupportedFiles( path );
+			path[ i ] = 0;
+		} else {
+			this->l->sendMessage( RTL_TYPE_M::INIT_OK, f->fname );
+		}
+	}
+
+	this->printCloseDir( path );
+	f_closedir( d );
+
+	return;
 }
 
 // Перерисовывает GUI и обновляет экран.
