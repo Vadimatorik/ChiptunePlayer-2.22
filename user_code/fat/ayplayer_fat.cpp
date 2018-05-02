@@ -99,7 +99,7 @@ int	AyPlayerFat::writeItemFileListAndRemoveItem	( FIL* f, itemFileInFat* item ) 
 	vPortFree( item );
 
     /// Если записалось целиком все успешно, то возвратим 0.
-    return ( ( r != FR_OK ) || ( l != sizeof( itemFileInFat ) ) ) ? 0 : -1;
+    return ( ( r == FR_OK ) && ( l == sizeof( itemFileInFat ) ) ) ? 0 : -1;
 }
 
 int AyPlayerFat::startFindingFileInDir ( DIR** dir, FILINFO** fInfo, const char* const pathDir, const char* const maskFind ) {

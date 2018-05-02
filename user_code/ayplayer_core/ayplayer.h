@@ -238,6 +238,7 @@ private:
 	int				writeItemFileList					( FIL* f, const uint32_t* const len, const AY_FORMAT format );
 
 	void			slItemClean							( uint32_t cout );
+	itemFileInFat*	structureItemFileListFilling ( const char* const nameTrack, const uint32_t lenTickTrack, const AY_FORMAT format );
 
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;

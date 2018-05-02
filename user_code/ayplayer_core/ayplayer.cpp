@@ -400,6 +400,20 @@ void AyPlayer::slItemClean ( uint32_t cout ) {
     }
 }
 
+itemFileInFat* AyPlayer::structureItemFileListFilling ( const char* const nameTrack, const uint32_t lenTickTrack, const AY_FORMAT format ) {
+	/// Выделяем память под элемент
+	/// (его удалит после записи writeItemFileListAndRemoveItem).
+	itemFileInFat* i	=	( itemFileInFat* )pvPortMalloc( sizeof( itemFileInFat ) );
+	assertParam( i );
+
+	/// Заполняем.
+	strcpy( i->fileName, nameTrack );
+	i->format		=	format;
+	i->lenTick		=	lenTickTrack;
+
+	return i;
+}
+
 int	AyPlayer::scanDir ( char* path ) {
 	int					r	=	0;
 
@@ -454,6 +468,12 @@ int	AyPlayer::scanDir ( char* path ) {
 			char lenString[50];
 			sprintf( lenString, "%lu", fileLen );
 			this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "File len tick:", lenString );
+
+			itemFileInFat*	fileListItem	=	this->structureItemFileListFilling( fi->fname, fileLen, AY_FORMAT::psg );
+			r	=	AyPlayerFat::writeItemFileListAndRemoveItem( f, fileListItem );
+
+			if ( r != 0 )
+				break;
 
 			/// В списке новый файл, сдвигаем.
 			this->slItemShiftDown( 4, fi->fname );
