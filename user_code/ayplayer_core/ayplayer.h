@@ -221,11 +221,13 @@ private:
 	/*!
 	 * Проходится по всем каталогам и составляет список поддерживаемых файлов.
 	 */
-	FRESULT				indexingSupportedFiles				( char* path );
+	FRESULT			indexingSupportedFiles				( char* path );
 
 	void			printMessageAndArg					( RTL_TYPE_M type, const char* const message, char* arg );
 
 	void			initWindowIndexingSupportedFiles	( char* stateIndexing = nullptr );
+	void			removeWindowIndexingSupportedFiles	( void );
+
 
 	void			initGuiStatusBar					( void );
 	void			slItemShiftDown							( uint32_t cout, char* newSt );

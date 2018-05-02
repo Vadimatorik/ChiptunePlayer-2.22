@@ -286,7 +286,7 @@ void AyPlayer::errorMicroSdDraw ( const AY_MICROSD sd, const FRESULT r ) {
 									massage,
 									&this->gui->smw );
 		this->guiUpdate();
-		makise_g_cont_clear( &this->g.c );
+		makise_g_cont_rem( &this->g.mw.el );
 }
 
 FRESULT AyPlayer::fatFsReinit( AY_MICROSD sd ) {
@@ -347,11 +347,17 @@ void AyPlayer::initWindowIndexingSupportedFiles( char* stateIndexing ) {
 					&this->gui->ssl,
 					&this->gui->sslItem );
 
+	/// Привязка list-а к его элементам.
 	for ( int i = 0; i < 4; i++ ) {
 		this->g.slItem[ i ].text	=	nullptr;
 		m_slist_add( &this->g.sl, &this->g.slItem[ i ] );
 	}
 }
+
+void AyPlayer::removeWindowIndexingSupportedFiles( void ) {
+	makise_g_cont_rem( &this->g.sl.el );
+}
+
 
 uint32_t AyPlayer::getStatePlay ( void ) {
 	return 0;
