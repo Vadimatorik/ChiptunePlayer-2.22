@@ -151,6 +151,43 @@ int AyPlayer::sortForNameFileList ( const char* const path, uint16_t* fl, uint32
 	return sortResult;
 }
 
+int AyPlayer::sortForLenFileList ( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fLenSort ) {
+	int	sortResult	=	0;
+
+	/// Начинаем быструю сортировку по имени.
+	std::sort( fl, &fl[ countFileInDir ], [ this, path, &sortResult, fi, d, fNoSort, fLenSort ]( int a, int b ) {
+		/*!
+	 	 * Если в процессе сортировки упадет флешка - то выдаем одно значение для быстроты сортировки и выходим.
+	 	 * Так массив быстро отсортируется и выйдя мы поймем, что упали.
+	 	 */
+		if ( sortResult < 0 ) {
+			return true;
+		}
+
+		/// Получаем имена треков.
+		uint32_t	aLen	=	AyPlayerFat::getLenTrackFromFile( fNoSort, a );
+
+		if ( aLen == 0xFFFFFFFF ) {
+			sortResult	=	-1;
+			return true;
+		}
+
+		uint32_t	bLen	=	AyPlayerFat::getLenTrackFromFile( fNoSort, b );
+		if ( bLen == 0xFFFFFFFF ) {
+			sortResult	=	-1;
+			return true;
+		}
+
+		return aLen < bLen;
+	} );
+
+	if ( sortResult == 0 ) {
+		sortResult = this->writeSortFile( fLenSort, fNoSort, fl, countFileInDir );
+	}
+
+	return sortResult;
+}
+
 int	AyPlayer::sortFileList ( char* path ) {
 	int					r	=	0;
 
@@ -185,8 +222,18 @@ int	AyPlayer::sortFileList ( char* path ) {
 	 */
 	uint16_t* fl	=	( uint16_t* )pvPortMalloc( sizeof( uint16_t ) * countFileInDir );
 
+	/// Сортировка по имени.
 	this->initPointArrayToSort( fl, countFileInDir );
 	r = sortForNameFileList( path, fl, countFileInDir, fi, d, fNoSort, fNameSort );
+	if ( r != 0 ) {
+		vPortFree( fl );
+		this->sortFileListCloseFile( path, d, fi, fNoSort, fNameSort, fLenSort );
+		return r;
+	}
+
+	/// Сортировка по длине.
+	this->initPointArrayToSort( fl, countFileInDir );
+	r = sortForLenFileList( path, fl, countFileInDir, fi, d, fNoSort, fLenSort );
 	if ( r != 0 ) {
 		vPortFree( fl );
 		this->sortFileListCloseFile( path, d, fi, fNoSort, fNameSort, fLenSort );

@@ -217,7 +217,7 @@ uint32_t AyPlayerFat::getLenTrackFromFile		( FIL* f, uint32_t nubmerTrack ) {
 	UINT		l;
 	r	=	f_read( f, &len, sizeof( uint32_t ), &l );
 
-	return ( ( r == FR_OK ) && ( l == sizeof( itemFileInFat ) ) ) ? 0 : -1;
+	return ( ( r == FR_OK ) && ( l == sizeof( uint32_t ) ) ) ? len : 0xFFFFFFFF;
 }
 
 int AyPlayerFat::readItemFileListAndRemoveItem ( FIL* f, itemFileInFat* item, uint32_t numberTrack ) {

@@ -252,6 +252,7 @@ private:
 	void			removeWindowSortingFileList			( void );
 	void			initPointArrayToSort				( uint16_t* array, uint32_t count );
 	int				sortForNameFileList					( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fNameSort );
+	int				sortForLenFileList					( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fLenSort );
 
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;
