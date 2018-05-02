@@ -50,7 +50,7 @@ LDFLAGS			+= -Wl,--undefined=uxTopUsedPriority
 LDFLAGS			+= -ffunction-sections -Wl,--gc-sections
 
 # Формируем map файл.
-LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
+#LDFLAGS			+= -Wl,-Map="build/$(PROJECT_NAME).map"
 
 #**********************************************************************
 # Параметры toolchain-а.

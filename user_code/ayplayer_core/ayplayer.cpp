@@ -1,4 +1,5 @@
 #include "ayplayer.h"
+#include "ayplayer_fat.h"
 
 RCC_RESULT AyPlayer::setRccCfg ( uint32_t numberCfg ) {
 	__disable_irq();
@@ -171,7 +172,8 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 				m_create_message_window(	&this->g.mw,
 											&this->g.c,
-											mp_rel( 9, 10, 108, 44 ),
+											mp_rel( 0,	11,
+													128, 64 - 11 ),
 											( char* )SD1_NOT_PRESENT,
 											( MakiseStyle_SMessageWindow* )&this->gui->smw );
 				this->guiUpdate();
@@ -197,7 +199,8 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 				m_create_message_window(	&this->g.mw,
 											&this->g.c,
-											mp_rel( 9, 10, 108, 44 ),
+											mp_rel( 0,	11,
+													128, 64 - 11 ),
 											( char* )SD2_NOT_PRESENT,
 											( MakiseStyle_SMessageWindow* )&this->gui->smw );
 				this->guiUpdate();
@@ -276,7 +279,12 @@ void AyPlayer::errorMicroSdDraw ( const AY_MICROSD sd, const FRESULT r ) {
 
 		massage[ 4 ]	=	' ';							/// На экране однозначно на разных строках.
 
-		m_create_message_window( &this->g.mw, &this->g.c, mp_rel( 9, 10, 108, 44 ), massage, ( MakiseStyle_SMessageWindow* )&this->gui->smw );
+		m_create_message_window(	&this->g.mw,
+									&this->g.c,
+									mp_rel( 0,	11,
+											128, 64 - 11 ),
+									massage,
+									&this->gui->smw );
 		this->guiUpdate();
 		makise_g_cont_clear( &this->g.c );
 }
@@ -310,7 +318,7 @@ FRESULT AyPlayer::fatFsReinit( AY_MICROSD sd ) {
 	return r;
 }
 
-void AyPlayer::printMessageAndArg ( const char* const message, char* arg ) {
+void AyPlayer::printMessageAndArg ( RTL_TYPE_M type, const char* const message, char* arg ) {
 	const uint32_t lenPath				=	strlen( arg ) + 1;
 	const uint32_t infoStringLen		=	strlen( message ) + 1;
 	const uint32_t mallocByteGetValue	=	lenPath + infoStringLen;
@@ -322,7 +330,7 @@ void AyPlayer::printMessageAndArg ( const char* const message, char* arg ) {
 
 	sprintf( outputMessage, "%s\t%s", message, arg );
 
-	this->l->sendMessage( RTL_TYPE_M::INIT_OK, outputMessage );
+	this->l->sendMessage( type, outputMessage );
 
 	vPortFree( outputMessage );
 }
@@ -363,7 +371,7 @@ void AyPlayer::initGuiStatusBar( void ) {
 }
 
 // Метод сдвигает вниз все строки (1 удаляется) и добавляет вверх новую.
-void AyPlayer::sbItemShift ( uint32_t cout, char* newSt ) {
+void AyPlayer::slItemShiftDown ( uint32_t cout, char* newSt ) {
 	/// Если раньше там была не пустая строка.
 	if ( this->g.slItem[ cout - 1 ].text != nullptr ) {
 		vPortFree( this->g.slItem[ cout - 1 ].text );
@@ -378,46 +386,142 @@ void AyPlayer::sbItemShift ( uint32_t cout, char* newSt ) {
     strcpy( this->g.slItem[ 0 ].text, newSt );
 }
 
-static const char AYPLAYER_MESSAGE_OPEN_DIR[]									=	"Open dir:";
-static const char AYPLAYER_MESSAGE_CLOSE_DIR[]									=	"Close dir:";
-static const char AYPLAYER_ERR_OPEN_DIR[]										=	"Error open dir:";
-static const char AYPLAYER_MESSAGE_FINDED_FILE[]								=	"File found:";
+void AyPlayer::slItemClean ( uint32_t cout ) {
+    for ( uint32_t l = 0; l < cout ; l++ ) {
+    	if ( this->g.slItem[ l ].text ) {
+    		vPortFree( this->g.slItem[ l ].text );
+    	}
+    }
+}
 
-static const char AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_FINDING_FILE[]	=	"Finding supported file...";
-static const char AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_ANALIS_FILE[]	=	"Analisis supported file...";
+int	AyPlayer::scanDir ( char* path ) {
+	int					r	=	0;
 
+	FILINFO*			fi	=	nullptr;
+	DIR*				d	=	nullptr;
+	FIL*				f	=	nullptr;
 
-static const char ANALYSIS_WAS_CARRIED_OUT_SUCCESSFULLY[]						=	"Analysis_was_carried_out_successfully:";
-static const char FILE_LEN_TICK[]												=	"File len tick:";
+	/// Ищем первый файл по маске.
+	r	=	AyPlayerFat::startFindingFileInDir( &d, &fi, path, "*.psg" );
 
-void AyPlayer::indexingSupportedFiles( char* path ) {
-	FRESULT				r;
-	DIR*				d	=	( DIR* )pvPortMalloc( sizeof( DIR ) );
-	assertParam( d );
-	static FILINFO		f;
-	const uint32_t		pathLen = strlen( path ) + 1;
+	/// Путь до файла со списком прошедших проверку файлов.
+	bool	flagFileListCreate	=	false;
+
+	while ( !r ) {
+		/// Собираем строчку с полным путем.
+		char*	fullPathToFile	=	AyPlayerFat::getFullPath( path, fi->fname );
+
+		/// Лог: найден файл под маску.
+		this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "File found:", fullPathToFile );						/// Лог.
+
+		/// Экран: начат анализ файла.
+		m_slist_set_text_string( &this->g.sl, "File analysis..." );											/// Экран.
+		this->guiUpdate();
+
+		/// Проверяем правильность файла.
+		uint32_t fileLen;
+		EC_AY_FILE_MODE_ANSWER	rPsgGet;
+		rPsgGet = this->ayFile->psgFileGetLong( fullPathToFile, fileLen );
+
+		/// Если файл прошел проверку.
+		if ( rPsgGet == EC_AY_FILE_MODE_ANSWER::OK ) {
+			/// Если в этой директории еще не создавали файл со списком прошедших проверку файлов.
+			if ( flagFileListCreate == false ) {
+				flagFileListCreate = true;
+
+				/// Пытаемся создать файл.
+				f	=	AyPlayerFat::openFileList( path );
+
+				/// Если не удалось - чистим память и выходим.
+				if ( f == nullptr ) {
+					this->printMessageAndArg( RTL_TYPE_M::INIT_ERROR, "FileList not created in dir:", path );
+					vPortFree( fullPathToFile );
+					r = -1;
+					break;
+				} else {
+					this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "FileList created in dir:", path );
+				}
+			}
+
+			/// Лог: данный об проанализированном файле.
+			this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "Analysis was carried out successfully:", fullPathToFile );
+			char lenString[50];
+			sprintf( lenString, "%lu", fileLen );
+			this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "File len tick:", lenString );
+
+			/// В списке новый файл, сдвигаем.
+			this->slItemShiftDown( 4, fi->fname );
+
+			/// На экран.
+			this->guiUpdate();
+		} else {
+			this->printMessageAndArg( RTL_TYPE_M::INIT_ISSUE, "Analysis was not carried out successfully:", fullPathToFile );
+		}
+
+		/// Полный путь теперь не актуален.
+		vPortFree( fullPathToFile );
+
+		/// Ищем следующий элемент.
+		r = AyPlayerFat::findingFileInDir( d, fi );
+
+		/// Элементов больше нет.
+		if ( r == 1 ) {
+			break;
+		}
+	}
+
+	/// 1 == последний файл, а это штатно.
+	if ( r == 1 ) {
+		r = 0;					/// d и fi почистила findingFileInDir,
+	} else {
+		/// Очищаем память.
+		/// Даже если что-то не так пойдет на нижнем уровне - эти методы должны выполниться чтобы
+		/// очистить память.
+		/// Храним в себе только -1 или 0.
+		/// Если была хоть раз -1, то не перезаписываем.
+		if ( fi )			vPortFree( fi );
+		r	=	( AyPlayerFat::closeDir( d ) != 0 ) ? -1 : r;
+	}
+
+	r	=	( AyPlayerFat::closeFileList( f ) != 0 ) ? -1 : r;
+
+	return r;
+}
+
+FRESULT AyPlayer::indexingSupportedFiles( char* path ) {
+	FRESULT					r;
+	static FILINFO			f;
 
 	/// Флаг выставляется, когда мы обнаружили в
 	/// директории хоть один файл и просканировали ее на все по шаблону.
 	/// Чтобы не нраваться на многократное повторное сканирование.
 	bool				scanDir	=	false;
 
-	this->printMessageAndArg( AYPLAYER_MESSAGE_OPEN_DIR, path );
-	m_slist_set_text_string( &this->g.sl, AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_FINDING_FILE );
-	this->guiUpdate();
+	/// Открываем директорию. Все игры с памятью внутри.
+	DIR*	d	=	AyPlayerFat::openDir( path );
 
-	r = f_opendir( d, path );
-	if ( r != FRESULT::FR_OK ) {
-		this->errorMicroSdDraw( AY_MICROSD::SD1, r );
-		this->printMessageAndArg( AYPLAYER_ERR_OPEN_DIR, path );
-	}
+	if ( d == nullptr )
+		return FRESULT::FR_DISK_ERR;
+
+	this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "Open  dir:", path );
 
 	/// Рекурсивно обходим все папки.
 	while( 1 ) {
+		/// Gui: мы снова начали поиск нужного файла.
+		m_slist_set_text_string( &this->g.sl, "Find supported files..." );
+		this->guiUpdate();
+
 		r = f_readdir( d, &f );
 
+		/// Если проблемы на нижнем уравне.
+		if ( r != FR_OK )
+			break;
+
 		/// Закончились элементы в текущей директории.
-		if ( r != FR_OK || f.fname[ 0 ] == 0 ) {
+		if ( f.fname[ 0 ] == 0 ) {
+			/// Лог: директория закончилась.
+			this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "Close dir:", path );
+
 			break;
 		}
 
@@ -425,64 +529,26 @@ void AyPlayer::indexingSupportedFiles( char* path ) {
 		if ( f.fattrib & AM_DIR ) {
 			uint32_t i = strlen(path);
 			sprintf( &path[ i ], "/%s", f.fname );
-			this->indexingSupportedFiles( path );
+
+			r	=	this->indexingSupportedFiles( path );
+
+			if ( r != FRESULT::FR_OK )								/// Аварийная ситуация.
+				break;
+
 			path[ i ] = 0;
 		} else {
-			if ( scanDir == true ) continue;
-
-			/// После того, как просканируем все файлы по шаблону в директории - нас будут
-			/// интересовать только вложенные директории.
+			if ( scanDir == true ) continue;						/// Сканируем директорию лишь единожды.
 			scanDir = true;
-
-			static FILINFO	fMusic;
-			static DIR		dirMusicFile;
-			/// В папке есть хотя бы 1 файл.
-			/// Так что ищем в этой директории отдельно файлы, которые поддерживаем.
-			r = f_findfirst( &dirMusicFile, &fMusic, path, "*.psg");
-
-			while ( r == FR_OK && fMusic.fname[0] ) {
-				char*	allPathToFile;
-				const uint32_t nameLen	=	strlen( fMusic.fname ) + 1;
-				const uint32_t allPathToFileLen = pathLen + nameLen + 1;
-				allPathToFile	=	( char* )pvPortMalloc( allPathToFileLen );
-				snprintf( allPathToFile, 4096, "%s/%s", path, fMusic.fname );
-
-				this->printMessageAndArg( AYPLAYER_MESSAGE_FINDED_FILE, allPathToFile );
-
-				m_slist_set_text_string( &this->g.sl, AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_ANALIS_FILE );
-				this->guiUpdate();
-
-				uint32_t fileLen;
-				EC_AY_FILE_MODE_ANSWER	rPsgGet;
-				rPsgGet = this->ayFile->psgFileGetLong( allPathToFile, fileLen );    // Проверяем валидность файла.
-
-
-
-				if ( rPsgGet == EC_AY_FILE_MODE_ANSWER::OK ) {
-					this->printMessageAndArg( ANALYSIS_WAS_CARRIED_OUT_SUCCESSFULLY, allPathToFile );
-					char lenString[50];
-
-					snprintf( lenString, 100, "%lu", fileLen );
-					this->printMessageAndArg( FILE_LEN_TICK, lenString );
-
-					m_slist_set_text_string( &this->g.sl, AYPLAYER_STATUS_GUI_INDEXING_SUPPORTED_FILES_ANALIS_FILE );
-					this->sbItemShift( 4, fMusic.fname );
-					this->guiUpdate();
-				}
-
-
-
-				vPortFree( allPathToFile );
-				r = f_findnext( &dirMusicFile, &fMusic );
+			if ( this->scanDir( path ) != 0 ) {
+				break;
 			}
 		}
 	}
 
-	this->printMessageAndArg( AYPLAYER_MESSAGE_CLOSE_DIR, path );
-	f_closedir( d );
-	vPortFree( d );
+	/// Фиксируем FRESULT::FR_DISK_ERR как приоритет над всем.
+	r = ( AyPlayerFat::closeDir( d ) == -1 ) ? FRESULT::FR_DISK_ERR : r;
 
-	return;
+	return r;
 }
 
 // Перерисовывает GUI и обновляет экран.

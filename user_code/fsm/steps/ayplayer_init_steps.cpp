@@ -157,6 +157,7 @@ int AyPlayer::fsmStepFuncIndexingSupportedFiles ( HANDLER_FSM_INPUT_DATA ) {
 	obj->initWindowIndexingSupportedFiles();
 	obj->indexingSupportedFiles( path );
 	vPortFree( path );
+	obj->slItemClean( 4 );
 
 	/*
 	obj->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "Creating file <<0:/playlist.sys>> in sd1." );

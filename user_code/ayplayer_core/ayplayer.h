@@ -100,6 +100,17 @@ struct ayPlayerGui {
 	MPlayerStatusBar									sb;
 };
 
+enum class AY_FORMAT {
+	psg				=	0,
+};
+
+/// Структура одного элемента в файле <<.fileList.txt>>.
+struct itemFileInFat {
+	char			fileName[ 256 ];
+	AY_FORMAT		format;
+	uint32_t		lenTick;
+};
+
 #define AYPLAYER_MICROSD_COUNT							2
 
 struct ayPlayerFatFs {
@@ -127,7 +138,7 @@ public:
 	uint32_t		getStatePlay				( void );
 	uint32_t		getPercentBattery			( void );
 
-
+	/// Шаги FSM. Инициализация.
 	HANDLER_FSM_STEP( fsmStepFuncFreeRtosObjInit );
 	HANDLER_FSM_STEP( fsmStepFuncHardwareMcInit );
 	HANDLER_FSM_STEP( fsmStepFuncHardwarePcbInit );
@@ -210,14 +221,21 @@ private:
 	/*!
 	 * Проходится по всем каталогам и составляет список поддерживаемых файлов.
 	 */
-	void			indexingSupportedFiles				( char* path );
+	FRESULT				indexingSupportedFiles				( char* path );
 
-	void			printMessageAndArg					( const char* const message, char* arg );
+	void			printMessageAndArg					( RTL_TYPE_M type, const char* const message, char* arg );
 
 	void			initWindowIndexingSupportedFiles	( char* stateIndexing = nullptr );
 
 	void			initGuiStatusBar					( void );
-	void			sbItemShift							( uint32_t cout, char* newSt );
+	void			slItemShiftDown							( uint32_t cout, char* newSt );
+
+	int				scanDir								( char* path );
+
+	/// 0 - успех. -1 провал
+	int				writeItemFileList					( FIL* f, const uint32_t* const len, const AY_FORMAT format );
+
+	void			slItemClean							( uint32_t cout );
 
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;
