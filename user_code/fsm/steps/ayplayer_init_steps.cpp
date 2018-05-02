@@ -155,7 +155,17 @@ int AyPlayer::fsmStepFuncIndexingSupportedFiles ( HANDLER_FSM_INPUT_DATA ) {
 	}
 }
 
+int AyPlayer::fsmStepFuncSortingFileList ( HANDLER_FSM_INPUT_DATA ) {
+	char*			path		=	( char* )pvPortMalloc( 1024 );
+	assertParam( path );
+	strcpy( path, "0:");
 
+	/// Лог: начат анализ.
+	obj->l->sendMessage( RTL_TYPE_M::INIT_OK, "Started sorting fileList." );
+	obj->findingFileListAndSort( path );
+
+	return 0;
+}
 
 
 

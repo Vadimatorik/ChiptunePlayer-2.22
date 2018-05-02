@@ -104,9 +104,11 @@ enum class AY_FORMAT {
 	psg				=	0,
 };
 
+#define ITEM_FILE_IN_FAT_FILE_NAME_LEN			256
+
 /// Структура одного элемента в файле <<.fileList.txt>>.
 struct itemFileInFat {
-	char			fileName[ 256 ];
+	char			fileName[ ITEM_FILE_IN_FAT_FILE_NAME_LEN ];
 	AY_FORMAT		format;
 	uint32_t		lenTick;
 };
@@ -145,6 +147,8 @@ public:
 	HANDLER_FSM_STEP( fsmStepFuncGuiInit );
 	HANDLER_FSM_STEP( fsmStepFuncMicroSdInit );
 	HANDLER_FSM_STEP( fsmStepFuncIndexingSupportedFiles );
+	HANDLER_FSM_STEP( fsmStepFuncSortingFileList );
+
 
 private:
 	static	void	mainTask					( void* obj );
@@ -223,7 +227,7 @@ private:
 	 */
 	FRESULT			indexingSupportedFiles				( char* path );
 
-	void			printMessageAndArg					( RTL_TYPE_M type, const char* const message, char* arg );
+	void			printMessageAndArg					( RTL_TYPE_M type, const char* const message, const char* const arg );
 
 	void			initWindowIndexingSupportedFiles	( char* stateIndexing = nullptr );
 	void			removeWindowIndexingSupportedFiles	( void );
@@ -238,7 +242,12 @@ private:
 	int				writeItemFileList					( FIL* f, const uint32_t* const len, const AY_FORMAT format );
 
 	void			slItemClean							( uint32_t cout );
-	itemFileInFat*	structureItemFileListFilling ( const char* const nameTrack, const uint32_t lenTickTrack, const AY_FORMAT format );
+	itemFileInFat*	structureItemFileListFilling		( const char* const nameTrack, const uint32_t lenTickTrack, const AY_FORMAT format );
+	int				sortFileList						( char* path );
+	FRESULT			findingFileListAndSort				( char* path );
+	int				sortFileListCreateFile				( const char* const path, FIL** fNoSort, FIL** fNameSort, FIL** fLenSort );
+	int				sortFileListCloseFile				( DIR* d, FILINFO* fi, FIL* fNoSort, FIL* fNameSort, FIL* fLenSort );
+	int				writeSortFile						( FIL* output, FIL* input, uint16_t* sortArray, uint32_t count );
 
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;

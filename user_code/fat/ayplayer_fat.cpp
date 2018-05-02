@@ -54,7 +54,7 @@ int AyPlayerFat::closeDir( DIR* d ) {
 	return ( r == FRESULT::FR_OK ) ? 0 : -1;
 }
 
-FIL* AyPlayerFat::openFileList ( char* path ) {
+FIL* AyPlayerFat::openFileListWithRewrite ( const char* const path, const char* const name ) {
 	FRESULT				r;
 	FIL*				f;
 
@@ -63,7 +63,7 @@ FIL* AyPlayerFat::openFileList ( char* path ) {
 	assertParam( f );
 
 
-	char* fullPath	=	AyPlayerFat::getFullPath( path, ".fileList" );
+	char* fullPath	=	AyPlayerFat::getFullPath( path, name );
 	/// Пытаемся открыть файл с перезаписью, если таковой ранее существовал.
     r = f_open( f, fullPath, FA_CREATE_ALWAYS | FA_READ | FA_WRITE );
     vPortFree( fullPath );
@@ -76,7 +76,29 @@ FIL* AyPlayerFat::openFileList ( char* path ) {
     return f;
 }
 
-int AyPlayerFat::closeFileList ( FIL* f ) {
+FIL* AyPlayerFat::openFileList ( const char* const path, const char* const name ) {
+	FRESULT				r;
+	FIL*				f;
+
+	/// Выделяем память под объект файла FatFS.
+	f	=	( FIL* )pvPortMalloc( sizeof( FIL ) );
+	assertParam( f );
+
+
+	char* fullPath	=	AyPlayerFat::getFullPath( path, name );
+	/// Пытаемся открыть файл с перезаписью, если таковой ранее существовал.
+    r = f_open( f, fullPath, FA_READ );
+    vPortFree( fullPath );
+
+    if ( r != FR_OK ) {
+    	vPortFree( f );
+    	f = nullptr;
+    }
+
+    return f;
+}
+
+int AyPlayerFat::closeFile ( FIL* f ) {
 	if ( f == nullptr )		return 0;
 
 	FRESULT				r;
@@ -106,12 +128,12 @@ int AyPlayerFat::startFindingFileInDir ( DIR** dir, FILINFO** fInfo, const char*
 	FRESULT				r;
 
 	/// Выделяем память под объект директории, в которой будем искать файл,
-	DIR*		d					=	( DIR* )pvPortMalloc( sizeof( DIR ) );
+	DIR*		d						=	( DIR* )pvPortMalloc( sizeof( DIR ) );
 	assertParam( d );
 
 	/// Выделяем память под объект директории, в которой будем искать файл,
-	FILINFO*	fi					=	( FILINFO* )pvPortMalloc( sizeof( FILINFO ) );
-	assertParam( d );
+	FILINFO*	fi						=	( FILINFO* )pvPortMalloc( sizeof( FILINFO ) );
+	assertParam( fi );
 
 	/// Открываем директорию и ищем в ней файл по маске.
 	r = f_findfirst( d, fi, pathDir, maskFind );
@@ -160,3 +182,57 @@ int AyPlayerFat::findingFileInDir ( DIR* d, FILINFO* fInfo ) {
 	/// Просто нет такого файла.
 	return 1;
 }
+
+char* AyPlayerFat::getNameTrackFromFile			( FIL* f, uint32_t nubmerTrack ) {
+	FRESULT				r;
+
+	const uint32_t	lseek	=	sizeof( itemFileInFat ) * nubmerTrack;
+	r	=	f_lseek( f, lseek );
+
+	if ( r != FR_OK ) {
+		return nullptr;
+	}
+
+	char*	name			=	( char* )pvPortMalloc( ITEM_FILE_IN_FAT_FILE_NAME_LEN );
+	UINT		l;
+	r	=	f_read( f, name, ITEM_FILE_IN_FAT_FILE_NAME_LEN, &l );
+	if ( ( r == FR_OK ) && ( l == ITEM_FILE_IN_FAT_FILE_NAME_LEN ) ) {
+		return name;
+	} else {
+		vPortFree( name );
+		return nullptr;
+	}
+}
+
+uint32_t AyPlayerFat::getLenTrackFromFile		( FIL* f, uint32_t nubmerTrack ) {
+	FRESULT				r;
+
+	const uint32_t	lseek	=	( sizeof( itemFileInFat ) * nubmerTrack ) + ITEM_FILE_IN_FAT_FILE_NAME_LEN + sizeof( AY_FORMAT );
+	r	=	f_lseek( f, lseek );
+
+	if ( r != FR_OK )
+		return 0xFFFFFFFF;
+
+	uint32_t	len;
+	UINT		l;
+	r	=	f_read( f, &len, sizeof( uint32_t ), &l );
+
+	return ( ( r == FR_OK ) && ( l == sizeof( itemFileInFat ) ) ) ? 0 : -1;
+}
+
+int AyPlayerFat::readItemFileListAndRemoveItem ( FIL* f, itemFileInFat* item, uint32_t numberTrack ) {
+	FRESULT				r;
+
+	const uint32_t	lseek	=	sizeof( itemFileInFat ) * numberTrack;
+	r	=	f_lseek( f, lseek );
+
+	if ( r != FR_OK ) {
+		return -1;
+	}
+
+	UINT		l;
+	r	=	f_read( f, item, sizeof( itemFileInFat ), &l );
+	return ( ( r == FR_OK ) && ( l == sizeof( itemFileInFat ) ) ) ? 0 : -1;
+}
+
+

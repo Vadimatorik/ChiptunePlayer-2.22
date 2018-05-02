@@ -37,7 +37,7 @@ public:
 	static	int			closeDir						( DIR* d );
 
 	/*!
-	 * Открывает файл по заданному пути.
+	 * Открывает файл по заданному пути или создает его заново.
 	 * Если файл по данному пути существовал ранее - заменяет его.
 	 * \param[in]		path		-	путь до файла, который будет открыт
 	 * 									(полный, включая расширение и карту).
@@ -45,7 +45,19 @@ public:
 	 * \return			{	Указатель на объект файла FatFS
 	 * 						или nullptr, если открыть не удалось.	}
 	 */
-	static	FIL*		openFileList					( char* path );
+	static	FIL*		openFileListWithRewrite			( const char* const path, const char* const name );
+
+	/*!
+	 * Открывает файл по заданному пути/
+	 * Файл должен существовать.
+	 * Если файл по данному пути существовал ранее - заменяет его.
+	 * \param[in]		path		-	путь до файла, который будет открыт
+	 * 									(полный, включая расширение и карту).
+	 *
+	 * \return			{	Указатель на объект файла FatFS
+	 * 						или nullptr, если открыть не удалось.	}
+	 */
+	static	FIL*		openFileList					( const char* const path, const char* const name );
 
 	/*!
 	 * Закрывает ранее открытый файл и удаляет его объект FatFS.
@@ -56,7 +68,7 @@ public:
 	 * 						-1	-	файл закрыт с ошибкой, объект
 	 * 								файла FatFS удален.	}
 	 */
-	static	int			closeFileList					( FIL* f );
+	static	int			closeFile					( FIL* f );
 
 	/*!
 	 * Записывает структуру элемента в <<.fileList>> (информацию о треке).
@@ -71,6 +83,8 @@ public:
 	 *
 	 */
 	static	int			writeItemFileListAndRemoveItem	( FIL* f, itemFileInFat* item );
+
+	static	int			readItemFileListAndRemoveItem	( FIL* f, itemFileInFat* item, uint32_t numberTrack );
 
 	/*!
 	 * Открывает директорию и ищет в ней первый элемент по маске.
@@ -93,4 +107,23 @@ public:
 	 * \param[out]		fInfo		-	объект структуры информации о файле FatFS.
 	 */
 	static	int			findingFileInDir				( DIR* d, FILINFO* fInfo );
+
+	/*!
+	 * Достает из ранее открытого файла-списка имя трека с заданным номером.
+	 * \param[in]		f			-	файл со списком треков.
+	 * \param[in]		nubmerTrack	-	номер трека в списке. Счет с 0.
+	 *
+	 * \return			{	Строка с именем или nullptr.	}
+	 */
+	static	char*		getNameTrackFromFile			( FIL* f, uint32_t nubmerTrack );
+
+	/*!
+	 * Достает из ранее открытого файла-списка длину трека с заданным номером.
+	 * \param[in]		f			-	файл со списком треков.
+	 * \param[in]		nubmerTrack	-	номер трека в списке. Счет с 0.
+	 *
+	 * \return			{	Длина трека или 0xFFFFFFFF	}
+	 */
+	static	uint32_t	getLenTrackFromFile				( FIL* f, uint32_t nubmerTrack );
+
 };
