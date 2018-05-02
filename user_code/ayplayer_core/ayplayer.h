@@ -246,8 +246,12 @@ private:
 	int				sortFileList						( char* path );
 	FRESULT			findingFileListAndSort				( char* path );
 	int				sortFileListCreateFile				( const char* const path, FIL** fNoSort, FIL** fNameSort, FIL** fLenSort );
-	int				sortFileListCloseFile				( DIR* d, FILINFO* fi, FIL* fNoSort, FIL* fNameSort, FIL* fLenSort );
+	int				sortFileListCloseFile				( const char* const path, DIR* d, FILINFO* fi, FIL* fNoSort, FIL* fNameSort, FIL* fLenSort );
 	int				writeSortFile						( FIL* output, FIL* input, uint16_t* sortArray, uint32_t count );
+	void			initWindowSortingFileList			( void );
+	void			removeWindowSortingFileList			( void );
+	void			initPointArrayToSort				( uint16_t* array, uint32_t count );
+	int				sortForNameFileList					( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fNameSort );
 
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;

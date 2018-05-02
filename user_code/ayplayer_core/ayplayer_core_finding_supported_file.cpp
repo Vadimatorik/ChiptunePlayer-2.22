@@ -19,7 +19,7 @@ int	AyPlayer::scanDir ( char* path ) {
 		char*	fullPathToFile	=	AyPlayerFat::getFullPath( path, fi->fname );
 
 		/// Лог: найден файл под маску.
-		this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "File found:", fullPathToFile );						/// Лог.
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File found:", fullPathToFile );						/// Лог.
 
 		/// Экран: начат анализ файла.
 		m_slist_set_text_string( &this->g.sl, "File analysis..." );											/// Экран.
@@ -41,20 +41,20 @@ int	AyPlayer::scanDir ( char* path ) {
 
 				/// Если не удалось - чистим память и выходим.
 				if ( f == nullptr ) {
-					this->printMessageAndArg( RTL_TYPE_M::INIT_ERROR, "FileList not created in dir:", path );
+					this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "FileList not created in dir:", path );
 					vPortFree( fullPathToFile );
 					r = -1;
 					break;
 				} else {
-					this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "FileList created in dir:", path );
+					this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "FileList created in dir:", path );
 				}
 			}
 
 			/// Лог: данный об проанализированном файле.
-			this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "Analysis was carried out successfully:", fullPathToFile );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "Analysis was carried out successfully:", fullPathToFile );
 			char lenString[50];
 			sprintf( lenString, "%lu", fileLen );
-			this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "File len tick:", lenString );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File len tick:", lenString );
 
 			itemFileInFat*	fileListItem	=	this->structureItemFileListFilling( fi->fname, fileLen, AY_FORMAT::psg );
 			r	=	AyPlayerFat::writeItemFileListAndRemoveItem( f, fileListItem );
@@ -68,7 +68,7 @@ int	AyPlayer::scanDir ( char* path ) {
 			/// На экран.
 			this->guiUpdate();
 		} else {
-			this->printMessageAndArg( RTL_TYPE_M::INIT_ISSUE, "Analysis was not carried out successfully:", fullPathToFile );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ISSUE, "Analysis was not carried out successfully:", fullPathToFile );
 		}
 
 		/// Полный путь теперь не актуален.
@@ -116,7 +116,7 @@ FRESULT AyPlayer::indexingSupportedFiles( char* path ) {
 	if ( d == nullptr )
 		return FRESULT::FR_DISK_ERR;
 
-	this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "Open  dir:", path );
+	this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "Open  dir:", path );
 
 	/// Рекурсивно обходим все папки.
 	while( 1 ) {
@@ -133,7 +133,7 @@ FRESULT AyPlayer::indexingSupportedFiles( char* path ) {
 		/// Закончились элементы в текущей директории.
 		if ( f.fname[ 0 ] == 0 ) {
 			/// Лог: директория закончилась.
-			this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "Close dir:", path );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "Close dir:", path );
 
 			break;
 		}

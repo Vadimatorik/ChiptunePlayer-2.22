@@ -24,32 +24,32 @@ int	AyPlayer::sortFileListCreateFile ( const char* const path, FIL** fNoSort, FI
 		/// Открываем файл со списком.
 		*fNoSort	=	AyPlayerFat::openFileList( path, ".fileList" );
 		if ( fNoSort == nullptr ) {
-			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileList>> not been open in dir: ", path );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileList>> not been open in dir:", path );
 			r = -1;
 			break;
 		}
 
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileList>> opened successfully in dir: ", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileList>> opened successfully in dir:", path );
 
 		/// Отсортированные по именам.
 		*fNameSort	=	AyPlayerFat::openFileListWithRewrite( path, ".fileListNameSort" );
 		if ( fNameSort == nullptr ) {
-			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileListNameSort>> not been open in dir: ", path );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileListNameSort>> not been open in dir:", path );
 			r = -1;
 			break;
 		}
 
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileListNameSort>> opened successfully in dir: ", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileListNameSort>> opened successfully in dir:", path );
 
 		/// Отсортированные по длительности.
 		*fLenSort	=	AyPlayerFat::openFileListWithRewrite( path, ".fileListLenSort" );
 		if ( fLenSort == nullptr ) {
-			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileListLenSort>> not been open in dir: ", path );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileListLenSort>> not been open in dir:", path );
 			r = -1;
 			break;
 		}
 
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileListLenSort>> opened successfully in dir: ", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileListLenSort>> opened successfully in dir:", path );
 
 	}  while( false );
 
@@ -57,20 +57,27 @@ int	AyPlayer::sortFileListCreateFile ( const char* const path, FIL** fNoSort, FI
 		AyPlayerFat::closeFile( *fNoSort );
 		AyPlayerFat::closeFile( *fNameSort );
 		AyPlayerFat::closeFile( *fLenSort );
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileList>>, <<fileListNameSort>> and <<fileListLenSort>> are closed in an emergency! Dir: ", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileList>>, <<fileListNameSort>> and <<fileListLenSort>> are closed in an emergency! Dir:", path );
 		return r;
 	}
 
 	return r;
 }
 
-int	AyPlayer::sortFileListCloseFile ( DIR* d, FILINFO* fi, FIL* fNoSort, FIL* fNameSort, FIL* fLenSort ) {
+int	AyPlayer::sortFileListCloseFile ( const char* const path, DIR* d, FILINFO* fi, FIL* fNoSort, FIL* fNameSort, FIL* fLenSort ) {
 	int r = 0;
 	if ( fi )										vPortFree( fi );
 	r	=	( AyPlayerFat::closeDir( d )			!= 0 ) ? -1 : r;
 	r	=	( AyPlayerFat::closeFile( fNoSort )		!= 0 ) ? -1 : r;
 	r	=	( AyPlayerFat::closeFile( fNameSort )	!= 0 ) ? -1 : r;
 	r	=	( AyPlayerFat::closeFile( fLenSort )	!= 0 ) ? -1 : r;
+
+	if ( r == 0 ) {
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileList>>, <<.fileListNameSort>> and <<.fileListLenSort>> closed successfully! Dir:", path );
+	} else {
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileList>>, <<.fileListNameSort>> and <<.fileListLenSort>> are closed in an emergency! Dir:", path );
+	}
+
 	return r;
 }
 
@@ -90,6 +97,58 @@ int AyPlayer::writeSortFile ( FIL* output, FIL* input, uint16_t* sortArray, uint
 	}
 
 	return funResult;
+}
+
+void AyPlayer::initPointArrayToSort ( uint16_t* array, uint32_t count ) {
+	/// Изначально все строкутры в своем порядке 0..countFileInDir-1.
+	for ( uint32_t i = 0; i < count; i++ )
+		array[ i ] = i;
+}
+
+
+int AyPlayer::sortForNameFileList ( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fNameSort ) {
+	int	sortResult	=	0;
+	/// Начинаем быструю сортировку по имени.
+	std::sort( fl, &fl[ countFileInDir ], [ this, path, &sortResult, fi, d, fNoSort, fNameSort ]( int a, int b ) {
+		/*!
+	 	 * Если в процессе сортировки упадет флешка - то выдаем одно значение для быстроты сортировки и выходим.
+	 	 * Так массив быстро отсортируется и выйдя мы поймем, что упали.
+	 	 */
+		if ( sortResult < 0 ) {
+			return true;
+		}
+
+		/// Получаем имена треков.
+		char*	aStruct	=	AyPlayerFat::getNameTrackFromFile( fNoSort, a );
+
+		if ( aStruct == nullptr ) {
+			sortResult	=	-1;
+			return true;
+		}
+
+		char*	bStruct	=	AyPlayerFat::getNameTrackFromFile( fNoSort, b );
+		if ( bStruct == nullptr ) {
+			sortResult	=	-1;
+			return true;
+		}
+
+		/// Сравниваем строки.
+		int resStrcmp;
+		resStrcmp	=	strcmp( aStruct, bStruct );
+
+		/// После сравнения удаляем сравниваемые элементы.
+		vPortFree( aStruct );
+		vPortFree( bStruct );
+
+		/// Возвращаем результат сравнения.
+		return resStrcmp < 0;
+	} );
+
+	if ( sortResult == 0 ) {
+		sortResult = this->writeSortFile( fNameSort, fNoSort, fl, countFileInDir );
+	}
+
+	return sortResult;
 }
 
 int	AyPlayer::sortFileList ( char* path ) {
@@ -115,7 +174,7 @@ int	AyPlayer::sortFileList ( char* path ) {
 	char*	fullPathToFile	=	AyPlayerFat::getFullPath( path, fi->fname );
 
 	/// Лог: найден файл под маску.
-	this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "Start sorting file:", fullPathToFile );					/// Лог.
+	this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "Start sorting file:", fullPathToFile );					/// Лог.
 	vPortFree( fullPathToFile );
 
 	/// Получаем колличество файлов в директории.
@@ -126,60 +185,23 @@ int	AyPlayer::sortFileList ( char* path ) {
 	 */
 	uint16_t* fl	=	( uint16_t* )pvPortMalloc( sizeof( uint16_t ) * countFileInDir );
 
-	/// Изначально все строкутры в своем порядке 0..countFileInDir-1.
-	for ( uint32_t i = 0; i < countFileInDir; i++ )
-		fl[ i ] = i;
-
-	int	sortResult	=	0;
-	/// Начинаем быструю сортировку по имени.
-	std::sort( fl, &fl[ countFileInDir ], [ this, &sortResult, fi, d, fNoSort, fNameSort, fLenSort ]( int a, int b ) {
-		/*!
-		 * Если в процессе сортировки упадет флешка - то выдаем одно значение для быстроты сортировки и выходим.
-		 * Так массив быстро отсортируется и выйдя мы поймем, что упали.
-		 */
-		if ( sortResult < 0 ) {
-			return true;
-		}
-
-		/// Получаем имена треков.
-		char*	aStruct	=	AyPlayerFat::getNameTrackFromFile( fNoSort, a );
-
-		if ( aStruct == nullptr ) {
-			this->sortFileListCloseFile( d, fi, fNoSort, fNameSort, fLenSort );
-			sortResult	=	-1;
-			return true;
-		}
-
-		char*	bStruct	=	AyPlayerFat::getNameTrackFromFile( fNoSort, b );
-		if ( bStruct == nullptr ) {
-			this->sortFileListCloseFile( d, fi, fNoSort, fNameSort, fLenSort );
-			sortResult	=	-1;
-			return true;
-		}
-
-		/// Сравниваем строки.
-		int resStrcmp;
-		resStrcmp	=	strcmp( aStruct, bStruct );
-
-		/// После сравнения удаляем сравниваемые элементы.
-		vPortFree( aStruct );
-		vPortFree( bStruct );
-
-		/// Возвращаем результат сравнения.
-		return resStrcmp < 0;
-	} );
-
-	sortResult = this->writeSortFile( fNameSort, fNoSort, fl, countFileInDir );
+	this->initPointArrayToSort( fl, countFileInDir );
+	r = sortForNameFileList( path, fl, countFileInDir, fi, d, fNoSort, fNameSort );
+	if ( r != 0 ) {
+		vPortFree( fl );
+		this->sortFileListCloseFile( path, d, fi, fNoSort, fNameSort, fLenSort );
+		return r;
+	}
 
 	vPortFree( fl );
 
 	/// Во время сортировки случилась ошибка.
-	if ( sortResult != 0 ) {
-		this->sortFileListCloseFile( d, fi, fNoSort, fNameSort, fLenSort );
+	if ( r != 0 ) {
+		this->sortFileListCloseFile( path, d, fi, fNoSort, fNameSort, fLenSort );
 		return -1;
 	}
 
-	r = this->sortFileListCloseFile( d, fi, fNoSort, fNameSort, fLenSort );
+	r = this->sortFileListCloseFile( path, d, fi, fNoSort, fNameSort, fLenSort );
 	return r;
 }
 
@@ -193,7 +215,7 @@ FRESULT AyPlayer::findingFileListAndSort ( char* path ) {
 	if ( d == nullptr )
 		return FRESULT::FR_DISK_ERR;
 
-	this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "Open  dir:", path );
+	this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "Open  dir:", path );
 
 	/// Флаг единоразового файла в директории.
 	bool				scanDir	=	false;
@@ -209,7 +231,7 @@ FRESULT AyPlayer::findingFileListAndSort ( char* path ) {
 		/// В данной директории нет файла с описанием.
 		if ( f.fname[ 0 ] == 0 ) {
 			/// Лог: директория закончилась.
-			this->printMessageAndArg( RTL_TYPE_M::INIT_OK, "Close dir:", path );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "Close dir:", path );
 
 			break;
 		}

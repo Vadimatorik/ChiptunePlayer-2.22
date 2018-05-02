@@ -19,6 +19,21 @@ void AyPlayer::initWindowIndexingSupportedFiles( char* stateIndexing ) {
 	}
 }
 
+void AyPlayer::initWindowSortingFileList ( void ) {
+	m_create_message_window(	&this->g.mw,
+								&this->g.c,
+								mp_rel( 0,	11,
+										128, 64 - 11 ),
+								"Sorting list file...",
+								&this->gui->smw );
+	this->guiUpdate();
+}
+
+void AyPlayer::removeWindowSortingFileList ( void) {
+	makise_g_cont_rem( &this->g.mw.el );
+}
+
+
 void AyPlayer::initGuiStatusBar( void ) {
 	m_create_player_status_bar(	&this->g.sb,
 								&this->g.c,

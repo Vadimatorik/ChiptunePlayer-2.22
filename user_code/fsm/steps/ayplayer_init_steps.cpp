@@ -131,7 +131,7 @@ int AyPlayer::fsmStepFuncIndexingSupportedFiles ( HANDLER_FSM_INPUT_DATA ) {
 	strcpy( path, "0:");
 
 	/// Лог: начат анализ.
-	obj->l->sendMessage( RTL_TYPE_M::INIT_OK, "Indexing files start." );
+	obj->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "Indexing files start." );
 
 	/// Готовим окно list-а c файлами..
 	obj->initWindowIndexingSupportedFiles();
@@ -157,12 +157,22 @@ int AyPlayer::fsmStepFuncIndexingSupportedFiles ( HANDLER_FSM_INPUT_DATA ) {
 
 int AyPlayer::fsmStepFuncSortingFileList ( HANDLER_FSM_INPUT_DATA ) {
 	char*			path		=	( char* )pvPortMalloc( 1024 );
+	int				r;
+
 	assertParam( path );
 	strcpy( path, "0:");
 
+	obj->initWindowSortingFileList();
+
 	/// Лог: начат анализ.
-	obj->l->sendMessage( RTL_TYPE_M::INIT_OK, "Started sorting fileList." );
-	obj->findingFileListAndSort( path );
+	obj->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "Started sorting fileList." );
+	r = obj->findingFileListAndSort( path );
+
+	obj->removeWindowSortingFileList();
+
+	vPortFree( path );
+
+	if ( r != 0 ) return 1;
 
 	return 0;
 }
