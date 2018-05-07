@@ -153,6 +153,7 @@ public:
 private:
 	static	void	mainTask					( void* obj );
 	static	void	illuminationControl			( void* obj );
+	static	void	playTask					( void* obj );
 
 	/*!
 	 * Останавливает все аппаратные модули, зависящие от тактового сигнала,
