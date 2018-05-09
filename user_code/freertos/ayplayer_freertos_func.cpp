@@ -23,6 +23,10 @@ void vApplicationMallocFailedHook( void ) {
 	while(1);
 }
 
+void vApplicationStackOverflowHook ( void ) {
+	while(1);
+}
+
 void vConfigureTimerForRunTimeStats ( void ) {
 	/// Таймер настроится при конфигурации RCC внутри AyPlayer.
 }

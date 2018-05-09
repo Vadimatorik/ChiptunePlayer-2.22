@@ -5,12 +5,10 @@
 extern "C" {
 #endif
 
-#define configUSE_HEAP_SCHEME                 	    2
+#define configUSE_HEAP_SCHEME						2
 
 #define configUSE_PREEMPTION						1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION		1
-#define configUSE_IDLE_HOOK							0
-#define configUSE_TICK_HOOK							0
 #define configCPU_CLOCK_HZ							16000000
 #define configTOTAL_HEAP_SIZE						( ( size_t ) ( 90 * 1024 ) )
 #define configTICK_RATE_HZ							( ( TickType_t ) 1000 )
@@ -21,6 +19,9 @@ extern "C" {
 #define configIDLE_SHOULD_YIELD						1
 #define configQUEUE_REGISTRY_SIZE					10
 #define configCHECK_FOR_STACK_OVERFLOW				2
+
+#define configUSE_IDLE_HOOK							0
+#define configUSE_TICK_HOOK							0
 #define configUSE_MALLOC_FAILED_HOOK       	 		1
 #define configUSE_DAEMON_TASK_STARTUP_HOOK  	    0
 
