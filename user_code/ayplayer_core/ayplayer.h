@@ -117,6 +117,10 @@ struct itemFileInFat {
 
 struct ayPlayerFatFs {
 	FATFS						f[ AYPLAYER_MICROSD_COUNT ];
+
+	/// Директория, в которой находится файловый менеджер
+	/// И из которой идет воспроизведение.
+	DIR							playDir;
 };
 
 class AyPlayer {
