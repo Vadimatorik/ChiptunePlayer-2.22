@@ -235,4 +235,44 @@ int AyPlayerFat::readItemFileListAndRemoveItem ( FIL* f, itemFileInFat* item, ui
 	return ( ( r == FR_OK ) && ( l == sizeof( itemFileInFat ) ) ) ? 0 : -1;
 }
 
+int AyPlayerFat::checkingFile ( const char* path, const char* nameFile, FILINFO* fi, FRESULT& fatReturn ) {
+	FRESULT		r;
+
+	char* fullPath;
+	fullPath = AyPlayerFat::getFullPath( path, nameFile );
+	r = f_stat( fullPath, fi );
+	vPortFree( fullPath );
+
+	switch( ( uint32_t )r ) {
+	case ( uint32_t )FR_OK:			return 1;
+	case ( uint32_t )FR_NO_FILE:	return 0;
+	default:
+		fatReturn = r;
+		return -1;
+	}
+}
+
+/// 0 - ок, 1 - нет файла, -1 флешка проблемная.
+int AyPlayerFat::removeFile ( const char* path, const char* nameFile, FRESULT& fatReturn ) {
+	FRESULT		r;
+
+	char* fullPath;
+	fullPath = AyPlayerFat::getFullPath( path, nameFile );
+
+	do {
+		r = f_chmod( fullPath, 0, AM_RDO|AM_ARC|AM_SYS|AM_HID );		/// Снимаем блокировки.
+		if ( r != FR_OK ) break;
+		r = f_unlink( fullPath );
+	} while( true );
+
+	vPortFree( fullPath );
+
+	switch( ( uint32_t )r ) {
+	case ( uint32_t )FR_OK:			return 0;
+	case ( uint32_t )FR_NO_FILE:	return 1;
+	default:
+		fatReturn = r;
+		return -1;
+	}
+}
 

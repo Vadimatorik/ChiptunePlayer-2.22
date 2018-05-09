@@ -41,26 +41,4 @@ state "guiInit" as s3 {
 s3:Инициализация MakiseGUI и драйвера дисплея
 }
 
-s3 --> s4								: 0
-
-state "microSdInit" as s4 {
-s4:Инициализируются FATFs: SD1, SD2.
-}
-
-s4 --> s5								: 0
-
-state "indexingSupportedFiles" as s5 {
-s5:Индексация поддерживаемых файлов во всех каталогах (рекурсивно).
-s5:В каждой директории создается файл playlist.sys со списком файлов.
-}
-
-s5 --> s6								: 0
-s5 --> s4								: 1
-
-state "sortingFileList" as s6 {
-s6:Создаются файлы с отсортированными значениями:
-s6:<<.fileListNameSort>>\t-\tсортировка по имени трека.
-s6:<<.fileListLenSort>>\t-\tсортировка по длительности трека.
-}
-
 @enduml

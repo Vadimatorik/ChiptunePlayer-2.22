@@ -17,7 +17,7 @@ FRESULT AyPlayer::fatFsReinit( AY_MICROSD sd ) {
 	};
 
 	if ( r != FRESULT::FR_OK ) {
-		errorMicroSdDraw( sd, r );
+		this->errorMicroSdDraw( sd, r );
 	} else {
 		char massage[] = "FatFs connected witch SDX!";
 		/// Пишем вместо X номер карты.

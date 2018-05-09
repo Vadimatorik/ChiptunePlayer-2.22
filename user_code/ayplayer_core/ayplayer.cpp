@@ -1,6 +1,7 @@
 #include "ayplayer.h"
 
 extern const fsmStep< AyPlayer > ayPlayerFreeRtosObjInitFsmStep;
+extern const fsmStep< AyPlayer > ayPlayerMicroSdInitFsmStep;
 
 void AyPlayer::start ( void ) {
 	/*!
@@ -36,6 +37,7 @@ void AyPlayer::start ( void ) {
 void AyPlayer::mainTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;
 	o->fsm.start( &ayPlayerFreeRtosObjInitFsmStep, o );
+	o->fsm.start( &ayPlayerMicroSdInitFsmStep, o );
 	while( true ) {
 		vTaskDelay( 1000 );
 	}

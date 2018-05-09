@@ -148,7 +148,9 @@ public:
 	HANDLER_FSM_STEP( fsmStepFuncMicroSdInit );
 	HANDLER_FSM_STEP( fsmStepFuncIndexingSupportedFiles );
 	HANDLER_FSM_STEP( fsmStepFuncSortingFileList );
-
+	HANDLER_FSM_STEP( fsmStepFuncCheckingChangeFatVolume );
+	HANDLER_FSM_STEP( fsmStepFuncCleanFlagChangeFatVolume );
+	HANDLER_FSM_STEP( fsmStepFuncInitMainWindow );
 
 private:
 	static	void	mainTask					( void* obj );
@@ -254,7 +256,20 @@ private:
 	void			initPointArrayToSort				( uint16_t* array, uint32_t count );
 	int				sortForNameFileList					( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fNameSort );
 	int				sortForLenFileList					( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fLenSort );
+	void			removeSystemFileInRootDir			( AY_MICROSD sdName, const char* fatValome );
 
+	/// Проверяем наличие файла в директории 0 - нет, 1 есть, -1 флешке плохо.
+	int checkingFile( AY_MICROSD sdName, const char* path, const char* nameFile, FILINFO* fi  );
+
+	int removeFile( AY_MICROSD sdName, const  char* path, const char* nameFile );
+
+
+	/*!
+	 * Находим системные файлы в директории.
+	 * Например, карзина или индексер.
+	 * Причем от разныех ОС.
+	 */
+	int			checkingSystemFileInRootDir			( AY_MICROSD sdName, const char* fatValome );
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;
 

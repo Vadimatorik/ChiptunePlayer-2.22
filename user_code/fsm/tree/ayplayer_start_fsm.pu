@@ -1,0 +1,54 @@
+CLASS_NAME						=		AyPlayer
+FILE_WITH_CLASS_DESCRIPTION		=		ayplayer.h
+
+@startuml
+
+[*] --> microSdInit
+
+
+state "microSdInit" as microSdInit {
+microSdInit:Инициализируются FATFs: SD1, SD2.
+}
+
+microSdInit --> checkingChangeFatVolume						: 0
+
+state "checkingChangeFatVolume" as checkingChangeFatVolume {
+checkingChangeFatVolume:Производится проверка того,
+checkingChangeFatVolume:что карту ранее не подключали
+checkingChangeFatVolume:к компьютеру.
+}
+
+checkingChangeFatVolume --> initMainWindow					: 0
+checkingChangeFatVolume --> indexingSupportedFiles			: 1
+
+state "indexingSupportedFiles" as indexingSupportedFiles {
+indexingSupportedFiles:Индексация поддерживаемых файлов во 
+indexingSupportedFiles:всех каталогах (рекурсивно).
+indexingSupportedFiles:В каждой директории создается файл 
+indexingSupportedFiles:.fileList со списком файлов.
+}
+
+indexingSupportedFiles --> sortingFileList					: 0
+
+state "sortingFileList" as sortingFileList {
+sortingFileList:Создаются файлы с отсортированными значениями:
+sortingFileList:<<.fileListNameSort>>\t-\tсортировка по имени трека.
+sortingFileList:<<.fileListLenSort>>\t-\tсортировка по длительности трека.
+sortingFileList:Для каждого файла playlist.sys рекурсивно.
+}
+
+sortingFileList --> cleanFlagChangeFatVolume				: 0
+
+state "cleanFlagChangeFatVolume" as cleanFlagChangeFatVolume {
+cleanFlagChangeFatVolume:Сбрасываем флаг того, 
+cleanFlagChangeFatVolume:что карта подключалась к компьютеру.
+}
+
+cleanFlagChangeFatVolume --> initMainWindow							: 0
+
+state "initMainWindow" as initMainWindow {
+initMainWindow:Выводится основное окно приложения
+initMainWindow:с параметрами пользователья.
+}
+
+@enduml

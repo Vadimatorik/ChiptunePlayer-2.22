@@ -126,4 +126,10 @@ public:
 	 */
 	static	uint32_t	getLenTrackFromFile				( FIL* f, uint32_t nubmerTrack );
 
+	/*!
+	 * Проверяет наличие файла.
+	 */
+	static	int			checkingFile					( const char* path, const char* nameFile, FILINFO* fi, FRESULT& fatReturn );
+
+	static	int			removeFile						( const char* path, const char* nameFile, FRESULT& fatReturn );
 };
