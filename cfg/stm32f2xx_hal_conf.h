@@ -1,47 +1,27 @@
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #define HAL_MODULE_ENABLED
 #define HAL_ADC_MODULE_ENABLED
-//#define HAL_CAN_MODULE_ENABLED
-//#define HAL_CRC_MODULE_ENABLED
-//#define HAL_CRYP_MODULE_ENABLED
-//#define HAL_DAC_MODULE_ENABLED
-//#define HAL_DCMI_MODULE_ENABLED
 #define HAL_DMA_MODULE_ENABLED
-//#define HAL_ETH_MODULE_ENABLED
 #define HAL_FLASH_MODULE_ENABLED
-//#define HAL_NAND_MODULE_ENABLED
-//#define HAL_NOR_MODULE_ENABLED
-//#define HAL_PCCARD_MODULE_ENABLED
 #define HAL_SRAM_MODULE_ENABLED
-//#define HAL_HASH_MODULE_ENABLED
 #define HAL_GPIO_MODULE_ENABLED
 #define HAL_IWDG_MODULE_ENABLED
 #define HAL_PWR_MODULE_ENABLED
 #define HAL_RCC_MODULE_ENABLED
 #define HAL_RNG_MODULE_ENABLED
-//#define HAL_RTC_MODULE_ENABLED
 #define HAL_SD_MODULE_ENABLED
 #define HAL_SPI_MODULE_ENABLED
-#define HAL_TIM_MODULE_ENABLED
 #define HAL_UART_MODULE_ENABLED
-//#define HAL_USART_MODULE_ENABLED
-//#define HAL_IRDA_MODULE_ENABLED
-//#define HAL_SMARTCARD_MODULE_ENABLED
+#define HAL_TIM_MODULE_ENABLED
 #define HAL_WWDG_MODULE_ENABLED
 #define HAL_CORTEX_MODULE_ENABLED
-//#define HAL_PCD_MODULE_ENABLED
-//#define HAL_HCD_MODULE_ENABLED
 #define HAL_MMC_MODULE_ENABLED
 
-/* ########################## HSE/HSI Values adaptation ##################### */
-/**
-  * @brief Adjust the value of External High Speed oscillator (HSE) used in your application.
-  *        This value is used by the RCC HAL module to compute the system frequency
-  *        (when HSE is used as system clock source, directly or through the PLL).  
-  */
 #if !defined  (HSE_VALUE) 
   #define HSE_VALUE                    16000000U       /*!< Value of the External oscillator in Hz */
 #endif /* HSE_VALUE */
@@ -87,13 +67,6 @@ extern "C" {
   #define EXTERNAL_CLOCK_VALUE       12288000U        /*!< Value of the Internal oscillator in Hz*/
 #endif /* EXTERNAL_CLOCK_VALUE */
 
-/* Tip: To avoid modifying this file each time you need to use different HSE,
-   ===  you can define the HSE value in your toolchain compiler preprocessor. */
-
-/* ########################### System Configuration ######################### */
-/**
-  * @brief This is the HAL system configuration section
-  */     
 #define  VDD_VALUE                      3300U /*!< Value of VDD in mv */
 #define  TICK_INT_PRIORITY              0x6U /*!< tick interrupt priority */
 #define  USE_RTOS                          0U
