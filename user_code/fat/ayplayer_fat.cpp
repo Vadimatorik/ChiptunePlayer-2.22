@@ -24,8 +24,6 @@ char* AyPlayerFat::getFullPath( const char* const path, const char* const fileNa
 DIR* AyPlayerFat::openDir( char* path ) {
 	FRESULT			r;
 	DIR*			d;
-
-	/// Выделяем память под объект директории FatFS.
 	d	=	( DIR* )pvPortMalloc( sizeof( DIR ) );
 	assertParam( d );
 
@@ -263,7 +261,7 @@ int AyPlayerFat::removeFile ( const char* path, const char* nameFile, FRESULT& f
 		r = f_chmod( fullPath, 0, AM_RDO|AM_ARC|AM_SYS|AM_HID );		/// Снимаем блокировки.
 		if ( r != FR_OK ) break;
 		r = f_unlink( fullPath );
-	} while( true );
+	} while( false );
 
 	vPortFree( fullPath );
 
@@ -276,3 +274,70 @@ int AyPlayerFat::removeFile ( const char* path, const char* nameFile, FRESULT& f
 	}
 }
 
+int AyPlayerFat::removeDir ( const char* path, FRESULT& fatReturn ) {
+	FRESULT		r;
+	do {
+		r = f_chmod( path, 0, AM_RDO|AM_ARC|AM_SYS|AM_HID );		/// Снимаем блокировки.
+		if ( r != FR_OK ) break;
+		r = f_unlink( path );
+	} while( false );
+
+	switch( ( uint32_t )r ) {
+	case ( uint32_t )FR_OK:			return 0;
+	case ( uint32_t )FR_NO_FILE:	return 1;
+	default:
+		fatReturn = r;
+		return -1;
+	}
+}
+
+int AyPlayerFat::removeDirRecurisve ( char* fullPath, FRESULT& fatReturn ) {
+	static FILINFO			f;
+	static int				r = 0;
+
+	DIR*	d	=	AyPlayerFat::openDir( fullPath );
+	assertParam( d );
+
+	/// Рекурсивно обходим все папки.
+	while( 1 ) {
+		fatReturn = f_readdir( d, &f );
+
+		/// Если проблемы на нижнем уравне.
+		if ( fatReturn != FR_OK ) {
+			r = -1;
+			break;
+		}
+
+		/// Закончились элементы в текущей директории.
+		if ( f.fname[ 0 ] == 0 )
+			break;
+
+		/// Найдена новая директория.
+		if ( f.fattrib & AM_DIR ) {
+			uint32_t i = strlen( fullPath );
+			sprintf( &fullPath[ i ], "/%s", f.fname );
+
+			r	=	AyPlayerFat::removeDirRecurisve( fullPath, fatReturn );
+
+			if ( fatReturn != FRESULT::FR_OK ) {								/// Аварийная ситуация.
+				r = -1;
+				break;
+			}
+
+			fullPath[ i ] = 0;
+		} else {
+			r = AyPlayerFat::removeFile( fullPath, f.fname, fatReturn );
+			if ( r != 0 )
+				break;
+		}
+	}
+
+	/// Фиксируем FRESULT::FR_DISK_ERR как приоритет над всем.
+	r = ( AyPlayerFat::closeDir( d ) == -1 ) ? -1 : r;
+
+	/// Удалили все в директории можно и ее саму.
+	if ( r == 0 )
+		r = AyPlayerFat::removeDir( fullPath, fatReturn );
+
+	return r;
+}

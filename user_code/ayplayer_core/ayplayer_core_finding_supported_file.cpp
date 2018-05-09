@@ -184,6 +184,27 @@ int AyPlayer::removeFile( AY_MICROSD sdName, const char* path, const char* nameF
 	return r;
 }
 
+int AyPlayer::removeDirRecurisve( AY_MICROSD sdName, const char* path, const char* nameDir ) {
+	FRESULT fRes;
+
+	char* fullPath	=	( char* )pvPortMalloc( 4096 );
+	assertParam( fullPath );
+
+	/// Собираем единую строку.
+	sprintf( fullPath, "%s/%s", path, nameDir );
+
+	int r = AyPlayerFat::removeDirRecurisve( fullPath, fRes );
+
+	if ( r < 0 ) {
+		this->errorMicroSdDraw( sdName, fRes );
+		assertParam( false );
+	}
+
+	vPortFree( fullPath );
+
+	return r;
+}
+
 int AyPlayer::checkingSystemFileInRootDir( AY_MICROSD sdName, const char* fatValome ) {
 	FILINFO*	fi						=	( FILINFO* )pvPortMalloc( sizeof( FILINFO ) );
 	assertParam( fi );
@@ -208,7 +229,7 @@ int AyPlayer::checkingSystemFileInRootDir( AY_MICROSD sdName, const char* fatVal
 
 void AyPlayer::removeSystemFileInRootDir( AY_MICROSD sdName, const char* fatValome ) {
 	do {
-		this->removeFile( sdName, fatValome, "System Volume Information" );
+		this->removeDirRecurisve( sdName, fatValome, "System Volume Information" );
 		this->removeFile( sdName, fatValome, "thumbs.db" );
 		this->removeFile( sdName, fatValome, "Desktop.ini" );
 		this->removeFile( sdName, fatValome, "autorun.inf" );

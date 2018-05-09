@@ -263,6 +263,7 @@ private:
 
 	int removeFile( AY_MICROSD sdName, const  char* path, const char* nameFile );
 
+	int removeDirRecurisve( AY_MICROSD sdName, const char* path, const char* nameDir );
 
 	/*!
 	 * Находим системные файлы в директории.
