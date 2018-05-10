@@ -1,4 +1,5 @@
 #include "ayplayer.h"
+#include "ayplayer_fat.h"
 
 FRESULT AyPlayer::fatFsReinit( AY_MICROSD sd ) {
 	FRESULT	r;

@@ -5,7 +5,7 @@
 
 // В этих очередях содержатся данные для каждого AY.
 // Они (данные) будут выдаваться в прерывании с заданной частотой.
-#define QB_AY_LOW_SIZE					32
+#define QB_AY_LOW_SIZE					64
 
 struct freeRtosObj {
 	/// Queue.

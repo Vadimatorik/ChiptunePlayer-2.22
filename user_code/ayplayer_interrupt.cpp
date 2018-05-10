@@ -12,6 +12,7 @@ extern SpiMaster8Bit			spi1;
 extern SpiMaster8Bit			spi2;
 extern SpiMaster8Bit			spi3;
 extern Pwr						pwr;
+extern AyYmLowLavel				ayLow;
 
 extern "C" {
 

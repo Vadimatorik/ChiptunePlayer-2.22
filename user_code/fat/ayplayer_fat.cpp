@@ -74,7 +74,7 @@ FIL* AyPlayerFat::openFileListWithRewrite ( const char* const path, const char* 
     return f;
 }
 
-FIL* AyPlayerFat::openFileList ( const char* const path, const char* const name ) {
+FIL* AyPlayerFat::openFile ( const char* const path, const char* const name ) {
 	FRESULT				r;
 	FIL*				f;
 

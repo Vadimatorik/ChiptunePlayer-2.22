@@ -44,9 +44,9 @@ const ayYmLowLavelCfg ayLowCfg {
 	.queueArray			=	osData.qAyLow,
 	.ayNumber			=	2,
 	.connectCfg			=	array_connect_cfg,
-	.taskPrio			=	3,
+	.taskPrio			=	4,
 	.timFrequencyAy		=	&ayClk,
-	.timInterruptTask	=	nullptr,// &interrupt_ay_obj,
+	.timInterruptTask	=	&interruptAy,
 	.pwrSet				=	pwr5VSet
 };
 

@@ -88,6 +88,9 @@ int AyPlayer::fsmStepFuncCleanFlagChangeFatVolume ( HANDLER_FSM_INPUT_DATA ) {
 }
 
 int AyPlayer::fsmStepFuncInitMainWindow ( HANDLER_FSM_INPUT_DATA ) {
-	( void )obj;
+	volatile int r;
+	r = obj->getFileInfoFromListCurDir( FILE_LIST_TYPE::NAME_SORT, 0 );
+	r = obj->startPlayFile();
+	( void )r;
 	return 0;
 }

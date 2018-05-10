@@ -30,13 +30,16 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 	 */
 	NVIC_SetPriority( DMA1_Stream3_IRQn, 10 );
 	NVIC_SetPriority( DMA1_Stream4_IRQn, 10 );
-	NVIC_SetPriority( DMA1_Stream7_IRQn, 10 );
+	NVIC_SetPriority( DMA1_Stream7_IRQn, 5 );				/// Выдача в AY (сдвиговый регистр).
 	NVIC_SetPriority( DMA2_Stream5_IRQn, 10 );
 	NVIC_SetPriority( DMA2_Stream6_IRQn, 10 );
 
 	NVIC_SetPriority( USART3_IRQn, 10 );
 
 	NVIC_SetPriority( PVD_IRQn, 10 );
+
+	/// Выдача семафора задаче обновления AY регистров.
+	NVIC_SetPriority( TIM6_DAC_IRQn, 5 );
 
 	NVIC_EnableIRQ( DMA1_Stream3_IRQn );
 	NVIC_EnableIRQ( DMA1_Stream4_IRQn );
@@ -47,6 +50,8 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 	NVIC_EnableIRQ( USART3_IRQn );
 
 	NVIC_EnableIRQ( PVD_IRQn );
+
+	NVIC_EnableIRQ( TIM6_DAC_IRQn );
 
 	/*!
 	 * После инициализации запускаем все модули,

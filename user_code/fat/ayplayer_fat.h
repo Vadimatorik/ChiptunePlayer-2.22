@@ -57,7 +57,7 @@ public:
 	 * \return			{	Указатель на объект файла FatFS
 	 * 						или nullptr, если открыть не удалось.	}
 	 */
-	static	FIL*		openFileList					( const char* const path, const char* const name );
+	static	FIL*		openFile					( const char* const path, const char* const name );
 
 	/*!
 	 * Закрывает ранее открытый файл и удаляет его объект FatFS.

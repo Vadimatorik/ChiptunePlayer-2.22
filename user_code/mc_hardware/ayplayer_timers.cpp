@@ -5,25 +5,25 @@
 const clkTimBaseCfg ay_clk_cfg_clk_tim_param[ AYPLAYER_RCC_CFG_COUNT ] = {
 	/// Индекс RCC: 0.
 	{
-		.period				= 15,
+		.period				= 32 - 1,
 		.prescaler			= 0,
 		.pulse				= 0
 	},
 	/// Индекс RCC: 1.
 	{
-		.period				= 15,
+		.period				= 32 - 1,
 		.prescaler			= 0,
 		.pulse				= 0
 	},
 	/// Индекс RCC: 2.
 	{
-		.period				= 4,
+		.period				= 4 - 1,
 		.prescaler			= 0,
 		.pulse				= 0
 	},
 	/// Индекс RCC: 3.
 	{
-		.period				= 4,
+		.period				= 4 - 1,
 		.prescaler			= 0,
 		.pulse				= 0
 	}
@@ -42,14 +42,14 @@ TimCompOneChannel ayClk( &ay_clk_cfg );				/// Генератор частоты
 const clkTimBaseCfg interrupt_ay_cfg_clk_tim_param[ AYPLAYER_RCC_CFG_COUNT ] = {
 	/// Индекс RCC: 0.
 	{
-		.period				= 400,
-		.prescaler			= 1500 - 1,
+		.period				= 400 - 1,
+		.prescaler			= 3000 - 1,
 		.pulse				= 0
 	},
 	/// Индекс RCC: 1.
 	{
-		.period				= 400,
-		.prescaler			= 1500 - 1,
+		.period				= 400 - 1,
+		.prescaler			= 3000 - 1,
 		.pulse				= 0
 	},
 	/// Индекс RCC: 2.

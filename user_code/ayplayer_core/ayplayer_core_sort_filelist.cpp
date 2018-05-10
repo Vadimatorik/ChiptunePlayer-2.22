@@ -22,7 +22,7 @@ int	AyPlayer::sortFileListCreateFile ( const char* const path, FIL** fNoSort, FI
 
 	do {
 		/// Открываем файл со списком.
-		*fNoSort	=	AyPlayerFat::openFileList( path, ".fileList" );
+		*fNoSort	=	AyPlayerFat::openFile( path, ".fileList" );
 		if ( fNoSort == nullptr ) {
 			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileList>> not been open in dir:", path );
 			r = -1;

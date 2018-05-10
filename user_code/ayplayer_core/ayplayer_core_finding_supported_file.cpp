@@ -56,7 +56,7 @@ int	AyPlayer::scanDir ( char* path ) {
 			sprintf( lenString, "%lu", fileLen );
 			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File len tick:", lenString );
 
-			itemFileInFat*	fileListItem	=	this->structureItemFileListFilling( fi->fname, fileLen, AY_FORMAT::psg );
+			itemFileInFat*	fileListItem	=	this->structureItemFileListFilling( fi->fname, fileLen, AY_FORMAT::PSG );
 			r	=	AyPlayerFat::writeItemFileListAndRemoveItem( f, fileListItem );
 
 			if ( r != 0 )

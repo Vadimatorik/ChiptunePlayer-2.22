@@ -18,11 +18,11 @@ void pwrChipOn ( uint32_t chip, bool state ) {
 	}
 }
 
-ayYmFileModeCfg ay_f_mode_cfg = {
+ayYmFileModeCfg ayFileModeCfg = {
 	.ay							= &ayLow,
 	.microsdMutex				= nullptr,
 	.pwrChipOn					= pwrChipOn
 };
 
-AyYmFileMode ayFileMode(&ay_f_mode_cfg);
+AyYmFileMode ayFileMode(&ayFileModeCfg);
 

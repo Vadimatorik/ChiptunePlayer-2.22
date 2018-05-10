@@ -351,8 +351,8 @@ const pinCfg bc1Cfg = {
 	}
 };
 
-/// AY1.CLK (TIM1 CHANNEL_1)
-/// AY2.CLK (TIM1 CHANNEL_1)
+/// AY1.CLK (TIM1 CHANNEL_2N)
+/// AY2.CLK (TIM1 CHANNEL_2N)
 /// Опорная частота звуковых генераторов.
 const pinCfg ayClkCfg = {
 	.GPIOx			=	GPIOB,
@@ -380,7 +380,7 @@ const pinCfg spiAudioClkCfg = {
 	}
 };
 
-/// SPI3.CLK
+/// SPI3.TX
 /// Сигнал данных интерфейса SPI цифровых
 /// потенциометров и сдвиговых регистров параллельной
 /// шины звуковых генераторов.
@@ -391,7 +391,7 @@ const pinCfg spiAudioTxCfg = {
 		.Mode		=	GPIO_MODE_AF_PP,
 		.Pull		=	GPIO_NOPULL,
 		.Speed		=	GPIO_SPEED_FREQ_MEDIUM,
-		.Alternate	=	0
+		.Alternate	=	GPIO_AF6_SPI3
 	}
 };
 
@@ -417,7 +417,7 @@ const pinCfg spiAudioStRegCfg = {
 		.Pin		=	GPIO_PIN_8,
 		.Mode		=	GPIO_MODE_OUTPUT_PP,
 		.Pull		=	GPIO_NOPULL,
-		.Speed		=	GPIO_SPEED_FREQ_MEDIUM,
+		.Speed		=	GPIO_SPEED_FREQ_VERY_HIGH,
 		.Alternate	=	0
 	}
 };

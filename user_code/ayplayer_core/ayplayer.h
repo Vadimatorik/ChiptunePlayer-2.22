@@ -101,7 +101,7 @@ struct ayPlayerGui {
 };
 
 enum class AY_FORMAT {
-	psg				=	0,
+	PSG				=	0,
 };
 
 #define ITEM_FILE_IN_FAT_FILE_NAME_LEN			256
@@ -118,9 +118,17 @@ struct itemFileInFat {
 struct ayPlayerFatFs {
 	FATFS						f[ AYPLAYER_MICROSD_COUNT ];
 
-	/// Директория, в которой находится файловый менеджер
-	/// И из которой идет воспроизведение.
+	/// Информация о файле, который в данный момент воспроизводится.
+	itemFileInFat				currentFileInfo;
+
+	/// Директория, в которой находится файловый менеджер.
 	DIR							playDir;
+};
+
+enum class FILE_LIST_TYPE {
+	NO_SORT			=	0,
+	NAME_SORT		=	1,
+	LEN_SORT		=	2,
 };
 
 class AyPlayer {
@@ -274,7 +282,17 @@ private:
 	 * Например, карзина или индексер.
 	 * Причем от разныех ОС.
 	 */
-	int			checkingSystemFileInRootDir			( AY_MICROSD sdName, const char* fatValome );
+	int			checkingSystemFileInRootDir				( AY_MICROSD sdName, const char* fatValome );
+
+	/// Заполняет внутренную переменную currentFileInfo
+	/// данными из файла-списка на флешке.
+	int			getFileInfoFromListCurDir ( FILE_LIST_TYPE listType, uint32_t numberFileInList );
+
+
+	/// В объекте fat для sd1 должена быть установлена актуальная директория с помощью f_chdir
+	/// Ну то есть мы указываем имя файла относительно текущей директории.
+	int		startPlayFile							( void );
+
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;
 
