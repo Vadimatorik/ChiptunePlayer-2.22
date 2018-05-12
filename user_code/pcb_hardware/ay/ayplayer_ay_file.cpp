@@ -20,7 +20,6 @@ void pwrChipOn ( uint32_t chip, bool state ) {
 
 ayYmFileModeCfg ayFileModeCfg = {
 	.ay							= &ayLow,
-	.microsdMutex				= nullptr,
 	.pwrChipOn					= pwrChipOn
 };
 
