@@ -88,9 +88,30 @@ int AyPlayer::fsmStepFuncCleanFlagChangeFatVolume ( HANDLER_FSM_INPUT_DATA ) {
 }
 
 int AyPlayer::fsmStepFuncInitMainWindow ( HANDLER_FSM_INPUT_DATA ) {
-	volatile int r;
-	r = obj->getFileInfoFromListCurDir( FILE_LIST_TYPE::NAME_SORT, 0 );
-	r = obj->startPlayFile();
-	( void )r;
+	/// Вместо считывания с карты памяти (системной).
+	/// Заполняем стандартные параметры.
+	obj->lType			=	FILE_LIST_TYPE::NAME_SORT;
+	obj->playState		=	AYPLAYER_STATUS::STOP;
+	obj->currentFile	=	0;
+
+	/// Переносим каталог воспроизведения в центр.
+	FRESULT	fr;
+	fr	=	f_chdir("0:");
+	(void)fr;
+
+	int		r;
+	/// Забираем данные о треке, на котором остановили воспроизведение.
+	r = obj->getFileInfoFromListCurDir( obj->lType, obj->currentFile );
+
+	obj->initPlayWindow();													/// Открываем главное окно.
+	(void)r;
+
+
+	obj->guiUpdate();
+
+	//volatile int r;
+	//r =
+	//r = obj->startPlayFile();
+	//( void )r;
 	return 0;
 }

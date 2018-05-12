@@ -12,13 +12,13 @@ int AyPlayer::getFileInfoFromListCurDir ( FILE_LIST_TYPE listType, uint32_t numb
 	 */
 	switch( static_cast< uint32_t >( listType ) ) {
 	case static_cast< uint32_t >( FILE_LIST_TYPE::NO_SORT ):
-		f	=	AyPlayerFat::openFile( "0:", ".fileList" );
+		f	=	AyPlayerFat::openFileInCurrentDir( AY_MICROSD::SD1, LIST_NO_SORT_FAT_NAME );
 		break;
 	case static_cast< uint32_t >( FILE_LIST_TYPE::NAME_SORT ):
-		f	=	AyPlayerFat::openFile( "0:", ".fileListNameSort" );
+		f	=	AyPlayerFat::openFileInCurrentDir( AY_MICROSD::SD1, LIST_SORT_NAME_FAT_NAME );
 		break;
 	case static_cast< uint32_t >( FILE_LIST_TYPE::LEN_SORT ):
-		f	=	AyPlayerFat::openFile( "0:", ".fileListLenSort" );
+		f	=	AyPlayerFat::openFileInCurrentDir( AY_MICROSD::SD1, LIST_SORT_LEN_FAT_NAME );
 		break;
 	}
 

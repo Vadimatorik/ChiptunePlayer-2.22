@@ -37,16 +37,16 @@ int	AyPlayer::scanDir ( char* path ) {
 				flagFileListCreate = true;
 
 				/// Пытаемся создать файл.
-				f	=	AyPlayerFat::openFileListWithRewrite( path, ".fileList" );
+				f	=	AyPlayerFat::openFileListWithRewrite( path, LIST_NO_SORT_FAT_NAME );
 
 				/// Если не удалось - чистим память и выходим.
 				if ( f == nullptr ) {
-					this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "FileList not created in dir:", path );
+					this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "<<" LIST_NO_SORT_FAT_NAME ">> not created in dir:", path );
 					vPortFree( fullPathToFile );
 					r = -1;
 					break;
 				} else {
-					this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "FileList created in dir:", path );
+					this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "<<" LIST_NO_SORT_FAT_NAME ">> created in dir:", path );
 				}
 			}
 

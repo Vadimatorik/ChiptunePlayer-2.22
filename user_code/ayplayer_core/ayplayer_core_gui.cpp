@@ -51,6 +51,19 @@ void AyPlayer::initGuiStatusBar( void ) {
 								&this->gui->statusBarCallbackCfg	);
 }
 
+void AyPlayer::initPlayWindow ( void ) {
+	m_create_play_bar(	&this->g.pb,
+						&makiseHost.host,
+						mp_rel(	0,	57,
+								128, 7	),
+						1,
+						&this->gui->playBarStyle );
+}
+
+void AyPlayer::removePlayWindow ( void ) {
+	makise_g_cont_rem( &this->g.pb.el );
+}
+
 void AyPlayer::removeWindowIndexingSupportedFiles( void ) {
 	makise_g_cont_rem( &this->g.sl.el );
 }
@@ -62,21 +75,21 @@ void AyPlayer::slItemShiftDown ( uint32_t cout, char* newSt ) {
 		vPortFree( this->g.slItem[ cout - 1 ].text );
 	}
 
-    for ( uint32_t l = cout - 1; l > 0 ; l-- ) {
-        this->g.slItem[ l ].text = this->g.slItem[ l - 1 ].text;
-    }
+	for ( uint32_t l = cout - 1; l > 0 ; l-- ) {
+		this->g.slItem[ l ].text = this->g.slItem[ l - 1 ].text;
+	}
 
-    uint32_t lenString = strlen( newSt ) + 1;
-    this->g.slItem[ 0 ].text = ( char* )pvPortMalloc( lenString );
-    strcpy( this->g.slItem[ 0 ].text, newSt );
+	uint32_t lenString = strlen( newSt ) + 1;
+	this->g.slItem[ 0 ].text = ( char* )pvPortMalloc( lenString );
+	strcpy( this->g.slItem[ 0 ].text, newSt );
 }
 
 void AyPlayer::slItemClean ( uint32_t cout ) {
-    for ( uint32_t l = 0; l < cout ; l++ ) {
-    	if ( this->g.slItem[ l ].text ) {
-    		vPortFree( this->g.slItem[ l ].text );
-    	}
-    }
+	for ( uint32_t l = 0; l < cout ; l++ ) {
+		if ( this->g.slItem[ l ].text ) {
+			vPortFree( this->g.slItem[ l ].text );
+		}
+	}
 }
 
 void AyPlayer::errorMicroSdDraw ( const AY_MICROSD sd, const FRESULT r ) {
@@ -142,6 +155,7 @@ extern ST7565		lcd;
 // Перерисовывает GUI и обновляет экран.
 void AyPlayer::guiUpdate ( void ) {
 	USER_OS_TAKE_MUTEX( this->os->mHost, portMAX_DELAY );
+	lcd.bufClear();
 	makise_g_host_call( &makiseHost, &makiseGui, M_G_CALL_PREDRAW );
 	makise_g_host_call( &makiseHost, &makiseGui, M_G_CALL_DRAW );
 	lcd.update();

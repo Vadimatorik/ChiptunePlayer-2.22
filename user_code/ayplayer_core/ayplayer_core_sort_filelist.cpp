@@ -22,34 +22,34 @@ int	AyPlayer::sortFileListCreateFile ( const char* const path, FIL** fNoSort, FI
 
 	do {
 		/// Открываем файл со списком.
-		*fNoSort	=	AyPlayerFat::openFile( path, ".fileList" );
+		*fNoSort	=	AyPlayerFat::openFile( path, LIST_NO_SORT_FAT_NAME );
 		if ( fNoSort == nullptr ) {
-			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileList>> not been open in dir:", path );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<" LIST_NO_SORT_FAT_NAME ">> not been open in dir:", path );
 			r = -1;
 			break;
 		}
 
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileList>> opened successfully in dir:", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<" LIST_NO_SORT_FAT_NAME ">> opened successfully in dir:", path );
 
 		/// Отсортированные по именам.
-		*fNameSort	=	AyPlayerFat::openFileListWithRewrite( path, ".fileListNameSort" );
+		*fNameSort	=	AyPlayerFat::openFileListWithRewrite( path, LIST_SORT_NAME_FAT_NAME );
 		if ( fNameSort == nullptr ) {
-			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileListNameSort>> not been open in dir:", path );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<" LIST_SORT_NAME_FAT_NAME ">> not been open in dir:", path );
 			r = -1;
 			break;
 		}
 
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileListNameSort>> opened successfully in dir:", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<" LIST_SORT_NAME_FAT_NAME ">> opened successfully in dir:", path );
 
 		/// Отсортированные по длительности.
-		*fLenSort	=	AyPlayerFat::openFileListWithRewrite( path, ".fileListLenSort" );
+		*fLenSort	=	AyPlayerFat::openFileListWithRewrite( path, LIST_SORT_LEN_FAT_NAME );
 		if ( fLenSort == nullptr ) {
-			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileListLenSort>> not been open in dir:", path );
+			this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<" LIST_SORT_LEN_FAT_NAME ">> not been open in dir:", path );
 			r = -1;
 			break;
 		}
 
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileListLenSort>> opened successfully in dir:", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<" LIST_SORT_LEN_FAT_NAME ">> opened successfully in dir:", path );
 
 	}  while( false );
 
@@ -57,7 +57,7 @@ int	AyPlayer::sortFileListCreateFile ( const char* const path, FIL** fNoSort, FI
 		AyPlayerFat::closeFile( *fNoSort );
 		AyPlayerFat::closeFile( *fNameSort );
 		AyPlayerFat::closeFile( *fLenSort );
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileList>>, <<fileListNameSort>> and <<fileListLenSort>> are closed in an emergency! Dir:", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<" LIST_NO_SORT_FAT_NAME ">>, <<" LIST_SORT_NAME_FAT_NAME ">> and <<" LIST_SORT_LEN_FAT_NAME ">> are closed in an emergency! Dir:", path );
 		return r;
 	}
 
@@ -73,9 +73,9 @@ int	AyPlayer::sortFileListCloseFile ( const char* const path, DIR* d, FILINFO* f
 	r	=	( AyPlayerFat::closeFile( fLenSort )	!= 0 ) ? -1 : r;
 
 	if ( r == 0 ) {
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<.fileList>>, <<.fileListNameSort>> and <<.fileListLenSort>> closed successfully! Dir:", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<" LIST_NO_SORT_FAT_NAME ">>, <<" LIST_SORT_NAME_FAT_NAME ">> and <<" LIST_SORT_LEN_FAT_NAME ">> closed successfully! Dir:", path );
 	} else {
-		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<.fileList>>, <<.fileListNameSort>> and <<.fileListLenSort>> are closed in an emergency! Dir:", path );
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ERROR, "File <<" LIST_NO_SORT_FAT_NAME ">>, <<" LIST_SORT_NAME_FAT_NAME ">> and <<" LIST_SORT_LEN_FAT_NAME ">> are closed in an emergency! Dir:", path );
 	}
 
 	return r;
@@ -198,7 +198,7 @@ int	AyPlayer::sortFileList ( char* path ) {
 	FIL*				fLenSort	=	nullptr;
 
 	/// Ищем файл в директории.
-	r	=	AyPlayerFat::startFindingFileInDir( &d, &fi, path, ".fileList" );
+	r	=	AyPlayerFat::startFindingFileInDir( &d, &fi, path, LIST_NO_SORT_FAT_NAME );
 	if ( r != 0 )
 		return r;			/// Папка без поддерживаемых файлов.
 

@@ -51,6 +51,15 @@
 #define	ILLUMINATION_CONTROL_TASK_PRIO			1
 #define	BUTTON_CLICK_HANDLER_TASK_PRIO			1
 
+#define LIST_NO_SORT_FAT_NAME					".fileList.list"
+#define LIST_SORT_NAME_FAT_NAME					".fileListNameSort.list"
+#define LIST_SORT_LEN_FAT_NAME					".fileListLenSort.list"
+
+enum class AYPLAYER_STATUS {
+	STOP				=	0,
+	PLAY				=	1,
+	PAUSE				=	2
+};
 
 struct ayplayerMcStrcut {
 	WdtBase*											wdt;
@@ -88,6 +97,7 @@ struct ayplayerGuiCfg {
 	MakiseStyle_SListItem								sslItem;
 	MakiseStyle_SMPlayerStatusBar						statusBarCfg;
 	MPlayerStatusBar_CallbackFunc						statusBarCallbackCfg;
+	MakiseStyle_PlayBar									playBarStyle;
 };
 
 struct ayPlayerCfg {
@@ -105,6 +115,7 @@ struct ayPlayerGui {
 	MSList												sl;
 	MSList_Item											slItem[ 4 ];
 	MPlayerStatusBar									sb;
+	MPlayBar											pb;
 };
 
 enum class AY_FORMAT {
@@ -286,6 +297,12 @@ private:
 
 	int removeDirRecurisve( AY_MICROSD sdName, const char* path, const char* nameDir );
 
+	/// Рабочие окна приложения (отрисовки).
+	/// Статусы дерева переходов ставятся через переменные состояния ниже.
+	/// Окно воспроизведения трека
+	void initPlayWindow ( void );
+	void removePlayWindow ( void );
+
 	/*!
 	 * Находим системные файлы в директории.
 	 * Например, карзина или индексер.
@@ -323,6 +340,10 @@ private:
 	USER_OS_STATIC_TASK_STRUCT_TYPE						tsButtonClickHandlerTask;
 	/// Яркость подсветки.
 	float												illuminationDuty = 1;
+
+	AYPLAYER_STATUS										playState;
+	FILE_LIST_TYPE										lType;
+	uint32_t											currentFile;
 
 	ayPlayerFatFs										fat;
 };

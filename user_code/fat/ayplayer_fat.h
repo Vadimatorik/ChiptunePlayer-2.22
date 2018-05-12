@@ -59,6 +59,7 @@ public:
 	 */
 	static	FIL*		openFile					( const char* const path, const char* const name );
 
+	static	FIL*		openFileInCurrentDir		( const AY_MICROSD sd, const char* const name );
 	/*!
 	 * Закрывает ранее открытый файл и удаляет его объект FatFS.
 	 * \param[in]		f			-	объект файла FatFS.

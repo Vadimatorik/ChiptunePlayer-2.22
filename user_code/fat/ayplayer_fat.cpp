@@ -96,6 +96,37 @@ FIL* AyPlayerFat::openFile ( const char* const path, const char* const name ) {
     return f;
 }
 
+FIL* AyPlayerFat::openFileInCurrentDir ( const AY_MICROSD sd, const char* const name ) {
+	FRESULT				r;
+	FIL*				f;
+
+	/// Выделяем память под объект файла FatFS.
+	f	=	( FIL* )pvPortMalloc( sizeof( FIL ) );
+	assertParam( f );
+
+	uint32_t len = strlen( name ) + 2;
+	char* fullName;
+	fullName	=	( char* )pvPortMalloc( len );
+	if ( sd == AY_MICROSD::SD1 ) {
+			fullName[ 0 ]	=	'0';
+		} else {
+			fullName[ 0 ]	=	'1';
+		}
+	fullName[1] = ':';
+	strcpy( &fullName[2], name );
+
+	/// Пытаемся открыть файл с перезаписью, если таковой ранее существовал.
+    r = f_open( f, fullName, FA_READ );
+    vPortFree( fullName );
+
+    if ( r != FR_OK ) {
+    	vPortFree( f );
+    	f = nullptr;
+    }
+
+    return f;
+}
+
 int AyPlayerFat::closeFile ( FIL* f ) {
 	if ( f == nullptr )		return 0;
 

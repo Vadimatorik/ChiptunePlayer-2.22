@@ -105,8 +105,15 @@ ayplayerGuiCfg ayGuiCfg = {
 		.border_color					=	MC_Black
 	},
 	.statusBarCallbackCfg = {
-		.get_state_play					=	ayplayerGetStatePlay,
-		.get_percent_battery			=	ayplayerGetPercentBattery
+		.getStatePlay					=	ayplayerGetStatePlay,
+		.getPercentBattery			=	ayplayerGetPercentBattery
+	},
+	.playBarStyle = {
+		.bg_color						=	MC_White,
+		.border_color					=	MC_Black,
+		.duty_color						=	MC_Black,
+		.time_color						=	MC_Black,
+		.font							=	&F_minecraft_rus_regular_8
 	}
 };
 
