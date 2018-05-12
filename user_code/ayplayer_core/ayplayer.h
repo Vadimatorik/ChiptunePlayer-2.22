@@ -45,9 +45,12 @@
 
 #define	TB_MAIN_TASK_SIZE						3000
 #define	TB_ILLUMINATION_CONTROL_TASK_SIZE		64
+#define	TB_BUTTON_CLICK_HANDLER_TASK_SIZE		1000
 
-#define MAIN_TASK_PRIO							3
-#define ILLUMINATION_CONTROL_TASK_PRIO			1
+#define	MAIN_TASK_PRIO							3
+#define	ILLUMINATION_CONTROL_TASK_PRIO			1
+#define	BUTTON_CLICK_HANDLER_TASK_PRIO			1
+
 
 struct ayplayerMcStrcut {
 	WdtBase*											wdt;
@@ -169,9 +172,11 @@ public:
 	HANDLER_FSM_STEP( fsmStepFuncInitMainWindow );
 
 private:
-	static	void	mainTask					( void* obj );
-	static	void	illuminationControl			( void* obj );
-	static	void	playTask					( void* obj );
+	static	void	mainTask						( void* obj );
+	static	void	illuminationControlTask			( void* obj );
+	static	void	playTask						( void* obj );
+	static	void	buttonClickHandlerTask			( void* obj );
+
 
 	/*!
 	 * Останавливает все аппаратные модули, зависящие от тактового сигнала,
@@ -314,7 +319,8 @@ private:
 	USER_OS_STATIC_TASK_STRUCT_TYPE						tsMainTask;
 	USER_OS_STATIC_STACK_TYPE							tbIlluminationControlTask[ TB_ILLUMINATION_CONTROL_TASK_SIZE ];
 	USER_OS_STATIC_TASK_STRUCT_TYPE						tsIlluminationControlTask;
-
+	USER_OS_STATIC_STACK_TYPE							tbButtonClickHandlerTask[ TB_BUTTON_CLICK_HANDLER_TASK_SIZE ];
+	USER_OS_STATIC_TASK_STRUCT_TYPE						tsButtonClickHandlerTask;
 	/// Яркость подсветки.
 	float												illuminationDuty = 1;
 

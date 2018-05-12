@@ -10,7 +10,7 @@ extern "C" {
 #define configUSE_PREEMPTION						1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION		1
 #define configCPU_CLOCK_HZ							16000000
-#define configTOTAL_HEAP_SIZE						( ( size_t ) ( 90 * 1024 ) )
+#define configTOTAL_HEAP_SIZE						( ( size_t ) ( 60 * 1024 ) )
 #define configTICK_RATE_HZ							( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES						( 5 )
 #define configMINIMAL_STACK_SIZE					( ( unsigned short ) 130 )

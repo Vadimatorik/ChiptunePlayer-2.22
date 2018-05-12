@@ -7,5 +7,5 @@ enum class EC_BUTTON_NAME {
 	RIGHT_LONG_PRESS	= 5,	RIGHT_LONG_CLICK	= 6,	RIGHT_CLICK	= 7,
 	ENTER				= 8,
 	MENU				= 9,
-	BACK				= 9,
+	BACK				= 10,
 };

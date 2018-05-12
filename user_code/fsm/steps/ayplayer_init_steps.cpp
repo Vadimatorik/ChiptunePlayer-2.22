@@ -81,6 +81,9 @@ int AyPlayer::fsmStepFuncHardwarePcbInit ( HANDLER_FSM_INPUT_DATA ) {
 	obj->pcb->srAy->init();
 	obj->pcb->ay->init();
 
+	/// Опрос клавиатуры.
+	obj->pcb->button->init();
+
 	return 0;
 }
 
