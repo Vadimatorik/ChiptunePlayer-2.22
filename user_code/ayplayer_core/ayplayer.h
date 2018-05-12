@@ -28,6 +28,12 @@
 #include "ayplayer_fat_error_string.h"
 
 #include "makise_e_message_window.h"
+#include "fsviewer.h"
+#include "play_bar.h"
+#include "play_list.h"
+#include "player_status_bar.h"
+#include "progress_bar.h"
+#include "slist.h"
 
 /*!
  * Количество режимов тактирования контроллера.
@@ -92,8 +98,6 @@ struct ayPlayerCfg {
 
 
 struct ayPlayerGui {
-	MHost												h;
-	MContainer											c;
 	MMessageWindow										mw;
 	MSList												sl;
 	MSList_Item											slItem[ 4 ];

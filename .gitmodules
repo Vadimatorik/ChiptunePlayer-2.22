@@ -46,3 +46,6 @@
 [submodule "submodule/module_system_dummy"]
 	path = submodule/module_system_dummy
 	url = git@github.com:Vadimatorik/module_system_dummy.git
+[submodule "submodule/module_makise_gui_elements_by_vadimatorik"]
+	path = submodule/module_makise_gui_elements_by_vadimatorik
+	url = git@github.com:Vadimatorik/module_makise_gui_elements_by_vadimatorik.git

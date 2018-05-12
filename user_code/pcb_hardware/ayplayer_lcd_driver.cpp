@@ -18,7 +18,7 @@ const ST7565Cfg st7565_cfg {
 
 /// Для доступа MakiseGUI.
 extern "C" {
-uint8_t lcd_buffer[1024] = { 0 };
+uint8_t makiseLcdBuf[1024] = { 0 };
 }
 
-ST7565 lcd( &st7565_cfg, lcd_buffer );
+ST7565 lcd( &st7565_cfg, makiseLcdBuf );

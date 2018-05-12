@@ -1,5 +1,11 @@
 #include "ayplayer.h"
 
+extern "C" {
+
+extern MHost				makiseHost;
+
+}
+
 bool AyPlayer::checkSd ( AY_MICROSD sd ) {
 	/// Если тип карты определен, значит она есть в слоте.
 	if ( this->pcb->sd[ (uint32_t)sd ]->getStatus() != EC_SD_STATUS::NOINIT )
@@ -36,7 +42,7 @@ void AyPlayer::waitSdCardInsert ( void ) {
 				const char SD1_NOT_PRESENT[]	=	"SD1 not present!";
 
 				m_create_message_window(	&this->g.mw,
-											&this->g.c,
+											&makiseHost.host,
 											mp_rel( 0,	11,
 													128, 64 - 11 ),
 											( char* )SD1_NOT_PRESENT,
@@ -63,7 +69,7 @@ void AyPlayer::waitSdCardInsert ( void ) {
 				const char SD2_NOT_PRESENT[]	=	"SD2 not present!";
 
 				m_create_message_window(	&this->g.mw,
-											&this->g.c,
+											&makiseHost.host,
 											mp_rel( 0,	11,
 													128, 64 - 11 ),
 											( char* )SD2_NOT_PRESENT,

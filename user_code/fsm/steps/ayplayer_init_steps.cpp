@@ -85,21 +85,40 @@ int AyPlayer::fsmStepFuncHardwarePcbInit ( HANDLER_FSM_INPUT_DATA ) {
 }
 
 extern "C" {
-extern const MakiseGUI mGui;
+
+extern MHost				makiseHost;
+extern MakiseGUI			makiseGui;
+extern MakiseDriver			makiseGuiDriver;
+
+uint32_t*	makiseGuiGetBuffer			( uint32_t size );
+void		makiseGuiPredraw			( MakiseGUI* gui );
+void		makiseGuiDraw				( MakiseGUI* gui );
+MInputData	makiseGuiInpHandler			( MInputData d, MInputResultEnum res );
+void		makiseGuiUpdate				( MakiseGUI* gui );
+
 }
 
-int AyPlayer::fsmStepFuncGuiInit ( HANDLER_FSM_INPUT_DATA ) {
-	obj->g.c.gui						= ( MakiseGUI* )&mGui;
-	obj->g.h.host						= &obj->g.c;
-	obj->g.h.host->gui					= ( MakiseGUI* )&mGui;
+extern ST7565		lcd;
 
-	int r;
-	r = makise_start( obj->g.h.host->gui );
+int AyPlayer::fsmStepFuncGuiInit ( HANDLER_FSM_INPUT_DATA ) {
+	makise_gui_autoinit(	&makiseHost,
+							&makiseGui,
+							&makiseGuiDriver,
+							makiseGuiGetBuffer,
+							makiseGuiInpHandler,
+							makiseGuiDraw,
+							makiseGuiPredraw,
+							makiseGuiUpdate		);
 
 	/// Статус бар всегда показывается.
 	obj->initGuiStatusBar();
 
-	assertParam( r == M_OK );
+	if ( lcd.reset()			!= BASE_RESULT::OK ) return M_ERROR;
+	if ( lcd.setContrast( 8 )	!= BASE_RESULT::OK ) return M_ERROR;
+	if ( lcd.clear()			!= BASE_RESULT::OK ) return M_ERROR;
+	if ( lcd.on()				!= BASE_RESULT::OK ) return M_ERROR;
+
+
 
 	obj->l->sendMessage( RTL_TYPE_M::INIT_OK, "MakiseGui started." );
 

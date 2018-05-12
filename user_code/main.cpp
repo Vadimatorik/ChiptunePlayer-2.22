@@ -78,7 +78,7 @@ ayplayerGuiCfg ayGuiCfg = {
 	.sslItem = {
 		.font							=	&F_minecraft_rus_regular_8,
 		.font_line_spacing				=	0,
-
+		.text_scroll_speed				=	1,
 		.normal = {
 			.bg_color					=	MC_White,
 			.font_col					=	MC_Black,

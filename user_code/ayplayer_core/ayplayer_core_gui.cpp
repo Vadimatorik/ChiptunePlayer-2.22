@@ -1,8 +1,16 @@
 #include "ayplayer.h"
 
+extern "C" {
+
+extern MHost				makiseHost;
+extern MakiseGUI			makiseGui;
+extern MakiseDriver			makiseGuiDriver;
+
+}
+
 void AyPlayer::initWindowIndexingSupportedFiles( char* stateIndexing ) {
 	m_create_slist(	&this->g.sl,
-					&this->g.c,
+					&makiseHost.host,
 					mp_rel( 0,	11,
 							128, 64 - 11 ),
 					stateIndexing,
@@ -21,7 +29,7 @@ void AyPlayer::initWindowIndexingSupportedFiles( char* stateIndexing ) {
 
 void AyPlayer::initWindowSortingFileList ( void ) {
 	m_create_message_window(	&this->g.mw,
-								&this->g.c,
+								&makiseHost.host,
 								mp_rel( 0,	11,
 										128, 64 - 11 ),
 								"Sorting list file...",
@@ -36,7 +44,7 @@ void AyPlayer::removeWindowSortingFileList ( void) {
 
 void AyPlayer::initGuiStatusBar( void ) {
 	m_create_player_status_bar(	&this->g.sb,
-								&this->g.c,
+								&makiseHost.host,
 								mp_rel(	0,	0,
 										128, 12	),
 								&this->gui->statusBarCfg,
@@ -119,7 +127,7 @@ void AyPlayer::errorMicroSdDraw ( const AY_MICROSD sd, const FRESULT r ) {
 		massage[ 4 ]	=	' ';							/// На экране однозначно на разных строках.
 
 		m_create_message_window(	&this->g.mw,
-									&this->g.c,
+									&makiseHost.host,
 									mp_rel( 0,	11,
 											128, 64 - 11 ),
 									massage,
@@ -129,13 +137,14 @@ void AyPlayer::errorMicroSdDraw ( const AY_MICROSD sd, const FRESULT r ) {
 }
 
 
+extern ST7565		lcd;
+
 // Перерисовывает GUI и обновляет экран.
 void AyPlayer::guiUpdate ( void ) {
 	USER_OS_TAKE_MUTEX( this->os->mHost, portMAX_DELAY );
-	this->pcb->lcd->bufClear();
-	makise_g_host_call( &this->g.h, M_G_CALL_PREDRAW );
-	makise_g_host_call( &this->g.h, M_G_CALL_DRAW );
-	this->pcb->lcd->update();
+	makise_g_host_call( &makiseHost, &makiseGui, M_G_CALL_PREDRAW );
+	makise_g_host_call( &makiseHost, &makiseGui, M_G_CALL_DRAW );
+	lcd.update();
 	USER_OS_GIVE_BIN_SEMAPHORE( this->os->sGuiUpdate );
 	USER_OS_GIVE_MUTEX( this->os->mHost );
 }
