@@ -52,12 +52,22 @@ void AyPlayer::initGuiStatusBar( void ) {
 }
 
 void AyPlayer::initPlayWindow ( void ) {
-	m_create_play_bar(	&this->g.pb,
-						&makiseHost.host,
-						mp_rel(	0,	57,
-								128, 7	),
-						1,
-						&this->gui->playBarStyle );
+	mCreatePlayBar(	&this->g.pb,
+					&makiseHost.host,
+					mp_rel(	0,	57,
+							128, 7	),
+					1,
+					&this->gui->playBarStyle );
+
+	/// Время трека сразу в статус бар.
+	mPlayBarSetNewTrack( &this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
+
+	mCreateScrollString(	&this->g.ss,
+							&makiseHost.host,
+							this->fat.currentFileInfo.fileName,
+							mp_rel(	0,	11,
+									128, 12	),
+							&this->gui->scrollStringStyle	);
 }
 
 void AyPlayer::removePlayWindow ( void ) {

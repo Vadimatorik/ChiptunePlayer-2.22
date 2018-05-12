@@ -99,21 +99,27 @@ ayplayerGuiCfg ayGuiCfg = {
 		}
 	},
 	.statusBarCfg = {
-		.font_ercent					=	&F_minecraft_rus_regular_8,
-		.font_font_ercent_col			=	MC_Black,
-		.bg_color						=	MC_White,
-		.border_color					=	MC_Black
+		.fontErcent						=	&F_minecraft_rus_regular_8,
+		.fontErcentCol					=	MC_Black,
+		.bgColor						=	MC_White,
+		.borderColor					=	MC_Black
 	},
 	.statusBarCallbackCfg = {
 		.getStatePlay					=	ayplayerGetStatePlay,
-		.getPercentBattery			=	ayplayerGetPercentBattery
+		.getPercentBattery				=	ayplayerGetPercentBattery
 	},
 	.playBarStyle = {
-		.bg_color						=	MC_White,
-		.border_color					=	MC_Black,
-		.duty_color						=	MC_Black,
-		.time_color						=	MC_Black,
+		.bgColor						=	MC_White,
+		.borderColor					=	MC_Black,
+		.dutyColor						=	MC_Black,
+		.timeColor						=	MC_Black,
 		.font							=	&F_minecraft_rus_regular_8
+	},
+	.scrollStringStyle = {
+		.fontErcent						=	&F_minecraft_rus_regular_8,
+		.fontErcentCol					=	MC_Black,
+		.bgColor						=	MC_White,
+		.borderColor					=	MC_Black
 	}
 };
 

@@ -34,6 +34,11 @@
 #include "player_status_bar.h"
 #include "progress_bar.h"
 #include "slist.h"
+#include "scroll_string.h"
+
+enum class AYPLAYER_WINDOW_NOW {
+	MAIN				=	0,
+};
 
 /*!
  * Количество режимов тактирования контроллера.
@@ -46,10 +51,16 @@
 #define	TB_MAIN_TASK_SIZE						3000
 #define	TB_ILLUMINATION_CONTROL_TASK_SIZE		64
 #define	TB_BUTTON_CLICK_HANDLER_TASK_SIZE		1000
+#define	TB_UPDATE_LCD_TASK_SIZE					1000
+#define	TB_PLAY_TASK_SIZE						1000
+#define	TB_PLAY_TICK_TASK_SIZE					1000
 
 #define	MAIN_TASK_PRIO							3
 #define	ILLUMINATION_CONTROL_TASK_PRIO			1
 #define	BUTTON_CLICK_HANDLER_TASK_PRIO			1
+#define	BUTTON_UPDATE_LCD_TASK_PRIO				1
+#define	PLAY_TASK_PRIO							1
+#define	PLAY_TICK_TASK_PRIO						1
 
 #define LIST_NO_SORT_FAT_NAME					".fileList.list"
 #define LIST_SORT_NAME_FAT_NAME					".fileListNameSort.list"
@@ -98,6 +109,7 @@ struct ayplayerGuiCfg {
 	MakiseStyle_SMPlayerStatusBar						statusBarCfg;
 	MPlayerStatusBar_CallbackFunc						statusBarCallbackCfg;
 	MakiseStyle_PlayBar									playBarStyle;
+	MakiseStyle_SMScrollString							scrollStringStyle;
 };
 
 struct ayPlayerCfg {
@@ -116,6 +128,7 @@ struct ayPlayerGui {
 	MSList_Item											slItem[ 4 ];
 	MPlayerStatusBar									sb;
 	MPlayBar											pb;
+	MScrollString										ss;
 };
 
 enum class AY_FORMAT {
@@ -187,6 +200,8 @@ private:
 	static	void	illuminationControlTask			( void* obj );
 	static	void	playTask						( void* obj );
 	static	void	buttonClickHandlerTask			( void* obj );
+	static	void	updateLcdTask					( void* obj );
+	static	void	playTickHandlerTask				( void* obj );
 
 
 	/*!
@@ -338,11 +353,19 @@ private:
 	USER_OS_STATIC_TASK_STRUCT_TYPE						tsIlluminationControlTask;
 	USER_OS_STATIC_STACK_TYPE							tbButtonClickHandlerTask[ TB_BUTTON_CLICK_HANDLER_TASK_SIZE ];
 	USER_OS_STATIC_TASK_STRUCT_TYPE						tsButtonClickHandlerTask;
+	USER_OS_STATIC_STACK_TYPE							tbUpdateLcdTask[ TB_UPDATE_LCD_TASK_SIZE ];
+	USER_OS_STATIC_TASK_STRUCT_TYPE						tsUpdateLcdTask;
+	USER_OS_STATIC_STACK_TYPE							tbPlayTask[ TB_PLAY_TASK_SIZE ];
+	USER_OS_STATIC_TASK_STRUCT_TYPE						tsPlayTask;
+	USER_OS_STATIC_STACK_TYPE							tbPlayTickTask[ TB_PLAY_TICK_TASK_SIZE ];
+	USER_OS_STATIC_TASK_STRUCT_TYPE						tsPlayTickTask;
+
 	/// Яркость подсветки.
 	float												illuminationDuty = 1;
 
 	AYPLAYER_STATUS										playState;
 	FILE_LIST_TYPE										lType;
+	AYPLAYER_WINDOW_NOW									wNow;
 	uint32_t											currentFile;
 
 	ayPlayerFatFs										fat;

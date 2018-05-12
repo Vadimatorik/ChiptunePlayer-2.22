@@ -14,7 +14,7 @@ extern "C" {
 #define configTICK_RATE_HZ							( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES						( 5 )
 #define configMINIMAL_STACK_SIZE					( ( unsigned short ) 130 )
-#define configMAX_TASK_NAME_LEN						( 10 )
+#define configMAX_TASK_NAME_LEN						( 20 )
 
 #define configIDLE_SHOULD_YIELD						1
 #define configQUEUE_REGISTRY_SIZE					10

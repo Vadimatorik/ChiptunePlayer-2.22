@@ -93,7 +93,7 @@ int AyPlayer::fsmStepFuncInitMainWindow ( HANDLER_FSM_INPUT_DATA ) {
 	obj->lType			=	FILE_LIST_TYPE::NAME_SORT;
 	obj->playState		=	AYPLAYER_STATUS::STOP;
 	obj->currentFile	=	0;
-
+	obj->wNow			=	AYPLAYER_WINDOW_NOW::MAIN;
 	/// Переносим каталог воспроизведения в центр.
 	FRESULT	fr;
 	fr	=	f_chdir("0:");
@@ -111,7 +111,7 @@ int AyPlayer::fsmStepFuncInitMainWindow ( HANDLER_FSM_INPUT_DATA ) {
 
 	//volatile int r;
 	//r =
-	//r = obj->startPlayFile();
+	//r =
 	//( void )r;
 	return 0;
 }

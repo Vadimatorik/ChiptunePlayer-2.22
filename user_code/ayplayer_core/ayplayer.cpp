@@ -20,7 +20,7 @@ void AyPlayer::start ( void ) {
 	 * Контроль подсветки экрана.
 	 */
 	USER_OS_STATIC_TASK_CREATE(	AyPlayer::illuminationControlTask,
-								"led",
+								"illuminationControl",
 								TB_ILLUMINATION_CONTROL_TASK_SIZE,
 								( void* )this,
 								ILLUMINATION_CONTROL_TASK_PRIO,
@@ -29,12 +29,39 @@ void AyPlayer::start ( void ) {
 
 	/// Обработка нажатой клавиши.
 	USER_OS_STATIC_TASK_CREATE(	AyPlayer::buttonClickHandlerTask,
-								"butHandler",
+								"buttonClickHandler",
 								TB_BUTTON_CLICK_HANDLER_TASK_SIZE,
 								( void* )this,
 								BUTTON_CLICK_HANDLER_TASK_PRIO,
 								this->tbButtonClickHandlerTask,
 								&this->tsButtonClickHandlerTask	);
+
+	/// Фоновое обновление экрана.
+	USER_OS_STATIC_TASK_CREATE(	AyPlayer::updateLcdTask,
+									"updateLcd",
+									TB_UPDATE_LCD_TASK_SIZE,
+									( void* )this,
+									BUTTON_UPDATE_LCD_TASK_PRIO,
+									this->tbUpdateLcdTask,
+									&this->tsUpdateLcdTask	);
+
+	/// Воспроизведение трека.
+	USER_OS_STATIC_TASK_CREATE(	AyPlayer::playTask,
+								"play",
+								TB_PLAY_TASK_SIZE,
+								( void* )this,
+								PLAY_TASK_PRIO,
+								this->tbPlayTask,
+								&this->tsPlayTask	);
+
+	/// Обновление плей-бара при прохождении секунды.
+	USER_OS_STATIC_TASK_CREATE(	AyPlayer::playTickHandlerTask,
+								"playTick",
+								TB_PLAY_TICK_TASK_SIZE,
+								( void* )this,
+								PLAY_TICK_TASK_PRIO,
+								this->tbPlayTickTask,
+								&this->tsPlayTickTask	);
 
 	vTaskStartScheduler();
 }
@@ -68,30 +95,56 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 		USER_OS_QUEUE_RECEIVE( o->os->qAyButton, &qData, portMAX_DELAY );
 
 		b	=	static_cast< EC_BUTTON_NAME >( qData );
-		( void )b;
+
+		if ( b == EC_BUTTON_NAME::ENTER ) {
+			if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
+				USER_OS_GIVE_BIN_SEMAPHORE( o->os->sStartPlay );
+			}
+		}
+	}
+}
+
+void AyPlayer::updateLcdTask ( void* obj ) {
+	AyPlayer* o = ( AyPlayer* )obj;
+	o->mcu->lcdPwmTim->setDuty( o->illuminationDuty );
+	while( true ) {
+		if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
+			mScrollStringScroll( &o->g.ss );
+		}
+
+		if ( USER_OS_TAKE_BIN_SEMAPHORE( o->os->sGuiUpdate, 1000 ) == pdFALSE ) {
+			o->guiUpdate();
+		}
+	}
+}
+
+void AyPlayer::playTickHandlerTask ( void* obj ) {
+	AyPlayer* o = ( AyPlayer* )obj;
+	while ( true ) {
+		USER_OS_TAKE_BIN_SEMAPHORE( o->os->sPlayTic, portMAX_DELAY );
+		mPlayBarIncSec( &o->g.pb );
+
+		if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
+			mScrollStringScroll( &o->g.ss );
+		}
 	}
 }
 
 void AyPlayer::playTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;
-/*
-    char* name;
-    EC_AY_FILE_MODE_ANSWER  r;
-    while ( true ) {
-        USER_OS_QUEUE_RECEIVE( ayplayer_play_queue, &name, portMAX_DELAY );
-        ayplayer_control.play_state_set( EC_AY_PLAY_STATE::PLAY );
-        r = ay_file_mode.psg_file_play( name, 1 );
-        ayplayer_control.play_state_set( EC_AY_PLAY_STATE::STOP );
 
-        // Переходим на следующий трек.
-        if ( r == EC_AY_FILE_MODE_ANSWER::TRACK_END ) {
-            m_click_play_list( &gui_pl, M_KEY_DOWN );
-            m_click_play_list( &gui_pl, M_KEY_OK );
-            gui_update();
-        }
-    }*/
-	(void)o;
-	while(1) {
-		vTaskDelay(1000);
+	int  r;
+	while ( true ) {
+		USER_OS_TAKE_BIN_SEMAPHORE( o->os->sStartPlay, portMAX_DELAY );
+		o->playState		=	AYPLAYER_STATUS::PLAY;
+		r	=	o->startPlayFile();
+		o->playState		=	AYPLAYER_STATUS::STOP;
+
+		// Переходим на следующий трек если это был не последний..
+		if ( r == 0 ) {
+			//m_click_play_list( &gui_pl, M_KEY_DOWN );
+			//..m_click_play_list( &gui_pl, M_KEY_OK );
+			//gui_update();
+		}
 	}
 }
