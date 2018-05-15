@@ -34,7 +34,7 @@
  * mutex-ы.
  */
 // Тип переменной-буфера, в которую будет создан mutex.
-#define USER_OS_STATIC_MUTEX_BUFFER						 StaticSemaphore_t
+#define USER_OS_STATIC_MUTEX_BUFFER							 StaticSemaphore_t
 // Тип переменной mutex-а, который будет создан статически и в него будут помещены данные.
 #define USER_OS_STATIC_MUTEX								SemaphoreHandle_t
 // Метод должен создать в заранее выделенной переменной-буфере mutex.
@@ -82,8 +82,16 @@
 #define USER_OS_STATIC_TASK_STRUCT_TYPE															StaticTask_t
 
 /*!
- * Создание таймера.
+ * Таймеры.
  */
+#define USER_OS_TIMER																			TimerHandle_t
+#define USER_OS_TIMER_STATIC_STRUCT																StaticTimer_t
+#define USER_OS_STATIC_TIMER_CREATE(STRING_NAME,PERIOD_MS,PARAM,FUNC,P_STRUCT)					xTimerCreateStatic(STRING_NAME,PERIOD_MS/portTICK_RATE_MS,pdTRUE,PARAM,FUNC,P_STRUCT)
+#define USER_OS_STATIC_TIMER_START(TIMER)														xTimerStart(TIMER,portMAX_DELAY)
+#define USER_OS_STATIC_TIMER_CHANGE_PERIOD(TIMER,PERIOD)										xTimerChangePeriod(TIMER,PERIOD,portMAX_DELAY)
+#define USER_OS_STATIC_TIMER_GET_PERIOD(TIMER)													xTimerGetPeriod(TIMER)
+#define USER_OS_STATIC_TIMER_STOP(TIMER)														xTimerStop(TIMER,portMAX_DELAY)
+#define USER_OS_STATIC_TIMER_RESET(TIMER)														xTimerReset(TIMER,portMAX_DELAY)
 
 
 //**********************************************************************

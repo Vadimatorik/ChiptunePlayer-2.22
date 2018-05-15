@@ -372,7 +372,8 @@ private:
 	USER_OS_STATIC_STACK_TYPE							tbPlayTickTask[ TB_PLAY_TICK_TASK_SIZE ];
 	USER_OS_STATIC_TASK_STRUCT_TYPE						tsPlayTickTask;
 
-	StaticTimer_t										timStNameScroll;
+	USER_OS_TIMER										timNameScroll;
+	USER_OS_TIMER_STATIC_STRUCT							timStNameScroll;
 
 	/// Яркость подсветки.
 	float												illuminationDuty = 1;

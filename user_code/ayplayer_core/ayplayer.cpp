@@ -63,23 +63,36 @@ void AyPlayer::start ( void ) {
 								this->tbPlayTickTask,
 								&this->tsPlayTickTask	);
 
-	TimerHandle_t		t;
-	t = xTimerCreateStatic(	"ScrollStringName",
-						500/portTICK_RATE_MS,
-						pdTRUE,
-						( void* )this,
-						AyPlayer::scrollNameInMainWindow,
-						&this->timStNameScroll	);
+	/// Прокрутка строки.
+	this->timNameScroll = USER_OS_STATIC_TIMER_CREATE(	"ScrollStringName",
+														1000,
+														( void* )this,
+														AyPlayer::scrollNameInMainWindow,
+														&this->timStNameScroll	);
 
-	xTimerStart( t, 1000 );
+	USER_OS_STATIC_TIMER_START( this->timNameScroll );
 
 	vTaskStartScheduler();
 }
 
+#define SCROLL_STRING_NAME_LOW					1000
+#define SCROLL_STRING_NAME_FAST					200
+
 void AyPlayer::scrollNameInMainWindow ( TimerHandle_t timer ) {
 	AyPlayer* o = ( AyPlayer* )pvTimerGetTimerID( timer );
+
 	if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
-		mSlimHorizontalListScrollString( &o->g.shl );
+		int r;
+		r = mSlimHorizontalListScrollString( &o->g.shl );
+
+		if ( r != 1 ) {
+			if ( USER_OS_STATIC_TIMER_GET_PERIOD( timer ) == SCROLL_STRING_NAME_LOW ) {
+				USER_OS_STATIC_TIMER_CHANGE_PERIOD(timer, SCROLL_STRING_NAME_FAST);
+			}
+		} else {
+			USER_OS_STATIC_TIMER_CHANGE_PERIOD(timer, SCROLL_STRING_NAME_LOW);
+		}
+
 		o->guiUpdate();
 	}
 }
@@ -174,8 +187,14 @@ void AyPlayer::startPlayTrack ( void ) {
 	if ( r != 0 )
 		return;
 
+	USER_OS_STATIC_TIMER_STOP( this->timNameScroll );
+	USER_OS_STATIC_TIMER_RESET( this->timNameScroll );
+	USER_OS_STATIC_TIMER_CHANGE_PERIOD( this->timNameScroll, SCROLL_STRING_NAME_LOW );
+
 	mSlimHorizontalListSetStringCurrentItem( &this->g.shl, this->fat.currentFileInfo.fileName );
 	mPlayBarSetNewTrack( &this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
+
+	USER_OS_STATIC_TIMER_START( this->timNameScroll );
 
 	USER_OS_GIVE_BIN_SEMAPHORE( this->os->sStartPlay );
 }
