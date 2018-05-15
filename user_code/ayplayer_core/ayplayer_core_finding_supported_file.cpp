@@ -14,6 +14,11 @@ int	AyPlayer::scanDir ( char* path ) {
 	/// Путь до файла со списком прошедших проверку файлов.
 	bool	flagFileListCreate	=	false;
 
+	/// Устанавливаем текущую директорию.
+	if ( ( !r ) && ( f_chdir( path ) != FR_OK ) ) {
+		r = -1;
+	}
+
 	while ( !r ) {
 		/// Собираем строчку с полным путем.
 		char*	fullPathToFile	=	AyPlayerFat::getFullPath( path, fi->fname );
@@ -25,13 +30,19 @@ int	AyPlayer::scanDir ( char* path ) {
 		m_slist_set_text_string( &this->g.sl, "File analysis..." );											/// Экран.
 		this->guiUpdate();
 
+
 		/// Проверяем правильность файла.
 		uint32_t fileLen;
-		EC_AY_FILE_MODE_ANSWER	rPsgGet;
-		rPsgGet = this->ayFile->psgFileGetLong( fullPathToFile, fileLen );
+
+
+		this->ay->setPlayFileName( fi->fname );
+		this->ay->setPlaySd( AY_MICROSD::SD1 );
+
+		int rPsgGet;
+		rPsgGet = this->ay->psgFileGetLong( fileLen );
 
 		/// Если файл прошел проверку.
-		if ( rPsgGet == EC_AY_FILE_MODE_ANSWER::OK ) {
+		if ( rPsgGet == 0 ) {
 			/// Если в этой директории еще не создавали файл со списком прошедших проверку файлов.
 			if ( flagFileListCreate == false ) {
 				flagFileListCreate = true;

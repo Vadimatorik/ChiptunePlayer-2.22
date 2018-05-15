@@ -27,10 +27,10 @@ sr_one_in_button_item_cfg buttonChannelcfg[ 7 ] = {
 		.vStartLongPress	=	0,
 		.sReleaseLongClick	=	nullptr,
 		.qReleaseLongClick	=	&osData.qAyButton,
-		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::UP ),
+		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::UP_CLICK ),
 		.sReleaseClick		=	nullptr,
 		.qReleaseClick		=	&osData.qAyButton,
-		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::UP ),
+		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::UP_CLICK ),
 		.status				=	&bSAr[0]
 	},
 	{
@@ -46,10 +46,10 @@ sr_one_in_button_item_cfg buttonChannelcfg[ 7 ] = {
 		.vStartLongPress	=	0,
 		.sReleaseLongClick	=	nullptr,
 		.qReleaseLongClick	=	&osData.qAyButton,
-		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::DOWN ),
+		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::DOWN_CLICK ),
 		.sReleaseClick		=	nullptr,
 		.qReleaseClick		=	&osData.qAyButton,
-		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::DOWN ),
+		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::DOWN_CLICK ),
 		.status				=	&bSAr[1]
 	},
 	{
@@ -99,14 +99,14 @@ sr_one_in_button_item_cfg buttonChannelcfg[ 7 ] = {
 		.qPress				=	nullptr,
 		.vPress				=	0,
 		.sStartLongPress	=	nullptr,
-		.qStartLongPress	=	nullptr,
-		.vStartLongPress	=	0,
+		.qStartLongPress	=	&osData.qAyButton,
+		.vStartLongPress	=	M_EC_TO_U8( EC_BUTTON_NAME::ENTER_LONG_PRESS ),
 		.sReleaseLongClick	=	nullptr,
 		.qReleaseLongClick	=	&osData.qAyButton,
-		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::ENTER ),
+		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::ENTER_LONG_CLICK ),
 		.sReleaseClick		=	nullptr,
 		.qReleaseClick		=	&osData.qAyButton,
-		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::ENTER ),
+		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::ENTER_CLICK ),
 		.status				=	&bSAr[4]
 	},
 	{
@@ -122,10 +122,10 @@ sr_one_in_button_item_cfg buttonChannelcfg[ 7 ] = {
 		.vStartLongPress	=	0,
 		.sReleaseLongClick	=	nullptr,
 		.qReleaseLongClick	=	&osData.qAyButton,
-		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::BACK ),
+		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::BACK_CLICK ),
 		.sReleaseClick		=	nullptr,
 		.qReleaseClick		=	&osData.qAyButton,
-		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::BACK ),
+		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::BACK_CLICK ),
 		.status				=	&bSAr[5]
 	},
 	{
@@ -141,10 +141,10 @@ sr_one_in_button_item_cfg buttonChannelcfg[ 7 ] = {
 		.vStartLongPress	=	0,
 		.sReleaseLongClick	=	nullptr,
 		.qReleaseLongClick	=	&osData.qAyButton,
-		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::MENU ),
+		.vReleaseLongClick	=	M_EC_TO_U8( EC_BUTTON_NAME::MENU_CLICK ),
 		.sReleaseClick		=	nullptr,
 		.qReleaseClick		=	&osData.qAyButton,
-		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::MENU ),
+		.vReleaseClick		=	M_EC_TO_U8( EC_BUTTON_NAME::MENU_CLICK ),
 		.status				=	&bSAr[6]
 	},
 };

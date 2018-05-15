@@ -115,11 +115,12 @@ ayplayerGuiCfg ayGuiCfg = {
 		.timeColor						=	MC_Black,
 		.font							=	&F_minecraft_rus_regular_8
 	},
-	.scrollStringStyle = {
-		.fontErcent						=	&F_minecraft_rus_regular_8,
-		.fontErcentCol					=	MC_Black,
+	.horizontalListStyle = {
+		.fontString						=	&F_minecraft_rus_regular_8,
+		.stringColor					=	MC_Black,
 		.bgColor						=	MC_White,
-		.borderColor					=	MC_Black
+		.borderColor					=	MC_Black,
+		.bgArrowColor					=	MC_Black
 	}
 };
 
@@ -127,8 +128,8 @@ ayPlayerCfg ayCfg = {
 	.mcu								=	&ayMcuCfg,
 	.l									=	&ayLog,
 	.pcb								=	&ayPcbCfg,
-	.ayF								=	&ayFileMode,
 	.os									=	&osData,
+	.ay									=	&ayYmFilePlay,
 	.gui								=	&ayGuiCfg
 };
 

@@ -16,8 +16,8 @@
 
 #include <string>
 
+#include "ayplayer_ay_file_class.h"
 #include "run_time_logger.h"
-#include "ay_ym_file_mode.h"
 #include "buttons_through_shift_register_one_input_pin.h"
 #include "ayplayer_gpio.h"
 #include "shift_register.h"
@@ -35,6 +35,9 @@
 #include "progress_bar.h"
 #include "slist.h"
 #include "scroll_string.h"
+#include "slim_horizontal_list.h"
+
+#include "ayplayer_fat.h"
 
 enum class AYPLAYER_WINDOW_NOW {
 	MAIN				=	0,
@@ -109,15 +112,15 @@ struct ayplayerGuiCfg {
 	MakiseStyle_SMPlayerStatusBar						statusBarCfg;
 	MPlayerStatusBar_CallbackFunc						statusBarCallbackCfg;
 	MakiseStyle_PlayBar									playBarStyle;
-	MakiseStyle_SMScrollString							scrollStringStyle;
+	MakiseStyle_SMSlimHorizontalList					horizontalListStyle;
 };
 
 struct ayPlayerCfg {
 	ayplayerMcStrcut*									mcu;
 	RunTimeLogger*										l;
 	ayplayerPcbStrcut*									pcb;
-	AyYmFileMode*										ayF;
 	freeRtosObj*										os;
+	AyYmFilePlay*										ay;
 	const ayplayerGuiCfg*								const gui;
 };
 
@@ -128,21 +131,10 @@ struct ayPlayerGui {
 	MSList_Item											slItem[ 4 ];
 	MPlayerStatusBar									sb;
 	MPlayBar											pb;
-	MScrollString										ss;
+	MSlimHorizontalList									shl;
 };
 
-enum class AY_FORMAT {
-	PSG				=	0,
-};
 
-#define ITEM_FILE_IN_FAT_FILE_NAME_LEN			256
-
-/// Структура одного элемента в файле <<.fileList.txt>>.
-struct itemFileInFat {
-	char			fileName[ ITEM_FILE_IN_FAT_FILE_NAME_LEN ];
-	AY_FORMAT		format;
-	uint32_t		lenTick;
-};
 
 #define AYPLAYER_MICROSD_COUNT							2
 
@@ -168,8 +160,8 @@ public:
 		mcu			( cfg->mcu ),
 		l			( cfg->l ),
 		pcb			( cfg->pcb ),
-		ayFile		( cfg->ayF ),
 		os			( cfg->os ),
+		ay			( cfg->ay ),
 		gui			( cfg->gui )
 	{}
 
@@ -304,9 +296,11 @@ private:
 	int				sortForNameFileList					( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fNameSort );
 	int				sortForLenFileList					( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fLenSort );
 	void			removeSystemFileInRootDir			( AY_MICROSD sdName, const char* fatValome );
-
+	int				getFileCountInCurDir				( FILE_LIST_TYPE listType, uint32_t& returnCount );
+	void			playPauseSet( bool state );
 	/// Проверяем наличие файла в директории 0 - нет, 1 есть, -1 флешке плохо.
 	int checkingFile( AY_MICROSD sdName, const char* path, const char* nameFile, FILINFO* fi  );
+	void stopPlayFile ( void );
 
 	int removeFile( AY_MICROSD sdName, const  char* path, const char* nameFile );
 
@@ -334,6 +328,22 @@ private:
 	/// Ну то есть мы указываем имя файла относительно текущей директории.
 	int		startPlayFile							( void );
 
+
+	void	initAyCfgCall								(	void	);
+
+
+	int		ayFileCallOpenFile							(	void	);
+	int		ayFileCallCloseFile							(	void	);
+	int		ayFileCallGetFileLen						(	uint32_t&		returnFileLenByte	);
+	int		ayFileCallSetOffsetByteInFile				(	const uint32_t 	offsetByte	);
+	int		ayFileCallReadInArray						(	uint8_t*		returnDataBuffer,
+															const uint32_t	countByteRead	);
+	int		ayFileCallSetPwrChip						(	bool			state	);
+	int		ayFileCallInitChip							(	void	);
+	int		ayFileCallSleepChip							(	const uint32_t	countTick	);
+	int		ayFileCallWritePacket						(	const uint8_t	reg,
+															const uint8_t	data	);
+
 	/// Текущий режим работы RCC.
 	uint32_t											rccIndex = 0;
 
@@ -342,8 +352,8 @@ private:
 	ayplayerMcStrcut*									const mcu;
 	RunTimeLogger*										const l;
 	ayplayerPcbStrcut*									const pcb;
-	AyYmFileMode*										const ayFile;
 	freeRtosObj*										const os;
+	AyYmFilePlay*										ay;
 	const ayplayerGuiCfg*								const gui;
 	ayPlayerGui											g;
 
@@ -367,6 +377,7 @@ private:
 	FILE_LIST_TYPE										lType;
 	AYPLAYER_WINDOW_NOW									wNow;
 	uint32_t											currentFile;
+	uint32_t											countFileInCurrentDir;
 
 	ayPlayerFatFs										fat;
 };

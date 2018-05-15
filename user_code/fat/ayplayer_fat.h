@@ -1,7 +1,21 @@
 #pragma once
 
 #include "ff.h"
-#include "ayplayer.h"
+#include "ayplayer_microsd_card.h"
+
+#define ITEM_FILE_IN_FAT_FILE_NAME_LEN			256
+
+enum class AY_FORMAT {
+	PSG				=	0,
+};
+
+/// Структура одного элемента в файле <<*.list>>.
+struct itemFileInFat {
+	char			fileName[ ITEM_FILE_IN_FAT_FILE_NAME_LEN ];
+	AY_FORMAT		format;
+	uint32_t		lenTick;
+};
+
 
 class AyPlayerFat {
 public:
@@ -119,13 +133,30 @@ public:
 	static	char*		getNameTrackFromFile			( FIL* f, uint32_t nubmerTrack );
 
 	/*!
-	 * Достает из ранее открытого файла-списка длину трека с заданным номером.
+	 * Достает из ранее открытого файла-списка размер трека с заданным номером.
 	 * \param[in]		f			-	файл со списком треков.
 	 * \param[in]		nubmerTrack	-	номер трека в списке. Счет с 0.
 	 *
 	 * \return			{	Длина трека или 0xFFFFFFFF	}
 	 */
-	static	uint32_t	getLenTrackFromFile				( FIL* f, uint32_t nubmerTrack );
+	static	uint32_t	getSizeTrackFromFile				( FIL* f, uint32_t nubmerTrack );
+
+
+
+	static	int	setOffsetByteInOpenFile			( FIL* f, uint32_t offset );
+
+	static	int	readFromOpenFile			( FIL* f, uint8_t* returnData, const uint32_t countByte );
+
+	/*!
+	 * Возвращает размер файла.
+	 * \param[in]		f				-	открытый файл, размер которого необходимо получить.
+	 * \param[in]		returnSizeByte	-	переменная, в которую будет положен размер трека.
+	 *
+	 * \return			{	Длина трека или 0xFFFFFFFF	}
+	 */
+	static	int			getSizeFromOpenTreck				( FIL* f, uint32_t& returnSizeByte );
+
+
 
 	/*!
 	 * Проверяет наличие файла.

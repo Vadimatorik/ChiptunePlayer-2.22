@@ -165,14 +165,14 @@ int AyPlayer::sortForLenFileList ( const char* const path, uint16_t* fl, uint32_
 		}
 
 		/// Получаем имена треков.
-		uint32_t	aLen	=	AyPlayerFat::getLenTrackFromFile( fNoSort, a );
+		uint32_t	aLen	=	AyPlayerFat::getSizeTrackFromFile( fNoSort, a );
 
 		if ( aLen == 0xFFFFFFFF ) {
 			sortResult	=	-1;
 			return true;
 		}
 
-		uint32_t	bLen	=	AyPlayerFat::getLenTrackFromFile( fNoSort, b );
+		uint32_t	bLen	=	AyPlayerFat::getSizeTrackFromFile( fNoSort, b );
 		if ( bLen == 0xFFFFFFFF ) {
 			sortResult	=	-1;
 			return true;

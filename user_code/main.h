@@ -22,11 +22,11 @@ extern ShiftRegister								srAy;
 extern ShiftRegister								srButton;
 extern ButtonsThroughShiftRegisterOneInputPin		button;
 extern ad5204< 2 >									soundDp;
-extern AyYmFileMode									ayFileMode;
 extern freeRtosObj									osData;
 extern AyYmLowLavel									ayLow;
 extern ST7565										lcd;
 extern MicrosdBase*									sdArray[2];
+extern AyYmFilePlay									ayYmFilePlay;
 
 #ifdef configGENERATE_RUN_TIME_STATS
 extern TimCounter									timRunTimeStats;

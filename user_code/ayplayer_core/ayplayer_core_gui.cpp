@@ -62,12 +62,17 @@ void AyPlayer::initPlayWindow ( void ) {
 	/// Время трека сразу в статус бар.
 	mPlayBarSetNewTrack( &this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
 
-	mCreateScrollString(	&this->g.ss,
-							&makiseHost.host,
-							this->fat.currentFileInfo.fileName,
-							mp_rel(	0,	11,
-									128, 12	),
-							&this->gui->scrollStringStyle	);
+	mCreateSlimHorizontalList(	&this->g.shl,
+								&makiseHost.host,
+								mp_rel(	0,	11,
+										128, 12	),
+								&this->gui->horizontalListStyle	);
+
+	/// Имя текущему элементу.
+	mSlimHorizontalListSetStringCurrentItem( &this->g.shl, this->fat.currentFileInfo.fileName );
+
+	/// Указываем колличество элементов в директории.
+	mSlimHorizontalSetItemCount( &this->g.shl, this->countFileInCurrentDir );
 }
 
 void AyPlayer::removePlayWindow ( void ) {

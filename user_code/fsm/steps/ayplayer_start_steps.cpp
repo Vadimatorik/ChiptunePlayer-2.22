@@ -94,12 +94,18 @@ int AyPlayer::fsmStepFuncInitMainWindow ( HANDLER_FSM_INPUT_DATA ) {
 	obj->playState		=	AYPLAYER_STATUS::STOP;
 	obj->currentFile	=	0;
 	obj->wNow			=	AYPLAYER_WINDOW_NOW::MAIN;
+
+
 	/// Переносим каталог воспроизведения в центр.
 	FRESULT	fr;
 	fr	=	f_chdir("0:");
 	(void)fr;
 
 	int		r;
+
+	/// забираем колличество файлов в текущей директории.
+	r = obj->getFileCountInCurDir( obj->lType, obj->countFileInCurrentDir );
+
 	/// Забираем данные о треке, на котором остановили воспроизведение.
 	r = obj->getFileInfoFromListCurDir( obj->lType, obj->currentFile );
 

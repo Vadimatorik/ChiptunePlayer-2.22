@@ -90,27 +90,86 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 
 	EC_BUTTON_NAME		b;
 	uint8_t				qData;
+	int					r;
+	( void )r;
 	while( true ) {
 		USER_OS_QUEUE_RESET( o->os->qAyButton );  // Старые команды нас не интересуют.
 		USER_OS_QUEUE_RECEIVE( o->os->qAyButton, &qData, portMAX_DELAY );
 
 		b	=	static_cast< EC_BUTTON_NAME >( qData );
 
-		if ( b == EC_BUTTON_NAME::ENTER ) {
-			if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
-				USER_OS_GIVE_BIN_SEMAPHORE( o->os->sStartPlay );
+		if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
+			if ( b == EC_BUTTON_NAME::ENTER_CLICK ) {
+				switch( static_cast< uint32_t >( o->playState ) ) {
+				case static_cast< uint32_t >( AYPLAYER_STATUS::STOP ):
+					USER_OS_GIVE_BIN_SEMAPHORE( o->os->sStartPlay );
+					break;
+
+				case static_cast< uint32_t >( AYPLAYER_STATUS::PAUSE ):
+					o->playPauseSet( true );
+					o->guiUpdate();
+					continue;
+
+				case static_cast< uint32_t >( AYPLAYER_STATUS::PLAY ):
+					o->playPauseSet( false );
+					o->guiUpdate();
+					continue;
+				};
+
+
+
+			}
+
+			if ( b == EC_BUTTON_NAME::ENTER_LONG_PRESS ) {
+				if ( ( o->playState == AYPLAYER_STATUS::PLAY ) || ( o->playState == AYPLAYER_STATUS::PAUSE ) ) {
+					o->stopPlayFile();
+					o->guiUpdate();
+				}
+				continue;
+			}
+
+			if ( b == EC_BUTTON_NAME::LEFT_CLICK ) {
+				if ( o->currentFile > 0 ) {
+					o->currentFile--;
+					o->stopPlayFile();
+					r = o->getFileInfoFromListCurDir( o->lType, o->currentFile );
+					mPlayBarSetNewTrack( &o->g.pb, o->fat.currentFileInfo.lenTick / 50 );
+					mSlimHorizontalListLeft( &o->g.shl, o->fat.currentFileInfo.fileName );
+					USER_OS_GIVE_BIN_SEMAPHORE( o->os->sStartPlay );
+					o->guiUpdate();
+				}
+				continue;
+			}
+
+			if ( b == EC_BUTTON_NAME::RIGHT_CLICK ) {
+				if ( o->currentFile < o->countFileInCurrentDir - 1 ) {
+					o->currentFile++;
+					o->stopPlayFile();
+					r = o->getFileInfoFromListCurDir( o->lType, o->currentFile );
+					mPlayBarSetNewTrack( &o->g.pb, o->fat.currentFileInfo.lenTick / 50 );
+					mSlimHorizontalListRight( &o->g.shl, o->fat.currentFileInfo.fileName );
+					USER_OS_GIVE_BIN_SEMAPHORE( o->os->sStartPlay );
+					o->guiUpdate();
+				}
+				continue;
 			}
 		}
 	}
 }
 
+
+/*
+
+ *if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
+			mSlimHorizontalListScrollString( &o->g.ss );
+		}
+ */
+
 void AyPlayer::updateLcdTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;
 	o->mcu->lcdPwmTim->setDuty( o->illuminationDuty );
 	while( true ) {
-		if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
-			mScrollStringScroll( &o->g.ss );
-		}
+
 
 		if ( USER_OS_TAKE_BIN_SEMAPHORE( o->os->sGuiUpdate, 1000 ) == pdFALSE ) {
 			o->guiUpdate();
@@ -118,15 +177,12 @@ void AyPlayer::updateLcdTask ( void* obj ) {
 	}
 }
 
+
 void AyPlayer::playTickHandlerTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;
 	while ( true ) {
 		USER_OS_TAKE_BIN_SEMAPHORE( o->os->sPlayTic, portMAX_DELAY );
 		mPlayBarIncSec( &o->g.pb );
-
-		if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
-			mScrollStringScroll( &o->g.ss );
-		}
 	}
 }
 
@@ -137,6 +193,7 @@ void AyPlayer::playTask ( void* obj ) {
 	while ( true ) {
 		USER_OS_TAKE_BIN_SEMAPHORE( o->os->sStartPlay, portMAX_DELAY );
 		o->playState		=	AYPLAYER_STATUS::PLAY;
+		o->guiUpdate();
 		r	=	o->startPlayFile();
 		o->playState		=	AYPLAYER_STATUS::STOP;
 

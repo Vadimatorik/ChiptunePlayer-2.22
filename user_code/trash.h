@@ -98,10 +98,26 @@ void ayplayer_button_inc_and_dec_detect ( void* param ) {
 	}
 }
 
-void ayplayer_button_init ( void ) {
-	&os_data.q_ay_button_init();
-	//ayplayer_button.init();
-	USER_OS_STATIC_TASK_CREATE( ayplayer_button_inc_and_dec_detect, "b_incdec", TB_B_INC_DEC_SIZE,  NULL, 2, tb_inc_dec_detect, &ts_inc_dec_detect );
+
+void AyYmFilePlay::hardStop ( void ) {
+	this->cfg->ay->hardwareClear();
+	this->cfg->ay->queueClear();
+	this->cfg->ay->playStateSet( 0 );								// Потом отключаем усилок и чипы.
+
+	if ( this->chipState[ 0 ] ) {
+		this->chipState[ 0 ]	=	0;
+		this->cfg->pwrChipOn( 0, false );
+	}
+
+	if ( this->chipState[ 1 ] ) {
+		this->chipState[ 1 ]	=	0;
+		this->cfg->pwrChipOn( 1, false );
+	}
+}
+
+int AyYmFilePlay::sendToQueue ( ayQueueStruct* item ) {
+
+}
 
 
 }*/

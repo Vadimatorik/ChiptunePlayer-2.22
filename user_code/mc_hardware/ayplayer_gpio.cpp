@@ -682,6 +682,12 @@ Pin bc1					( &bc1Cfg );
 Pin chip1PwrOn			( &chip1PwrOnCfg );			/// Подача питания на первый чип.
 Pin chip2PwrOn			( &chip2PwrOnCfg );			/// Подача питания на второй чип.
 
+/// Для обращений file play.
+Pin pwrAy[ 2 ] = {
+	chip2PwrOn,				/// Из-за сдвигового регистра обратный счет.
+	chip1PwrOn
+};
+
 // PWR.
 Pin pwr5vOn				( &pwr5vOnCfg );
 Pin pwrOn				( &pwrOnCfg );
@@ -698,6 +704,8 @@ Pin buttonIn			( &buttonInCfg );			/// Общий вход клавиатуры,
 // + - громкость.
 Pin buttonInc			( &buttonIncCfg );
 Pin buttonDec			( &buttonDecCfg );
+
+
 
 /*!
  * Передаем основному объекту все используемые выводы.

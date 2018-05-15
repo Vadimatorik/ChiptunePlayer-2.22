@@ -233,7 +233,7 @@ char* AyPlayerFat::getNameTrackFromFile			( FIL* f, uint32_t nubmerTrack ) {
 	}
 }
 
-uint32_t AyPlayerFat::getLenTrackFromFile		( FIL* f, uint32_t nubmerTrack ) {
+uint32_t AyPlayerFat::getSizeTrackFromFile		( FIL* f, uint32_t nubmerTrack ) {
 	FRESULT				r;
 
 	const uint32_t	lseek	=	( sizeof( itemFileInFat ) * nubmerTrack ) + ITEM_FILE_IN_FAT_FILE_NAME_LEN + sizeof( AY_FORMAT );
@@ -247,6 +247,35 @@ uint32_t AyPlayerFat::getLenTrackFromFile		( FIL* f, uint32_t nubmerTrack ) {
 	r	=	f_read( f, &len, sizeof( uint32_t ), &l );
 
 	return ( ( r == FR_OK ) && ( l == sizeof( uint32_t ) ) ) ? len : 0xFFFFFFFF;
+}
+
+
+int AyPlayerFat::setOffsetByteInOpenFile ( FIL* f, uint32_t offset ) {
+	if ( f_lseek( f, offset ) == FR_OK ) {
+		return 0;
+	} else {
+		return -1;
+	}
+}
+
+int AyPlayerFat::readFromOpenFile ( FIL* f, uint8_t* returnData, const uint32_t countByte ) {
+	UINT		l;
+	FRESULT		r;
+
+	r = f_read( f, returnData, static_cast< UINT >( countByte ), &l );
+
+	if ( r != FR_OK )
+		return -1;
+
+	if ( l != countByte )
+		return -2;
+
+	return 0;
+}
+
+int AyPlayerFat::getSizeFromOpenTreck ( FIL* f, uint32_t& returnSizeByte ) {
+	returnSizeByte = f_size( f );
+	return 0;
 }
 
 int AyPlayerFat::readItemFileListAndRemoveItem ( FIL* f, itemFileInFat* item, uint32_t numberTrack ) {
