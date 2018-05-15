@@ -63,9 +63,26 @@ void AyPlayer::start ( void ) {
 								this->tbPlayTickTask,
 								&this->tsPlayTickTask	);
 
+	TimerHandle_t		t;
+	t = xTimerCreateStatic(	"ScrollStringName",
+						500/portTICK_RATE_MS,
+						pdTRUE,
+						( void* )this,
+						AyPlayer::scrollNameInMainWindow,
+						&this->timStNameScroll	);
+
+	xTimerStart( t, 1000 );
+
 	vTaskStartScheduler();
 }
 
+void AyPlayer::scrollNameInMainWindow ( TimerHandle_t timer ) {
+	AyPlayer* o = ( AyPlayer* )pvTimerGetTimerID( timer );
+	if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
+		mSlimHorizontalListScrollString( &o->g.shl );
+		o->guiUpdate();
+	}
+}
 
 void AyPlayer::mainTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;
@@ -130,6 +147,7 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 					o->currentFile--;
 					o->stopPlayFile();
 					o->startPlayTrack();
+					mSlimHorizontalListLeft( &o->g.shl, o->fat.currentFileInfo.fileName );
 					o->guiUpdate();
 				}
 				continue;
@@ -140,6 +158,7 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 					o->currentFile++;
 					o->stopPlayFile();
 					o->startPlayTrack();
+					mSlimHorizontalListRight( &o->g.shl, o->fat.currentFileInfo.fileName );
 					o->guiUpdate();
 				}
 				continue;
@@ -155,17 +174,11 @@ void AyPlayer::startPlayTrack ( void ) {
 	if ( r != 0 )
 		return;
 
+	mSlimHorizontalListSetStringCurrentItem( &this->g.shl, this->fat.currentFileInfo.fileName );
 	mPlayBarSetNewTrack( &this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
-	mSlimHorizontalListRight( &this->g.shl, this->fat.currentFileInfo.fileName );
+
 	USER_OS_GIVE_BIN_SEMAPHORE( this->os->sStartPlay );
 }
-
-/*
-
- *if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
-			mSlimHorizontalListScrollString( &o->g.ss );
-		}
- */
 
 void AyPlayer::updateLcdTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;

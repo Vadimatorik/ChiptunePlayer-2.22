@@ -194,6 +194,7 @@ private:
 	static	void	buttonClickHandlerTask			( void* obj );
 	static	void	updateLcdTask					( void* obj );
 	static	void	playTickHandlerTask				( void* obj );
+	static	void	scrollNameInMainWindow			( TimerHandle_t timer );
 
 
 	/*!
@@ -370,6 +371,8 @@ private:
 	USER_OS_STATIC_TASK_STRUCT_TYPE						tsPlayTask;
 	USER_OS_STATIC_STACK_TYPE							tbPlayTickTask[ TB_PLAY_TICK_TASK_SIZE ];
 	USER_OS_STATIC_TASK_STRUCT_TYPE						tsPlayTickTask;
+
+	StaticTimer_t										timStNameScroll;
 
 	/// Яркость подсветки.
 	float												illuminationDuty = 1;
