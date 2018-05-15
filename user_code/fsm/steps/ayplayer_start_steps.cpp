@@ -71,6 +71,8 @@ int AyPlayer::fsmStepFuncSortingFileList ( HANDLER_FSM_INPUT_DATA ) {
 
 	vPortFree( path );
 
+	obj->removeWindowSortingFileList();
+
 	if ( r != 0 ) return 1;
 
 	return 0;
