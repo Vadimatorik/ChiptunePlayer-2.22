@@ -5,13 +5,13 @@
 const clkTimBaseCfg ay_clk_cfg_clk_tim_param[ AYPLAYER_RCC_CFG_COUNT ] = {
 	/// Индекс RCC: 0.
 	{
-		.period				= 32 - 1,
+		.period				= 32 - 1 + 2,
 		.prescaler			= 0,
 		.pulse				= 0
 	},
 	/// Индекс RCC: 1.
 	{
-		.period				= 32 - 1,
+		.period				= 32 - 1 + 2,
 		.prescaler			= 0,
 		.pulse				= 0
 	},
