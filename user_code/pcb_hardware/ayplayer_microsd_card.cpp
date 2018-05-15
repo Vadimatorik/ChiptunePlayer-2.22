@@ -26,10 +26,10 @@ MicrosdSpi sd2( &sd2Cfg );
 
 const microsd_sdio_cfg_t sd1Cfg = {
 	.wide						= SDIO_BUS_WIDE_4B,
-	.div						= 0xFF,
+	.div						= 2,
 	.dmaRx						= DMA2_Stream6,
 	.dmaRxCh					= DMA_CHANNEL_4,
-	.dmaRxIrqPrio			= 6,
+	.dmaRxIrqPrio				= 6,
 	.sdioIrqPrio				= 0								// Не используется.
 };
 

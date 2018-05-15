@@ -69,8 +69,6 @@ int AyPlayer::fsmStepFuncSortingFileList ( HANDLER_FSM_INPUT_DATA ) {
 	obj->l->sendMessage( RTL_TYPE_M::RUN_MESSAGE_OK, "Started sorting fileList." );
 	r = obj->findingFileListAndSort( path );
 
-	obj->removeWindowSortingFileList();
-
 	vPortFree( path );
 
 	if ( r != 0 ) return 1;

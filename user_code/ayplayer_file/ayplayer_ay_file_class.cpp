@@ -1,4 +1,4 @@
-#include "../ayplayer_file/ayplayer_ay_file_class.h"
+#include "ayplayer_ay_file_class.h"
 
 void AyYmFilePlay::setPlaySd ( AY_MICROSD sd ) {
 	this->sd = sd;

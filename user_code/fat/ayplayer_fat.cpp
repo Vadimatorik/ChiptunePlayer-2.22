@@ -104,7 +104,7 @@ FIL* AyPlayerFat::openFileInCurrentDir ( const AY_MICROSD sd, const char* const 
 	f	=	( FIL* )pvPortMalloc( sizeof( FIL ) );
 	assertParam( f );
 
-	uint32_t len = strlen( name ) + 2;
+	uint32_t len = strlen( name ) + 2 + 1;
 	char* fullName;
 	fullName	=	( char* )pvPortMalloc( len );
 	if ( sd == AY_MICROSD::SD1 ) {
