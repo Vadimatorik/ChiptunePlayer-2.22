@@ -327,6 +327,7 @@ private:
 	/// В объекте fat для sd1 должена быть установлена актуальная директория с помощью f_chdir
 	/// Ну то есть мы указываем имя файла относительно текущей директории.
 	int		startPlayFile							( void );
+	void	startPlayTrack ( void );
 
 
 	void	initAyCfgCall								(	void	);

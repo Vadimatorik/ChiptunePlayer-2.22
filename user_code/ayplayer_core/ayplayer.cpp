@@ -115,9 +115,6 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 					o->guiUpdate();
 					continue;
 				};
-
-
-
 			}
 
 			if ( b == EC_BUTTON_NAME::ENTER_LONG_PRESS ) {
@@ -132,10 +129,7 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 				if ( o->currentFile > 0 ) {
 					o->currentFile--;
 					o->stopPlayFile();
-					r = o->getFileInfoFromListCurDir( o->lType, o->currentFile );
-					mPlayBarSetNewTrack( &o->g.pb, o->fat.currentFileInfo.lenTick / 50 );
-					mSlimHorizontalListLeft( &o->g.shl, o->fat.currentFileInfo.fileName );
-					USER_OS_GIVE_BIN_SEMAPHORE( o->os->sStartPlay );
+					o->startPlayTrack();
 					o->guiUpdate();
 				}
 				continue;
@@ -145,10 +139,7 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 				if ( o->currentFile < o->countFileInCurrentDir - 1 ) {
 					o->currentFile++;
 					o->stopPlayFile();
-					r = o->getFileInfoFromListCurDir( o->lType, o->currentFile );
-					mPlayBarSetNewTrack( &o->g.pb, o->fat.currentFileInfo.lenTick / 50 );
-					mSlimHorizontalListRight( &o->g.shl, o->fat.currentFileInfo.fileName );
-					USER_OS_GIVE_BIN_SEMAPHORE( o->os->sStartPlay );
+					o->startPlayTrack();
 					o->guiUpdate();
 				}
 				continue;
@@ -157,6 +148,17 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 	}
 }
 
+
+void AyPlayer::startPlayTrack ( void ) {
+	int r;
+	r = this->getFileInfoFromListCurDir( this->lType, this->currentFile );
+	if ( r != 0 )
+		return;
+
+	mPlayBarSetNewTrack( &this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
+	mSlimHorizontalListRight( &this->g.shl, this->fat.currentFileInfo.fileName );
+	USER_OS_GIVE_BIN_SEMAPHORE( this->os->sStartPlay );
+}
 
 /*
 
@@ -195,13 +197,19 @@ void AyPlayer::playTask ( void* obj ) {
 		o->playState		=	AYPLAYER_STATUS::PLAY;
 		o->guiUpdate();
 		r	=	o->startPlayFile();
-		o->playState		=	AYPLAYER_STATUS::STOP;
 
-		// Переходим на следующий трек если это был не последний..
-		if ( r == 0 ) {
-			//m_click_play_list( &gui_pl, M_KEY_DOWN );
-			//..m_click_play_list( &gui_pl, M_KEY_OK );
-			//gui_update();
+		/// Если трек был остановлен или проблемы на аппаратном уровне.
+		if ( r != 0 ) {
+			o->playState		=	AYPLAYER_STATUS::STOP;
+			continue;
 		}
+
+		/// Переходим на следующий трек если это был не последний.
+		if ( o->currentFile < o->countFileInCurrentDir - 1 ) {
+			o->currentFile++;
+		} else {
+			o->currentFile	=	0;
+		}
+		o->startPlayTrack();
 	}
 }
