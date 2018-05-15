@@ -115,11 +115,7 @@ int AyPlayer::startPlayFile ( void ) {
 		r	=	this->ay->psgFilePlay();
 	}
 
-	if ( (  r == 0 ) || ( r == -5 ) ) {
-		return 0;
-	} else {
-		return -1;
-	}
+	return r;
 }
 
 void AyPlayer::stopPlayFile ( void ) {
