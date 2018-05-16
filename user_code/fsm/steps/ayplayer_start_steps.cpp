@@ -114,10 +114,5 @@ int AyPlayer::fsmStepFuncInitMainWindow ( HANDLER_FSM_INPUT_DATA ) {
 
 
 	obj->guiUpdate();
-
-	//volatile int r;
-	//r =
-	//r =
-	//( void )r;
 	return 0;
 }
