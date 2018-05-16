@@ -34,7 +34,6 @@ int	AyPlayer::scanDir ( char* path ) {
 		/// Проверяем правильность файла.
 		uint32_t fileLen;
 
-
 		this->ay->setPlayFileName( fi->fname );
 		this->ay->setPlaySd( AY_MICROSD::SD1 );
 
@@ -70,8 +69,10 @@ int	AyPlayer::scanDir ( char* path ) {
 			itemFileInFat*	fileListItem	=	this->structureItemFileListFilling( fi->fname, fileLen, AY_FORMAT::PSG );
 			r	=	AyPlayerFat::writeItemFileListAndRemoveItem( f, fileListItem );
 
-			if ( r != 0 )
+			if ( r != 0 ) {
+				this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ISSUE, "Write item file in <<" LIST_NO_SORT_FAT_NAME ">> was not carried out successfully. Name item file: ", fi->fname );
 				break;
+			}
 
 			/// В списке новый файл, сдвигаем.
 			this->slItemShiftDown( 4, fi->fname );
@@ -108,6 +109,11 @@ int	AyPlayer::scanDir ( char* path ) {
 	}
 
 	r	=	( AyPlayerFat::closeFile( f ) != 0 ) ? -1 : r;
+	if ( r == 0 ) {
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File <<" LIST_NO_SORT_FAT_NAME ">> was close successfully. Dir:" , path );
+	} else {
+		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_ISSUE, "File <<" LIST_NO_SORT_FAT_NAME ">> was not close successfully. Dir:" , path );
+	}
 
 	return r;
 }

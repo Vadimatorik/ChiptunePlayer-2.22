@@ -8,7 +8,7 @@
 extern MicrosdSdio			sd1;
 extern MicrosdSpi			sd2;
 
-#define NUMBER_OF_ATTEMPTS				5
+#define NUMBER_OF_ATTEMPTS				30
 
 MicrosdBase* sdArray[ 2 ] = {
 	&sd1,
@@ -46,6 +46,7 @@ DRESULT disk_read ( BYTE pdrv, BYTE* buff, DWORD sector, UINT count ) {
 	do {
 		funcR = ( DRESULT )sdArray[ pdrv ]->readSector( sector, buff, count, 1000 );
 		l--;
+		USER_OS_DELAY_MS(1);
 	} while ( ( funcR != RES_OK ) && ( l != 0 ) );
 
 	return funcR;
@@ -58,6 +59,7 @@ DRESULT disk_write ( BYTE pdrv, const BYTE* buff, DWORD sector, UINT count ) {
 	do {
 		funcR = ( DRESULT )sdArray[ pdrv ]->writeSector( buff, sector, count, 1000 );
 		l--;
+		USER_OS_DELAY_MS(1);
 	} while ( ( funcR != RES_OK ) && ( l != 0 ) );
 
 	return funcR;

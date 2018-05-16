@@ -115,7 +115,7 @@ int AyPlayer::startPlayFile ( void ) {
 		r	=	this->ay->psgFilePlay();
 	}
 
-	return r;
+ 	return r;
 }
 
 void AyPlayer::stopPlayFile ( void ) {

@@ -5,6 +5,8 @@
 #include "ayplayer_fat.h"
 #include "pin.h"
 
+#define AY_YM_FILE_PLAY_FLASH_BUFFER_SIZE_BYTE				1024 * 10
+
 class AyYmFilePlay : public AyYmFilePlayBase {
 public:
 	AyYmFilePlay( Pin* pwrPinArray, AyYmLowLavel* ayLow ) :
@@ -39,4 +41,16 @@ private:
 	FIL*					f					=	nullptr;
 	uint32_t				usingChip;
 	bool					flagStop;
+
+	/// Т.к. методы зачастую читают по 1 байту, то чтобы ускорить этот процесс
+	/// сразу копируется значительный кусок трека.
+	__attribute__((__aligned__(4)))
+	uint8_t					flashBuffer[ AY_YM_FILE_PLAY_FLASH_BUFFER_SIZE_BYTE ];
+
+	/// Смещение, с которого было скопирован кусок.
+	uint32_t				pointStartSeekBuffer;
+
+	/// Смещение, с которого будет считан следующий байт/последовательность
+	/// байт (относительно буффера).
+	uint32_t				pointInBuffer;
 };
