@@ -1,6 +1,6 @@
 ﻿PROJECT_NAME		:= AyPlayer
 
-DEFINE_PROJ			:=	-DSTM32F205xx -DSTM32F2 -DSTM32 -D__CHECK_DEVICE_DEFINES
+DEFINE_PROJ			:=	-DSTM32F205xx -DSTM32F2 -DSTM32
 
 DEFINE_PROJ			+=	-DMODULE_BUTTONS_THROUGH_SHIFT_REGISTER_ONE_INPUT_PIN_ENABLED
 
@@ -107,7 +107,7 @@ PROJ_C_FILE				+= $(shell find submodule/ -maxdepth 10 -type f -name "*.c" )
 PROJ_S_FILE				= $(STARTUPE_S_NAME)
 
 PROJ_DIR				:= $(shell find user_code/ -maxdepth 10 -type d -name "*" )
-PROJ_DIR				+= $(shell find submodule/ -maxdepth 105 -type d -name "*" )
+PROJ_DIR				+= $(shell find submodule/ -maxdepth 10 -type d -name "*" )
 
 PROJ_PATH				:= $(addprefix -I, $(PROJ_DIR))
 PROJ_OBJ_FILE			:= $(addprefix build/obj/, $(PROJ_CPP_FILE))

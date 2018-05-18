@@ -17,8 +17,6 @@ extern TimCounter						timRunTimeStats;
 
 extern "C" {
 
-#ifdef configGENERATE_RUN_TIME_STATS
-
 void vApplicationMallocFailedHook( void ) {
 	while(1);
 }
@@ -26,6 +24,8 @@ void vApplicationMallocFailedHook( void ) {
 void vApplicationStackOverflowHook ( void ) {
 	while(1);
 }
+
+#ifdef configGENERATE_RUN_TIME_STATS
 
 void vConfigureTimerForRunTimeStats ( void ) {
 	/// Таймер настроится при конфигурации RCC внутри AyPlayer.
