@@ -161,7 +161,7 @@ public:
 	/*!
 	 * Проверяет наличие файла.
 	 */
-	static	int			checkingFile					( const char* path, const char* nameFile, FILINFO* fi, FRESULT& fatReturn );
+	static	int			checkingFileOrDir					( const char* path, const char* nameFile, FILINFO* fi, FRESULT& fatReturn );
 
 	static	int			removeFile						( const char* path, const char* nameFile, FRESULT& fatReturn );
 

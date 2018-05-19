@@ -24,6 +24,7 @@ char* AyPlayerFat::getFullPath( const char* const path, const char* const fileNa
 DIR* AyPlayerFat::openDir( char* path ) {
 	FRESULT			r;
 	DIR*			d;
+
 	d	=	( DIR* )pvPortMalloc( sizeof( DIR ) );
 	assertParam( d );
 
@@ -293,7 +294,7 @@ int AyPlayerFat::readItemFileListAndRemoveItem ( FIL* f, itemFileInFat* item, ui
 	return ( ( r == FR_OK ) && ( l == sizeof( itemFileInFat ) ) ) ? 0 : -1;
 }
 
-int AyPlayerFat::checkingFile ( const char* path, const char* nameFile, FILINFO* fi, FRESULT& fatReturn ) {
+int AyPlayerFat::checkingFileOrDir ( const char* path, const char* nameFile, FILINFO* fi, FRESULT& fatReturn ) {
 	FRESULT		r;
 
 	char* fullPath;
@@ -356,7 +357,10 @@ int AyPlayerFat::removeDirRecurisve ( char* fullPath, FRESULT& fatReturn ) {
 	static int				r = 0;
 
 	DIR*	d	=	AyPlayerFat::openDir( fullPath );
-	assertParam( d );
+
+	/// Что-то не так с драйверами или директории не существует.
+	if ( d == nullptr )
+		return -1;
 
 	/// Рекурсивно обходим все папки.
 	while( 1 ) {

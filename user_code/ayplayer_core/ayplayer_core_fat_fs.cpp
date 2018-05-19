@@ -30,9 +30,9 @@ FRESULT AyPlayer::fatFsReinit( AY_MICROSD sd ) {
 	return r;
 }
 
-int AyPlayer::checkingFile( AY_MICROSD sdName, const char* path, const char* nameFile, FILINFO* fi ) {
+int AyPlayer::checkingFileOrDir( AY_MICROSD sdName, const char* path, const char* nameFile, FILINFO* fi ) {
 	FRESULT fRes;
-	int r = AyPlayerFat::checkingFile( path, nameFile, fi, fRes );
+	int r = AyPlayerFat::checkingFileOrDir( path, nameFile, fi, fRes );
 	if ( r < 0 ) {
 		this->errorMicroSdDraw( sdName, fRes );
 		assertParam( false );
@@ -78,13 +78,15 @@ int AyPlayer::checkingSystemFileInRootDir( AY_MICROSD sdName, const char* fatVal
 	int r;
 
 	do {
-		r = this->checkingFile( sdName, fatValome, "System Volume Information", fi );
+		r = this->checkingFileOrDir( sdName, fatValome, "System Volume Information", fi );
 		if ( r == 1 )		break;
-		r = this->checkingFile( sdName, fatValome, "thumbs.db", fi );
+		r = this->checkingFileOrDir( sdName, fatValome, ".Trash-1000", fi );
 		if ( r == 1 )		break;
-		r = this->checkingFile( sdName, fatValome, "Desktop.ini", fi );
+		r = this->checkingFileOrDir( sdName, fatValome, "thumbs.db", fi );
 		if ( r == 1 )		break;
-		r = this->checkingFile( sdName, fatValome, "autorun.inf", fi );
+		r = this->checkingFileOrDir( sdName, fatValome, "Desktop.ini", fi );
+		if ( r == 1 )		break;
+		r = this->checkingFileOrDir( sdName, fatValome, "autorun.inf", fi );
 		if ( r == 1 )		break;
 	} while( false );
 
@@ -93,11 +95,39 @@ int AyPlayer::checkingSystemFileInRootDir( AY_MICROSD sdName, const char* fatVal
 	return r;
 }
 
-void AyPlayer::removeSystemFileInRootDir( AY_MICROSD sdName, const char* fatValome ) {
+#define CHECK_RETURN_FUNC_VALUE(r)			if ( r < 0 )	break
+
+int AyPlayer::removeSystemFileInRootDir( AY_MICROSD sdName, const char* fatValome ) {
+	FILINFO*		fi	=	nullptr;
+	fi	=	( FILINFO* )pvPortMalloc( sizeof( FILINFO ) );
+	assertParam( fi );
+
+	int r;
+
 	do {
-		this->removeDirRecurisve( sdName, fatValome, "System Volume Information" );
-		this->removeFile( sdName, fatValome, "thumbs.db" );
-		this->removeFile( sdName, fatValome, "Desktop.ini" );
-		this->removeFile( sdName, fatValome, "autorun.inf" );
+		r	=	this->checkingFileOrDir( sdName, fatValome, "System Volume Information", fi );
+		CHECK_RETURN_FUNC_VALUE(r);
+		if ( r == 1 ) {				/// Удаляем папку только если она есть :)
+			r	=	this->removeDirRecurisve( sdName, fatValome, "System Volume Information" );
+			CHECK_RETURN_FUNC_VALUE(r);
+		}
+
+		r	=	this->checkingFileOrDir( sdName, fatValome, ".Trash-1000", fi );
+		CHECK_RETURN_FUNC_VALUE(r);
+		if ( r == 1 ) {
+			r	=	this->removeDirRecurisve( sdName, fatValome, ".Trash-1000" );
+			CHECK_RETURN_FUNC_VALUE(r);
+		}
+
+		r	=	this->removeFile( sdName, fatValome, "thumbs.db" );
+		CHECK_RETURN_FUNC_VALUE(r);
+		r	=	this->removeFile( sdName, fatValome, "Desktop.ini" );
+		CHECK_RETURN_FUNC_VALUE(r);
+		r	=	this->removeFile( sdName, fatValome, "autorun.inf" );
+		CHECK_RETURN_FUNC_VALUE(r);
 	} while( false );
+
+	vPortFree( fi );
+
+	return r;
 }

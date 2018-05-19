@@ -296,11 +296,11 @@ private:
 	void			initPointArrayToSort				( uint16_t* array, uint32_t count );
 	int				sortForNameFileList					( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fNameSort );
 	int				sortForLenFileList					( const char* const path, uint16_t* fl, uint32_t countFileInDir, FILINFO* fi, DIR* d, FIL* fNoSort, FIL* fLenSort );
-	void			removeSystemFileInRootDir			( AY_MICROSD sdName, const char* fatValome );
+	int				removeSystemFileInRootDir			( AY_MICROSD sdName, const char* fatValome );
 	int				getFileCountInCurDir				( FILE_LIST_TYPE listType, uint32_t& returnCount );
 	void			playPauseSet( bool state );
 	/// Проверяем наличие файла в директории 0 - нет, 1 есть, -1 флешке плохо.
-	int checkingFile( AY_MICROSD sdName, const char* path, const char* nameFile, FILINFO* fi  );
+	int checkingFileOrDir( AY_MICROSD sdName, const char* path, const char* nameFile, FILINFO* fi  );
 	void stopPlayFile ( void );
 
 	int removeFile( AY_MICROSD sdName, const  char* path, const char* nameFile );
