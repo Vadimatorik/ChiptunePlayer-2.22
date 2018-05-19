@@ -133,6 +133,21 @@ void AyPlayer::playPauseSet( bool state ) {
 	}
 }
 
+void AyPlayer::trackMainWindowInit ( void ) {
+	USER_OS_STATIC_TIMER_STOP( this->timNameScroll );
+	USER_OS_STATIC_TIMER_RESET( this->timNameScroll );
+	USER_OS_STATIC_TIMER_CHANGE_PERIOD( this->timNameScroll, SCROLL_STRING_NAME_LOW );
+
+	/// Имя текущему элементу.
+	mSlimHorizontalListSetStringCurrentItem( this->g.shl, this->fat.currentFileInfo.fileName );
+
+	/// Указываем колличество элементов в директории.
+
+	mPlayBarSetNewTrack( this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
+
+	USER_OS_STATIC_TIMER_START( this->timNameScroll );
+}
+
 void AyPlayer::startPlayTrack ( void ) {
 	int r;
 	r = this->getFileInfoFromListCurDir( this->lType, this->currentFile );
@@ -140,14 +155,7 @@ void AyPlayer::startPlayTrack ( void ) {
 		return;
 
 	if ( this->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
-		USER_OS_STATIC_TIMER_STOP( this->timNameScroll );
-		USER_OS_STATIC_TIMER_RESET( this->timNameScroll );
-		USER_OS_STATIC_TIMER_CHANGE_PERIOD( this->timNameScroll, SCROLL_STRING_NAME_LOW );
-
-		mSlimHorizontalListSetStringCurrentItem( this->g.shl, this->fat.currentFileInfo.fileName );
-		mPlayBarSetNewTrack( this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
-
-		USER_OS_STATIC_TIMER_START( this->timNameScroll );
+		this->trackMainWindowInit();
 	}
 
 	USER_OS_GIVE_BIN_SEMAPHORE( this->os->sStartPlay );

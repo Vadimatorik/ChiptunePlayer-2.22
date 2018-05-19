@@ -34,7 +34,7 @@
 #include "play_list.h"
 #include "player_status_bar.h"
 #include "progress_bar.h"
-#include "slist.h"
+#include "makise_e_slist.h"
 #include "scroll_string.h"
 #include "slim_horizontal_list.h"
 
@@ -374,11 +374,11 @@ private:
 	/// Заполняет внутренную переменную currentFileInfo
 	/// данными из файла-списка на флешке.
 	int			getFileInfoFromListCurDir ( FILE_LIST_TYPE listType, uint32_t numberFileInList );
-
+	void		trackMainWindowInit					(	void	);
 
 	/// В объекте fat для sd1 должена быть установлена актуальная директория с помощью f_chdir
 	/// Ну то есть мы указываем имя файла относительно текущей директории.
-	int		startPlayFile							( void );
+	int		startPlayFile							(	void	);
 	void	startPlayTrack ( void );
 
 

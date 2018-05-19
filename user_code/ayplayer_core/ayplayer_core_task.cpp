@@ -23,6 +23,9 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 
 		b	=	static_cast< EC_BUTTON_NAME >( qData );
 
+		/*!
+		 * Основное окно.
+		 */
 		if ( o->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
 			if ( b == EC_BUTTON_NAME::ENTER_CLICK ) {
 				switch( static_cast< uint32_t >( o->playState ) ) {
@@ -74,11 +77,24 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 
 			/// Переход в эквалайзер.
 			if ( b == EC_BUTTON_NAME::DOWN_CLICK ) {
-				USER_OS_STATIC_TIMER_STOP( o->timNameScroll );			/// Скролить строку теперь не нужно.
 				o->removePlayWindow();									/// Закрываем текущее окно.
 				o->wNow = AYPLAYER_WINDOW_NOW::EQUALIZER;				/// Говорим что следующее будет эквалайзер.
 				o->initEqualizerWindow();
 				o->guiUpdate();
+			}
+		}
+
+		/*!
+		 * Окно эквалайзера.
+		 */
+		if ( o->wNow == AYPLAYER_WINDOW_NOW::EQUALIZER ) {
+			if ( ( b == EC_BUTTON_NAME::BACK_LONG_CLICK ) ||
+				 ( b == EC_BUTTON_NAME::BACK_CLICK ) ) {
+				o->removeEqualizerWindow();
+				o->wNow = AYPLAYER_WINDOW_NOW::MAIN;
+				o->initPlayWindow();
+				o->guiUpdate();
+				continue;
 			}
 		}
 	}

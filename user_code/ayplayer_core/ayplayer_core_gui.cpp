@@ -100,14 +100,19 @@ void AyPlayer::initPlayWindow ( void ) {
 										128, 12	),
 								&this->gui->horizontalListStyle	);
 
-	/// Имя текущему элементу.
-	mSlimHorizontalListSetStringCurrentItem( this->g.shl, this->fat.currentFileInfo.fileName );
+	/*!
+	 * Запускаем скролл строки трека в главном
+	 * окне и инициализируем все элементы.
+	 */
+	this->trackMainWindowInit();
 
 	/// Указываем колличество элементов в директории.
 	mSlimHorizontalSetItemCount( this->g.shl, this->countFileInCurrentDir );
 }
 
 void AyPlayer::removePlayWindow ( void ) {
+	USER_OS_STATIC_TIMER_STOP( this->timNameScroll );	/// Скролить строку теперь не нужно.
+
 	makise_g_cont_rem( &this->g.pb->el );
 	makise_g_cont_rem( &this->g.shl->el );
 
@@ -142,11 +147,14 @@ void AyPlayer::initEqualizerWindow ( void ) {
 		x += w + step;
 	}
 
-	mi_focus( &this->g.sliders[ 0 ]->el, M_G_FOCUS_GET );
+//	mi_focus( &this->g.sliders[ 0 ]->el, M_G_FOCUS_GET );
 }
 
 void AyPlayer::removeEqualizerWindow ( void ) {
-
+	for ( int i = 0; i < 6; i++ ) {
+		makise_g_cont_rem( &this->g.sliders[ i ]->el );
+		vPortFree( this->g.sliders[ i ] );
+	}
 }
 
 void AyPlayer::errorMicroSdDraw ( const AY_MICROSD sd, const FRESULT r ) {
