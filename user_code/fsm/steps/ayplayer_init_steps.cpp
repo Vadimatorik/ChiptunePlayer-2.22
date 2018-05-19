@@ -20,6 +20,9 @@ int AyPlayer::fsmStepFuncHardwareMcInit ( HANDLER_FSM_INPUT_DATA ) {
 	r = obj->mcu->gp->reinitAllPorts();
 	assertParam( r == BASE_RESULT::OK );
 
+	/// Фиксируем питание.
+	obj->mcu->gpio->pwr.all_pwr->reset();
+
 	/*!
 	 * RCC и все объекты, зависящие от него.
 	 */

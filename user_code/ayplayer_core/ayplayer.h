@@ -40,7 +40,9 @@
 #include "ayplayer_fat.h"
 
 enum class AYPLAYER_WINDOW_NOW {
-	MAIN				=	0,
+	INIT				=	0,
+	MAIN				=	1,
+	EQUALIZER			=	2
 };
 
 /*!
@@ -51,12 +53,12 @@ enum class AYPLAYER_WINDOW_NOW {
 #define HANDLER_FSM_STEP(NAME_STEP)				static int NAME_STEP ( const fsmStep< AyPlayer >* previousStep, AyPlayer* obj )
 #define HANDLER_FSM_INPUT_DATA					__attribute__((unused)) const fsmStep< AyPlayer >* previousStep, AyPlayer* obj
 
-#define	TB_MAIN_TASK_SIZE						3000
-#define	TB_ILLUMINATION_CONTROL_TASK_SIZE		64
-#define	TB_BUTTON_CLICK_HANDLER_TASK_SIZE		1000
-#define	TB_UPDATE_LCD_TASK_SIZE					1000
-#define	TB_PLAY_TASK_SIZE						1000
-#define	TB_PLAY_TICK_TASK_SIZE					1000
+#define	TB_MAIN_TASK_SIZE						800
+#define	TB_ILLUMINATION_CONTROL_TASK_SIZE		200
+#define	TB_BUTTON_CLICK_HANDLER_TASK_SIZE		400
+#define	TB_UPDATE_LCD_TASK_SIZE					400
+#define	TB_PLAY_TASK_SIZE						800
+#define	TB_PLAY_TICK_TASK_SIZE					200
 
 #define	MAIN_TASK_PRIO							3
 #define	ILLUMINATION_CONTROL_TASK_PRIO			1
@@ -64,6 +66,9 @@ enum class AYPLAYER_WINDOW_NOW {
 #define	BUTTON_UPDATE_LCD_TASK_PRIO				1
 #define	PLAY_TASK_PRIO							1
 #define	PLAY_TICK_TASK_PRIO						1
+
+#define SCROLL_STRING_NAME_LOW					1000
+#define SCROLL_STRING_NAME_FAST					200
 
 #define LIST_NO_SORT_FAT_NAME					".fileList.list"
 #define LIST_SORT_NAME_FAT_NAME					".fileListNameSort.list"
@@ -99,7 +104,7 @@ struct ayplayerPcbStrcut {
 	ShiftRegister*										srAy;
 	ShiftRegister*										srButton;
 	ButtonsThroughShiftRegisterOneInputPin*				button;
-	ad5204< 2 >*										dp;
+	ad5204*												dp;
 	AyYmLowLavel*										ay;
 	ST7565*												lcd;
 	MicrosdBase** 										sd;
@@ -126,12 +131,12 @@ struct ayPlayerCfg {
 
 
 struct ayPlayerGui {
-	MMessageWindow										mw;
-	MSList												sl;
-	MSList_Item											slItem[ 4 ];
-	MPlayerStatusBar									sb;
-	MPlayBar											pb;
-	MSlimHorizontalList									shl;
+	MMessageWindow*										mw;
+	MSList*												sl;
+	MSList_Item*										slItem[ 4 ];
+	MPlayerStatusBar*									sb;
+	MPlayBar*											pb;
+	MSlimHorizontalList*								shl;
 };
 
 
@@ -152,6 +157,27 @@ enum class FILE_LIST_TYPE {
 	NO_SORT			=	0,
 	NAME_SORT		=	1,
 	LEN_SORT		=	2,
+};
+
+/*!
+ * Причина отключения плеера.
+ */
+enum class CAUSE_SHUTDOWN {
+	USER_OFF				=	0,
+	UNDERVOLTAGE			=	1,
+	TIMEOUT					=	2
+};
+
+/*!
+ * Если на флешке нет актуальной таблицы
+ * "уровень громкости == значение потенциометра" - тогда
+ * используем стандартное.
+ */
+const uint8_t volumeTableDafault[16] = {
+	0x00, 0x10, 0x20, 0x30,
+	0x40, 0x50, 0x60, 0x70,
+	0x80, 0x90, 0xA0, 0xB0,
+	0xC0, 0xD0, 0xE0, 0xFF
 };
 
 class AyPlayer {
@@ -195,6 +221,9 @@ private:
 	static	void	updateLcdTask					( void* obj );
 	static	void	playTickHandlerTask				( void* obj );
 	static	void	scrollNameInMainWindow			( TimerHandle_t timer );
+
+
+	void			powerOff							(	CAUSE_SHUTDOWN	cause	);
 
 
 	/*!
@@ -306,7 +335,7 @@ private:
 	int removeFile( AY_MICROSD sdName, const  char* path, const char* nameFile );
 
 	int removeDirRecurisve( AY_MICROSD sdName, const char* path, const char* nameDir );
-
+	void volumeSet				( const uint8_t left, const uint8_t right);
 	/// Рабочие окна приложения (отрисовки).
 	/// Статусы дерева переходов ставятся через переменные состояния ниже.
 	/// Окно воспроизведения трека
@@ -332,7 +361,7 @@ private:
 
 
 	void	initAyCfgCall								(	void	);
-
+	void	initEqualizerWindow							( void );
 
 	int		ayFileCallOpenFile							(	void	);
 	int		ayFileCallCloseFile							(	void	);
@@ -383,6 +412,11 @@ private:
 	AYPLAYER_WINDOW_NOW									wNow;
 	uint32_t											currentFile;
 	uint32_t											countFileInCurrentDir;
+
+	/// Громкость.
+	uint8_t												currentVolumeIndex;		/// Текущая громкость (значение потенциометра в таблице).
+	uint8_t												volumeTable[16];		/// Соотношение "уровень громкости == значению потенциометра".
+
 
 	ayPlayerFatFs										fat;
 };

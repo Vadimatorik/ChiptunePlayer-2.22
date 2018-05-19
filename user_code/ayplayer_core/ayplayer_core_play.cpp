@@ -93,18 +93,18 @@ int AyPlayer::getFileCountInCurDir ( FILE_LIST_TYPE listType, uint32_t& returnCo
 
 
 int AyPlayer::startPlayFile ( void ) {
-	this->pcb->dp->connect_on();
+	this->pcb->dp->connectOn();
 
-	this->pcb->dp->value_set( 0, 0, 0xFF );			// B
-	this->pcb->dp->value_set( 0, 1, 0x80 );			// C
-	this->pcb->dp->value_set( 0, 2, 0xFF );			// A
+	this->pcb->dp->valueSet( 0, 0, 0xFF );			// B
+	this->pcb->dp->valueSet( 0, 1, 0x80 );			// C
+	this->pcb->dp->valueSet( 0, 2, 0xFF );			// A
 
-	this->pcb->dp->value_set( 0, 3, 0XFF );			// A1
-	this->pcb->dp->value_set( 1, 0, 0x80 );			// B2
-	this->pcb->dp->value_set( 1, 1, 0xFF );			// C1
+	this->pcb->dp->valueSet( 0, 3, 0XFF );			// A1
+	this->pcb->dp->valueSet( 1, 0, 0x80 );			// B2
+	this->pcb->dp->valueSet( 1, 1, 0xFF );			// C1
 
-	this->pcb->dp->value_set( 1, 2, 0xFF );			// Левый наушник.
-	this->pcb->dp->value_set( 1, 3, 0xFF );			// Правый.
+	this->pcb->dp->valueSet( 1, 2, 0xFF );			// Левый наушник.
+	this->pcb->dp->valueSet( 1, 3, 0xFF );
 
 	int r;
 	switch( static_cast< uint32_t >( this->fat.currentFileInfo.format ) ) {
@@ -118,12 +118,19 @@ int AyPlayer::startPlayFile ( void ) {
  	return r;
 }
 
+void AyPlayer::volumeSet ( const uint8_t left, const uint8_t right ) {
+	this->pcb->dp->valueSet( 1, 2, left );			// Левый наушник.
+	this->pcb->dp->valueSet( 1, 3, right );			// Правый.
+}
+
+/// Метод вызывается только из main окна.
 void AyPlayer::stopPlayFile ( void ) {
 	this->ay->stop();
 	this->playState		=	AYPLAYER_STATUS::STOP;
-	mPlayBarResetTrack( &this->g.pb );
+	mPlayBarResetTrack( this->g.pb );
 }
 
+/// Метод вызывается только из main окна.
 void AyPlayer::playPauseSet( bool state ) {
 	this->ay->setPause( state );
 
@@ -134,6 +141,23 @@ void AyPlayer::playPauseSet( bool state ) {
 	}
 }
 
+void AyPlayer::startPlayTrack ( void ) {
+	int r;
+	r = this->getFileInfoFromListCurDir( this->lType, this->currentFile );
+	if ( r != 0 )
+		return;
+
+	USER_OS_STATIC_TIMER_STOP( this->timNameScroll );
+	USER_OS_STATIC_TIMER_RESET( this->timNameScroll );
+	USER_OS_STATIC_TIMER_CHANGE_PERIOD( this->timNameScroll, SCROLL_STRING_NAME_LOW );
+
+	mSlimHorizontalListSetStringCurrentItem( this->g.shl, this->fat.currentFileInfo.fileName );
+	mPlayBarSetNewTrack( this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
+
+	USER_OS_STATIC_TIMER_START( this->timNameScroll );
+
+	USER_OS_GIVE_BIN_SEMAPHORE( this->os->sStartPlay );
+}
 
 
 

@@ -41,14 +41,22 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 				const char SD1_NOT_PRESENT[]	=	"SD1 not present!";
 
-				m_create_message_window(	&this->g.mw,
+				/// Создаем временный граф. объект.
+				MMessageWindow*			m;
+				m	=	( MMessageWindow* )pvPortMalloc( sizeof( MMessageWindow ) );
+				assertParam( m );
+
+
+				m_create_message_window(	m,
 											&makiseHost.host,
 											mp_rel( 0,	11,
 													128, 64 - 11 ),
 											( char* )SD1_NOT_PRESENT,
 											( MakiseStyle_SMessageWindow* )&this->gui->smw );
 				this->guiUpdate();
-				makise_g_cont_rem( &this->g.mw.el );
+
+				makise_g_cont_rem( &m->el );
+				vPortFree( m );
 			}
 
 			vTaskDelay( 100 );
@@ -68,14 +76,21 @@ void AyPlayer::waitSdCardInsert ( void ) {
 
 				const char SD2_NOT_PRESENT[]	=	"SD2 not present!";
 
-				m_create_message_window(	&this->g.mw,
+				/// Создаем временный граф. объект.
+				MMessageWindow*			m;
+				m	=	( MMessageWindow* )pvPortMalloc( sizeof( MMessageWindow ) );
+				assertParam( m );
+
+				m_create_message_window(	m,
 											&makiseHost.host,
 											mp_rel( 0,	11,
 													128, 64 - 11 ),
 											( char* )SD2_NOT_PRESENT,
 											( MakiseStyle_SMessageWindow* )&this->gui->smw );
 				this->guiUpdate();
-				makise_g_cont_rem( &this->g.mw.el );
+
+				makise_g_cont_rem( &m->el );
+				vPortFree( m );
 			}
 
 			vTaskDelay( 100 );

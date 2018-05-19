@@ -27,7 +27,7 @@ int	AyPlayer::scanDir ( char* path ) {
 		this->printMessageAndArg( RTL_TYPE_M::RUN_MESSAGE_OK, "File found:", fullPathToFile );						/// Лог.
 
 		/// Экран: начат анализ файла.
-		m_slist_set_text_string( &this->g.sl, "File analysis..." );											/// Экран.
+		m_slist_set_text_string( this->g.sl, "File analysis..." );											/// Экран.
 		this->guiUpdate();
 
 
@@ -138,7 +138,7 @@ FRESULT AyPlayer::indexingSupportedFiles( char* path ) {
 	/// Рекурсивно обходим все папки.
 	while( 1 ) {
 		/// Gui: мы снова начали поиск нужного файла.
-		m_slist_set_text_string( &this->g.sl, "Find supported files..." );
+		m_slist_set_text_string( this->g.sl, "Find supported files..." );
 		this->guiUpdate();
 
 		r = f_readdir( d, &f );

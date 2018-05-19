@@ -21,7 +21,7 @@ extern Pwr											pwr;
 extern ShiftRegister								srAy;
 extern ShiftRegister								srButton;
 extern ButtonsThroughShiftRegisterOneInputPin		button;
-extern ad5204< 2 >									soundDp;
+extern ad5204										soundDp;
 extern freeRtosObj									osData;
 extern AyYmLowLavel									ayLow;
 extern ST7565										lcd;

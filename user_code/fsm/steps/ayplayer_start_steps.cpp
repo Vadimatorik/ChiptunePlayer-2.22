@@ -95,6 +95,10 @@ int AyPlayer::fsmStepFuncInitMainWindow ( HANDLER_FSM_INPUT_DATA ) {
 	obj->currentFile	=	0;
 	obj->wNow			=	AYPLAYER_WINDOW_NOW::MAIN;
 
+	/// Таблица громкости по умолчанию.
+	memcpy( obj->volumeTable, volumeTableDafault, sizeof( volumeTableDafault ) );
+	obj->currentVolumeIndex	=	4;
+
 
 	/// Переносим каталог воспроизведения в центр.
 	FRESULT	fr;
