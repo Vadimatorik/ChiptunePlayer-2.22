@@ -81,6 +81,7 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 				o->wNow = AYPLAYER_WINDOW_NOW::EQUALIZER;				/// Говорим что следующее будет эквалайзер.
 				o->initEqualizerWindow();
 				o->guiUpdate();
+				continue;
 			}
 		}
 

@@ -147,7 +147,7 @@ void AyPlayer::initEqualizerWindow ( void ) {
 		x += w + step;
 	}
 
-//	mi_focus( &this->g.sliders[ 0 ]->el, M_G_FOCUS_GET );
+	mi_focus( &this->g.sliders[ 0 ]->el, M_G_FOCUS_GET );
 }
 
 void AyPlayer::removeEqualizerWindow ( void ) {
