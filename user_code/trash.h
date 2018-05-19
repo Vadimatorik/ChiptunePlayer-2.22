@@ -98,26 +98,4 @@ void ayplayer_button_inc_and_dec_detect ( void* param ) {
 	}
 }
 
-
-void AyYmFilePlay::hardStop ( void ) {
-	this->cfg->ay->hardwareClear();
-	this->cfg->ay->queueClear();
-	this->cfg->ay->playStateSet( 0 );								// Потом отключаем усилок и чипы.
-
-	if ( this->chipState[ 0 ] ) {
-		this->chipState[ 0 ]	=	0;
-		this->cfg->pwrChipOn( 0, false );
-	}
-
-	if ( this->chipState[ 1 ] ) {
-		this->chipState[ 1 ]	=	0;
-		this->cfg->pwrChipOn( 1, false );
-	}
-}
-
-int AyYmFilePlay::sendToQueue ( ayQueueStruct* item ) {
-
-}
-
-
 }*/
