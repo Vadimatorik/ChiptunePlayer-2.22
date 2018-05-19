@@ -147,14 +147,16 @@ void AyPlayer::startPlayTrack ( void ) {
 	if ( r != 0 )
 		return;
 
-	USER_OS_STATIC_TIMER_STOP( this->timNameScroll );
-	USER_OS_STATIC_TIMER_RESET( this->timNameScroll );
-	USER_OS_STATIC_TIMER_CHANGE_PERIOD( this->timNameScroll, SCROLL_STRING_NAME_LOW );
+	if ( this->wNow == AYPLAYER_WINDOW_NOW::MAIN ) {
+		USER_OS_STATIC_TIMER_STOP( this->timNameScroll );
+		USER_OS_STATIC_TIMER_RESET( this->timNameScroll );
+		USER_OS_STATIC_TIMER_CHANGE_PERIOD( this->timNameScroll, SCROLL_STRING_NAME_LOW );
 
-	mSlimHorizontalListSetStringCurrentItem( this->g.shl, this->fat.currentFileInfo.fileName );
-	mPlayBarSetNewTrack( this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
+		mSlimHorizontalListSetStringCurrentItem( this->g.shl, this->fat.currentFileInfo.fileName );
+		mPlayBarSetNewTrack( this->g.pb, this->fat.currentFileInfo.lenTick / 50 );
 
-	USER_OS_STATIC_TIMER_START( this->timNameScroll );
+		USER_OS_STATIC_TIMER_START( this->timNameScroll );
+	}
 
 	USER_OS_GIVE_BIN_SEMAPHORE( this->os->sStartPlay );
 }

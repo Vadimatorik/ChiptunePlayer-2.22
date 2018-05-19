@@ -70,7 +70,6 @@ int AyPlayer::fsmStepFuncFreeRtosObjInit ( HANDLER_FSM_INPUT_DATA ) {
 	obj->os->qAyButton		=	USER_OS_STATIC_QUEUE_CREATE( 1, sizeof( uint8_t ), obj->os->qbAyButton, &obj->os->qsAyButton );
 
 	obj->os->sPlayTic		=	USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &obj->os->sbPlayTic );
-	obj->os->sGuiUpdate		=	USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &obj->os->sbGuiUpdate );
 	obj->os->sStartPlay		=	USER_OS_STATIC_BIN_SEMAPHORE_CREATE( &obj->os->sbStartPlay );
 
 	obj->os->mSpi3			=	USER_OS_STATIC_MUTEX_CREATE( &obj->os->mbSpi3 );

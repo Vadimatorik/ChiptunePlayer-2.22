@@ -74,28 +74,13 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 
 			/// Переход в эквалайзер.
 			if ( b == EC_BUTTON_NAME::DOWN_CLICK ) {
-				o->removePlayWindow();							/// Закрываем текущее окно.
-				o->wNow = AYPLAYER_WINDOW_NOW::EQUALIZER;		/// Говорим что следующее будет эквалайзер.
-
+				USER_OS_STATIC_TIMER_STOP( o->timNameScroll );			/// Скролить строку теперь не нужно.
+				o->removePlayWindow();									/// Закрываем текущее окно.
+				o->wNow = AYPLAYER_WINDOW_NOW::EQUALIZER;				/// Говорим что следующее будет эквалайзер.
 			}
 		}
 	}
 }
-
-
-
-void AyPlayer::updateLcdTask ( void* obj ) {
-	AyPlayer* o = ( AyPlayer* )obj;
-	o->mcu->lcdPwmTim->setDuty( o->illuminationDuty );
-	while( true ) {
-
-
-		if ( USER_OS_TAKE_BIN_SEMAPHORE( o->os->sGuiUpdate, 1000 ) == pdFALSE ) {
-			o->guiUpdate();
-		}
-	}
-}
-
 
 void AyPlayer::playTickHandlerTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;

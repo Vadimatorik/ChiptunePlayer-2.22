@@ -217,6 +217,5 @@ void AyPlayer::guiUpdate ( void ) {
 	makise_g_host_call( &makiseHost, &makiseGui, M_G_CALL_PREDRAW );
 	makise_g_host_call( &makiseHost, &makiseGui, M_G_CALL_DRAW );
 	lcd.update();
-	USER_OS_GIVE_BIN_SEMAPHORE( this->os->sGuiUpdate );
 	USER_OS_GIVE_MUTEX( this->os->mHost );
 }

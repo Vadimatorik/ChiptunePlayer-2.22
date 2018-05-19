@@ -30,12 +30,10 @@ struct freeRtosObj {
 
 	/// Semaphore.
 	USER_OS_STATIC_BIN_SEMAPHORE			sPlayTic;
-	USER_OS_STATIC_BIN_SEMAPHORE			sGuiUpdate;
 	USER_OS_STATIC_BIN_SEMAPHORE			sStartPlay;
 
 	/// Semaphore buffer.
 	USER_OS_STATIC_BIN_SEMAPHORE_BUFFER		sbPlayTic;
-	USER_OS_STATIC_BIN_SEMAPHORE_BUFFER		sbGuiUpdate;
 	USER_OS_STATIC_BIN_SEMAPHORE_BUFFER		sbStartPlay;			/// Выдается, когда надо запустить воспроизведение,
 																	///а все данные о треке уже указаны (внутри объекта ayplayer).
 };

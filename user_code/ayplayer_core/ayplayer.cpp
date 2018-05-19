@@ -34,15 +34,6 @@ void AyPlayer::start ( void ) {
 								this->tbButtonClickHandlerTask,
 								&this->tsButtonClickHandlerTask	);
 
-	/// Фоновое обновление экрана.
-	USER_OS_STATIC_TASK_CREATE(	AyPlayer::updateLcdTask,
-									"updateLcd",
-									TB_UPDATE_LCD_TASK_SIZE,
-									( void* )this,
-									BUTTON_UPDATE_LCD_TASK_PRIO,
-									this->tbUpdateLcdTask,
-									&this->tsUpdateLcdTask	);
-
 	/// Воспроизведение трека.
 	USER_OS_STATIC_TASK_CREATE(	AyPlayer::playTask,
 								"play",
