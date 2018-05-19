@@ -138,6 +138,7 @@ struct ayPlayerGui {
 	MPlayBar*											pb;
 	MSlimHorizontalList*								shl;
 	MSlider*											sliders[ 6 ];
+	int32_t												currentSlider;
 };
 
 
@@ -195,12 +196,12 @@ struct __attribute__((packed)) ayplayerEqualizer {
 };
 
 const ayplayerEqualizer ayplayerEqualizerDafault = {
-	.A1			=	23,
-	.B1			=	20,
-	.C1			=	23,
-	.A2			=	23,
-	.B2			=	20,
-	.C2			=	23,
+	.A1			=	230,
+	.B1			=	200,
+	.C1			=	230,
+	.A2			=	230,
+	.B2			=	200,
+	.C2			=	230,
 };
 
 class AyPlayer {
@@ -375,6 +376,16 @@ private:
 	/// данными из файла-списка на флешке.
 	int			getFileInfoFromListCurDir ( FILE_LIST_TYPE listType, uint32_t numberFileInList );
 	void		trackMainWindowInit					(	void	);
+
+
+
+	void initEqualizer (	void	);
+
+
+	void setValueEqualizer (	void	);
+
+
+
 
 	/// В объекте fat для sd1 должена быть установлена актуальная директория с помощью f_chdir
 	/// Ну то есть мы указываем имя файла относительно текущей директории.

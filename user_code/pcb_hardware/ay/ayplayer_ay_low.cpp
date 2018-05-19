@@ -23,8 +23,8 @@ ayYmConnectionChipCfg ay_connect_cfg = { 0, 1, 2, 3, 4, 5, 6, 7 };
 ayYmConnectionChipCfg ym_connect_cfg = { 7, 6, 5, 4, 3, 2, 1, 0 };
 
 ayYmConnectionChipCfg array_connect_cfg[] = {
-	ym_connect_cfg,					/// 40 PIN.
-	ay_connect_cfg					/// 28 PIN.
+	ym_connect_cfg,					/// 40 PIN, AY2, AY2_VDD (включается вместе с AY1 по питании).
+	ay_connect_cfg					/// 28 PIN. AY1.
 };
 
 /*!

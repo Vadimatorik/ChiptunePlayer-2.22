@@ -684,8 +684,8 @@ Pin chip2PwrOn			( &chip2PwrOnCfg );			/// Подача питания на вт
 
 /// Для обращений file play.
 Pin pwrAy[ 2 ] = {
-	chip2PwrOn,				/// Из-за сдвигового регистра обратный счет.
-	chip1PwrOn
+	chip1PwrOn,
+	chip2PwrOn
 };
 
 // PWR.

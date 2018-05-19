@@ -95,8 +95,12 @@ int AyPlayer::getFileCountInCurDir ( FILE_LIST_TYPE listType, uint32_t& returnCo
 int AyPlayer::startPlayFile ( void ) {
 	this->pcb->dp->connectOn();
 
-	//this->pcb->dp->valueSet( 1, 2, 0xFF );			// Левый наушник.
-	//this->pcb->dp->valueSet( 1, 3, 0xFF );
+
+
+	this->initEqualizer();
+
+	this->volumeSet(	this->volumeTable[ this->currentVolumeIndex ],
+						this->volumeTable[ this->currentVolumeIndex ]	);
 
 	int r;
 	switch( static_cast< uint32_t >( this->fat.currentFileInfo.format ) ) {
@@ -108,6 +112,41 @@ int AyPlayer::startPlayFile ( void ) {
 	}
 
  	return r;
+}
+
+/*!
+ * Устанавливает в значение из текущего столбца выбранного эквалайзера в потенциометр.
+ */
+void AyPlayer::setValueEqualizer (	void	) {
+	switch( this->g.currentSlider ) {
+	case 0:							/// A1.
+		this->pcb->dp->valueSet( 0, 2, this->eq.A1 );
+		break;
+	case 1:							/// B1.
+		this->pcb->dp->valueSet( 0, 0, this->eq.B1 );
+		break;
+	case 2:							/// C1.
+		this->pcb->dp->valueSet( 0, 1, this->eq.C1 );
+		break;
+	case 3:							/// A2.
+		this->pcb->dp->valueSet( 0, 3, this->eq.A2 );
+		break;
+	case 4:							/// B2.
+		this->pcb->dp->valueSet( 1, 0, this->eq.B2 );
+		break;
+	case 5:							/// C2.
+		this->pcb->dp->valueSet( 1, 1, this->eq.C2 );
+		break;
+	}
+}
+
+void AyPlayer::initEqualizer (	void	) {
+	this->pcb->dp->valueSet( 0, 2, this->eq.A1 );
+	this->pcb->dp->valueSet( 0, 0, this->eq.B1 );
+	this->pcb->dp->valueSet( 0, 1, this->eq.C1 );
+	this->pcb->dp->valueSet( 0, 3, this->eq.A2 );
+	this->pcb->dp->valueSet( 1, 0, this->eq.B2 );
+	this->pcb->dp->valueSet( 1, 1, this->eq.C2 );
 }
 
 void AyPlayer::volumeSet ( const uint8_t left, const uint8_t right ) {

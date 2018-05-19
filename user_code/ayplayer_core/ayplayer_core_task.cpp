@@ -1,6 +1,12 @@
 #include "ayplayer.h"
 #include "ayplayer_button.h"
 
+extern "C" {
+
+extern MHost				makiseHost;
+
+}
+
 void AyPlayer::illuminationControlTask ( void* obj ) {
 	AyPlayer* o = ( AyPlayer* )obj;
 	o->mcu->lcdPwmTim->setDuty( o->illuminationDuty );
@@ -94,6 +100,76 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 				o->removeEqualizerWindow();
 				o->wNow = AYPLAYER_WINDOW_NOW::MAIN;
 				o->initPlayWindow();
+				o->guiUpdate();
+				continue;
+			}
+
+			if ( ( b == EC_BUTTON_NAME::LEFT_LONG_CLICK ) ||
+				 ( b == EC_BUTTON_NAME::LEFT_CLICK ) ) {
+
+				o->g.currentSlider--;
+				if ( o->g.currentSlider < 0 )
+					o->g.currentSlider	=	5;
+
+				mi_focus_prev( &makiseHost );
+				o->guiUpdate();
+				continue;
+			}
+
+			if ( ( b == EC_BUTTON_NAME::RIGHT_LONG_CLICK ) ||
+				 ( b == EC_BUTTON_NAME::RIGHT_CLICK ) ) {
+
+				o->g.currentSlider++;
+				if ( o->g.currentSlider == 6)
+					o->g.currentSlider	=	0;
+
+				mi_focus_next( &makiseHost );
+				o->guiUpdate();
+				continue;
+			}
+
+			if ( ( b == EC_BUTTON_NAME::DOWN_CLICK ) ||
+				 ( b == EC_BUTTON_NAME::DOWN_LONG_CLICK ) ) {
+				uint8_t* value;
+				value = &o->eq.A1;
+
+				if ( value[ o->g.currentSlider ] > 0 ) {
+					int b = value[ o->g.currentSlider ] - 10;
+					if ( b < 0 ) {
+						value[ o->g.currentSlider ] = 0;
+					} else {
+						value[ o->g.currentSlider ] = static_cast< uint8_t >( b );
+					}
+				}
+
+				m_slider_set_value(	o->g.sliders[ o->g.currentSlider ],
+									value[ o->g.currentSlider ] );
+
+				o->setValueEqualizer();
+
+				o->guiUpdate();
+				continue;
+			}
+
+			if ( ( b == EC_BUTTON_NAME::UP_CLICK ) ||
+				 ( b == EC_BUTTON_NAME::UP_LONG_CLICK ) ) {
+				uint8_t* value;
+				value = &o->eq.A1;
+
+				if ( value[ o->g.currentSlider ] < 0xFF ) {
+					int b = value[ o->g.currentSlider ] + 10;
+					if ( b > 0xFF ) {
+						value[ o->g.currentSlider ] = 0xFF;
+					} else {
+						value[ o->g.currentSlider ] = static_cast< uint8_t >( b );
+					}
+				}
+
+				m_slider_set_value(	o->g.sliders[ o->g.currentSlider ],
+									value[ o->g.currentSlider ] );
+
+				o->setValueEqualizer();
+
 				o->guiUpdate();
 				continue;
 			}

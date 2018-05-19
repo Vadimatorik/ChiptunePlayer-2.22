@@ -139,7 +139,7 @@ void AyPlayer::initEqualizerWindow ( void ) {
 							MSlider_Type_ReadWrite,
 							&this->gui->m	);
 
-		m_slider_set_range( this->g.sliders[ i ], 0, 26 );
+		m_slider_set_range( this->g.sliders[ i ], 0, 255 );
 
 		m_slider_set_value(	this->g.sliders[ i ],
 							*( ( ( uint8_t* )&this->eq.A1 ) + i ) );
@@ -148,6 +148,7 @@ void AyPlayer::initEqualizerWindow ( void ) {
 	}
 
 	mi_focus( &this->g.sliders[ 0 ]->el, M_G_FOCUS_GET );
+	this->g.currentSlider	=	0;
 }
 
 void AyPlayer::removeEqualizerWindow ( void ) {

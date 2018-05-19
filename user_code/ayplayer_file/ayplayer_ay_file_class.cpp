@@ -194,7 +194,20 @@ int AyYmFilePlay::readInArray (	uint8_t*		returnDataBuffer,
 }
 
 int AyYmFilePlay::setPwrChip ( bool state ) {
-	pwrPin[ this->usingChip ].set( state );
+	if ( state == true ) {
+		pwrPin[ this->usingChip ].set( false );
+		if ( this->usingChip == 0 ) {
+			/// 40 PIN чип, надо включать оба...
+			pwrPin[ 0 ].set( true );
+			pwrPin[ 1 ].set( true );
+		} else {
+			pwrPin[ 0 ].set( true );
+		}
+	} else {
+		pwrPin[ 0 ].set( false );
+		pwrPin[ 1 ].set( false );
+	}
+
 	return 0;
 }
 
