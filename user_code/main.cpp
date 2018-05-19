@@ -121,6 +121,35 @@ ayplayerGuiCfg ayGuiCfg = {
 		.bgColor						=	MC_White,
 		.borderColor					=	MC_Black,
 		.bgArrowColor					=	MC_Black
+	},
+	.m = {
+		.maincolor						=	MC_Black,
+		.font							=	&F_minecraft_rus_regular_8,
+		.font_line_spacing				=	1,
+		.unactive = {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_White,
+			.double_border				=	0
+		},
+		.normal = {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_White,
+			.double_border				=	0
+		},
+		.focused = {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_Black,
+			.double_border				=	1
+		},
+		.active = {
+			.bg_color					=	MC_White,
+			.font_col					=	MC_Black,
+			.border_c					=	MC_Black,
+			.double_border				=	1
+		}
 	}
 };
 

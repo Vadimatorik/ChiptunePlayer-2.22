@@ -115,31 +115,37 @@ void AyPlayer::removePlayWindow ( void ) {
 	vPortFree( this->g.shl );
 }
 
-// Метод сдвигает вниз все строки (1 удаляется) и добавляет вверх новую.
-void AyPlayer::slItemShiftDown ( uint32_t cout, char* newSt ) {
-	/// Если раньше там была не пустая строка.
-	if ( this->g.slItem[ cout - 1 ]->text != nullptr ) {
-		vPortFree( this->g.slItem[ cout - 1 ]->text );
-	}
-
-	for ( uint32_t l = cout - 1; l > 0 ; l-- ) {
-		this->g.slItem[ l ]->text = this->g.slItem[ l - 1 ]->text;
-	}
-
-	uint32_t lenString = strlen( newSt ) + 1;
-	this->g.slItem[ 0 ]->text = ( char* )pvPortMalloc( lenString );
-	strcpy( this->g.slItem[ 0 ]->text, newSt );
-}
-
-void AyPlayer::slItemClean ( uint32_t cout ) {
-	for ( uint32_t l = 0; l < cout ; l++ ) {
-		if ( this->g.slItem[ l ]->text ) {
-			vPortFree( this->g.slItem[ l ]->text );
-		}
-	}
-}
 
 void AyPlayer::initEqualizerWindow ( void ) {
+	uint32_t	x		=	5 ;							/// 5 отступ с каждой стороны.
+	uint32_t	w		=	18;							/// Ширина 18  на каждый слайдер.
+	uint32_t	step	=	2;							/// 2 между.
+	uint32_t	y		=	12 + 4;						/// Отступаем сверху статус бар и 4 пикселя.
+	uint32_t	h		=	( 64 - 1 ) - 12 - 8 - 8;	/// Формируем высоту.
+
+	for ( int i = 0; i < 6; i++ ) {
+		this->g.sliders[ i ]	=	( MSlider* )pvPortMalloc( sizeof( MSlider ) );
+		assertParam( this->g.sliders[ i ] );
+
+		m_create_slider(	this->g.sliders[ i ],
+							&makiseHost.host,
+							mp_rel(	x,	y,
+									w,	h	),
+							MSlider_Type_ReadWrite,
+							&this->gui->m	);
+
+		m_slider_set_range( this->g.sliders[ i ], 0, 26 );
+
+		m_slider_set_value(	this->g.sliders[ i ],
+							*( ( ( uint8_t* )&this->eq.A1 ) + i ) );
+
+		x += w + step;
+	}
+
+	mi_focus( &this->g.sliders[ 0 ]->el, M_G_FOCUS_GET );
+}
+
+void AyPlayer::removeEqualizerWindow ( void ) {
 
 }
 
@@ -205,6 +211,30 @@ void AyPlayer::errorMicroSdDraw ( const AY_MICROSD sd, const FRESULT r ) {
 
 		makise_g_cont_rem( &m->el );
 		vPortFree( m );
+}
+
+// Метод сдвигает вниз все строки (1 удаляется) и добавляет вверх новую.
+void AyPlayer::slItemShiftDown ( uint32_t cout, char* newSt ) {
+	/// Если раньше там была не пустая строка.
+	if ( this->g.slItem[ cout - 1 ]->text != nullptr ) {
+		vPortFree( this->g.slItem[ cout - 1 ]->text );
+	}
+
+	for ( uint32_t l = cout - 1; l > 0 ; l-- ) {
+		this->g.slItem[ l ]->text = this->g.slItem[ l - 1 ]->text;
+	}
+
+	uint32_t lenString = strlen( newSt ) + 1;
+	this->g.slItem[ 0 ]->text = ( char* )pvPortMalloc( lenString );
+	strcpy( this->g.slItem[ 0 ]->text, newSt );
+}
+
+void AyPlayer::slItemClean ( uint32_t cout ) {
+	for ( uint32_t l = 0; l < cout ; l++ ) {
+		if ( this->g.slItem[ l ]->text ) {
+			vPortFree( this->g.slItem[ l ]->text );
+		}
+	}
 }
 
 

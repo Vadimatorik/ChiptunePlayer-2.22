@@ -28,7 +28,8 @@
 #include "ayplayer_fat_error_string.h"
 
 #include "makise_e_message_window.h"
-#include "fsviewer.h"
+#include "makise_e_slider.h"
+
 #include "play_bar.h"
 #include "play_list.h"
 #include "player_status_bar.h"
@@ -116,6 +117,7 @@ struct ayplayerGuiCfg {
 	MPlayerStatusBar_CallbackFunc						statusBarCallbackCfg;
 	MakiseStyle_PlayBar									playBarStyle;
 	MakiseStyle_SMSlimHorizontalList					horizontalListStyle;
+	MakiseStyle											m;
 };
 
 struct ayPlayerCfg {
@@ -135,6 +137,7 @@ struct ayPlayerGui {
 	MPlayerStatusBar*									sb;
 	MPlayBar*											pb;
 	MSlimHorizontalList*								shl;
+	MSlider*											sliders[ 6 ];
 };
 
 
@@ -176,6 +179,28 @@ const uint8_t volumeTableDafault[16] = {
 	0x40, 0x50, 0x60, 0x70,
 	0x80, 0x90, 0xA0, 0xB0,
 	0xC0, 0xD0, 0xE0, 0xFF
+};
+
+/*!
+ * Значения эквалайзера (цифровых потенциометров).
+ * 0..26 диапазон каждого поля.
+ */
+struct __attribute__((packed)) ayplayerEqualizer {
+	uint8_t			A1;
+	uint8_t			B1;
+	uint8_t			C1;
+	uint8_t			A2;
+	uint8_t			B2;
+	uint8_t			C2;
+};
+
+const ayplayerEqualizer ayplayerEqualizerDafault = {
+	.A1			=	23,
+	.B1			=	20,
+	.C1			=	23,
+	.A2			=	23,
+	.B2			=	20,
+	.C2			=	23,
 };
 
 class AyPlayer {
@@ -359,6 +384,7 @@ private:
 
 	void	initAyCfgCall								(	void	);
 	void	initEqualizerWindow							( void );
+	void	removeEqualizerWindow						(	void	);
 
 	int		ayFileCallOpenFile							(	void	);
 	int		ayFileCallCloseFile							(	void	);
@@ -412,6 +438,7 @@ private:
 	uint8_t												currentVolumeIndex;		/// Текущая громкость (значение потенциометра в таблице).
 	uint8_t												volumeTable[16];		/// Соотношение "уровень громкости == значению потенциометра".
 
+	ayplayerEqualizer									eq;
 
 	ayPlayerFatFs										fat;
 };

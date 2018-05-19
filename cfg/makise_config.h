@@ -10,6 +10,7 @@ extern "C" {
 #define MAKISEGUI_BUFFER_DEPTH						1
 #define MAKISEGUI_BUFFER_DEPTHMASK					1
 
+#define MAKISE_E_SLIDER								1
 
 #define MAKISE_BUF_H								64
 #define MAKISE_BUF_W								128

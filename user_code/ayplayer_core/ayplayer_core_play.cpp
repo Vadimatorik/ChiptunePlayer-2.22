@@ -95,16 +95,8 @@ int AyPlayer::getFileCountInCurDir ( FILE_LIST_TYPE listType, uint32_t& returnCo
 int AyPlayer::startPlayFile ( void ) {
 	this->pcb->dp->connectOn();
 
-	this->pcb->dp->valueSet( 0, 0, 0xFF );			// B
-	this->pcb->dp->valueSet( 0, 1, 0x80 );			// C
-	this->pcb->dp->valueSet( 0, 2, 0xFF );			// A
-
-	this->pcb->dp->valueSet( 0, 3, 0XFF );			// A1
-	this->pcb->dp->valueSet( 1, 0, 0x80 );			// B2
-	this->pcb->dp->valueSet( 1, 1, 0xFF );			// C1
-
-	this->pcb->dp->valueSet( 1, 2, 0xFF );			// Левый наушник.
-	this->pcb->dp->valueSet( 1, 3, 0xFF );
+	//this->pcb->dp->valueSet( 1, 2, 0xFF );			// Левый наушник.
+	//this->pcb->dp->valueSet( 1, 3, 0xFF );
 
 	int r;
 	switch( static_cast< uint32_t >( this->fat.currentFileInfo.format ) ) {

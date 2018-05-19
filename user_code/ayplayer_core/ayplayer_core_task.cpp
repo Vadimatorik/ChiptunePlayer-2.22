@@ -77,6 +77,8 @@ void AyPlayer::buttonClickHandlerTask ( void* obj ) {
 				USER_OS_STATIC_TIMER_STOP( o->timNameScroll );			/// Скролить строку теперь не нужно.
 				o->removePlayWindow();									/// Закрываем текущее окно.
 				o->wNow = AYPLAYER_WINDOW_NOW::EQUALIZER;				/// Говорим что следующее будет эквалайзер.
+				o->initEqualizerWindow();
+				o->guiUpdate();
 			}
 		}
 	}

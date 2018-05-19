@@ -99,6 +99,8 @@ int AyPlayer::fsmStepFuncInitMainWindow ( HANDLER_FSM_INPUT_DATA ) {
 	memcpy( obj->volumeTable, volumeTableDafault, sizeof( volumeTableDafault ) );
 	obj->currentVolumeIndex	=	4;
 
+	/// Забираем начальные значения потенциометров.
+	memcpy( &obj->eq, &ayplayerEqualizerDafault, sizeof( ayplayerEqualizer ) );
 
 	/// Переносим каталог воспроизведения в центр.
 	FRESULT	fr;
