@@ -1,0 +1,44 @@
+CLASS_NAME						=		AyPlayer
+FILE_WITH_CLASS_DESCRIPTION		=		ayplayer.h
+
+@startuml
+
+[*] --> s0
+
+state "freeRtosObjInit" as s0 {
+s0:Инициализируются базовые элементы ОС (mutex, semaphore, timer).
+}
+
+s0 --> s1								: 0
+
+state "hardwareMcInit" as s1 {
+s1: Инициализация периферии микроконтроллера.
+s1:1. Сторожевой таймер\t\t\t\t\t(WDT)
+s1:2. Порты ввода/вывода\t\t\t\t\t(GPIO)
+s1:3. Система генерации тактового сигнала\t(RCC)
+s1:4. Таймеры\t\t\t\t\t\t\t(TIMER)
+s1:5. Аналого-цифровые преобразователи\t(ADC)
+s1:6. SPI
+s1:7. UART
+s1:8. NVIC
+s1:После инициализации вызывается метод запуска базовых модулей:
+s1:1. SPI1, SPI2, SPI3
+s1:2. USART3
+s1:3. ADC на канал с аккумулятора
+}
+
+s1 --> s2								: 0
+
+state "hardwarePcbInit" as s2 {
+s2:Инициализируются:
+s2:Сдвиговые регистры
+s2:Низкоуровневый AY
+}
+
+s2 --> s3								: 0
+
+state "guiInit" as s3 {
+s3:Инициализация MakiseGUI и драйвера дисплея
+}
+
+@enduml

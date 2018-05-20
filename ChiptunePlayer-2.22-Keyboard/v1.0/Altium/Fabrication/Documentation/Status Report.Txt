@@ -1,0 +1,10 @@
+Output: Generates pick and place files
+Type  : Pick Place
+From  : Variant [[No Variations]] of PCB Document [Main.PcbDoc]
+   Generated File[Generates pick and place files.txt]
+
+
+Files Generated   : 1
+Documents Printed : 0
+
+Finished Output Generation At 14:53:10 On 20.05.2018
