@@ -52,3 +52,6 @@
 [submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/plantuml_to_fsm_tree_generator"]
 	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/plantuml_to_fsm_tree_generator
 	url = git@github.com:Vadimatorik/plantuml_to_fsm_tree_generator.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_shift_register"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_shift_register
+	url = git@github.com:Vadimatorik/module_shift_register.git
