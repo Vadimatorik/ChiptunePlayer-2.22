@@ -49,3 +49,6 @@
 [submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_freertos_for_stm32f2"]
 	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_freertos_for_stm32f2
 	url = git@github.com:Vadimatorik/module_freertos_for_stm32f2.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/plantuml_to_fsm_tree_generator"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/plantuml_to_fsm_tree_generator
+	url = git@github.com:Vadimatorik/plantuml_to_fsm_tree_generator.git
