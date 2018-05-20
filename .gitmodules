@@ -43,3 +43,9 @@
 [submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_freertos_for_stm32f4"]
 	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_freertos_for_stm32f4
 	url = git@github.com:Vadimatorik/module_freertos_for_stm32f4.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_stm32f2_low_level_by_st"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_stm32f2_low_level_by_st
+	url = git@github.com:Vadimatorik/module_stm32f2_low_level_by_st.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_freertos_for_stm32f2"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_freertos_for_stm32f2
+	url = git@github.com:Vadimatorik/module_freertos_for_stm32f2.git
