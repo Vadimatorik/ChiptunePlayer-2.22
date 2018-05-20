@@ -1,0 +1,45 @@
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_button"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_button
+	url = git@github.com:Vadimatorik/module_button.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_chiptune"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_chiptune
+	url = git@github.com:Vadimatorik/module_chiptune.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_makise_gui"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_makise_gui
+	url = git@github.com:Vadimatorik/module_makise_gui.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_makise_gui_elements_by_vadimatorik"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_makise_gui_elements_by_vadimatorik
+	url = git@github.com:Vadimatorik/module_makise_gui_elements_by_vadimatorik.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_microsd_low_level_driver"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_microsd_low_level_driver
+	url = git@github.com:Vadimatorik/module_microsd_low_level_driver.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_fatfs_by_chan"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_fatfs_by_chan
+	url = git@github.com:Vadimatorik/module_fatfs_by_chan.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_digital_potentiometer"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_digital_potentiometer
+	url = git@github.com:Vadimatorik/module_digital_potentiometer.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_run_time_logger"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_run_time_logger
+	url = git@github.com:Vadimatorik/module_run_time_logger.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_mc_hardware_interfaces"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_mc_hardware_interfaces
+	url = git@github.com:Vadimatorik/module_mc_hardware_interfaces.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_modbus"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_modbus
+	url = git@github.com:Vadimatorik/module_modbus.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_mono_lcd_lib"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_mono_lcd_lib
+	url = git@github.com:Vadimatorik/module_mono_lcd_lib.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_fsm"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_fsm
+	url = git@github.com:Vadimatorik/module_fsm.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_system_dummy"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_system_dummy
+	url = git@github.com:Vadimatorik/module_system_dummy.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_stm32f4_low_level_by_st"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_stm32f4_low_level_by_st
+	url = git@github.com:Vadimatorik/module_stm32f4_low_level_by_st.git
+[submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_freertos_for_stm32f4"]
+	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_freertos_for_stm32f4
+	url = git@github.com:Vadimatorik/module_freertos_for_stm32f4.git
