@@ -1,0 +1,4 @@
+GOST 2.304 type A
+наклонный
+14
+https://hubstub.ru/stm32/75-tsifrovoy-programmiruyemyy-generator-podklyucheniye-ltc6903-k-stm32.html
