@@ -300,7 +300,7 @@ AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
 AnnotateSuffix=
 AnnotateScope=All
-AnnotateOrder=-1
+AnnotateOrder=10
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
 ClassGenCCAutoEnabled=1
@@ -311,6 +311,10 @@ GenerateClassCluster=0
 DocumentUniqueId=TTOBHTCK
 
 [GeneratedDocument1]
+DocumentPath=Project Outputs for ChiptunePlayer-2.22-MainBoard v2.0\Design Rule Check - main.html
+DItemRevisionGUID=
+
+[GeneratedDocument2]
 DocumentPath=..\..\..\..\module_altium_lib_by_vadimatorik\my_lib.cmp
 DItemRevisionGUID=
 
