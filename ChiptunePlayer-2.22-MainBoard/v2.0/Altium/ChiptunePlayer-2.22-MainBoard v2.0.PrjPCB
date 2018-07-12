@@ -243,23 +243,6 @@ GenerateClassCluster=0
 DocumentUniqueId=IRTGDAKU
 
 [Document13]
-DocumentPath=Power5VManagement.SchDoc
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=7
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=XKUXNNWQ
-
-[Document14]
 DocumentPath=MicroSdCard.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -276,7 +259,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=QMBALDVA
 
-[Document15]
+[Document14]
 DocumentPath=KeyBoard.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -293,7 +276,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=MUQCQGBM
 
-[Document16]
+[Document15]
 DocumentPath=Lcd.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
