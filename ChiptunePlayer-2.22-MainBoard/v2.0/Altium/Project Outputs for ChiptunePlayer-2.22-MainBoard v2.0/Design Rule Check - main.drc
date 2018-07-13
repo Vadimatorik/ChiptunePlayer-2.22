@@ -1,7 +1,7 @@
 Protel Design System Design Rule Check
 PCB File : C:\Users\Vadim\Documents\project\chiptune_player_2.22\ChiptunePlayer-2.22-MainBoard\v2.0\Altium\main.PcbDoc
 Date     : 13.07.2018
-Time     : 12:06:14
+Time     : 12:13:44
 
 Processing Rule : Clearance Constraint (Gap=0.15mm) (All),(All)
 Rule Violations :0
@@ -15,10 +15,10 @@ Rule Violations :0
 Processing Rule : Modified Polygon (Allow modified: No), (Allow shelved: No)
 Rule Violations :0
 
-Processing Rule : Width Constraint (Min=0.3mm) (Max=1mm) (Preferred=0.5mm) (InNetClass('SUPPLAY'))
+Processing Rule : Width Constraint (Min=0.15mm) (Max=1mm) (Preferred=0.3mm) (All)
 Rule Violations :0
 
-Processing Rule : Width Constraint (Min=0.15mm) (Max=1mm) (Preferred=0.3mm) (All)
+Processing Rule : Width Constraint (Min=0.3mm) (Max=1mm) (Preferred=0.5mm) (InNetClass('SUPPLAY'))
 Rule Violations :0
 
 Processing Rule : Routing Layers(All)
@@ -54,10 +54,10 @@ Rule Violations :0
 Processing Rule : Net Antennae (Tolerance=0mm) (All)
 Rule Violations :0
 
-Processing Rule : Matched Lengths(Tolerance=1mm) (InNetClass('SDIO'))
+Processing Rule : Matched Lengths(Tolerance=1mm) (InNetClass('Usb'))
 Rule Violations :0
 
-Processing Rule : Matched Lengths(Tolerance=1mm) (InNetClass('Usb'))
+Processing Rule : Matched Lengths(Tolerance=1mm) (InNetClass('SDIO'))
 Rule Violations :0
 
 Processing Rule : Component Clearance Constraint ( Horizontal Gap = 0.01mm, Vertical Gap = 1mm ) (All),(All) 
@@ -69,4 +69,4 @@ Rule Violations :0
 
 Violations Detected : 0
 Waived Violations : 0
-Time Elapsed        : 00:00:05
+Time Elapsed        : 00:00:06
