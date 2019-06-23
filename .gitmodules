@@ -55,9 +55,12 @@
 [submodule "ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_shift_register"]
 	path = ChiptunePlayer-2.22-MainBoard/v1.0/Program/submodule/module_shift_register
 	url = git@github.com:Vadimatorik/module_shift_register.git
-[submodule "MainBoard/ChiptunePlayer-2.22-MainBoard-v2.x.x"]
-	path = MainBoard/ChiptunePlayer-2.22-MainBoard-v2.x.x
-	url = git@github.com:Vadimatorik/ChiptunePlayer-2.22-MainBoard-v2.x.x.git
-[submodule "AudioShield/ChiptunePlayer-2.22-AudioShieldAYYM-v1.x.x"]
-	path = AudioShield/ChiptunePlayer-2.22-AudioShieldAYYM-v1.x.x
-	url = git@github.com:Vadimatorik/ChiptunePlayer-2.22-AudioShieldAYYM-v1.x.x.git
+[submodule "ChiptunePlayer-2.22-Firmware"]
+	path = ChiptunePlayer-2.22-Firmware
+	url = git@github.com:Vadimatorik/ChiptunePlayer-2.22-Firmware.git
+[submodule "ChiptunePlayer-2.22-AudioShieldAYYM"]
+	path = ChiptunePlayer-2.22-AudioShieldAYYM
+	url = git@github.com:Vadimatorik/ChiptunePlayer-2.22-AudioShieldAYYM.git
+[submodule "ChiptunePlayer-2.22-MainBoard"]
+	path = ChiptunePlayer-2.22-MainBoard
+	url = git@github.com:Vadimatorik/ChiptunePlayer-2.22-MainBoard.git
