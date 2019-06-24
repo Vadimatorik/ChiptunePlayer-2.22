@@ -4,6 +4,6 @@
 
 Для скаичвания необходомо ввести в терминал:
 
-git clone git@github.com:Vadimatorik/ChiptunePlayer-2.22.git
+git clone https://github.com/Vadimatorik/ChiptunePlayer-2.22.git
 
 git submodule update --init --recursive
